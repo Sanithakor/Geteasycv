@@ -29,22 +29,9 @@ export async function captureElement(element: HTMLElement, options: Partial<Expo
   await new Promise(resolve => setTimeout(resolve, 500));
   
   return html2canvas(element, {
-    scale: opts.scale,
-    backgroundColor: '#ffffff',
     useCORS: true,
     allowTaint: true,
     logging: false,
-    imageTimeout: 15000,
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight,
-    onclone: (clonedDoc) => {
-      // Ensure proper styling in cloned document
-      const clonedElement = clonedDoc.querySelector('[data-export="true"]');
-      if (clonedElement) {
-        (clonedElement as HTMLElement).style.fontFamily = 'inherit';
-        (clonedElement as HTMLElement).style.fontSize = 'inherit';
-      }
-    }
   });
 }
 

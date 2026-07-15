@@ -142,7 +142,7 @@ const Field = ({ label, value, onChange, type = 'text', placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );
@@ -165,7 +165,7 @@ const TextField = ({ label, value, onChange, rows = 4, placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="resize-y max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );
@@ -185,7 +185,7 @@ const SelectField = ({ label, value, options, onChange, icon }: {
     <select
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>{option.label}</option>
@@ -215,7 +215,7 @@ const ColorField = ({ label, value, onChange, icon }: {
       <input 
         value={value} 
         onChange={(event) => onChange(event.target.value)} 
-        className="h-12 min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md" 
+        className="h-12 min-w-0 flex-1 max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md" 
         placeholder="#000000"
       />
     </span>
@@ -284,6 +284,24 @@ export default function EditorPage() {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
 
+  const saveDraft = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      const draft = {
+        cvData, 
+        customTheme, 
+        selectedLayout, 
+        sectionVariants, 
+        visibility, 
+        sectionOrder, 
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('geteasycv-draft', JSON.stringify(draft));
+      if (!autoSave) {
+        toast.success('Draft saved locally');
+      }
+    }
+  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -295,7 +313,7 @@ export default function EditorPage() {
       }, 2000);
       return () => clearTimeout(timeoutId);
     }
-  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave, mounted]);
+  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave, mounted, saveDraft]);
 
   const visibleData = useMemo(() => prepareExportData(cvData, visibility), [cvData, visibility]);
   const customTemplate = useMemo<GeneratedTemplate>(() => ({
@@ -369,21 +387,9 @@ export default function EditorPage() {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       const canvas = await html2canvas(exportRef.current, {
-        scale: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
-        backgroundColor: isHex(customTheme.background) ? customTheme.background : '#ffffff',
         useCORS: true,
         allowTaint: true,
         logging: false,
-        imageTimeout: 15000,
-        windowWidth: exportRef.current.scrollWidth,
-        windowHeight: exportRef.current.scrollHeight,
-        onclone: (clonedDoc) => {
-          // Ensure fonts are loaded in cloned document
-          const clonedElement = clonedDoc.querySelector('[data-export="true"]');
-          if (clonedElement) {
-            clonedElement.style.fontFamily = customTheme.fontFamily;
-          }
-        }
       });
       
       toast.dismiss('export');
@@ -468,24 +474,6 @@ export default function EditorPage() {
   const updateProject = (id: string, key: keyof ProjectItem, value: string | string[]) => setCvData((prev) => ({ ...prev, projects: (prev.projects || []).map((item) => (item.id === id ? { ...item, [key]: value } : item)) }));
   const updateCertification = (id: string, key: keyof CertificationItem, value: string) => setCvData((prev) => ({ ...prev, certifications: (prev.certifications || []).map((item) => (item.id === id ? { ...item, [key]: value } : item)) }));
   const updateLanguage = (id: string, key: keyof LanguageItem, value: string) => setCvData((prev) => ({ ...prev, languages: (prev.languages || []).map((item) => (item.id === id ? { ...item, [key]: value } : item)) }));
-
-  const saveDraft = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      const draft = {
-        cvData, 
-        customTheme, 
-        selectedLayout, 
-        sectionVariants, 
-        visibility, 
-        sectionOrder, 
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem('geteasycv-draft', JSON.stringify(draft));
-      if (!autoSave) {
-        toast.success('Draft saved locally');
-      }
-    }
-  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave]);
 
   const loadDraft = () => {
     try {
@@ -693,7 +681,7 @@ export default function EditorPage() {
         <div className="space-y-6">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm font-semibold text-slate-950">Find a template for your role</p>
-            <input value={templateSearch} onChange={(event) => setTemplateSearch(event.target.value)} placeholder="Search templates, layouts, styles..." className="mt-3 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100" />
+            <input value={templateSearch} onChange={(event) => setTemplateSearch(event.target.value)} placeholder="Search templates, layouts, styles..." className="mt-3 h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100" />
             <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
               {jobCategories.map((category) => (
                 <button key={category} type="button" onClick={() => setJobCategory(category)} className={`shrink-0 rounded-full px-3 py-2 text-xs font-semibold ${jobCategory === category ? 'bg-slate-950 text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100'}`}>{category}</button>
@@ -706,7 +694,7 @@ export default function EditorPage() {
               <div key={template.id} className={`group rounded-2xl border bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${selectedTemplate.id === template.id ? 'border-teal-500 ring-2 ring-teal-100' : 'border-slate-200'}`}>
                 <button type="button" onClick={() => setPreviewTemplate(template)} className="h-36 w-full overflow-hidden rounded-xl bg-slate-100">
                   <div className="flex h-full items-start justify-center p-2 transition group-hover:scale-105">
-                    <TemplateRenderer template={template} data={sampleCV} scale={0.18} />
+                    <TemplateRenderer template={template} data={sampleCV} scale={1} />
                   </div>
                 </button>
                 <div className="mt-3 flex items-start justify-between gap-2">
@@ -773,7 +761,6 @@ export default function EditorPage() {
             {(['content', 'design', 'layout', 'settings'] as EditorTab[]).map((tab) => (
               <button key={tab} type="button" onClick={() => switchTab(tab)} className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${activeTab === tab ? 'bg-slate-950 text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'}`}>{tab}</button>
             ))}
-            {notice && <span className="rounded-full bg-teal-50 px-3 py-2 text-xs font-semibold text-teal-800">{notice}</span>}
             <button type="button" onClick={saveDraft} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Save</button>
             <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-100 hover:bg-teal-700 disabled:opacity-50">
               {isExporting ? 'Exporting' : 'Export PDF'}

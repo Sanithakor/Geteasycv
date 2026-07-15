@@ -75,12 +75,10 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             theme={theme}
             headerVariant={sectionVariants.headerVariant as HeaderVariant}
             experienceVariant={sectionVariants.experienceVariant as ExperienceVariant}
-            skillsVariant={sectionVariants.skillsVariant as SkillsVariant}
             educationVariant={sectionVariants.educationVariant as EducationVariant}
             projectsVariant={sectionVariants.projectsVariant as ProjectsVariant}
             certificationsVariant={sectionVariants.certificationsVariant as CertificationsVariant}
             languagesVariant={sectionVariants.languagesVariant as LanguagesVariant}
-            contactVariant={sectionVariants.contactVariant as ContactVariant}
           />
         );
 

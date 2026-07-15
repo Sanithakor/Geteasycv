@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useMemo, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
 import { GeneratedTemplate, generateTemplates, getTemplateStats } from '@/lib/generateTemplates';
+import { generateOptimizedTemplatePreview } from '@/lib/optimizedTemplatePreview';
 
 const pageSize = 12;
 const categories = ['All', 'ATS Friendly', 'Creative', 'Modern', 'Executive', 'Minimal'];
@@ -21,88 +22,94 @@ function templateCategory(template: GeneratedTemplate) {
 }
 
 function TemplatePreview({ template }: { template: GeneratedTemplate }) {
-  const [failed, setFailed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [previewSrc, setPreviewSrc] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const handleLoad = useCallback(() => {
-    setLoaded(true);
+  // Ensure client-side only execution
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
-  const handleError = useCallback(() => {
-    console.error('Template preview failed to render');
-    setFailed(true);
-  }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const generatePreview = () => {
+      try {
+        // Generate optimized SVG preview with actual template data
+        const svgPreview = generateOptimizedTemplatePreview(template);
+        
+        // Use encodeURIComponent instead of btoa to handle special characters
+        const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgPreview)}`;
+        setPreviewSrc(dataUrl);
+        setLoading(false);
+      } catch (err) {
+        console.error('Preview generation failed:', err);
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    generatePreview();
+  }, [template, mounted]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-teal-50 border border-slate-200"
-    >
-      {/* Fallback background */}
-      <Image
-        src="/images/templates/preview-placeholder.svg"
-        alt="Template preview placeholder"
-        fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        className={`object-contain transition-opacity duration-300 ${failed || !loaded ? 'opacity-100' : 'opacity-0'}`}
-        priority={false}
-      />
-      
-      {/* Actual template preview */}
-      {!failed && (
-        <div className="absolute inset-0 flex items-center justify-center p-4">
-          <div 
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              transform: 'scale(0.95)',
-              transformOrigin: 'center center',
-            }}
-            onLoad={handleLoad}
-            onError={handleError}
-          >
-            <div className="relative w-full h-full overflow-hidden rounded-lg bg-white shadow-lg">
-              <div 
-                className="origin-center overflow-hidden w-full h-full flex items-center justify-center"
-                style={{
-                  transform: containerRef.current 
-                    ? `scale(${Math.min(
-                        (containerRef.current.offsetWidth - 32) / 300,
-                        (containerRef.current.offsetHeight - 32) / 400
-                      )})`
-                    : 'scale(0.8)',
+    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-teal-50 border border-slate-200">
+      {/* Only render content after client-side mounting */}
+      {!mounted ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/90">
+          <div className="animate-pulse bg-slate-200 rounded w-full h-full"></div>
+        </div>
+      ) : (
+        <>
+          {/* Template preview image */}
+          {previewSrc && (
+            <div className="absolute inset-0">
+              <Image
+                src={previewSrc}
+                alt={`${template.layout.name} - ${template.theme.name} template preview`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-contain p-2 transition-opacity duration-300"
+                priority={false}
+                onLoad={() => {
+                  setLoading(false);
+                  setError(false);
                 }}
-              >
-                <div className="w-[300px] h-[400px] bg-white shadow-xl rounded-lg overflow-hidden">
-                  <TemplateRenderer template={template} data={sampleCV} scale={0.3} />
-                </div>
-              </div>
+                onError={() => {
+                  setError(true);
+                  setLoading(false);
+                }}
+              />
             </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Loading indicator */}
-      {!loaded && !failed && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
-        </div>
-      )}
-      
-      {/* Retry button for failed previews */}
-      {failed && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            type="button"
-            onClick={() => {
-              setFailed(false);
-              setLoaded(false);
-            }}
-            className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
-          >
-            🔄 Retry Preview
-          </button>
-        </div>
+          )}
+          
+          {/* Loading indicator */}
+          {loading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mb-2"></div>
+              <p className="text-xs text-slate-600 font-medium">Generating Preview...</p>
+            </div>
+          )}
+          
+          {/* Error state */}
+          {error && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm p-4 text-center">
+              <div className="text-2xl mb-2">🎨</div>
+              <p className="text-sm font-medium text-slate-700 mb-1">{template.layout.name}</p>
+              <p className="text-xs text-slate-500">{template.theme.name} Theme</p>
+            </div>
+          )}
+          
+          {/* Template info overlay */}
+          {!loading && !error && (
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3">
+              <p className="text-white text-xs font-semibold truncate drop-shadow-sm">{template.layout.name}</p>
+              <p className="text-white/90 text-xs truncate drop-shadow-sm">{template.theme.name}</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -154,7 +161,7 @@ const StepsGuide = () => {
     <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-white/60 p-6 shadow-lg">
       <h3 className="text-lg font-semibold text-slate-950 mb-6">How to Create Your Resume</h3>
       <div className="space-y-6">
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <div key={step.number} className="flex items-start space-x-4">
             <div className="flex-shrink-0 w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
               <span className="text-xl">{step.icon}</span>
@@ -229,7 +236,7 @@ export default function TemplatesPage() {
                     setPage(1);
                   }}
                   placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 />
               </div>
             </div>
@@ -245,7 +252,7 @@ export default function TemplatesPage() {
                     setPage(1);
                   }}
                   placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 />
               </div>
               
