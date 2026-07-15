@@ -1,0 +1,47 @@
+[
+  {
+    "id": "modern-pro",
+    "name": "Modern Pro",
+    "category": "Professional",
+    "thumbnail": "/images/templates/preview-placeholder.svg",
+    "colors": ["#6366F1", "#8B5CF6"],
+    "isPremium": true,
+    "rating": 4.8,
+    "downloads": 1200,
+    "features": [
+      "ATS Friendly",
+      "Clean Layout",
+      "Editable Sections"
+    ]
+  },
+  {
+    "id": "minimal-clean",
+    "name": "Minimal Clean",
+    "category": "Minimal",
+    "thumbnail": "/images/templates/preview-placeholder.svg",
+    "colors": ["#0F172A", "#64748B"],
+    "isPremium": false,
+    "rating": 4.6,
+    "downloads": 980,
+    "features": [
+      "Simple Design",
+      "One Page",
+      "Fast Editing"
+    ]
+  },
+  {
+    "id": "creative-gradient",
+    "name": "Creative Gradient",
+    "category": "Creative",
+    "thumbnail": "/images/templates/preview-placeholder.svg",
+    "colors": ["#22C55E", "#4ADE80"],
+    "isPremium": true,
+    "rating": 4.9,
+    "downloads": 1500,
+    "features": [
+      "Colorful Layout",
+      "Modern Typography",
+      "Portfolio Ready"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "personal": {
+    "name": "John Doe",
+    "title": "Frontend Developer",
+    "email": "john@example.com",
+    "phone": "+91 9876543210",
+    "location": "Ahmedabad, India"
+  },
+  "summary": "Passionate frontend developer with 3+ years experience building modern UI.",
+  "skills": ["HTML", "CSS", "JavaScript", "React", "Next.js"],
+  "experience": [
+    {
+      "company": "Tech Solutions",
+      "role": "Frontend Developer",
+      "duration": "2022 - Present",
+      "description": "Built scalable UI with React and improved performance by 30%."
+    }
+  ],
+  "education": [
+    {
+      "degree": "BCA",
+      "institute": "XYZ University",
+      "year": "2021"
+    }
+  ]
+}

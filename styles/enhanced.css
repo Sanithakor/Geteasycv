@@ -1,0 +1,187 @@
+/* Enhanced animations and transitions for CV Builder */
+
+/* Smooth scrollbar styling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Enhanced button animations */
+.btn-enhanced {
+  @apply transform transition-all duration-200 ease-in-out;
+}
+
+.btn-enhanced:hover {
+  @apply scale-105 shadow-lg;
+}
+
+.btn-enhanced:active {
+  @apply scale-95;
+}
+
+/* Template preview animations */
+.template-preview {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.template-preview:hover {
+  @apply shadow-2xl transform -translate-y-1;
+}
+
+/* Loading animations */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Glass effect */
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-sm border border-white/60;
+}
+
+/* Gradient backgrounds */
+.gradient-bg-1 {
+  background: linear-gradient(135deg, #ecfeff 0%, #f8fafc 35%, #ffffff 70%);
+}
+
+.gradient-bg-2 {
+  background: linear-gradient(135deg, #f0f9ff 0%, #ecfeff 50%, #ffffff 100%);
+}
+
+/* Animation enter effects */
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation: slide-in-from-bottom 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Custom focus styles */
+.focus-ring {
+  @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+}
+
+/* Enhanced shadows */
+.shadow-premium {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-glass {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Improved drag and drop styles */
+.drag-preview {
+  @apply opacity-50 ring-2 ring-teal-200 scale-105 rotate-2;
+}
+
+.drop-zone {
+  @apply border-dashed border-2 border-teal-300 bg-teal-50;
+}
+
+/* Status indicators */
+.status-complete {
+  @apply text-green-500;
+}
+
+.status-incomplete {
+  @apply text-slate-300;
+}
+
+.status-progress {
+  @apply text-teal-500;
+}
+
+/* Loading states */
+.loading-skeleton {
+  @apply animate-pulse bg-slate-200 rounded;
+}
+
+/* Typography enhancements */
+.text-gradient {
+  background: linear-gradient(135deg, #0f766e 0%, #0891b2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Interactive elements */
+.interactive-scale {
+  @apply transition-transform duration-200 hover:scale-105 active:scale-95;
+}
+
+/* Panel transitions */
+.panel-enter {
+  @apply transition-all duration-300 ease-out;
+}
+
+.panel-enter-from {
+  @apply opacity-0 transform translate-x-4;
+}
+
+.panel-enter-to {
+  @apply opacity-100 transform translate-x-0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .mobile-stack {
+    @apply flex-col space-y-4 space-x-0;
+  }
+  
+  .mobile-hide {
+    @apply hidden;
+  }
+  
+  .mobile-full {
+    @apply w-full;
+  }
+}
+
+/* Print styles for PDF export optimization */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-optimize {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
