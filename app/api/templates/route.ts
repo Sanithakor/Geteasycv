@@ -17,7 +17,12 @@ export async function GET(req: Request) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {
+    const where: {
+      status: string;
+      category?: string;
+      isPremium?: boolean;
+      isATS?: boolean;
+    } = {
       status: 'active',
     };
 

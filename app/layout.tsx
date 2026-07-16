@@ -1,10 +1,35 @@
 import type { Metadata } from "next";
+import { Inter, Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import "../styles/enhanced.css";
 
+// ── Fonts ────────────────────────────────────────────────────────────────────
+// Inter is the primary UI font (variable font — no weight needed)
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+// Poppins is used for headings in several themes
+const poppins = Poppins({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+});
+
+// Playfair Display is used for luxury/editorial themes
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
+});
+
 export const metadata: Metadata = {
   title: "GetEasyCV - Professional Resume Builder",
-  description: "Create professional resumes with our easy-to-use resume builder. Choose from 200+ templates and export as PDF.",
+  description:
+    "Create professional resumes with our easy-to-use resume builder. Choose from templates and export as PDF.",
 };
 
 export default function RootLayout({
@@ -15,10 +40,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased"
+      className={`h-full antialiased ${inter.variable} ${poppins.variable} ${playfairDisplay.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-gray-50">{children}</body>
+      {/*
+       * bg-slate-50 is the canonical background for this project.
+       * globals.css sets the same value (#f8fafc) on body directly —
+       * the Tailwind class here keeps Tailwind-generated purge working
+       * and removes the previous bg-gray-50 mismatch.
+       */}
+      <body className="min-h-full flex flex-col bg-slate-50">{children}</body>
     </html>
   );
 }

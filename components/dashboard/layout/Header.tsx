@@ -20,8 +20,13 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('light');
 
   React.useEffect(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
+    if (stored === 'dark' || stored === 'light') {
+      setTheme(stored);
+      document.documentElement.classList.toggle('dark', stored === 'dark');
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
@@ -32,11 +37,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
   return (

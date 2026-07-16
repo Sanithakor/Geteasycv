@@ -1,12 +1,10 @@
 /**
  * User Dashboard Page
- * Premium SaaS user dashboard with analytics and resume management
- * Integrated with sidebar and header layout
  */
 
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import {
@@ -21,59 +19,71 @@ import {
 import Link from 'next/link';
 import { Plus, MoreVertical, Download, Eye, FileText, Download as DownloadIcon } from 'lucide-react';
 
-// Mock data for charts
-const activityData = [
-  { month: 'Jan', resumes: 1, downloads: 0 },
-  { month: 'Feb', resumes: 1, downloads: 2 },
-  { month: 'Mar', resumes: 2, downloads: 5 },
-  { month: 'Apr', resumes: 2, downloads: 3 },
-  { month: 'May', resumes: 2, downloads: 8 },
-  { month: 'Jun', resumes: 3, downloads: 4 },
-];
+interface ResumeRow {
+  id: string;
+  title: string;
+  status: string;
+  views: number;
+  downloads: number;
+  updatedAt: string;
+  template?: { name: string } | null;
+}
 
-const recentResumes = [
-  {
-    id: '1',
-    title: 'Software Engineer Resume',
-    template: 'Modern',
-    lastModified: '2 hours ago',
-    status: 'published',
-    views: 24,
-    downloads: 5,
-  },
-  {
-    id: '2',
-    title: 'Product Manager Resume',
-    template: 'Executive',
-    lastModified: '1 day ago',
-    status: 'published',
-    views: 18,
-    downloads: 3,
-  },
-  {
-    id: '3',
-    title: 'UX Designer Resume',
-    template: 'Creative',
-    lastModified: '3 days ago',
-    status: 'draft',
-    views: 0,
-    downloads: 0,
-  },
+interface DashboardStats {
+  totalResumes: number;
+  totalDownloads: number;
+  totalViews: number;
+  published: number;
+}
+
+// Placeholder chart data — replaced by real data once analytics API exists
+const activityData = [
+  { month: 'Jan', downloads: 0 },
+  { month: 'Feb', downloads: 2 },
+  { month: 'Mar', downloads: 5 },
+  { month: 'Apr', downloads: 3 },
+  { month: 'May', downloads: 8 },
+  { month: 'Jun', downloads: 4 },
 ];
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, user, _hydrated } = useAuthStore();
-  const [isLoading, setIsLoading] = React.useState(true);
+  const { isAuthenticated, user, _hydrated, token } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
+  const [resumes, setResumes] = useState<ResumeRow[]>([]);
+  const [stats, setStats] = useState<DashboardStats>({
+    totalResumes: 0,
+    totalDownloads: 0,
+    totalViews: 0,
+    published: 0,
+  });
 
   useEffect(() => {
     if (!_hydrated) return;
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
-    setIsLoading(false);
-  }, [_hydrated, isAuthenticated, router]);
+    if (!isAuthenticated) { router.push('/login'); return; }
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/resumes', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const rows: ResumeRow[] = data.data || [];
+        setResumes(rows);
+        setStats({
+          totalResumes: rows.length,
+          totalDownloads: rows.reduce((s, r) => s + (r.downloads || 0), 0),
+          totalViews: rows.reduce((s, r) => s + (r.views || 0), 0),
+          published: rows.filter((r) => r.status === 'published').length,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [_hydrated, isAuthenticated, token, router]);
 
   if (!_hydrated || !isAuthenticated || !user || isLoading) {
     return (
@@ -82,11 +92,13 @@ export default function DashboardPage() {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-4 animate-pulse">
             <FileText className="w-6 h-6 text-white" />
           </div>
-          <p className="text-slate-600 dark:text-slate-400">Loading dashboard...</p>
+          <p className="text-slate-600 dark:text-slate-400">Loading dashboard…</p>
         </div>
       </div>
     );
   }
+
+  const recentResumes = resumes.slice(0, 5);
 
   return (
     <div className="space-y-8">
@@ -111,10 +123,10 @@ export default function DashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KPICard title="Total Resumes" value="3" icon="📄" trend={{ value: 1, direction: 'up', period: 'this month' }} />
-        <KPICard title="Total Downloads" value="12" icon="⬇️" trend={{ value: 4, direction: 'up', period: 'this month' }} />
-        <KPICard title="Profile Views" value="48" icon="👁️" trend={{ value: 15, direction: 'up', period: 'this month' }} />
-        <KPICard title="Shares" value="8" icon="🔗" trend={{ value: 2, direction: 'up', period: 'this month' }} />
+        <KPICard title="Total Resumes" value={String(stats.totalResumes)} icon="📄" />
+        <KPICard title="Total Downloads" value={String(stats.totalDownloads)} icon="⬇️" />
+        <KPICard title="Profile Views" value={String(stats.totalViews)} icon="👁️" />
+        <KPICard title="Published" value={String(stats.published)} icon="🔗" />
       </div>
 
       {/* Charts & Stats */}
@@ -147,8 +159,7 @@ export default function DashboardPage() {
               <h3 className="font-semibold text-slate-900 dark:text-white">Downloads</h3>
               <DownloadIcon className="w-5 h-5 text-blue-600" />
             </div>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">12</p>
-            <p className="text-sm text-green-600 dark:text-green-400 mt-2">↑ 4 from last month</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.totalDownloads}</p>
           </div>
 
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
@@ -156,8 +167,7 @@ export default function DashboardPage() {
               <h3 className="font-semibold text-slate-900 dark:text-white">Profile Views</h3>
               <Eye className="w-5 h-5 text-purple-600" />
             </div>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">48</p>
-            <p className="text-sm text-green-600 dark:text-green-400 mt-2">↑ 15 from last month</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.totalViews}</p>
           </div>
 
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6">
@@ -175,7 +185,7 @@ export default function DashboardPage() {
         <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">Your Resumes</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{recentResumes.length} resumes total</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{recentResumes.length} recent</p>
           </div>
           <Link href="/my-resumes" className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
             View all →
@@ -195,37 +205,48 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-              {recentResumes.map((resume) => (
-                <tr key={resume.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white">
-                        <FileText className="w-5 h-5" />
-                      </div>
-                      <p className="font-medium text-slate-900 dark:text-white">{resume.title}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{resume.template}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${resume.status === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'}`}>
-                      <span className={`w-2 h-2 rounded-full ${resume.status === 'published' ? 'bg-green-600' : 'bg-yellow-600'}`} />
-                      {resume.status === 'published' ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1"><Eye className="w-4 h-4" /><span>{resume.views}</span></div>
-                      <div className="flex items-center gap-1"><Download className="w-4 h-4" /><span>{resume.downloads}</span></div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">{resume.lastModified}</td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                      <MoreVertical className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                    </button>
+              {recentResumes.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                    No resumes yet.{' '}
+                    <Link href="/editor" className="text-blue-600 hover:underline">Create your first resume →</Link>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentResumes.map((resume) => (
+                  <tr key={resume.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white">
+                          <FileText className="w-5 h-5" />
+                        </div>
+                        <p className="font-medium text-slate-900 dark:text-white">{resume.title}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{resume.template?.name || '—'}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${resume.status === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'}`}>
+                        <span className={`w-2 h-2 rounded-full ${resume.status === 'published' ? 'bg-green-600' : 'bg-yellow-600'}`} />
+                        {resume.status === 'published' ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1"><Eye className="w-4 h-4" /><span>{resume.views}</span></div>
+                        <div className="flex items-center gap-1"><Download className="w-4 h-4" /><span>{resume.downloads}</span></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                      {new Date(resume.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Link href={`/editor?id=${resume.id}`} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors inline-block">
+                        <MoreVertical className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -250,7 +271,7 @@ export default function DashboardPage() {
   );
 }
 
-function KPICard({ title, value, icon, trend }: { title: string; value: string; icon: string; trend?: { value: number; direction: 'up' | 'down'; period: string } }) {
+function KPICard({ title, value, icon }: { title: string; value: string; icon: string }) {
   return (
     <div className="group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-400 dark:hover:border-blue-600">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -259,15 +280,7 @@ function KPICard({ title, value, icon, trend }: { title: string; value: string; 
           <h3 className="text-sm font-medium text-slate-600 dark:text-slate-400">{title}</h3>
           <span className="text-2xl opacity-60 group-hover:opacity-100 transition-opacity">{icon}</span>
         </div>
-        <p className="text-3xl font-bold text-slate-900 dark:text-white mb-4">{value}</p>
-        {trend && (
-          <div className="flex items-center gap-2">
-            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${trend.direction === 'up' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'}`}>
-              {trend.direction === 'up' ? '↑' : '↓'} {trend.value}%
-            </div>
-            <span className="text-xs text-slate-500 dark:text-slate-400">{trend.period}</span>
-          </div>
-        )}
+        <p className="text-3xl font-bold text-slate-900 dark:text-white">{value}</p>
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
     </div>

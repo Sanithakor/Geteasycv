@@ -17,8 +17,11 @@ export interface User {
   avatar?: string;
   role: UserRole;
   tier: SubscriptionTier;
-  createdAt: Date;
-  updatedAt: Date;
+  // JSON.parse / fetch responses always deserialize dates as ISO strings.
+  // Using `Date` here was a TypeScript lie — calling Date methods on these
+  // would throw at runtime. Parse to Date at the call site if needed.
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {
@@ -148,8 +151,8 @@ export interface Resume {
   downloads: number;
   views: number;
   version: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ResumeCreatePayload {
@@ -235,8 +238,8 @@ export interface Template {
   downloads: number;
   uses: number;
   rating: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ============================================================================
@@ -268,11 +271,11 @@ export interface Subscription {
   plan: PlanName;
   status: 'active' | 'canceled' | 'expired' | 'paused';
   stripeId?: string;
-  currentPeriodStart?: Date;
-  currentPeriodEnd?: Date;
-  canceledAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
+  canceledAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Payment {
@@ -284,8 +287,8 @@ export interface Payment {
   description?: string;
   stripePaymentId?: string;
   invoiceUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Coupon {
@@ -295,8 +298,8 @@ export interface Coupon {
   value: number;
   maxUses?: number;
   currentUses: number;
-  validFrom: Date;
-  validUntil: Date;
+  validFrom: string;
+  validUntil: string;
   active: boolean;
 }
 
@@ -393,7 +396,7 @@ export interface UserAnalytics {
   userId: string;
   resumesCreated: number;
   resumesDownloaded: number;
-  lastActive: Date;
+  lastActive: string;
   templatePreferences: string[];
 }
 

@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
-:root {
-  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-poppins: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-playfair: "Playfair Display", Georgia, Cambria, "Times New Roman", serif;
-  --font-manrope: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-dm-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+/*
+ * Register next/font CSS variables as Tailwind v4 theme tokens.
+ * The actual variable *values* are injected by next/font at build time
+ * via the className/variable props in layout.tsx.
+ * Fallback stacks ensure graceful degradation if a font hasn't loaded yet.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
 }
 
 @layer base {
@@ -16,9 +22,10 @@
   body {
     margin: 0;
     min-height: 100vh;
+    /* slate-50 — matches the bg-slate-50 class used project-wide */
     background: #f8fafc;
     color: #111827;
-    font-family: var(--font-inter);
+    font-family: var(--font-sans);
   }
 }
 
@@ -47,8 +54,19 @@
   background: #94a3b8;
 }
 
-/* Smooth transitions */
-* {
+/*
+ * Scope transitions to interactive elements only.
+ * Applying transitions to every `*` forces the browser to recalculate
+ * style on each property change for every node — a measurable perf hit
+ * on complex pages. Buttons, links, and inputs are the only elements
+ * that actually need these transitions.
+ */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -141,17 +159,6 @@
 
 .animation-delay-4000 {
   animation-delay: 4s;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 .animate-fadeIn {

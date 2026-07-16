@@ -63,25 +63,22 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const data: AuthResponse = await response.json();
-          console.log('[AuthStore] Login successful, setting state:', {
-            email: data.user.email,
-            token: data.token?.substring(0, 20) + '...',
-          });
           
+          // Normalise subscriptionTier → tier (API returns DB column name).
+          const user = {
+            ...data.user,
+            tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
+          } as User;
+          delete (user as any).subscriptionTier;
+
           set({
-            user: data.user,
+            user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
           });
-          
-          console.log('[AuthStore] State updated:', {
-            isAuthenticated: get().isAuthenticated,
-            user: get().user?.email,
-          });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Login failed';
-          console.error('[AuthStore] Login error:', message);
           set({
             error: message,
             isLoading: false,
@@ -105,9 +102,20 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(errorData.message || 'Signup failed');
           }
 
-          const data: AuthResponse = await response.json();
+          const data: AuthResponse & { user: { subscriptionTier?: string } } = await response.json();
+
+          // The signup API returns `subscriptionTier` from Prisma, but our
+          // User type and authStore use `tier`. Normalise here so downstream
+          // code never sees the raw DB field name.
+          const user = {
+            ...data.user,
+            tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
+          } as User;
+          // Remove the raw DB field if present
+          delete (user as any).subscriptionTier;
+
           set({
-            user: data.user,
+            user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
@@ -275,19 +283,19 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-store',
+      // Only persist user identity and auth flag — NOT the raw token.
+      // The token is set as an httpOnly cookie by the API on login/signup,
+      // so API routes that rely on cookies work automatically.
+      // Client-side fetches that need the token explicitly can still read
+      // it from state (it's kept in memory), but it won't be written to
+      // localStorage, avoiding the confused dual-token state.
       partialize: (state) => ({
-        token: state.token,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {
-        // Called when the store is rehydrated from storage
         if (state) {
           state.setHydrated(true);
-          console.log('[AuthStore] Rehydrated from storage:', {
-            isAuthenticated: state.isAuthenticated,
-            user: state.user?.email,
-          });
         }
       },
     }

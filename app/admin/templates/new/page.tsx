@@ -7,8 +7,14 @@
 import React from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function CreateTemplatePage() {
+  const router = useRouter();
+  const { token } = useAuthStore();
+  const [isLoading, setIsLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: '',
     category: 'modern',
@@ -27,13 +33,35 @@ export default function CreateTemplatePage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+    setIsLoading(true);
+    const tid = toast.loading('Creating template…');
+    try {
+      const res = await fetch('/api/admin/templates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to create template');
+      }
+      toast.success('Template created', { id: tid });
+      router.push('/admin/templates');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to create template', { id: tid });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="max-w-2xl">
+      <Toaster position="bottom-right" />
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <Link
@@ -140,10 +168,11 @@ export default function CreateTemplatePage() {
           </Link>
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            disabled={isLoading}
+            className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
           >
             <Save className="w-4 h-4" />
-            Create Template
+            {isLoading ? 'Creating…' : 'Create Template'}
           </button>
         </div>
       </form>

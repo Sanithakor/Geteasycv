@@ -52,23 +52,27 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, templateId } = body;
 
-    if (!title || !templateId) {
+    if (!title) {
       return NextResponse.json(
-        { error: 'Title and templateId are required' },
+        { error: 'Title is required' },
         { status: 400 }
       );
     }
 
-    // Verify template exists
-    const template = await prisma.template.findUnique({
-      where: { id: templateId },
-    });
+    // Verify template exists only when a templateId is supplied.
+    // Duplicate actions may omit templateId when the original template
+    // was deleted — we allow that instead of returning 404.
+    if (templateId) {
+      const template = await prisma.template.findUnique({
+        where: { id: templateId },
+      });
 
-    if (!template) {
-      return NextResponse.json(
-        { error: 'Template not found' },
-        { status: 404 }
-      );
+      if (!template) {
+        return NextResponse.json(
+          { error: 'Template not found' },
+          { status: 404 }
+        );
+      }
     }
 
     // Create resume
@@ -77,7 +81,7 @@ export async function POST(req: Request) {
         title,
         slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         userId: auth.userId,
-        templateId,
+        ...(templateId ? { templateId } : {}),
         status: 'draft',
       },
       include: {

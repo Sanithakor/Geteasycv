@@ -1,11 +1,14 @@
 /**
  * Admin Dashboard Layout
- * Premium SaaS Admin Interface
+ * Guards the entire /admin/* tree — users without role === 'admin'
+ * are redirected to /login (unauthenticated) or shown a 403 (authenticated).
  */
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
 import Sidebar from '@/components/admin/layout/Sidebar';
 import Header from '@/components/admin/layout/Header';
 
@@ -14,19 +17,42 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const { isAuthenticated, user, _hydrated } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  useEffect(() => {
+    if (!_hydrated) return;
+    if (!isAuthenticated) {
+      router.replace('/login');
+      return;
+    }
+    if (user?.role !== 'admin') {
+      router.replace('/dashboard');
+    }
+  }, [_hydrated, isAuthenticated, user, router]);
+
+  // Show nothing while hydrating or if the user isn't an admin.
+  // The useEffect above will redirect — this just prevents a flash
+  // of the admin UI to the wrong user.
+  if (!_hydrated || !isAuthenticated || user?.role !== 'admin') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-4 animate-pulse">
+            <span className="text-white text-lg">⚙️</span>
+          </div>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">Loading…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Sidebar */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-
-      {/* Main Content */}
       <div className="lg:pl-64 flex flex-col min-h-screen">
-        {/* Header */}
         <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-
-        {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="px-4 sm:px-6 lg:px-8 py-8">
             {children}
