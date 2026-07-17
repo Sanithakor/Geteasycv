@@ -23,7 +23,7 @@ export default function MediaPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Media Library</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">{MEDIA.length} files</p>
         </div>
-        <label className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors cursor-pointer">
+        <label className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors cursor-pointer">
           <Upload className="w-4 h-4" /> Upload Files
           <input type="file" className="hidden" multiple accept="image/*" />
         </label>
@@ -32,18 +32,18 @@ export default function MediaPage() {
       <div className="flex gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search files..." className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search files..." className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
         </div>
         <div className="flex border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
-          <button onClick={() => setView('grid')} className={`px-3 py-2 text-sm ${view === 'grid' ? 'bg-blue-600 text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>Grid</button>
-          <button onClick={() => setView('list')} className={`px-3 py-2 text-sm ${view === 'list' ? 'bg-blue-600 text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>List</button>
+          <button onClick={() => setView('grid')} className={`px-3 py-2 text-sm ${view === 'grid' ? 'bg-violet-600 text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>Grid</button>
+          <button onClick={() => setView('list')} className={`px-3 py-2 text-sm ${view === 'list' ? 'bg-violet-600 text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>List</button>
         </div>
       </div>
 
       {view === 'grid' ? (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {filtered.map(f => (
-            <div key={f.id} className="group rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+            <div key={f.id} className="group rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden hover:border-violet-300 dark:hover:border-violet-700 transition-colors">
               <div className="h-24 bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-2xl">
                 {f.type.includes('svg') ? '🎨' : f.type.includes('icon') ? '🔵' : '🖼️'}
               </div>
@@ -59,7 +59,7 @@ export default function MediaPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
           {filtered.map(f => (
             <div key={f.id} className="flex items-center gap-4 px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
               <span className="text-xl">{f.type.includes('svg') ? '🎨' : f.type.includes('icon') ? '🔵' : '🖼️'}</span>

@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 mb-6">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-teal-700 text-sm font-black text-white shadow-lg">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-violet-700 text-sm font-black text-white shadow-lg">
               CV
             </span>
             <span className="text-lg font-bold tracking-tight text-slate-950">GetEasyCV</span>

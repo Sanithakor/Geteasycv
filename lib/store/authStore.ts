@@ -34,7 +34,19 @@ interface AuthState {
   canManageTemplate: () => boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const getApiBaseUrl = () => {
+  let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  url = url.replace(/['"]/g, '');
+  if (url.endsWith('/')) {
+    url = url.slice(0, -1);
+  }
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const useAuthStore = create<AuthState>()(
   persist(

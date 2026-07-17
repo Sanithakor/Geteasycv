@@ -1,5 +1,5 @@
 /**
- * Next.js Middleware
+ * Next.js Proxy (formerly Middleware)
  * Protects routes and handles authentication redirects
  */
 
@@ -18,18 +18,7 @@ const protectedRoutes = [
 // Routes that should redirect to dashboard if already authenticated
 const authRoutes = ['/login', '/signup', '/forgot-password'];
 
-// Public routes that don't require authentication
-const publicRoutes = [
-  '/',
-  '/pricing',
-  '/blog',
-  '/templates',
-  '/contact',
-  '/privacy',
-  '/terms',
-];
-
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   
   // Check if route is protected
@@ -40,7 +29,7 @@ export function middleware(request: NextRequest) {
   // Check if route is an auth route
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // For protected routes: we can't check auth state in middleware (it's server-side)
+  // For protected routes: we can't check auth state in proxy (it's server-side)
   // The auth state is stored in localStorage (client-side)
   // So we let the request through and let the page handle it
   // The page will redirect to login if not authenticated
@@ -61,7 +50,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configure which routes to run middleware on
+// Configure which routes to run proxy on
 export const config = {
   matcher: [
     /*

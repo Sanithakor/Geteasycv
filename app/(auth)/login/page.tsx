@@ -26,8 +26,8 @@ export default function LoginPage() {
     console.log('[LoginPage] Store hydrated, checking auth state:', { isAuthenticated });
     
     if (isAuthenticated) {
-      console.log('[LoginPage] User is authenticated, redirecting to /dashboard');
-      router.push('/dashboard');
+      console.log('[LoginPage] User is authenticated, redirecting to /admin');
+      router.push('/admin');
     }
   }, [isAuthenticated, isHydrated, router]);
 

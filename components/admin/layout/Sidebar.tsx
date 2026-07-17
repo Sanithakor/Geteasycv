@@ -1,253 +1,232 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ChevronDown, X } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import {
-  BarChartIcon,
-  UsersIcon,
-  FileTextIcon,
-  PaletteIcon,
-  ImageIcon,
-  TrendingUpIcon,
-  CreditCardIcon,
-  HelpCircleIcon,
-  BookOpenIcon,
-  SettingsIcon,
-  LogOutIcon,
-} from '@/components/icons';
-
-interface MenuItemConfig {
-  title: string;
-  icon: React.ReactNode;
-  href?: string;
-  submenu?: { title: string; href: string }[];
-}
-
-const MENU_ITEMS: MenuItemConfig[] = [
-  {
-    title: 'Dashboard',
-    icon: <BarChartIcon className="w-5 h-5" />,
-    href: '/admin',
-  },
-  {
-    title: 'Users',
-    icon: <UsersIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'All Users',          href: '/admin/users' },
-      { title: 'Create User',        href: '/admin/users/new' },
-      { title: 'Roles & Permissions', href: '/admin/roles' },
-    ],
-  },
-  {
-    title: 'Resume Templates',
-    icon: <FileTextIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Templates',        href: '/admin/templates' },
-      { title: 'Categories',       href: '/admin/template-categories' },
-      { title: 'Create Template',  href: '/admin/templates/new' },
-    ],
-  },
-  {
-    title: 'Template Builder',
-    icon: <PaletteIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Sections',     href: '/admin/sections' },
-      { title: 'Themes',       href: '/admin/themes' },
-      { title: 'AI Settings',  href: '/admin/ai-settings' },
-    ],
-  },
-  {
-    title: 'Media Library',
-    icon: <ImageIcon className="w-5 h-5" />,
-    href: '/admin/media',
-  },
-  {
-    title: 'Analytics',
-    icon: <TrendingUpIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Overview',   href: '/admin/analytics' },
-      { title: 'Revenue',    href: '/admin/analytics/revenue' },
-      { title: 'Users',      href: '/admin/analytics/users' },
-      { title: 'Templates',  href: '/admin/analytics/templates' },
-    ],
-  },
-  {
-    title: 'Subscriptions',
-    icon: <CreditCardIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Plans',     href: '/admin/subscriptions' },
-      { title: 'Payments',  href: '/admin/payments' },
-      { title: 'Invoices',  href: '/admin/invoices' },
-      { title: 'Coupons',   href: '/admin/coupons' },
-    ],
-  },
-  {
-    title: 'Support',
-    icon: <HelpCircleIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Tickets',          href: '/admin/support' },
-      { title: 'FAQs',             href: '/admin/faqs' },
-      { title: 'Email Templates',  href: '/admin/email-templates' },
-    ],
-  },
-  {
-    title: 'Content',
-    icon: <BookOpenIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'Blog',            href: '/admin/blog' },
-      { title: 'Email Campaigns', href: '/admin/campaigns' },
-      { title: 'Notifications',   href: '/admin/notifications' },
-    ],
-  },
-  {
-    title: 'Settings',
-    icon: <SettingsIcon className="w-5 h-5" />,
-    submenu: [
-      { title: 'General',        href: '/admin/settings' },
-      { title: 'API Keys',       href: '/admin/api-keys' },
-      { title: 'Activity Logs',  href: '/admin/activity-logs' },
-      { title: 'System',         href: '/admin/system' },
-    ],
-  },
-];
+  LayoutDashboard,
+  Users,
+  FileText,
+  LayoutTemplate,
+  FolderTree,
+  Columns,
+  Sparkles,
+  Image,
+  CreditCard,
+  Coins,
+  ShoppingCart,
+  Ticket,
+  BookOpen,
+  Mail,
+  Bell,
+  LineChart,
+  Activity,
+  Settings,
+  ShieldAlert,
+  LogOut,
+  MoreVertical,
+  X
+} from 'lucide-react';
 
 interface SidebarProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
+interface SidebarLink {
+  title: string;
+  icon: React.ComponentType<any>;
+  href: string;
+}
+
+interface SidebarGroup {
+  groupName: string;
+  items: SidebarLink[];
+}
+
+const SIDEBAR_GROUPS: SidebarGroup[] = [
+  {
+    groupName: 'MANAGEMENT',
+    items: [
+      { title: 'Users', icon: Users, href: '/admin/users' },
+      { title: 'Resumes', icon: FileText, href: '/admin/resumes' },
+      { title: 'Templates', icon: LayoutTemplate, href: '/admin/templates' },
+      { title: 'Template Categories', icon: FolderTree, href: '/admin/template-categories' },
+      { title: 'Sections', icon: Columns, href: '/admin/sections' },
+      { title: 'AI Content', icon: Sparkles, href: '/admin/ai-settings' },
+      { title: 'Media Library', icon: Image, href: '/admin/media' },
+    ]
+  },
+  {
+    groupName: 'BILLING',
+    items: [
+      { title: 'Subscriptions', icon: CreditCard, href: '/admin/subscriptions' },
+      { title: 'Payments', icon: Coins, href: '/admin/payments' },
+      { title: 'Orders', icon: ShoppingCart, href: '/admin/invoices' },
+      { title: 'Coupons', icon: Ticket, href: '/admin/coupons' },
+    ]
+  },
+  {
+    groupName: 'CONTENT',
+    items: [
+      { title: 'Blog Posts', icon: BookOpen, href: '/admin/blog' },
+      { title: 'Email Templates', icon: Mail, href: '/admin/email-templates' },
+      { title: 'Notifications', icon: Bell, href: '/admin/notifications' },
+    ]
+  },
+  {
+    groupName: 'SYSTEM',
+    items: [
+      { title: 'Analytics', icon: LineChart, href: '/admin/analytics' },
+      { title: 'Activity Logs', icon: Activity, href: '/admin/activity-logs' },
+      { title: 'Settings', icon: Settings, href: '/admin/settings' },
+      { title: 'Roles & Permissions', icon: ShieldAlert, href: '/admin/roles' },
+    ]
+  }
+];
+
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuthStore();
-  const [expandedMenu, setExpandedMenu] = React.useState<string | null>(null);
-
-  // Auto-expand the parent group whose child matches the current route.
-  React.useEffect(() => {
-    const activeParent = MENU_ITEMS.find(
-      (item) => item.submenu?.some((sub) => pathname.startsWith(sub.href))
-    );
-    if (activeParent) setExpandedMenu(activeParent.title);
-  }, [pathname]);
+  const [showFooterMenu, setShowFooterMenu] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     router.push('/login');
   };
 
-  const isMenuActive = (item: MenuItemConfig) => {
-    if (item.href) {
-      return item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href);
+  const isLinkActive = (href: string) => {
+    if (href === '/admin') {
+      return pathname === '/admin';
     }
-    return item.submenu?.some((sub) => pathname.startsWith(sub.href));
+    return pathname.startsWith(href);
   };
 
   return (
     <>
+      {/* Mobile backdrop */}
       {open && (
-        <div className="fixed inset-0 bg-black/50 lg:hidden z-40" onClick={() => setOpen(false)} />
+        <div className="fixed inset-0 bg-slate-900/40 lg:hidden z-40" onClick={() => setOpen(false)} />
       )}
 
       <div
-        className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out z-50 lg:z-0 flex flex-col ${
+        className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200/80 flex flex-col z-50 lg:z-0 transform transition-transform duration-300 ease-in-out ${
           open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        {/* Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">CV</span>
+        {/* Logo Section */}
+        <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center text-white shadow-sm shadow-violet-100 flex-shrink-0">
+              <FileText className="w-5 h-5" />
             </div>
-            <span className="font-bold text-slate-900 dark:text-white hidden sm:inline">GetEasyCV</span>
+            <div>
+              <span className="block text-sm font-bold tracking-tight text-slate-900 leading-none">CV Builder</span>
+              <span className="block text-[10px] font-semibold text-slate-400 mt-1 uppercase tracking-wider">Admin Panel</span>
+            </div>
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="lg:hidden p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="lg:hidden p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {MENU_ITEMS.map((item) => (
-            <div key={item.title}>
-              {item.submenu ? (
-                <button
-                  onClick={() => setExpandedMenu(expandedMenu === item.title ? null : item.title)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium transition-all ${
-                    isMenuActive(item)
-                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {item.icon}
-                    <span>{item.title}</span>
-                  </div>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      expandedMenu === item.title ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-              ) : (
-                <Link
-                  href={item.href || '#'}
-                  onClick={() => setOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all ${
-                    isMenuActive(item)
-                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50'
-                  }`}
-                >
-                  {item.icon}
-                  <span>{item.title}</span>
-                </Link>
-              )}
+        {/* Scrollable Navigation */}
+        <div className="flex-1 overflow-y-auto py-4 space-y-4">
+          {/* Dashboard Home Link (Standalone) */}
+          <div className="px-3">
+            <Link
+              href="/admin"
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                pathname === '/admin'
+                  ? 'bg-violet-50 text-violet-600'
+                  : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
+              }`}
+            >
+              <LayoutDashboard className={`w-[18px] h-[18px] ${pathname === '/admin' ? 'text-violet-600' : 'text-slate-400'}`} />
+              <span>Dashboard</span>
+            </Link>
+          </div>
 
-              {item.submenu && expandedMenu === item.title && (
-                <div className="mt-1 space-y-1 pl-2 border-l-2 border-slate-200 dark:border-slate-700">
-                  {item.submenu.map((subitem) => (
+          {/* Grouped Links */}
+          {SIDEBAR_GROUPS.map((group) => (
+            <div key={group.groupName} className="space-y-1">
+              <div className="px-6 py-1.5 text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">
+                {group.groupName}
+              </div>
+              <div className="px-3 space-y-[2px]">
+                {group.items.map((item) => {
+                  const active = isLinkActive(item.href);
+                  const Icon = item.icon;
+                  return (
                     <Link
-                      key={subitem.href}
-                      href={subitem.href}
+                      key={item.href}
+                      href={item.href}
                       onClick={() => setOpen(false)}
-                      className={`block px-3 py-2 text-sm rounded-lg transition-all ${
-                        pathname === subitem.href
-                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                        active
+                          ? 'bg-violet-50 text-violet-600'
+                          : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
                       }`}
                     >
-                      {subitem.title}
+                      <Icon className={`w-[18px] h-[18px] ${active ? 'text-violet-600' : 'text-slate-400'}`} />
+                      <span className="truncate">{item.title}</span>
                     </Link>
-                  ))}
-                </div>
-              )}
+                  );
+                })}
+              </div>
             </div>
           ))}
-        </nav>
+        </div>
 
-        {/* Footer */}
-        <div className="border-t border-slate-200 dark:border-slate-700 p-4 space-y-2 flex-shrink-0">
-          <Link
-            href="/admin/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all"
-          >
-            <SettingsIcon className="w-4 h-4" />
-            <span>Settings</span>
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-          >
-            <LogOutIcon className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
+        {/* User Profile Footer */}
+        <div className="border-t border-slate-100 p-4 flex items-center justify-between gap-3 bg-white flex-shrink-0 relative">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200">
+              <img src="https://i.pravatar.cc/100?img=68" alt="Admin" className="w-full h-full object-cover" />
+            </div>
+            <div className="min-w-0">
+              <span className="block text-sm font-bold text-slate-900 truncate">John Admin</span>
+              <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">Super Admin</span>
+            </div>
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setShowFooterMenu(!showFooterMenu)}
+              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-slate-700 transition-colors"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+
+            {/* Dropdown Options */}
+            {showFooterMenu && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowFooterMenu(false)} />
+                <div className="absolute right-0 bottom-full mb-2 w-44 rounded-[20px] border border-slate-200/70 bg-white p-1.5 shadow-xl z-20">
+                  <Link
+                    href="/admin/settings"
+                    onClick={() => setShowFooterMenu(false)}
+                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    <Settings className="w-4 h-4 text-slate-400" />
+                    <span>Settings</span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+                  >
+                    <LogOut className="w-4 h-4 text-red-400" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

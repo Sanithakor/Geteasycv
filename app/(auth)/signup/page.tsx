@@ -93,7 +93,7 @@ export default function SignupPage() {
 
     try {
       await signup(formData.email, formData.password, formData.name);
-      router.push('/dashboard');
+      router.push('/admin');
     } catch (err) {
       console.error('Signup error:', err);
     }

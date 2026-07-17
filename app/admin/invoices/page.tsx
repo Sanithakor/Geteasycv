@@ -22,7 +22,7 @@ export default function InvoicesPage() {
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Invoices</h1>
         <p className="text-slate-500 dark:text-slate-400 mt-1">Billing invoices and receipts</p>
       </div>
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

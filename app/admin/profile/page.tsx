@@ -31,7 +31,7 @@ export default function AdminProfilePage() {
       {/* Avatar */}
       <div className="flex items-center gap-6">
         <div className="relative">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-3xl font-bold">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center text-white text-3xl font-bold">
             {user?.name?.[0]?.toUpperCase() || 'A'}
           </div>
           <button className="absolute bottom-0 right-0 w-7 h-7 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center hover:bg-slate-50 transition-colors">
@@ -47,42 +47,42 @@ export default function AdminProfilePage() {
 
       {/* Profile Form */}
       <form onSubmit={handleSave} className="space-y-6">
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
+        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
           <h2 className="font-semibold text-slate-900 dark:text-white">Account Details</h2>
           {saved && <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-lg text-sm">✓ Changes saved</div>}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-            <input value={form.name} onChange={e => setForm(p => ({...p, name: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input value={form.name} onChange={e => setForm(p => ({...p, name: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
-            <input type="email" value={form.email} onChange={e => setForm(p => ({...p, email: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="email" value={form.email} onChange={e => setForm(p => ({...p, email: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Bio</label>
-            <textarea value={form.bio} onChange={e => setForm(p => ({...p, bio: e.target.value}))} rows={3} placeholder="A short bio about yourself..." className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+            <textarea value={form.bio} onChange={e => setForm(p => ({...p, bio: e.target.value}))} rows={3} placeholder="A short bio about yourself..." className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none" />
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
+        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
           <h2 className="font-semibold text-slate-900 dark:text-white">Change Password</h2>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Current Password</label>
-            <input type="password" value={form.currentPassword} onChange={e => setForm(p => ({...p, currentPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
+            <input type="password" value={form.currentPassword} onChange={e => setForm(p => ({...p, currentPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" placeholder="••••••••" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">New Password</label>
-              <input type="password" value={form.newPassword} onChange={e => setForm(p => ({...p, newPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
+              <input type="password" value={form.newPassword} onChange={e => setForm(p => ({...p, newPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" placeholder="••••••••" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Confirm Password</label>
-              <input type="password" value={form.confirmPassword} onChange={e => setForm(p => ({...p, confirmPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
+              <input type="password" value={form.confirmPassword} onChange={e => setForm(p => ({...p, confirmPassword: e.target.value}))} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" placeholder="••••••••" />
             </div>
           </div>
         </div>
 
-        <button type="submit" className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+        <button type="submit" className="flex items-center gap-2 px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
           <Save className="w-4 h-4" /> Save Changes
         </button>
       </form>

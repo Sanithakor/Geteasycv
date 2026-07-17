@@ -142,7 +142,7 @@ const Field = ({ label, value, onChange, type = 'text', placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );
@@ -165,7 +165,7 @@ const TextField = ({ label, value, onChange, rows = 4, placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="resize-y max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="resize-y max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );
@@ -185,7 +185,7 @@ const SelectField = ({ label, value, options, onChange, icon }: {
     <select
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>{option.label}</option>
@@ -215,7 +215,7 @@ const ColorField = ({ label, value, onChange, icon }: {
       <input 
         value={value} 
         onChange={(event) => onChange(event.target.value)} 
-        className="h-12 min-w-0 flex-1 max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md" 
+        className="h-12 min-w-0 flex-1 max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md" 
         placeholder="#000000"
       />
     </span>
@@ -542,11 +542,11 @@ export default function EditorPage() {
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={() => dropSection(index)}
                 onDragEnd={() => setDraggedSectionIndex(null)}
-                className={`flex cursor-grab items-center justify-between rounded-xl border border-slate-200 bg-white p-3 active:cursor-grabbing ${draggedSectionIndex === index ? 'opacity-50 ring-2 ring-teal-200' : ''}`}
+                className={`flex cursor-grab items-center justify-between rounded-xl border border-slate-200 bg-white p-3 active:cursor-grabbing ${draggedSectionIndex === index ? 'opacity-50 ring-2 ring-violet-200' : ''}`}
               >
                 <span className="text-sm font-semibold text-slate-700">{index + 1}. {sectionLabels[key]}</span>
                 <span className="flex items-center gap-2">
-                  <button type="button" onClick={() => setVisibility((prev) => ({ ...prev, [key]: !prev[key] }))} className={`rounded-lg px-2 py-1 text-xs font-semibold ${visibility[key] ? 'bg-teal-600 text-white' : 'bg-slate-200 text-slate-600'}`}>{visibility[key] ? 'On' : 'Off'}</button>
+                  <button type="button" onClick={() => setVisibility((prev) => ({ ...prev, [key]: !prev[key] }))} className={`rounded-lg px-2 py-1 text-xs font-semibold ${visibility[key] ? 'bg-violet-600 text-white' : 'bg-slate-200 text-slate-600'}`}>{visibility[key] ? 'On' : 'Off'}</button>
                   <button type="button" onClick={() => moveSection(index, -1)} className="rounded-lg border border-slate-200 px-2 py-1 text-xs">Up</button>
                   <button type="button" onClick={() => moveSection(index, 1)} className="rounded-lg border border-slate-200 px-2 py-1 text-xs">Down</button>
                 </span>
@@ -585,7 +585,7 @@ export default function EditorPage() {
     if (activeStep === 'experience') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, experience: [...prev.experience, { id: `exp-${Date.now()}`, company: 'Company', position: 'Role', startDate: '2025-01', endDate: 'Present', current: true, description: 'Describe your impact.', achievements: [], location: '' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add work experience</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, experience: [...prev.experience, { id: `exp-${Date.now()}`, company: 'Company', position: 'Role', startDate: '2025-01', endDate: 'Present', current: true, description: 'Describe your impact.', achievements: [], location: '' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add work experience</button>
           {cvData.experience.map((item) => (
             <ItemCard key={item.id} title={item.position} subtitle={item.company} onRemove={() => setCvData((prev) => ({ ...prev, experience: prev.experience.filter((entry) => entry.id !== item.id) }))}>
               <Field label="Position" value={item.position} onChange={(value) => updateExperience(item.id, 'position', value)} />
@@ -602,7 +602,7 @@ export default function EditorPage() {
     if (activeStep === 'education') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, education: [...prev.education, { id: `edu-${Date.now()}`, institution: 'Institution', degree: 'Degree', field: 'Field', startDate: '2022', endDate: '2026' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add education</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, education: [...prev.education, { id: `edu-${Date.now()}`, institution: 'Institution', degree: 'Degree', field: 'Field', startDate: '2022', endDate: '2026' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add education</button>
           {cvData.education.map((item) => (
             <ItemCard key={item.id} title={item.institution} subtitle={item.degree} onRemove={() => setCvData((prev) => ({ ...prev, education: prev.education.filter((entry) => entry.id !== item.id) }))}>
               <Field label="Institution" value={item.institution} onChange={(value) => updateEducation(item.id, 'institution', value)} />
@@ -618,7 +618,7 @@ export default function EditorPage() {
     if (activeStep === 'skills') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, skills: [...prev.skills, { id: `skill-${Date.now()}`, name: 'Skill', level: 80, category: 'technical' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add skill</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, skills: [...prev.skills, { id: `skill-${Date.now()}`, name: 'Skill', level: 80, category: 'technical' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add skill</button>
           {cvData.skills.map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.category} onRemove={() => setCvData((prev) => ({ ...prev, skills: prev.skills.filter((entry) => entry.id !== item.id) }))}>
               <Field label="Skill" value={item.name} onChange={(value) => updateSkill(item.id, 'name', value)} />
@@ -633,7 +633,7 @@ export default function EditorPage() {
     if (activeStep === 'projects') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, projects: [...(prev.projects || []), { id: `project-${Date.now()}`, name: 'Project', description: 'Project outcome and scope.', technologies: ['Next.js'], link: '' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add project</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, projects: [...(prev.projects || []), { id: `project-${Date.now()}`, name: 'Project', description: 'Project outcome and scope.', technologies: ['Next.js'], link: '' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add project</button>
           {(cvData.projects || []).map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.technologies.join(', ')} onRemove={() => setCvData((prev) => ({ ...prev, projects: (prev.projects || []).filter((entry) => entry.id !== item.id) }))}>
               <Field label="Project name" value={item.name} onChange={(value) => updateProject(item.id, 'name', value)} />
@@ -649,7 +649,7 @@ export default function EditorPage() {
     if (activeStep === 'certifications') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, certifications: [...(prev.certifications || []), { id: `cert-${Date.now()}`, name: 'Certification', issuer: 'Issuer', date: '2026', link: '' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add certification</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, certifications: [...(prev.certifications || []), { id: `cert-${Date.now()}`, name: 'Certification', issuer: 'Issuer', date: '2026', link: '' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add certification</button>
           {(cvData.certifications || []).map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.issuer} onRemove={() => setCvData((prev) => ({ ...prev, certifications: (prev.certifications || []).filter((entry) => entry.id !== item.id) }))}>
               <Field label="Name" value={item.name} onChange={(value) => updateCertification(item.id, 'name', value)} />
@@ -665,7 +665,7 @@ export default function EditorPage() {
     if (activeStep === 'languages') {
       return (
         <div className="space-y-4">
-          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, languages: [...(prev.languages || []), { id: `lang-${Date.now()}`, name: 'Language', proficiency: 'professional' }] }))} className="w-full rounded-xl border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-100">Add language</button>
+          <button type="button" onClick={() => setCvData((prev) => ({ ...prev, languages: [...(prev.languages || []), { id: `lang-${Date.now()}`, name: 'Language', proficiency: 'professional' }] }))} className="w-full rounded-xl border border-dashed border-violet-300 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-800 hover:bg-violet-100">Add language</button>
           {(cvData.languages || []).map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.proficiency} onRemove={() => setCvData((prev) => ({ ...prev, languages: (prev.languages || []).filter((entry) => entry.id !== item.id) }))}>
               <Field label="Language" value={item.name} onChange={(value) => updateLanguage(item.id, 'name', value)} />
@@ -681,7 +681,7 @@ export default function EditorPage() {
         <div className="space-y-6">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm font-semibold text-slate-950">Find a template for your role</p>
-            <input value={templateSearch} onChange={(event) => setTemplateSearch(event.target.value)} placeholder="Search templates, layouts, styles..." className="mt-3 h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100" />
+            <input value={templateSearch} onChange={(event) => setTemplateSearch(event.target.value)} placeholder="Search templates, layouts, styles..." className="mt-3 h-11 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100" />
             <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
               {jobCategories.map((category) => (
                 <button key={category} type="button" onClick={() => setJobCategory(category)} className={`shrink-0 rounded-full px-3 py-2 text-xs font-semibold ${jobCategory === category ? 'bg-slate-950 text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100'}`}>{category}</button>
@@ -691,7 +691,7 @@ export default function EditorPage() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {filteredTemplates.map((template) => (
-              <div key={template.id} className={`group rounded-2xl border bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${selectedTemplate.id === template.id ? 'border-teal-500 ring-2 ring-teal-100' : 'border-slate-200'}`}>
+              <div key={template.id} className={`group rounded-2xl border bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${selectedTemplate.id === template.id ? 'border-violet-500 ring-2 ring-violet-100' : 'border-slate-200'}`}>
                 <button type="button" onClick={() => setPreviewTemplate(template)} className="h-36 w-full overflow-hidden rounded-xl bg-slate-100">
                   <div className="flex h-full items-start justify-center p-2 transition group-hover:scale-105">
                     <TemplateRenderer template={template} data={sampleCV} scale={1} />
@@ -724,12 +724,12 @@ export default function EditorPage() {
 
     return (
       <div className="space-y-5">
-        <div className="rounded-2xl border border-teal-200 bg-teal-50 p-4">
-          <p className="text-sm font-semibold text-teal-950">Your resume is ready to export.</p>
-          <p className="mt-1 text-sm text-teal-800">Use PDF for applications, PNG/JPG for portfolio previews, or Print for browser-native output.</p>
+        <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4">
+          <p className="text-sm font-semibold text-violet-950">Your resume is ready to export.</p>
+          <p className="mt-1 text-sm text-violet-800">Use PDF for applications, PNG/JPG for portfolio previews, or Print for browser-native output.</p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-2xl bg-teal-600 px-4 py-4 text-sm font-semibold text-white shadow-lg shadow-teal-100 hover:bg-teal-700 disabled:opacity-50">Download PDF</button>
+          <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-2xl bg-violet-600 px-4 py-4 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700 disabled:opacity-50">Download PDF</button>
           <button type="button" onClick={() => downloadExport('png')} disabled={isExporting} className="rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50">Download PNG</button>
           <button type="button" onClick={() => downloadExport('jpg')} disabled={isExporting} className="rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50">Download JPG</button>
           <button type="button" onClick={() => window.print()} className="rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-semibold hover:bg-slate-50">Print</button>
@@ -740,12 +740,12 @@ export default function EditorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7f8] text-slate-950">
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col bg-[#f4f7f8] text-slate-950">
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur flex-shrink-0">
         <div className="mx-auto flex max-w-[1800px] flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link href="/" className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-teal-700 text-sm font-black text-white shadow-lg shadow-teal-100">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-violet-700 text-sm font-black text-white shadow-lg shadow-violet-100">
                 CV
               </span>
               <span>
@@ -762,16 +762,16 @@ export default function EditorPage() {
               <button key={tab} type="button" onClick={() => switchTab(tab)} className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${activeTab === tab ? 'bg-slate-950 text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'}`}>{tab}</button>
             ))}
             <button type="button" onClick={saveDraft} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Save</button>
-            <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-100 hover:bg-teal-700 disabled:opacity-50">
+            <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700 disabled:opacity-50">
               {isExporting ? 'Exporting' : 'Export PDF'}
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-[1800px] gap-4 px-4 pb-28 pt-4 lg:pb-4 xl:grid-cols-[300px_minmax(520px,1fr)_430px]">
-        <aside className="rounded-3xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur xl:sticky xl:top-[86px] xl:max-h-[calc(100vh-104px)] xl:overflow-auto">
-          <div className="rounded-2xl bg-gradient-to-br from-slate-950 to-teal-800 p-4 text-white">
+      <main className="mx-auto grid max-w-[1800px] gap-4 px-4 pb-28 pt-4 lg:pb-4 lg:grid-cols-[280px_minmax(520px,1fr)_400px] lg:h-[calc(100vh-70px)] lg:overflow-hidden flex-1">
+        <aside className="rounded-3xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur lg:h-full lg:overflow-y-auto">
+          <div className="rounded-2xl bg-gradient-to-br from-slate-950 to-violet-800 p-4 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Resume progress</p>
             <div className="mt-3 flex items-end justify-between">
               <span className="text-3xl font-semibold">{progress}%</span>
@@ -791,13 +791,13 @@ export default function EditorPage() {
                   key={step.id}
                   type="button"
                   onClick={() => selectStep(step.id)}
-                  className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition ${active ? 'bg-teal-50 ring-1 ring-teal-200' : 'hover:bg-slate-50'}`}
+                  className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition ${active ? 'bg-violet-50 ring-1 ring-violet-200' : 'hover:bg-slate-50'}`}
                 >
-                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold ${complete ? 'bg-teal-600 text-white' : active ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold ${complete ? 'bg-violet-600 text-white' : active ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-500'}`}>
                     {complete ? '✓' : index + 1}
                   </span>
                   <span className="min-w-0">
-                    <span className={`block text-sm font-semibold ${active ? 'text-teal-950' : 'text-slate-800'}`}>{step.title}</span>
+                    <span className={`block text-sm font-semibold ${active ? 'text-violet-950' : 'text-slate-800'}`}>{step.title}</span>
                     <span className="block truncate text-xs text-slate-500">{step.helper}</span>
                   </span>
                 </button>
@@ -806,18 +806,18 @@ export default function EditorPage() {
           </nav>
         </aside>
 
-        <section className="min-w-0 overflow-hidden rounded-3xl border border-white/70 bg-white shadow-xl shadow-slate-200/50">
-          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <section className="min-w-0 overflow-hidden rounded-3xl border border-white/70 bg-white shadow-xl shadow-slate-200/50 lg:h-full lg:flex lg:flex-col">
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between flex-shrink-0">
             <div>
               <h2 className="text-sm font-semibold text-slate-950">Live Resume Preview</h2>
               <p className="text-xs text-slate-500">{customTheme.name} theme, {selectedLayout.name} layout</p>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-semibold text-slate-500">{Math.round(zoom * 100)}%</span>
-              <input type="range" min={0.48} max={1} step={0.04} value={zoom} onChange={(event) => setZoom(Number(event.target.value))} className="w-36 accent-teal-600" />
+              <input type="range" min={0.48} max={1} step={0.04} value={zoom} onChange={(event) => setZoom(Number(event.target.value))} className="w-36 accent-violet-600" />
             </div>
           </div>
-          <div className="flex min-h-[calc(100vh-172px)] justify-center overflow-auto bg-[radial-gradient(circle_at_top,#eefdf9,#dfe8ea_45%,#d5dee1)] p-4 sm:p-8">
+          <div className="flex min-h-[calc(100vh-172px)] lg:min-h-0 lg:flex-1 justify-center overflow-auto bg-[radial-gradient(circle_at_top,#eefdf9,#dfe8ea_45%,#d5dee1)] p-4 sm:p-8">
             <div className="printable origin-top transition-transform" style={{ transform: `scale(${zoom})`, width: 920 }}>
               <div className="min-h-[1300px] rounded-2xl bg-white p-4 shadow-[0_35px_100px_-40px_rgba(15,23,42,0.65)]">
                 <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
@@ -826,16 +826,16 @@ export default function EditorPage() {
           </div>
         </section>
 
-        <aside className="rounded-3xl border border-white/70 bg-white/90 shadow-xl shadow-slate-200/50 backdrop-blur xl:sticky xl:top-[86px] xl:max-h-[calc(100vh-104px)] xl:overflow-auto">
-          <div className="border-b border-slate-100 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">{activeTab === 'layout' ? 'Layout tools' : `Step ${builderSteps.findIndex((step) => step.id === activeStep) + 1} of ${builderSteps.length}`}</p>
+        <aside className="rounded-3xl border border-white/70 bg-white/90 shadow-xl shadow-slate-200/50 backdrop-blur lg:h-full lg:flex lg:flex-col lg:overflow-hidden">
+          <div className="border-b border-slate-100 p-5 flex-shrink-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-700">{activeTab === 'layout' ? 'Layout tools' : `Step ${builderSteps.findIndex((step) => step.id === activeStep) + 1} of ${builderSteps.length}`}</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-950">{panelTitle}</h2>
             <p className="mt-2 text-sm text-slate-500">{panelHelper}</p>
           </div>
-          <div className="space-y-5 p-5">{renderEditor()}</div>
-          <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-slate-100 bg-white/95 p-4 backdrop-blur">
+          <div className="space-y-5 p-5 lg:flex-1 lg:overflow-y-auto">{renderEditor()}</div>
+          <div className="sticky bottom-0 lg:relative lg:bottom-auto flex items-center justify-between gap-3 border-t border-slate-100 bg-white/95 p-4 backdrop-blur flex-shrink-0">
             <button type="button" onClick={goBack} className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50">Back</button>
-            <button type="button" onClick={goNext} className="rounded-xl bg-teal-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-100 hover:bg-teal-700">Continue</button>
+            <button type="button" onClick={goNext} className="rounded-xl bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700">Continue</button>
           </div>
         </aside>
       </main>
@@ -864,7 +864,7 @@ export default function EditorPage() {
               </div>
             </div>
             <div className="flex justify-end gap-3 border-t border-slate-100 p-5">
-              <button type="button" onClick={() => applyTemplate(previewTemplate)} className="rounded-xl bg-teal-600 px-5 py-2 text-sm font-semibold text-white">Use this template</button>
+              <button type="button" onClick={() => applyTemplate(previewTemplate)} className="rounded-xl bg-violet-600 px-5 py-2 text-sm font-semibold text-white">Use this template</button>
             </div>
           </div>
         </div>

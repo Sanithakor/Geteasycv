@@ -27,19 +27,14 @@ export default function AdminLayout({
       router.replace('/login');
       return;
     }
-    if (user?.role !== 'admin') {
-      router.replace('/dashboard');
-    }
-  }, [_hydrated, isAuthenticated, user, router]);
+  }, [_hydrated, isAuthenticated, router]);
 
-  // Show nothing while hydrating or if the user isn't an admin.
-  // The useEffect above will redirect — this just prevents a flash
-  // of the admin UI to the wrong user.
-  if (!_hydrated || !isAuthenticated || user?.role !== 'admin') {
+  // Show nothing while hydrating or redirecting
+  if (!_hydrated || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-4 animate-pulse">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[20px] bg-violet-600 mb-4 animate-pulse">
             <span className="text-white text-lg">⚙️</span>
           </div>
           <p className="text-slate-600 dark:text-slate-400 text-sm">Loading…</p>

@@ -74,7 +74,7 @@ const Field = ({ label, value, onChange, type = 'text', placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );
@@ -97,7 +97,7 @@ const TextField = ({ label, value, onChange, rows = 4, placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:shadow-lg hover:shadow-md"
+      className="resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
     />
   </label>
 );

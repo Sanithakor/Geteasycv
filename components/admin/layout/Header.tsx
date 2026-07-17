@@ -1,13 +1,13 @@
 /**
- * Admin Header
- * Sticky header with search, notifications, and user menu
+ * Redesigned Admin Header matching mock dashboard layout
  */
 
 'use client';
 
 import React from 'react';
-import { Menu, Search, Bell, Moon, Sun, LogOut } from 'lucide-react';
+import { Menu, Search, Bell, LogOut, Plus, Settings, User } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
+import Link from 'next/link';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -17,163 +17,171 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const { user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light');
+  const [showCreateDropdown, setShowCreateDropdown] = React.useState(false);
 
   React.useEffect(() => {
-    // Initialise from localStorage first, fall back to system preference.
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
-    if (stored === 'dark' || stored === 'light') {
-      setTheme(stored);
-      document.documentElement.classList.toggle('dark', stored === 'dark');
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-      document.documentElement.classList.add('dark');
+    // Force light theme strictly
+    document.documentElement.classList.remove('dark');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', 'light');
     }
   }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
 
   const handleLogout = async () => {
     await logout();
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
-      <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur flex-shrink-0">
+      <div className="flex items-center justify-between px-6 h-16">
         {/* Left side */}
         <div className="flex items-center gap-4 flex-1">
-          {/* Menu button */}
+          {/* Mobile menu toggle button */}
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="lg:hidden p-2 hover:bg-slate-50 rounded-lg text-slate-600 hover:text-slate-900 transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>
 
-          {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-md">
+          {/* Search bar */}
+          <div className="hidden md:flex flex-1 max-w-sm">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                placeholder="Search anything..."
+                className="w-full pl-10 pr-16 py-1.5 rounded-[20px] border border-slate-200/80 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 text-sm transition-all"
               />
+              <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2 bg-white border border-slate-200/60 rounded px-1.5 py-0.5 text-[9px] font-bold text-slate-400 font-mono shadow-sm">
+                Ctrl + K
+              </div>
             </div>
           </div>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
-          {/* Theme switcher */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-5 h-5 text-yellow-500" />
-            ) : (
-              <Moon className="w-5 h-5 text-slate-600" />
-            )}
-          </button>
-
-          {/* Notifications */}
+        <div className="flex items-center gap-3">
+          {/* Quick Create Dropdown */}
           <div className="relative">
             <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors relative"
+              onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl font-semibold text-sm shadow-sm transition-all hover:shadow-violet-100 hover:scale-[1.01]"
             >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+              <Plus className="w-4 h-4" />
+              <span>Create New</span>
             </button>
 
-            {/* Notifications dropdown */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-50">
-                <div className="p-4">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">
-                    Notifications
-                  </h3>
-                  <div className="space-y-3 max-h-80 overflow-y-auto">
-                    <NotificationItem
-                      icon="📧"
-                      title="New User Signup"
-                      message="John Doe just registered"
-                      time="5 min ago"
-                    />
-                    <NotificationItem
-                      icon="💰"
-                      title="Payment Received"
-                      message="$99.00 from Jane Smith"
-                      time="1 hour ago"
-                    />
-                    <NotificationItem
-                      icon="📝"
-                      title="Template Published"
-                      message="Modern Resume template published"
-                      time="2 hours ago"
-                    />
-                  </div>
+            {showCreateDropdown && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowCreateDropdown(false)} />
+                <div className="absolute right-0 mt-2 w-48 rounded-[20px] border border-slate-200 bg-white p-1.5 shadow-xl z-20">
+                  <Link
+                    href="/admin/users/new"
+                    onClick={() => setShowCreateDropdown(false)}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    Add User
+                  </Link>
+                  <Link
+                    href="/admin/templates/new"
+                    onClick={() => setShowCreateDropdown(false)}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    Add Template
+                  </Link>
+                  <Link
+                    href="/admin/blog"
+                    onClick={() => setShowCreateDropdown(false)}
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    Create Blog Post
+                  </Link>
                 </div>
-              </div>
+              </>
             )}
           </div>
 
-          {/* User menu */}
+          {/* Notifications bell button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 hover:text-slate-800 transition-colors relative"
+            >
+              <Bell className="w-[21px] h-[21px]" />
+              <span className="absolute top-1.5 right-1.5 min-w-[15px] h-3.5 px-1 bg-red-500 text-white rounded-full text-[8px] font-black flex items-center justify-center border border-white">
+                8
+              </span>
+            </button>
+
+            {/* Notifications Dropdown */}
+            {showNotifications && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowNotifications(false)} />
+                <div className="absolute right-0 mt-2 w-80 rounded-[20px] border border-slate-200 bg-white shadow-xl z-20 overflow-hidden">
+                  <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 className="font-bold text-slate-900">Notifications</h3>
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-violet-50 text-violet-600">8 New</span>
+                  </div>
+                  <div className="p-2 max-h-80 overflow-y-auto space-y-1">
+                    <NotificationItem icon="👤" title="New User Registered" message="sarah.jones@example.com joined" time="3 mins ago" />
+                    <NotificationItem icon="💳" title="Subscription Upgraded" message="Mike upgraded to Premium Yearly" time="15 mins ago" />
+                    <NotificationItem icon="📄" title="New Resume Created" message="ATS Modern layout was used" time="1 hour ago" />
+                    <NotificationItem icon="💵" title="Payment Successful" message="Received $29.00 from Lisa Anderson" time="3 hours ago" />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="h-6 w-px bg-slate-200 mx-1" />
+
+          {/* User profile dropdown button */}
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 flex-shrink-0 shadow-sm hover:ring-2 hover:ring-violet-100 transition-all"
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
-                {user?.name?.[0]?.toUpperCase() || 'A'}
-              </div>
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-slate-900 dark:text-white">
-                  {user?.name || 'Admin'}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {user?.role || 'admin'}
-                </p>
-              </div>
+              <img src="https://i.pravatar.cc/100?img=68" alt="Profile" className="w-full h-full object-cover" />
             </button>
 
-            {/* User menu dropdown */}
+            {/* User Dropdown */}
             {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-50">
-                <div className="p-4 border-b border-slate-200 dark:border-slate-700">
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">
-                    {user?.name || 'Admin'}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {user?.email}
-                  </p>
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
+                <div className="absolute right-0 mt-2 w-48 rounded-[20px] border border-slate-200 bg-white p-1.5 shadow-xl z-20">
+                  <div className="px-3 py-2 border-b border-slate-100">
+                    <p className="text-sm font-bold text-slate-900">{user?.name || 'John Admin'}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{user?.email || 'admin@geteasycv.com'}</p>
+                  </div>
+                  <div className="p-1 space-y-[2px]">
+                    <Link
+                      href="/admin/profile"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <User className="w-4 h-4 text-slate-400" />
+                      <span>My Profile</span>
+                    </Link>
+                    <Link
+                      href="/admin/settings"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <Settings className="w-4 h-4 text-slate-400" />
+                      <span>Settings</span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4 text-red-400" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
                 </div>
-                <div className="p-2">
-                  <MenuItem href="/admin/profile" icon="👤">
-                    Profile
-                  </MenuItem>
-                  <MenuItem href="/admin/settings" icon="⚙️">
-                    Settings
-                  </MenuItem>
-                  <MenuItem href="/admin/api-keys" icon="🔑">
-                    API Keys
-                  </MenuItem>
-                  <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
-                </div>
-              </div>
+              </>
             )}
           </div>
         </div>
@@ -194,41 +202,13 @@ function NotificationItem({
   time: string;
 }) {
   return (
-    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-      <div className="flex items-start gap-3">
-        <div className="text-xl">{icon}</div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-900 dark:text-white">
-            {title}
-          </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
-            {message}
-          </p>
-          <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-            {time}
-          </p>
-        </div>
+    <div className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
+      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm flex-shrink-0">{icon}</div>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-bold text-slate-800 truncate">{title}</p>
+        <p className="text-[11px] text-slate-500 truncate mt-0.5">{message}</p>
+        <span className="block text-[9px] text-slate-400 mt-1 font-semibold">{time}</span>
       </div>
     </div>
-  );
-}
-
-function MenuItem({
-  href,
-  icon,
-  children,
-}: {
-  href: string;
-  icon: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      className="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-    >
-      <span>{icon}</span>
-      {children}
-    </a>
   );
 }

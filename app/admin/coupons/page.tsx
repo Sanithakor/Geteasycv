@@ -20,41 +20,41 @@ export default function CouponsPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Coupons</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">{COUPONS.filter(c => c.status === 'active').length} active coupons</p>
         </div>
-        <button onClick={() => setShowNew(!showNew)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors">
+        <button onClick={() => setShowNew(!showNew)} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors">
           <Plus className="w-4 h-4" /> Create Coupon
         </button>
       </div>
 
       {/* Create Form */}
       {showNew && (
-        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-6">
+        <div className="rounded-[20px] border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-900/20 p-6">
           <h3 className="font-semibold text-slate-900 dark:text-white mb-4">New Coupon</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Code</label>
-              <input value={newCode.code} onChange={e => setNewCode(p => ({...p, code: e.target.value.toUpperCase()}))} placeholder="PROMO20" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input value={newCode.code} onChange={e => setNewCode(p => ({...p, code: e.target.value.toUpperCase()}))} placeholder="PROMO20" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Type</label>
-              <select value={newCode.type} onChange={e => setNewCode(p => ({...p, type: e.target.value}))} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select value={newCode.type} onChange={e => setNewCode(p => ({...p, type: e.target.value}))} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
                 <option value="percent">Percentage (%)</option>
                 <option value="fixed">Fixed Amount ($)</option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Value</label>
-              <input type="number" value={newCode.value} onChange={e => setNewCode(p => ({...p, value: e.target.value}))} placeholder={newCode.type === 'percent' ? '20' : '10'} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="number" value={newCode.value} onChange={e => setNewCode(p => ({...p, value: e.target.value}))} placeholder={newCode.type === 'percent' ? '20' : '10'} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
             </div>
           </div>
           <div className="flex gap-3 mt-4">
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">Create Coupon</button>
+            <button className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm font-medium transition-colors">Create Coupon</button>
             <button onClick={() => setShowNew(false)} className="px-4 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors">Cancel</button>
           </div>
         </div>
       )}
 
       {/* Table */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -80,7 +80,7 @@ export default function CouponsPage() {
                     {c.uses} / {c.maxUses ?? '∞'}
                     {c.maxUses && (
                       <div className="w-24 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-1 overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.min(100, (c.uses / c.maxUses) * 100)}%` }} />
+                        <div className="h-full bg-violet-500 rounded-full" style={{ width: `${Math.min(100, (c.uses / c.maxUses) * 100)}%` }} />
                       </div>
                     )}
                   </td>

@@ -20,7 +20,7 @@ export default function APIKeysPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">API Keys</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">Manage API access credentials</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors">
           <Plus className="w-4 h-4" /> Generate Key
         </button>
       </div>
@@ -31,7 +31,7 @@ export default function APIKeysPage() {
 
       <div className="space-y-4">
         {KEYS.map(k => (
-          <div key={k.id} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+          <div key={k.id} className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">

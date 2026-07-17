@@ -38,7 +38,7 @@ export default function PaymentsPage() {
           { label: 'Successful', value: PAYMENTS.filter(p => p.status === 'succeeded').length, sub: 'Payments' },
           { label: 'Failed / Refunded', value: PAYMENTS.filter(p => p.status !== 'succeeded').length, sub: 'Need attention' },
         ].map((c, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+          <div key={i} className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
             <p className="text-sm text-slate-500 dark:text-slate-400">{c.label}</p>
             <p className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{c.value}</p>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{c.sub}</p>
@@ -47,7 +47,7 @@ export default function PaymentsPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

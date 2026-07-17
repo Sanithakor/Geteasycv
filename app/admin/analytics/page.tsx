@@ -43,7 +43,7 @@ const trafficData = [
   { source: 'Other', value: 1000, percentage: 10 },
 ];
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#10b981'];
+const COLORS = ['#7c3aed', '#8b5cf6', '#ec4899', '#06b6d4', '#10b981'];
 
 export default function AnalyticsPage() {
   return (
@@ -68,7 +68,7 @@ export default function AnalyticsPage() {
         ].map((stat, idx) => (
           <div
             key={idx}
-            className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6"
+            className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6"
           >
             <p className="text-sm text-slate-600 dark:text-slate-400">
               {stat.label}
@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Country Analytics */}
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
             Top Countries
           </h2>
@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Device Analytics */}
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
             Device Usage
           </h2>
@@ -131,14 +131,14 @@ export default function AnalyticsPage() {
                   color: '#f1f5f9',
                 }}
               />
-              <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="value" fill="#7c3aed" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Traffic Sources */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
           Traffic Sources
         </h2>
@@ -155,7 +155,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+                  className="h-full bg-gradient-to-r from-violet-500 to-violet-600"
                   style={{ width: `${source.percentage}%` }}
                 />
               </div>

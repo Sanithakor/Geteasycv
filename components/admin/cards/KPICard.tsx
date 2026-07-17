@@ -30,10 +30,10 @@ export function KPICard({
   return (
     <div
       onClick={onClick}
-      className="group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-400 dark:hover:border-blue-600 cursor-pointer"
+      className="group relative overflow-hidden rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-400 dark:hover:border-violet-600 cursor-pointer"
     >
       {/* Background gradient on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-50 to-transparent dark:from-violet-900/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div className="relative z-10">
         {/* Header */}
@@ -81,7 +81,7 @@ export function KPICard({
       </div>
 
       {/* Accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-violet-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
     </div>
   );
 }

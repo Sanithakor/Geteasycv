@@ -75,7 +75,7 @@ const TESTIMONIALS = [
     quote:
       "The live editor is incredibly smooth. I had a polished resume ready in under 20 minutes.",
     avatar: "JR",
-    color: "from-teal-500 to-green-500",
+    color: "from-violet-500 to-green-500",
   },
   {
     name: "Priya M.",
@@ -363,7 +363,7 @@ export default function Home() {
             {/* Brand */}
             <div className="lg:col-span-1">
               <div className="flex items-center gap-3 mb-4">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-700 to-teal-700 text-sm font-black text-white shadow-lg">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-700 to-violet-700 text-sm font-black text-white shadow-lg">
                   CV
                 </span>
                 <span className="text-lg font-bold tracking-tight text-white">

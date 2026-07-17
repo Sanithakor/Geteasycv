@@ -21,17 +21,21 @@ export function generateOptimizedTemplatePreview(template: GeneratedTemplate): s
   // Create layout-specific accurate previews that match actual components
   const layoutPreviews = {
     'single-column': createAccurateSingleColumnPreview,
+    'single-column-ats': createAccurateSingleColumnPreview,
     'centered': createAccurateCenteredPreview,
     'sidebar-left': createAccurateSidebarLeftPreview,
     'sidebar-right': createAccurateSidebarRightPreview,
     'two-column': createAccurateTwoColumnPreview,
+    'two-column-split': createAccurateTwoColumnSplitPreview,
     'modern-card': createAccurateModernCardPreview,
     'executive': createAccurateExecutivePreview,
     'creative-designer': createAccurateCreativePreview,
     'compact-ats': createAccurateCompactATSPreview,
     'timeline': createAccurateTimelinePreview,
     'bento-grid': createAccurateBentoGridPreview,
+    'magazine': createAccurateMagazinePreview,
     'magazine-style': createAccurateMagazinePreview,
+    'dashboard': createAccurateDashboardPreview,
     'dashboard-style': createAccurateDashboardPreview,
     'glassmorphism': createAccurateGlassmorphismPreview,
     'luxury-minimal': createAccurateLuxuryMinimalPreview,
@@ -39,8 +43,7 @@ export function generateOptimizedTemplatePreview(template: GeneratedTemplate): s
     'premium-dark': createAccuratePremiumDarkPreview,
     'editorial': createAccurateEditorialPreview,
     'startup-style': createAccurateStartupPreview,
-    'gradient-accent': createAccurateGradientAccentPreview,
-    'two-column-split': createAccurateTwoColumnSplitPreview
+    'gradient-accent': createAccurateGradientAccentPreview
   };
 
   const previewGenerator = layoutPreviews[layout.id as keyof typeof layoutPreviews] || createAccurateCenteredPreview;
@@ -150,6 +153,13 @@ function createAccurateSingleColumnPreview(template: GeneratedTemplate, data: { 
   const email = sanitizeText(data.personal.email);
   const phone = sanitizeText(data.personal.phone);
   const location = sanitizeText(data.personal.location);
+  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
+  
+  // Check layout headerVariant (fallback to centered if not specified)
+  const headerVariant = template.sectionVariants?.headerVariant || 'split'; // Default to split for ATS layouts if possible
+  
+  const isSplit = headerVariant === 'split' || template.layoutId === 'single-column-ats';
+  const startY = isSplit ? 170 : 180;
   
   return `
     <svg width="400" height="600" xmlns="http://www.w3.org/2000/svg">
@@ -157,6 +167,20 @@ function createAccurateSingleColumnPreview(template: GeneratedTemplate, data: { 
         <filter id="boxShadow">
           <dropShadow dx="0" dy="25" stdDeviation="25" flood-opacity="0.25"/>
         </filter>
+        <linearGradient id="headerGrad-${template.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${theme.primary}" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="${theme.secondary || theme.primary + '10'}"/>
+        </linearGradient>
+        <linearGradient id="splitHeaderGrad-${template.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${theme.primary}"/>
+          <stop offset="100%" stop-color="${theme.primary}CC"/>
+        </linearGradient>
+        <clipPath id="avatarClipCentered-${template.id}">
+          <circle cx="200" cy="65" r="22"/>
+        </clipPath>
+        <clipPath id="avatarClipSplit-${template.id}">
+          <circle cx="62.5" cy="62.5" r="22.5"/>
+        </clipPath>
       </defs>
       
       <!-- Background matching exact theme.background -->
@@ -165,57 +189,102 @@ function createAccurateSingleColumnPreview(template: GeneratedTemplate, data: { 
       <!-- Main Content Container with exact theme styling -->
       <rect x="15" y="15" width="370" height="570" rx="${parseInt(theme.borderRadius)}" fill="${theme.background}" filter="url(#boxShadow)"/>
       
-      <!-- Header Section (centered variant) -->
-      <text x="200" y="60" text-anchor="middle" font-family="${theme.fontFamilyHeading}" font-size="18" font-weight="700" fill="${theme.text}">
-        ${firstName} ${lastName}
-      </text>
-      <text x="200" y="80" text-anchor="middle" font-family="${theme.fontFamily}" font-size="11" font-weight="400" fill="${theme.primary}">
-        ${title}
-      </text>
-      <text x="200" y="95" text-anchor="middle" font-family="${theme.fontFamily}" font-size="8" font-weight="400" fill="${theme.textSecondary}">
-        ${email} • ${phone} • ${location}
-      </text>
+      ${isSplit ? `
+        <!-- Header Section Card (Split Variant) -->
+        <rect x="25" y="25" width="350" height="130" rx="${parseInt(theme.borderRadius) * 0.8}" fill="url(#splitHeaderGrad-${template.id})"/>
+        
+        <!-- Avatar Image clipped and with white border -->
+        <image href="${avatar}" x="40" y="40" width="45" height="45" clip-path="url(#avatarClipSplit-${template.id})"/>
+        <circle cx="62.5" cy="62.5" r="22.5" fill="none" stroke="white" stroke-width="2" opacity="0.9"/>
+        
+        <!-- Details -->
+        <text x="100" y="60" font-family="${theme.fontFamilyHeading}" font-size="13" font-weight="700" fill="white">
+          ${firstName} ${lastName}
+        </text>
+        <text x="100" y="78" font-family="${theme.fontFamily}" font-size="9" font-weight="500" fill="white" opacity="0.9">
+          ${title}
+        </text>
+        <text x="360" y="52" text-anchor="end" font-family="${theme.fontFamily}" font-size="7" fill="white" opacity="0.9">
+          ${email}
+        </text>
+        <text x="360" y="66" text-anchor="end" font-family="${theme.fontFamily}" font-size="7" fill="white" opacity="0.9">
+          ${phone}
+        </text>
+        <text x="360" y="80" text-anchor="end" font-family="${theme.fontFamily}" font-size="7" fill="white" opacity="0.9">
+          ${location}
+        </text>
+        <line x1="40" y1="100" x2="360" y2="100" stroke="white" stroke-opacity="0.2" stroke-width="0.5"/>
+        <text x="40" y="118" font-family="${theme.fontFamily}" font-size="7" font-weight="600" fill="white" opacity="0.8">Website</text>
+        <text x="90" y="118" font-family="${theme.fontFamily}" font-size="7" font-weight="600" fill="white" opacity="0.8">LinkedIn</text>
+      ` : `
+        <!-- Header Section Card (Centered Variant) -->
+        <rect x="25" y="25" width="350" height="145" rx="${parseInt(theme.borderRadius) * 0.8}" fill="url(#headerGrad-${template.id})"/>
+        
+        <!-- Avatar Image clipped and with border -->
+        <image href="${avatar}" x="178" y="43" width="44" height="44" clip-path="url(#avatarClipCentered-${template.id})"/>
+        <circle cx="200" cy="65" r="22" fill="none" stroke="${theme.primary}" stroke-width="2" opacity="0.8"/>
+        
+        <!-- Details -->
+        <text x="200" y="105" text-anchor="middle" font-family="${theme.fontFamilyHeading}" font-size="14" font-weight="700" fill="${theme.text}">
+          ${firstName} ${lastName}
+        </text>
+        <text x="200" y="122" text-anchor="middle" font-family="${theme.fontFamily}" font-size="9" font-weight="500" fill="${theme.primary}">
+          ${title}
+        </text>
+        <text x="200" y="136" text-anchor="middle" font-family="${theme.fontFamily}" font-size="7" font-weight="400" fill="${theme.textSecondary}">
+          ${email} | ${phone} | ${location}
+        </text>
+      `}
       
-      <!-- Summary Section -->
-      <text x="40" y="135" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">SUMMARY</text>
-      <rect x="40" y="140" width="320" height="1" fill="${theme.border}"/>
-      <text x="40" y="160" font-family="${theme.fontFamily}" font-size="8" font-weight="400" fill="${theme.text}">
-        ${sanitizeText(sampleCV.summary).substring(0, 120)}...
-      </text>
+      <!-- Professional Summary Card -->
+      <rect x="25" y="${startY}" width="350" height="60" rx="${parseInt(theme.borderRadius) * 0.4}" fill="${theme.background}" stroke="${theme.primary}25" stroke-width="1"/>
+      <text x="35" y="${startY + 16}" font-family="${theme.fontFamilyHeading}" font-size="10" font-weight="700" fill="${theme.primary}">Professional Summary</text>
+      <text x="35" y="${startY + 32}" font-family="${theme.fontFamily}" font-size="7.5" font-weight="400" fill="${theme.text}">Results-driven Senior Full Stack Developer with 8+ years of experience building</text>
+      <text x="35" y="${startY + 44}" font-family="${theme.fontFamily}" font-size="7.5" font-weight="400" fill="${theme.text}">scalable web applications. Proven track record of leading technical teams...</text>
       
       <!-- Experience Section -->
-      <text x="40" y="200" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">EXPERIENCE</text>
-      <rect x="40" y="205" width="320" height="1" fill="${theme.border}"/>
+      <text x="25" y="${startY + 85}" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">Experience</text>
       
-      <!-- Experience Item 1 -->
-      <text x="40" y="225" font-family="${theme.fontFamily}" font-size="9" font-weight="600" fill="${theme.text}">Senior Full Stack Developer</text>
-      <text x="40" y="238" font-family="${theme.fontFamily}" font-size="8" font-weight="400" fill="${theme.textSecondary}">TechCorp Inc. • 2021-03 - Present</text>
-      <text x="40" y="251" font-family="${theme.fontFamily}" font-size="7" font-weight="400" fill="${theme.textMuted}">
-        Leading the development of enterprise-level web applications...
-      </text>
+      <!-- Timeline Dot and Line -->
+      <circle cx="25" cy="${startY + 108}" r="4" fill="${theme.primary}"/>
+      <line x1="25" y1="${startY + 118}" x2="25" y2="${startY + 265}" stroke="${theme.primary}" stroke-width="1.5" stroke-dasharray="2,2"/>
       
-      <!-- Experience Item 2 -->
-      <text x="40" y="275" font-family="${theme.fontFamily}" font-size="9" font-weight="600" fill="${theme.text}">Full Stack Developer</text>
-      <text x="40" y="288" font-family="${theme.fontFamily}" font-size="8" font-weight="400" fill="${theme.textSecondary}">StartupXYZ • 2018-06 - 2021-02</text>
-      <text x="40" y="301" font-family="${theme.fontFamily}" font-size="7" font-weight="400" fill="${theme.textMuted}">
-        Developed and maintained multiple client-facing applications...
-      </text>
+      <!-- Experience Item Card -->
+      <rect x="40" y="${startY + 95}" width="335" height="175" rx="${parseInt(theme.borderRadius) * 0.4}" fill="${theme.background}" stroke="${theme.primary}15" stroke-width="1"/>
+      <text x="50" y="${startY + 112}" font-family="${theme.fontFamily}" font-size="9" font-weight="700" fill="${theme.text}">Senior Full Stack Developer</text>
+      <text x="50" y="${startY + 125}" font-family="${theme.fontFamily}" font-size="8" font-weight="600" fill="${theme.primary}">TechCorp Inc.</text>
+      <text x="365" y="${startY + 112}" text-anchor="end" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">2021-03 - Present</text>
+      <text x="365" y="${startY + 125}" text-anchor="end" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">San Francisco, CA</text>
+      <text x="50" y="${startY + 140}" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">Leading the development of enterprise-level web applications serving 1M+ users.</text>
+      
+      <!-- Experience Item achievements -->
+      <circle cx="55" cy="${startY + 156}" r="1.5" fill="${theme.primary}"/>
+      <text x="63" y="${startY + 159}" font-family="${theme.fontFamily}" font-size="7" fill="${theme.text}">Reduced application load time by 40% through performance optimization.</text>
+      
+      <circle cx="55" cy="${startY + 172}" r="1.5" fill="${theme.primary}"/>
+      <text x="63" y="${startY + 175}" font-family="${theme.fontFamily}" font-size="7" fill="${theme.text}">Led a team of 5 developers, conducting code reviews and mentoring junior engineers.</text>
+      
+      <circle cx="55" cy="${startY + 188}" r="1.5" fill="${theme.primary}"/>
+      <text x="63" y="${startY + 191}" font-family="${theme.fontFamily}" font-size="7" fill="${theme.text}">Architected and implemented microservices architecture, improving system scalability.</text>
+      
+      <!-- Experience Item 2 (Brief) -->
+      <text x="50" y="${startY + 218}" font-family="${theme.fontFamily}" font-size="9" font-weight="700" fill="${theme.text}">Full Stack Developer</text>
+      <text x="50" y="${startY + 231}" font-family="${theme.fontFamily}" font-size="8" font-weight="600" fill="${theme.primary}">StartupXYZ</text>
+      <text x="365" y="${startY + 218}" text-anchor="end" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">2018-06 - 2021-02</text>
+      <text x="50" y="${startY + 246}" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">Developed and maintained multiple client-facing applications using React/Node.js.</text>
       
       <!-- Education Section -->
-      <text x="40" y="340" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">EDUCATION</text>
-      <rect x="40" y="345" width="320" height="1" fill="${theme.border}"/>
-      
-      <text x="40" y="365" font-family="${theme.fontFamily}" font-size="9" font-weight="600" fill="${theme.text}">Master of Science in Computer Science</text>
-      <text x="40" y="378" font-family="${theme.fontFamily}" font-size="8" font-weight="400" fill="${theme.textSecondary}">Stanford University • 2014-09 - 2016-06</text>
+      <text x="25" y="${startY + 290}" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">Education</text>
+      <text x="25" y="${startY + 308}" font-family="${theme.fontFamily}" font-size="9" font-weight="700" fill="${theme.text}">Master of Science in Computer Science</text>
+      <text x="25" y="${startY + 320}" font-family="${theme.fontFamily}" font-size="7.5" fill="${theme.textSecondary}">Stanford University • 2014-09 - 2016-06</text>
       
       <!-- Skills Section -->
-      <text x="40" y="415" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">SKILLS</text>
-      <rect x="40" y="420" width="320" height="1" fill="${theme.border}"/>
+      <text x="25" y="${startY + 345}" font-family="${theme.fontFamilyHeading}" font-size="11" font-weight="700" fill="${theme.primary}">Skills</text>
       
-      <!-- Skills Tags (matching theme styling) -->
+      <!-- Skills Tags (matching theme styling with background opacity and primary text) -->
       ${['React', 'TypeScript', 'Node.js', 'Next.js', 'PostgreSQL', 'GraphQL', 'AWS', 'Docker'].map((skill, i) => `
-        <rect x="${40 + (i % 4) * 80}" y="${440 + Math.floor(i / 4) * 25}" width="70" height="16" rx="${parseInt(theme.borderRadius)/3}" fill="${theme.secondary}" stroke="${theme.border}" stroke-width="0.5"/>
-        <text x="${40 + (i % 4) * 80 + 35}" y="${440 + Math.floor(i / 4) * 25 + 11}" text-anchor="middle" font-family="${theme.fontFamily}" font-size="7" font-weight="500" fill="${theme.textSecondary}">${skill}</text>
+        <rect x="${25 + (i % 4) * 88}" y="${startY + 360 + Math.floor(i / 4) * 22}" width="78" height="15" rx="${parseInt(theme.borderRadius)/4}" fill="${theme.primary}" fill-opacity="0.08" stroke="${theme.primary}" stroke-opacity="0.25" stroke-width="0.5"/>
+        <text x="${25 + (i % 4) * 88 + 39}" y="${startY + 360 + Math.floor(i / 4) * 22 + 10}" text-anchor="middle" font-family="${theme.fontFamily}" font-size="7" font-weight="500" fill="${theme.primary}">${skill}</text>
       `).join('')}
     </svg>
   `;
@@ -232,6 +301,7 @@ function createAccurateSidebarLeftPreview(template: GeneratedTemplate, data: { p
   const email = sanitizeText(data.personal.email);
   const phone = sanitizeText(data.personal.phone);
   const location = sanitizeText(data.personal.location);
+  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
   
   return `
     <svg width="400" height="600" xmlns="http://www.w3.org/2000/svg">
@@ -243,6 +313,9 @@ function createAccurateSidebarLeftPreview(template: GeneratedTemplate, data: { p
         <filter id="boxShadow">
           <dropShadow dx="0" dy="25" stdDeviation="25" flood-opacity="0.25"/>
         </filter>
+        <clipPath id="avatarClipSidebarLeft-${template.id}">
+          <circle cx="56" cy="60" r="18"/>
+        </clipPath>
       </defs>
       
       <!-- Background matching exact theme.background -->
@@ -254,9 +327,9 @@ function createAccurateSidebarLeftPreview(template: GeneratedTemplate, data: { p
       <!-- Sidebar (280px width equivalent = 112px in 400px viewport) -->
       <rect x="0" y="0" width="112" height="600" rx="${parseInt(theme.borderRadius)}" fill="url(#sidebarGrad)"/>
       
-      <!-- Profile Photo in Sidebar (centered) -->
-      <circle cx="56" cy="60" r="22" fill="rgba(255, 255, 255, 0.3)"/>
-      <circle cx="56" cy="60" r="18" fill="rgba(255, 255, 255, 0.7)"/>
+      <!-- Profile Photo in Sidebar (centered, clipped with white border) -->
+      <image href="${avatar}" x="38" y="42" width="36" height="36" clip-path="url(#avatarClipSidebarLeft-${template.id})"/>
+      <circle cx="56" cy="60" r="18" fill="none" stroke="white" stroke-width="1.5" opacity="0.9"/>
       
       <!-- Name in Sidebar (text-center, text-xl font-bold) -->
       <text x="56" y="105" text-anchor="middle" font-family="${theme.fontFamilyHeading}" font-size="9" font-weight="700" fill="white">
@@ -333,6 +406,10 @@ function createAccurateSidebarRightPreview(template: GeneratedTemplate, data: { 
   const firstName = sanitizeText(data.personal.firstName);
   const lastName = sanitizeText(data.personal.lastName);
   const title = sanitizeText(data.personal.title);
+  const email = sanitizeText(data.personal.email);
+  const phone = sanitizeText(data.personal.phone);
+  const location = sanitizeText(data.personal.location);
+  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
   
   return `
     <svg width="400" height="600" xmlns="http://www.w3.org/2000/svg">
@@ -344,6 +421,9 @@ function createAccurateSidebarRightPreview(template: GeneratedTemplate, data: { 
         <filter id="boxShadow">
           <dropShadow dx="0" dy="25" stdDeviation="25" flood-opacity="0.25"/>
         </filter>
+        <clipPath id="avatarClipSidebarRight-${template.id}">
+          <circle cx="344" cy="60" r="18"/>
+        </clipPath>
       </defs>
       
       <rect width="400" height="600" fill="${theme.background}"/>
@@ -353,18 +433,65 @@ function createAccurateSidebarRightPreview(template: GeneratedTemplate, data: { 
       <rect x="288" y="0" width="112" height="600" rx="${parseInt(theme.borderRadius)}" fill="url(#sidebarGradRight)"/>
       
       <!-- Profile Photo in Right Sidebar -->
-      <circle cx="344" cy="60" r="18" fill="rgba(255, 255, 255, 0.7)"/>
+      <image href="${avatar}" x="326" y="42" width="36" height="36" clip-path="url(#avatarClipSidebarRight-${template.id})"/>
+      <circle cx="344" cy="60" r="18" fill="none" stroke="white" stroke-width="1.5" opacity="0.9"/>
       
       <!-- Name in Right Sidebar -->
       <text x="344" y="105" text-anchor="middle" font-family="${theme.fontFamilyHeading}" font-size="9" font-weight="700" fill="white">${firstName}</text>
       <text x="344" y="118" text-anchor="middle" font-family="${theme.fontFamilyHeading}" font-size="9" font-weight="700" fill="white">${lastName}</text>
       <text x="344" y="135" text-anchor="middle" font-family="${theme.fontFamily}" font-size="7" fill="white" opacity="0.9">${title}</text>
       
-      <!-- Main Content on Left -->
-      <text x="25" y="40" font-family="${theme.fontFamilyHeading}" font-size="10" font-weight="700" fill="${theme.primary}" text-transform="uppercase">EXPERIENCE</text>
-      <rect x="25" y="45" width="240" height="0.5" fill="${theme.primary}"/>
-      <text x="25" y="65" font-family="${theme.fontFamily}" font-size="8" font-weight="700" fill="${theme.text}">Senior Full Stack Developer</text>
-      <text x="25" y="77" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="${theme.textSecondary}">TechCorp Inc. • 2021-03 - Present</text>
+      <!-- Contact Section in Sidebar -->
+      <text x="300" y="160" font-family="${theme.fontFamily}" font-size="6" font-weight="600" fill="white" opacity="0.7" text-transform="uppercase" letter-spacing="1px">CONTACT</text>
+      <text x="300" y="175" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="white" opacity="0.9">
+        ${email.substring(0, 20)}...
+      </text>
+      <text x="300" y="188" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="white" opacity="0.9">
+        ${phone}
+      </text>
+      <text x="300" y="201" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="white" opacity="0.9">
+        ${location}
+      </text>
+      
+      <!-- Skills Section in Sidebar -->
+      <text x="300" y="230" font-family="${theme.fontFamily}" font-size="6" font-weight="600" fill="white" opacity="0.7" text-transform="uppercase" letter-spacing="1px">SKILLS</text>
+      ${['React', 'TypeScript', 'Node.js', 'Next.js', 'PostgreSQL', 'GraphQL'].map((skill, i) => `
+        <rect x="300" y="${245 + i * 18}" width="88" height="12" rx="6" fill="rgba(255, 255, 255, 0.2)"/>
+        <text x="344" y="${245 + i * 18 + 8}" text-anchor="middle" font-family="${theme.fontFamily}" font-size="5" font-weight="500" fill="white" opacity="0.95">${skill}</text>
+      `).join('')}
+      
+      <!-- Main Content Area on Left -->
+      <!-- Summary Section -->
+      <text x="25" y="40" font-family="${theme.fontFamilyHeading}" font-size="10" font-weight="700" fill="${theme.primary}" text-transform="uppercase">SUMMARY</text>
+      <rect x="25" y="45" width="240" height="0.5" fill="${theme.primary}" opacity="0.5"/>
+      <text x="25" y="60" font-family="${theme.fontFamily}" font-size="7" font-weight="400" fill="${theme.textMuted}">
+        Results-driven professional with extensive
+      </text>
+      <text x="25" y="70" font-family="${theme.fontFamily}" font-size="7" font-weight="400" fill="${theme.textMuted}">
+        experience in project management
+      </text>
+      
+      <!-- Experience Section -->
+      <text x="25" y="100" font-family="${theme.fontFamilyHeading}" font-size="10" font-weight="700" fill="${theme.primary}" text-transform="uppercase">EXPERIENCE</text>
+      <rect x="25" y="105" width="240" height="0.5" fill="${theme.primary}" opacity="0.5"/>
+      
+      <!-- Experience Item 1 -->
+      <text x="25" y="125" font-family="${theme.fontFamily}" font-size="8" font-weight="700" fill="${theme.text}">Senior Full Stack Developer</text>
+      <text x="25" y="137" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="${theme.textSecondary}">TechCorp Inc. • 2021-03 - Present</text>
+      <text x="25" y="149" font-family="${theme.fontFamily}" font-size="5" font-weight="400" fill="${theme.textMuted}">Leading the development of enterprise-level...</text>
+      <text x="25" y="159" font-family="${theme.fontFamily}" font-size="5" font-weight="400" fill="${theme.textMuted}">web applications serving 1M+ users.</text>
+      
+      <!-- Experience Item 2 -->
+      <text x="25" y="180" font-family="${theme.fontFamily}" font-size="8" font-weight="700" fill="${theme.text}">Full Stack Developer</text>
+      <text x="25" y="192" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="${theme.textSecondary}">StartupXYZ • 2018-06 - 2021-02</text>
+      <text x="25" y="204" font-family="${theme.fontFamily}" font-size="5" font-weight="400" fill="${theme.textMuted}">Developed and maintained multiple client-facing...</text>
+      <text x="25" y="214" font-family="${theme.fontFamily}" font-size="5" font-weight="400" fill="${theme.textMuted}">web applications using React and Node.js.</text>
+      
+      <!-- Education Section -->
+      <text x="25" y="245" font-family="${theme.fontFamilyHeading}" font-size="10" font-weight="700" fill="${theme.primary}" text-transform="uppercase">EDUCATION</text>
+      <rect x="25" y="250" width="240" height="0.5" fill="${theme.primary}" opacity="0.5"/>
+      <text x="25" y="270" font-family="${theme.fontFamily}" font-size="8" font-weight="700" fill="${theme.text}">Master of Science</text>
+      <text x="25" y="282" font-family="${theme.fontFamily}" font-size="6" font-weight="400" fill="${theme.textSecondary}">Stanford University • 2014-09 - 2016-06</text>
     </svg>
   `;
 }

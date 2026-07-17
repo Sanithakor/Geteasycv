@@ -13,7 +13,7 @@ const TICKETS = [
 const PRIORITY: Record<string, string> = {
   high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  low: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  low: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
 };
 const STATUS: Record<string, string> = {
   open: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
@@ -38,7 +38,7 @@ export default function SupportPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Support Tickets</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">{TICKETS.filter(t => t.status === 'open').length} open tickets</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors text-sm">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors text-sm">
           <Plus className="w-4 h-4" /> Create Ticket
         </button>
       </div>
@@ -49,9 +49,9 @@ export default function SupportPage() {
           { l: 'Open', v: TICKETS.filter(t => t.status === 'open').length, c: 'text-red-600' },
           { l: 'Pending', v: TICKETS.filter(t => t.status === 'pending').length, c: 'text-amber-600' },
           { l: 'Resolved', v: TICKETS.filter(t => t.status === 'resolved').length, c: 'text-green-600' },
-          { l: 'Total', v: TICKETS.length, c: 'text-blue-600' },
+          { l: 'Total', v: TICKETS.length, c: 'text-violet-600' },
         ].map((s, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 text-center">
+          <div key={i} className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 text-center">
             <p className={`text-2xl font-bold ${s.c}`}>{s.v}</p>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{s.l}</p>
           </div>
@@ -62,9 +62,9 @@ export default function SupportPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets..." className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets..." className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
         </div>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
           <option value="all">All Status</option>
           <option value="open">Open</option>
           <option value="pending">Pending</option>
@@ -73,7 +73,7 @@ export default function SupportPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

@@ -23,6 +23,7 @@ function templateCategory(template: GeneratedTemplate) {
 
 function TemplatePreview({ template }: { template: GeneratedTemplate }) {
   const [previewSrc, setPreviewSrc] = useState<string>('');
+  const [svgContent, setSvgContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -39,11 +40,13 @@ function TemplatePreview({ template }: { template: GeneratedTemplate }) {
       try {
         // Generate optimized SVG preview with actual template data
         const svgPreview = generateOptimizedTemplatePreview(template);
+        setSvgContent(svgPreview);
         
-        // Use encodeURIComponent instead of btoa to handle special characters
+        // Keep dataUrl as fallback
         const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgPreview)}`;
         setPreviewSrc(dataUrl);
         setLoading(false);
+        setError(false);
       } catch (err) {
         console.error('Preview generation failed:', err);
         setError(true);
@@ -55,7 +58,7 @@ function TemplatePreview({ template }: { template: GeneratedTemplate }) {
   }, [template, mounted]);
 
   return (
-    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-teal-50 border border-slate-200">
+    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-violet-50 border border-slate-200">
       {/* Only render content after client-side mounting */}
       {!mounted ? (
         <div className="absolute inset-0 flex items-center justify-center bg-white/90">
@@ -64,31 +67,38 @@ function TemplatePreview({ template }: { template: GeneratedTemplate }) {
       ) : (
         <>
           {/* Template preview image */}
-          {previewSrc && (
-            <div className="absolute inset-0">
-              <Image
-                src={previewSrc}
-                alt={`${template.layout.name} - ${template.theme.name} template preview`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-contain p-2 transition-opacity duration-300"
-                priority={false}
-                onLoad={() => {
-                  setLoading(false);
-                  setError(false);
-                }}
-                onError={() => {
-                  setError(true);
-                  setLoading(false);
-                }}
-              />
-            </div>
+          {svgContent ? (
+            <div 
+              className="absolute inset-0 p-2 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
+              dangerouslySetInnerHTML={{ __html: svgContent }}
+            />
+          ) : (
+            previewSrc && (
+              <div className="absolute inset-0">
+                <Image
+                  src={previewSrc}
+                  alt={`${template.layout.name} - ${template.theme.name} template preview`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-contain p-2 transition-opacity duration-300"
+                  priority={false}
+                  onLoad={() => {
+                    setLoading(false);
+                    setError(false);
+                  }}
+                  onError={() => {
+                    setError(true);
+                    setLoading(false);
+                  }}
+                />
+              </div>
+            )
           )}
           
           {/* Loading indicator */}
           {loading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mb-2"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-600 mb-2"></div>
               <p className="text-xs text-slate-600 font-medium">Generating Preview...</p>
             </div>
           )}
@@ -121,7 +131,7 @@ const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; total
       <span className="text-sm font-medium text-slate-600 whitespace-nowrap">Step {currentStep} of {totalSteps}</span>
       <div className="w-24 bg-slate-200 rounded-full h-2 flex-shrink-0">
         <div 
-          className="bg-teal-600 h-2 rounded-full transition-all duration-300"
+          className="bg-violet-600 h-2 rounded-full transition-all duration-300"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         />
       </div>
@@ -163,7 +173,7 @@ const StepsGuide = () => {
       <div className="space-y-6">
         {steps.map((step) => (
           <div key={step.number} className="flex items-start space-x-4">
-            <div className="flex-shrink-0 w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+            <div className="flex-shrink-0 w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center">
               <span className="text-xl">{step.icon}</span>
             </div>
             <div className="flex-1 min-w-0 space-y-2">
@@ -218,7 +228,7 @@ export default function TemplatesPage() {
         <section className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
           <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:items-start">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700">Template gallery</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-700">Template gallery</p>
               <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
                 Choose a polished resume template that fits your next role.
               </h1>
@@ -236,7 +246,7 @@ export default function TemplatesPage() {
                     setPage(1);
                   }}
                   placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
                 />
               </div>
             </div>
@@ -252,7 +262,7 @@ export default function TemplatesPage() {
                     setPage(1);
                   }}
                   placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
                 />
               </div>
               
@@ -307,7 +317,7 @@ export default function TemplatesPage() {
 
           {isLoading ? (
             <div className="mt-8 flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600"></div>
             </div>
           ) : pagedTemplates.length === 0 ? (
             <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
@@ -352,7 +362,7 @@ export default function TemplatesPage() {
                       <p className="mt-1 line-clamp-2 text-sm text-slate-500">{template.description}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">{template.theme.name}</span>
+                      <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700">{template.theme.name}</span>
                       <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{template.category}</span>
                     </div>
                   </div>
@@ -430,7 +440,7 @@ export default function TemplatesPage() {
                 >
                   {favorites.includes(selectedTemplate.id) ? '💾 Saved' : '💾 Save Template'}
                 </button>
-                <Link href={`/editor?template=${selectedTemplate.id}`} className="rounded-2xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-100 hover:bg-teal-700 transition-colors">
+                <Link href={`/editor?template=${selectedTemplate.id}`} className="rounded-2xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700 transition-colors">
                   Use this template
                 </Link>
               </div>

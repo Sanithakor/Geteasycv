@@ -40,7 +40,7 @@ export default function SettingsPage() {
       </div>
 
       {/* General Settings */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
           General Settings
         </h2>
@@ -54,7 +54,7 @@ export default function SettingsPage() {
               name="siteName"
               value={formData.siteName}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           </div>
 
@@ -67,7 +67,7 @@ export default function SettingsPage() {
               name="siteUrl"
               value={formData.siteUrl}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           </div>
 
@@ -80,7 +80,7 @@ export default function SettingsPage() {
               name="supportEmail"
               value={formData.supportEmail}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           </div>
 
@@ -93,14 +93,14 @@ export default function SettingsPage() {
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           </div>
         </div>
       </div>
 
       {/* Maintenance Mode */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
           Maintenance Mode
         </h2>
@@ -127,7 +127,7 @@ export default function SettingsPage() {
                 name="maintenanceMessage"
                 value={formData.maintenanceMessage}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 rows={4}
               />
             </div>
@@ -136,7 +136,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Save Button */}
-      <button className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+      <button className="flex items-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
         <Save className="w-4 h-4" />
         Save Settings
       </button>
