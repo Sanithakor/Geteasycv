@@ -4,6 +4,7 @@ import type { Config } from 'tailwindcss';
 // the CSS variables injected by next/font (--font-inter, --font-poppins,
 // --font-playfair). No need to duplicate them here.
 const config: Config = {
+  darkMode: 'class',
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',

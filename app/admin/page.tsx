@@ -200,13 +200,13 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!_hydrated) return;
 
-    if (!isAuthenticated || user?.role !== 'admin') {
+    if (!isAuthenticated) {
       router.push('/login');
       return;
     }
 
     setIsLoading(false);
-  }, [isAuthenticated, user, _hydrated, router]);
+  }, [isAuthenticated, _hydrated, router]);
 
   if (!_hydrated || isLoading || !isAuthenticated) {
     return (
@@ -222,42 +222,42 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Top Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
-          <p className="text-slate-500 text-sm mt-1">Welcome back! Here's what's happening with your platform.</p>
+          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
+          <p className="text-slate-500 text-xs mt-0.5">Welcome back! Here's what's happening with your platform.</p>
         </div>
 
         {/* Datepicker Mock Widget */}
-        <div className="flex items-center gap-2 border border-slate-200/80 bg-white rounded-xl px-3 py-1.5 shadow-sm text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-50/80 transition-colors">
-          <Calendar className="w-4 h-4 text-slate-400" />
+        <div className="flex items-center gap-2 border border-slate-200/80 bg-white rounded-xl px-2.5 py-1.5 shadow-sm text-xs font-semibold text-slate-700 cursor-pointer hover:bg-slate-50/80 transition-colors">
+          <Calendar className="w-3.5 h-3.5 text-slate-400" />
           <span>May 20 – May 26, 2025</span>
         </div>
       </div>
 
       {/* Grid of 8 KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {kpiMetrics.map((kpi) => {
           const Icon = kpi.icon;
           return (
             <div
               key={kpi.title}
-              className="bg-white border border-slate-200/70 rounded-[20px] p-4 flex flex-col justify-between hover:shadow-md transition-all duration-300"
+              className="bg-white border border-slate-200/70 rounded-[20px] p-3.5 flex flex-col justify-between hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{kpi.title}</span>
-                  <p className="text-2xl font-black text-slate-900">{kpi.value}</p>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{kpi.title}</span>
+                  <p className="text-lg font-black text-slate-900">{kpi.value}</p>
                 </div>
-                <div className={`w-9 h-9 rounded-xl ${kpi.iconBg} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className="w-4.5 h-4.5" />
+                <div className={`w-8.5 h-8.5 rounded-xl ${kpi.iconBg} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className="w-4 h-4" />
                 </div>
               </div>
 
               {/* Sparkline & Growth Row */}
-              <div className="mt-4 flex items-end justify-between">
+              <div className="mt-3 flex items-end justify-between">
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-bold">
                   <span>↑ {kpi.trend}</span>
                   <span className="text-[10px] text-slate-400 font-semibold lowercase">vs last 7 days</span>
@@ -272,9 +272,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Middle row: Resumes Created, Top Templates, Resumes by Category */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3.5.5">
         {/* Resumes Created Area Chart (spans 2 columns on large screen) */}
-        <div className="lg:col-span-2 bg-white border border-slate-200/70 rounded-[20px] p-5 flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white border border-slate-200/70 rounded-[20px] p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
             <div>
               <h2 className="text-base font-bold text-slate-900">Resumes Created Overview</h2>
@@ -324,7 +324,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Top Templates List */}
-        <div className="bg-white border border-slate-200/70 rounded-[20px] p-5 flex flex-col justify-between">
+        <div className="bg-white border border-slate-200/70 rounded-[20px] p-3.5 flex flex-col justify-between">
           <div className="border-b border-slate-100 pb-4 mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-slate-900">Top Templates</h2>
@@ -350,7 +350,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Resumes by Category Donut Chart */}
-        <div className="bg-white border border-slate-200/70 rounded-[20px] p-5 flex flex-col justify-between">
+        <div className="bg-white border border-slate-200/70 rounded-[20px] p-3.5 flex flex-col justify-between">
           <div className="border-b border-slate-100 pb-4 mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-slate-900">Resumes by Category</h2>
@@ -394,9 +394,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Bottom Row: Recent Resumes, Recent Users, Recent Payments */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5.5">
         {/* Recent Resumes Table */}
-        <div className="bg-white border border-slate-200/70 rounded-[20px] p-5">
+        <div className="bg-white border border-slate-200/70 rounded-[20px] p-3.5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
             <div>
               <h2 className="text-base font-bold text-slate-900">Recent Resumes</h2>
@@ -434,7 +434,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Users Table */}
-        <div className="bg-white border border-slate-200/70 rounded-[20px] p-5">
+        <div className="bg-white border border-slate-200/70 rounded-[20px] p-3.5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
             <div>
               <h2 className="text-base font-bold text-slate-900">Recent Users</h2>
@@ -472,7 +472,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Payments Table */}
-        <div className="bg-white border border-slate-200/70 rounded-[20px] p-5">
+        <div className="bg-white border border-slate-200/70 rounded-[20px] p-3.5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
             <div>
               <h2 className="text-base font-bold text-slate-900">Recent Payments</h2>

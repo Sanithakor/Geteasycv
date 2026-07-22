@@ -20,15 +20,15 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
   if (variant === 'standard') {
     return (
       <div
-        className="w-full p-6"
+        className="cv-block w-full p-4"
         style={{
           ...cardStyles,
           boxShadow: shadowStyle,
-          marginBottom: '1rem',
+          marginBottom: '0.5rem',
         }}
       >
         <h2
-          className="text-xl font-semibold mb-3"
+          className="text-xl font-semibold mb-1.5"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -41,7 +41,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
           style={{
             fontFamily: theme.fontFamily,
             color: theme.text,
-            lineHeight: 1.7,
+            lineHeight: 1.4,
           }}
         >
           {data}
@@ -54,16 +54,16 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
   if (variant === 'highlight') {
     return (
       <div
-        className="w-full p-6"
+        className="cv-block w-full p-4"
         style={{
           background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,
           borderRadius: theme.borderRadius,
           borderLeft: `4px solid ${theme.primary}`,
-          marginBottom: '1rem',
+          marginBottom: '0.5rem',
         }}
       >
         <h2
-          className="text-xl font-semibold mb-3"
+          className="text-xl font-semibold mb-1.5"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -76,7 +76,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
           style={{
             fontFamily: theme.fontFamily,
             color: theme.text,
-            lineHeight: 1.7,
+            lineHeight: 1.4,
           }}
         >
           {data}
@@ -87,13 +87,13 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   // Minimal variant
   return (
-    <div className="w-full p-4" style={{ marginBottom: '1rem' }}>
+    <div className="cv-block w-full p-4" style={{ marginBottom: '0.5rem' }}>
       <p
         className="leading-relaxed italic"
         style={{
           fontFamily: theme.fontFamily,
           color: theme.textSecondary,
-          lineHeight: 1.7,
+          lineHeight: 1.4,
           borderLeft: `3px solid ${theme.primary}`,
           paddingLeft: '1rem',
         }}

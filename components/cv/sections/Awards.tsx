@@ -18,9 +18,9 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
   // Cards variant
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -32,7 +32,7 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-5"
+              className="p-3.5"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
@@ -82,9 +82,9 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
   // Badges variant
   if (variant === 'badges') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -130,9 +130,9 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
 
   // List variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,

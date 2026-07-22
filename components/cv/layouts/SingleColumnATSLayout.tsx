@@ -36,7 +36,7 @@ const SingleColumnATSLayout: React.FC<SingleColumnATSLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2rem',
+        padding: '2.5rem',
         borderRadius: theme.borderRadius,
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       }}

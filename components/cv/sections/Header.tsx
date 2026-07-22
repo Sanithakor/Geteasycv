@@ -34,11 +34,11 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
         style={{
           background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,
           borderRadius: theme.borderRadius,
-          marginBottom: '1rem',
+          marginBottom: '0.5rem',
         }}
       >
         {avatar && (
-          <div className="mb-4 flex justify-center">
+          <div className="mb-1 flex justify-center">
             <img
               src={avatar}
               alt={`${data.firstName} ${data.lastName}`}
@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
           </div>
         )}
         <h1
-          className="text-3xl font-bold mb-2"
+          className="text-3xl font-bold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.text,
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
           {data.firstName} <span style={{ color: theme.primary }}>{data.lastName}</span>
         </h1>
         <p
-          className="text-xl mb-4"
+          className="text-xl mb-1"
           style={{
             fontFamily: theme.fontFamily,
             color: theme.textSecondary,
@@ -124,14 +124,14 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
   if (variant === 'split') {
     return (
       <div
-        className="w-full p-6"
+        className="cv-block w-full p-4"
         style={{
           background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`,
           borderRadius: theme.borderRadius,
-          marginBottom: '1rem',
+          marginBottom: '0.5rem',
         }}
       >
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           {avatar && (
             <img
               src={avatar}
@@ -190,7 +190,7 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
         style={{
           background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
           borderRadius: theme.borderRadius,
-          marginBottom: '1rem',
+          marginBottom: '0.5rem',
           padding: '3rem 2rem',
         }}
       >
@@ -200,16 +200,16 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
             <img
               src={avatar}
               alt={`${data.firstName} ${data.lastName}`}
-              className="w-28 h-28 rounded-full object-cover border-4 border-white mb-4 shadow-lg"
+              className="w-28 h-28 rounded-full object-cover border-4 border-white mb-1 shadow-lg"
             />
           )}
           <h1
-            className="text-4xl font-bold mb-2"
+            className="text-4xl font-bold mb-1"
             style={{ fontFamily: theme.fontFamilyHeading }}
           >
             {data.firstName} {data.lastName}
           </h1>
-          <p className="text-xl opacity-90 mb-4">{data.title}</p>
+          <p className="text-xl opacity-90 mb-1">{data.title}</p>
           <div className="flex flex-wrap justify-center gap-4 text-sm opacity-80">
             {data.email && <span>{data.email}</span>}
             {data.phone && <span>{data.phone}</span>}
@@ -222,7 +222,7 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) =>
 
   // Minimal variant
   return (
-    <div className="w-full p-4 border-b-2" style={{ borderColor: theme.primary, marginBottom: '1rem' }}>
+    <div className="cv-block w-full p-4 border-b-2" style={{ borderColor: theme.primary, marginBottom: '0.5rem' }}>
       <div className="flex justify-between items-center">
         <div>
           <h1

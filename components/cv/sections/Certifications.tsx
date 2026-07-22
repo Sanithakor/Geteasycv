@@ -18,9 +18,9 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
   // List variant
   if (variant === 'list') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -32,7 +32,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-4 flex justify-between items-center"
+              className="cv-block p-4 flex justify-between items-center"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
@@ -76,9 +76,9 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
   // Badges variant
   if (variant === 'badges') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -90,7 +90,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
           {data.map((item) => (
             <div
               key={item.id}
-              className="px-4 py-3 rounded-xl text-center"
+              className="cv-block px-4 py-3 rounded-xl text-center"
               style={{
                 background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
                 border: `1px solid ${theme.primary}30`,
@@ -117,9 +117,9 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
 
   // Cards variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -131,7 +131,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
         {data.map((item) => (
           <div
             key={item.id}
-            className="p-4"
+            className="cv-block p-4"
             style={{
               ...cardStyles,
               boxShadow: shadowStyle,

@@ -19,9 +19,9 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
   // Timeline variant
   if (variant === 'timeline') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -35,22 +35,22 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
             className="absolute left-4 top-0 bottom-0 w-0.5"
             style={{ backgroundColor: theme.border }}
           />
-          <div className="space-y-6">
+          <div className="space-y-3.5">
             {data.map((item) => (
-              <div key={item.id} className="relative pl-10">
+              <div key={item.id} className="cv-block relative pl-10">
                 {/* Timeline dot */}
                 <div
                   className="absolute left-2.5 top-1 w-3 h-3 rounded-full"
                   style={{ backgroundColor: theme.primary }}
                 />
                 <div
-                  className="p-5"
+                  className="cv-block p-3.5"
                   style={{
                     ...cardStyles,
                     boxShadow: shadowStyle,
                   }}
                 >
-                  <div className="flex justify-between items-start mb-2">
+                  <div className="flex justify-between items-start mb-1">
                     <div>
                       <h3
                         className="text-lg font-semibold"
@@ -73,7 +73,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
                     </div>
                   </div>
                   <p
-                    className="mb-3 text-sm"
+                    className="mb-1.5 text-sm"
                     style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
                   >
                     {item.description}
@@ -107,9 +107,9 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
   // Cards variant
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -121,13 +121,13 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-5"
+              className="cv-block p-3.5"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
               }}
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start mb-1">
                 <div>
                   <h3
                     className="text-lg font-semibold"
@@ -150,7 +150,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
                 </div>
               </div>
               <p
-                className="mb-3 text-sm"
+                className="mb-1.5 text-sm"
                 style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
               >
                 {item.description}
@@ -182,9 +182,9 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
   // Bordered variant
   if (variant === 'bordered') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -192,10 +192,10 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
         >
           Experience
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-2.5">
           {data.map((item, index) => (
-            <div key={item.id} className="p-4" style={{ border: `1px solid ${theme.border}`, borderRadius: theme.borderRadius }}>
-              <div className="flex justify-between items-start mb-2">
+            <div key={item.id} className="cv-block p-4" style={{ border: `1px solid ${theme.border}`, borderRadius: theme.borderRadius }}>
+              <div className="flex justify-between items-start mb-1">
                 <div>
                   <h3
                     className="text-lg font-semibold"
@@ -217,7 +217,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
                 </div>
               </div>
               <p
-                className="mb-2 text-sm"
+                className="mb-1 text-sm"
                 style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
               >
                 {item.description}
@@ -248,9 +248,9 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
 
   // Compact variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -260,7 +260,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
       </h2>
       <div className="space-y-3">
         {data.map((item, index) => (
-          <div key={item.id}>
+          <div key={item.id} className="cv-block">
             <div className="flex justify-between items-start">
               <div>
                 <h3

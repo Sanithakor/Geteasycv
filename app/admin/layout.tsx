@@ -49,7 +49,7 @@ export default function AdminLayout({
       <div className="lg:pl-64 flex flex-col min-h-screen">
         <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
         <main className="flex-1 overflow-y-auto">
-          <div className="px-4 sm:px-6 lg:px-8 py-8">
+          <div className="px-6 py-6 text-sm text-slate-600">
             {children}
           </div>
         </main>

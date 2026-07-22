@@ -65,9 +65,9 @@ const Contact: React.FC<ContactProps> = ({ data, theme, variant = 'icons' }) => 
   // Icons variant
   if (variant === 'icons') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -108,9 +108,9 @@ const Contact: React.FC<ContactProps> = ({ data, theme, variant = 'icons' }) => 
   // Cards variant
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -160,9 +160,9 @@ const Contact: React.FC<ContactProps> = ({ data, theme, variant = 'icons' }) => 
 
   // List variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,

@@ -142,7 +142,7 @@ const Field = ({ label, value, onChange, type = 'text', placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
+      className="h-9.5 max-w-full w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-md hover:shadow-sm"
     />
   </label>
 );
@@ -155,7 +155,7 @@ const TextField = ({ label, value, onChange, rows = 4, placeholder, icon }: {
   placeholder?: string;
   icon?: string;
 }) => (
-  <label className="grid gap-2 text-sm font-medium text-slate-700">
+  <label className="grid gap-2 text-xs font-semibold text-slate-700">
     <div className="flex items-center gap-2">
       {icon && <span className="text-base">{icon}</span>}
       <span>{label}</span>
@@ -165,7 +165,7 @@ const TextField = ({ label, value, onChange, rows = 4, placeholder, icon }: {
       value={value}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
-      className="resize-y max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
+      className="resize-y max-w-full w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-md hover:shadow-sm"
     />
   </label>
 );
@@ -177,7 +177,7 @@ const SelectField = ({ label, value, options, onChange, icon }: {
   onChange: (value: string) => void;
   icon?: string;
 }) => (
-  <label className="grid gap-2 text-sm font-medium text-slate-700">
+  <label className="grid gap-2 text-xs font-semibold text-slate-700">
     <div className="flex items-center gap-2">
       {icon && <span className="text-base">{icon}</span>}
       <span>{label}</span>
@@ -185,7 +185,7 @@ const SelectField = ({ label, value, options, onChange, icon }: {
     <select
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="h-12 max-w-full w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-lg hover:shadow-md"
+      className="h-9.5 max-w-full w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-950 shadow-sm outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-100 focus:shadow-md hover:shadow-sm"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>{option.label}</option>
@@ -284,15 +284,93 @@ export default function EditorPage() {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
 
+  const cvContentRef = useRef<HTMLDivElement | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [activePage, setActivePage] = useState(1);
+
+  // Tab key navigation and Page Up/Down controls
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const tag = document.activeElement?.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        setActivePage((prev) => (prev < totalPages ? prev + 1 : 1));
+      } else if (event.key === 'PageDown') {
+        event.preventDefault();
+        setActivePage((prev) => Math.min(totalPages, prev + 1));
+      } else if (event.key === 'PageUp') {
+        event.preventDefault();
+        setActivePage((prev) => Math.max(1, prev - 1));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (cvContentRef.current) {
+      const timer = setTimeout(() => {
+        const container = cvContentRef.current;
+        if (!container) return;
+
+        // Reset previous cv-spacers
+        const previousSpacers = container.querySelectorAll('.cv-spacer');
+        previousSpacers.forEach((s) => s.remove());
+
+        // Gather all block components
+        const blocks = container.querySelectorAll('.cv-block');
+        const PAGE_HEIGHT = 1300.8;
+        const BOTTOM_MARGIN = 40; // 40px standard bottom margin
+
+        blocks.forEach((block) => {
+          const containerRect = container.getBoundingClientRect();
+          const blockRect = block.getBoundingClientRect();
+
+          const top = blockRect.top - containerRect.top;
+          const bottom = blockRect.bottom - containerRect.top;
+
+          const pageIndexTop = Math.floor(top / PAGE_HEIGHT);
+          const pageIndexBottom = Math.floor((bottom + BOTTOM_MARGIN) / PAGE_HEIGHT);
+
+          // If a single block crosses an A4 page cutoff boundary, insert a spacer div
+          if (pageIndexTop !== pageIndexBottom && pageIndexTop >= 0) {
+            const spacer = document.createElement('div');
+            spacer.className = 'cv-spacer';
+            
+            const currentPageEnd = (pageIndexTop + 1) * PAGE_HEIGHT;
+            const spacerHeight = currentPageEnd - top;
+
+            spacer.style.height = `${spacerHeight}px`;
+            spacer.style.width = '100%';
+            
+            block.parentNode?.insertBefore(spacer, block);
+          }
+        });
+
+        // Re-measure height after spacers are inserted
+        const height = container.scrollHeight || 1300.8;
+        const pages = Math.max(1, Math.ceil(height / 1300.8));
+        setTotalPages(pages);
+        setActivePage((prev) => Math.min(prev, pages));
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [cvData, customTheme, selectedLayout, sectionVariants, sectionOrder, mounted]);
+
   const saveDraft = useCallback(() => {
-    if (typeof window !== 'undefined') {
+    if (mounted) {
       const draft = {
-        cvData, 
-        customTheme, 
-        selectedLayout, 
-        sectionVariants, 
-        visibility, 
-        sectionOrder, 
+        cvData,
+        customTheme,
+        selectedLayout,
+        sectionVariants,
+        visibility,
+        sectionOrder,
         savedAt: new Date().toISOString()
       };
       localStorage.setItem('geteasycv-draft', JSON.stringify(draft));
@@ -300,10 +378,45 @@ export default function EditorPage() {
         toast.success('Draft saved locally');
       }
     }
-  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave]);
+  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave, mounted]);
+
+  const saveTemplateDesign = () => {
+    if (typeof window === 'undefined') return;
+    const templateId = new URLSearchParams(window.location.search).get('template');
+    if (!templateId) return;
+
+    const customDesign = {
+      theme: customTheme,
+      layout: selectedLayout,
+      sectionVariants,
+      sectionOrder
+    };
+
+    localStorage.setItem(`geteasycv-custom-template-${templateId}`, JSON.stringify(customDesign));
+    toast.success('Template layout design saved successfully!');
+  };
 
   useEffect(() => {
     setMounted(true);
+    // Check if there is a customized design for the current template
+    if (typeof window !== 'undefined') {
+      const templateId = new URLSearchParams(window.location.search).get('template');
+      if (templateId) {
+        const savedCustomTemplate = localStorage.getItem(`geteasycv-custom-template-${templateId}`);
+        if (savedCustomTemplate) {
+          try {
+            const parsed = JSON.parse(savedCustomTemplate);
+            if (parsed.theme) setCustomTheme(parsed.theme);
+            if (parsed.layout) setSelectedLayout(parsed.layout);
+            if (parsed.sectionVariants) setSectionVariants(parsed.sectionVariants);
+            if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
+            console.log(`Loaded customized template design for template: ${templateId}`);
+          } catch (e) {
+            console.error('Failed to parse customized template:', e);
+          }
+        }
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -689,22 +802,68 @@ export default function EditorPage() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3.5 sm:grid-cols-2">
             {filteredTemplates.map((template) => (
-              <div key={template.id} className={`group rounded-2xl border bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${selectedTemplate.id === template.id ? 'border-violet-500 ring-2 ring-violet-100' : 'border-slate-200'}`}>
-                <button type="button" onClick={() => setPreviewTemplate(template)} className="h-36 w-full overflow-hidden rounded-xl bg-slate-100">
-                  <div className="flex h-full items-start justify-center p-2 transition group-hover:scale-105">
-                    <TemplateRenderer template={template} data={sampleCV} scale={1} />
+              <div 
+                key={template.id} 
+                className={`group rounded-xl border bg-white p-3 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between ${
+                  selectedTemplate.id === template.id 
+                    ? 'border-violet-500 ring-2 ring-violet-50' 
+                    : 'border-slate-200/80'
+                }`}
+              >
+                <div>
+                  <button 
+                    type="button" 
+                    onClick={() => setPreviewTemplate(template)} 
+                    className="h-52 w-full overflow-hidden rounded-lg bg-slate-50 relative flex items-start justify-center cursor-pointer border border-slate-100 hover:bg-slate-100/50 transition-colors"
+                  >
+                    <div 
+                      className="absolute top-2 origin-top transition-transform duration-300 scale-[0.17] group-hover:scale-[0.19]"
+                      style={{ width: 800 }}
+                    >
+                      <TemplateRenderer template={template} data={sampleCV} scale={1} />
+                    </div>
+                  </button>
+
+                  <div className="mt-3">
+                    <span className="inline-block rounded-full bg-violet-50 dark:bg-violet-950 px-2 py-0.5 text-[9px] font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider mb-2">
+                      {template.layout.category || 'Professional'}
+                    </span>
+                    
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-bold text-slate-950">{template.layout.name}</p>
+                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">{template.theme.name}</p>
+                      </div>
+                      
+                      <button 
+                        type="button" 
+                        onClick={() => setFavoriteTemplates((prev) => prev.includes(template.id) ? prev.filter((id) => id !== template.id) : [...prev, template.id])} 
+                        className={`rounded-lg p-1.5 transition-colors cursor-pointer shrink-0 ${
+                          favoriteTemplates.includes(template.id) 
+                            ? 'bg-amber-50 text-amber-500 hover:bg-amber-100' 
+                            : 'bg-slate-50 text-slate-400 hover:bg-slate-100'
+                        }`}
+                        title={favoriteTemplates.includes(template.id) ? 'Remove bookmark' : 'Bookmark template'}
+                      >
+                        ★
+                      </button>
+                    </div>
                   </div>
-                </button>
-                <div className="mt-3 flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-950">{template.layout.name}</p>
-                    <p className="text-xs text-slate-500">{template.theme.name}</p>
-                  </div>
-                  <button type="button" onClick={() => setFavoriteTemplates((prev) => prev.includes(template.id) ? prev.filter((id) => id !== template.id) : [...prev, template.id])} className={`rounded-lg px-2 py-1 text-xs font-semibold ${favoriteTemplates.includes(template.id) ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}`}>Save</button>
                 </div>
-                <button type="button" onClick={() => applyTemplate(template)} className="mt-3 w-full rounded-xl bg-slate-950 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800">Use template</button>
+
+                <button 
+                  type="button" 
+                  onClick={() => applyTemplate(template)} 
+                  className={`mt-3 w-full rounded-lg px-3 py-2 text-xs font-bold transition duration-200 cursor-pointer ${
+                    selectedTemplate.id === template.id
+                      ? 'bg-violet-600 text-white hover:bg-violet-700'
+                      : 'bg-slate-900 text-white hover:bg-slate-800'
+                  }`}
+                >
+                  {selectedTemplate.id === template.id ? 'Currently Active' : 'Use Template'}
+                </button>
               </div>
             ))}
           </div>
@@ -762,6 +921,15 @@ export default function EditorPage() {
               <button key={tab} type="button" onClick={() => switchTab(tab)} className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${activeTab === tab ? 'bg-slate-950 text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'}`}>{tab}</button>
             ))}
             <button type="button" onClick={saveDraft} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Save</button>
+            {mounted && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('template') && (
+              <button 
+                type="button" 
+                onClick={saveTemplateDesign} 
+                className="rounded-full border border-violet-200 bg-violet-50 text-violet-700 px-4 py-2 text-sm font-semibold hover:bg-violet-100 transition-all shadow-sm"
+              >
+                Save Template Design
+              </button>
+            )}
             <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700 disabled:opacity-50">
               {isExporting ? 'Exporting' : 'Export PDF'}
             </button>
@@ -769,20 +937,20 @@ export default function EditorPage() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-[1800px] gap-4 px-4 pb-28 pt-4 lg:pb-4 lg:grid-cols-[280px_minmax(520px,1fr)_400px] lg:h-[calc(100vh-70px)] lg:overflow-hidden flex-1">
-        <aside className="rounded-3xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur lg:h-full lg:overflow-y-auto">
-          <div className="rounded-2xl bg-gradient-to-br from-slate-950 to-violet-800 p-4 text-white">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Resume progress</p>
-            <div className="mt-3 flex items-end justify-between">
-              <span className="text-3xl font-semibold">{progress}%</span>
-              <span className="text-xs text-white/70">{selectedLayout.name}</span>
+      <main className="mx-auto grid max-w-[1800px] gap-3 px-3 pb-28 pt-3 lg:pb-3 lg:grid-cols-[280px_minmax(520px,1fr)_380px] lg:h-[calc(100vh-70px)] lg:overflow-hidden flex-1">
+        <aside className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-md shadow-slate-200/50 backdrop-blur lg:h-full lg:overflow-y-auto">
+          <div className="rounded-xl bg-gradient-to-br from-slate-950 to-violet-800 p-3 text-white">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">Resume progress</p>
+            <div className="mt-2.5 flex items-end justify-between">
+              <span className="text-xl font-bold">{progress}%</span>
+              <span className="text-[10px] text-white/70">{mounted ? selectedLayout.name : 'Loading...'}</span>
             </div>
-            <div className="mt-4 h-2 rounded-full bg-white/15">
+            <div className="mt-3.5 h-1.5 rounded-full bg-white/15">
               <div className="h-full rounded-full bg-white" style={{ width: `${progress}%` }} />
             </div>
           </div>
 
-          <nav className="mt-4 space-y-2">
+          <nav className="mt-3.5 space-y-1.5">
             {builderSteps.map((step, index) => {
               const complete = completedStep(step.id, cvData);
               const active = activeStep === step.id;
@@ -791,14 +959,14 @@ export default function EditorPage() {
                   key={step.id}
                   type="button"
                   onClick={() => selectStep(step.id)}
-                  className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition ${active ? 'bg-violet-50 ring-1 ring-violet-200' : 'hover:bg-slate-50'}`}
+                  className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition ${active ? 'bg-violet-50 ring-1 ring-violet-200' : 'hover:bg-slate-50'}`}
                 >
-                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold ${complete ? 'bg-violet-600 text-white' : active ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold ${complete ? 'bg-violet-600 text-white' : active ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-500'}`}>
                     {complete ? '✓' : index + 1}
                   </span>
                   <span className="min-w-0">
-                    <span className={`block text-sm font-semibold ${active ? 'text-violet-950' : 'text-slate-800'}`}>{step.title}</span>
-                    <span className="block truncate text-xs text-slate-500">{step.helper}</span>
+                    <span className={`block text-xs font-bold ${active ? 'text-violet-950' : 'text-slate-800'}`}>{step.title}</span>
+                    <span className="block truncate text-[10px] text-slate-500">{step.helper}</span>
                   </span>
                 </button>
               );
@@ -806,11 +974,13 @@ export default function EditorPage() {
           </nav>
         </aside>
 
-        <section className="min-w-0 overflow-hidden rounded-3xl border border-white/70 bg-white shadow-xl shadow-slate-200/50 lg:h-full lg:flex lg:flex-col">
-          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between flex-shrink-0">
+        <section className="min-w-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md shadow-slate-200/50 lg:h-full lg:flex lg:flex-col">
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between flex-shrink-0">
             <div>
-              <h2 className="text-sm font-semibold text-slate-950">Live Resume Preview</h2>
-              <p className="text-xs text-slate-500">{customTheme.name} theme, {selectedLayout.name} layout</p>
+              <h2 className="text-xs font-bold text-slate-950">Live Resume Preview</h2>
+              <p className="text-[10px] text-slate-500">
+                {mounted ? `${customTheme.name} theme, ${selectedLayout.name} layout` : 'Loading layout...'}
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-semibold text-slate-500">{Math.round(zoom * 100)}%</span>
@@ -819,21 +989,91 @@ export default function EditorPage() {
           </div>
           <div className="flex min-h-[calc(100vh-172px)] lg:min-h-0 lg:flex-1 justify-center overflow-auto bg-[radial-gradient(circle_at_top,#eefdf9,#dfe8ea_45%,#d5dee1)] p-4 sm:p-8">
             <div className="printable origin-top transition-transform" style={{ transform: `scale(${zoom})`, width: 920 }}>
-              <div className="min-h-[1300px] rounded-2xl bg-white p-4 shadow-[0_35px_100px_-40px_rgba(15,23,42,0.65)]">
-                <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
+              <div 
+                className={`rounded-2xl bg-white p-4 shadow-[0_35px_100px_-40px_rgba(15,23,42,0.65)] relative ${
+                  mounted && !isExporting ? 'h-[1332.8px] overflow-hidden' : 'min-h-[1300px]'
+                }`}
+              >
+                <div 
+                  ref={cvContentRef}
+                  style={mounted && !isExporting ? { transform: `translateY(-${(activePage - 1) * 1300.8}px)`, transition: 'transform 0.3s ease-in-out' } : undefined}
+                >
+                  <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
+                </div>
+                
+                {/* Visual A4 Page Break Guidelines (Ignored in exports) */}
+                <div data-html2canvas-ignore="true" className="absolute left-0 right-0 border-t-2 border-dashed border-violet-400/50 z-30 pointer-events-none print-hidden" style={{ top: '1300.8px' }}>
+                  <div className="absolute right-4 -top-3 bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wide">
+                    Page 1 / Page 2 A4 Boundary
+                  </div>
+                </div>
+                <div data-html2canvas-ignore="true" className="absolute left-0 right-0 border-t-2 border-dashed border-violet-400/50 z-30 pointer-events-none print-hidden" style={{ top: '2601.6px' }}>
+                  <div className="absolute right-4 -top-3 bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wide">
+                    Page 2 / Page 3 A4 Boundary
+                  </div>
+                </div>
+                <div data-html2canvas-ignore="true" className="absolute left-0 right-0 border-t-2 border-dashed border-violet-400/50 z-30 pointer-events-none print-hidden" style={{ top: '3902.4px' }}>
+                  <div className="absolute right-4 -top-3 bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wide">
+                    Page 3 / Page 4 A4 Boundary
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Page Navigator Footer */}
+          <div className="border-t border-slate-100 px-4 py-2 bg-slate-50 flex items-center justify-between flex-shrink-0 text-xs font-semibold select-none z-10" data-html2canvas-ignore="true">
+            <span className="text-slate-500 font-bold">Total Pages: {totalPages}</span>
+            
+            <div className="flex items-center gap-1.5">
+              <button 
+                type="button" 
+                disabled={activePage === 1}
+                onClick={() => setActivePage(prev => Math.max(1, prev - 1))}
+                className="h-7 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer font-bold"
+              >
+                Prev
+              </button>
+              
+              <div className="flex gap-1">
+                {Array.from({ length: totalPages }).map((_, idx) => (
+                  <button 
+                    key={idx}
+                    type="button"
+                    onClick={() => setActivePage(idx + 1)}
+                    className={`w-7 h-7 rounded-lg font-bold transition-all cursor-pointer ${
+                      activePage === idx + 1 
+                        ? 'bg-violet-600 text-white shadow-sm shadow-violet-100' 
+                        : 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                type="button" 
+                disabled={activePage === totalPages}
+                onClick={() => setActivePage(prev => Math.min(totalPages, prev + 1))}
+                className="h-7 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer font-bold"
+              >
+                Next
+              </button>
+            </div>
+            
+            <span className="text-slate-400 font-mono text-[10px]">A4 Format ({activePage}/{totalPages})</span>
+          </div>
         </section>
 
-        <aside className="rounded-3xl border border-white/70 bg-white/90 shadow-xl shadow-slate-200/50 backdrop-blur lg:h-full lg:flex lg:flex-col lg:overflow-hidden">
-          <div className="border-b border-slate-100 p-5 flex-shrink-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-700">{activeTab === 'layout' ? 'Layout tools' : `Step ${builderSteps.findIndex((step) => step.id === activeStep) + 1} of ${builderSteps.length}`}</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-950">{panelTitle}</h2>
-            <p className="mt-2 text-sm text-slate-500">{panelHelper}</p>
+        <aside className="rounded-2xl border border-white/70 bg-white/90 shadow-md shadow-slate-200/50 backdrop-blur lg:h-full lg:flex lg:flex-col lg:overflow-hidden">
+          <div className="border-b border-slate-100 p-3.5 flex-shrink-0">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700">{activeTab === 'layout' ? 'Layout tools' : `Step ${builderSteps.findIndex((step) => step.id === activeStep) + 1} of ${builderSteps.length}`}</p>
+            <h2 className="mt-1 text-base font-extrabold text-slate-950">{panelTitle}</h2>
+            <p className="mt-1 text-xs text-slate-500">{panelHelper}</p>
           </div>
-          <div className="space-y-5 p-5 lg:flex-1 lg:overflow-y-auto">{renderEditor()}</div>
-          <div className="sticky bottom-0 lg:relative lg:bottom-auto flex items-center justify-between gap-3 border-t border-slate-100 bg-white/95 p-4 backdrop-blur flex-shrink-0">
+          <div className="space-y-4.5 p-3.5 lg:flex-1 lg:overflow-y-auto">{renderEditor()}</div>
+          <div className="sticky bottom-0 lg:relative lg:bottom-auto flex items-center justify-between gap-3 border-t border-slate-100 bg-white/95 p-3 backdrop-blur flex-shrink-0">
             <button type="button" onClick={goBack} className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50">Back</button>
             <button type="button" onClick={goNext} className="rounded-xl bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-100 hover:bg-violet-700">Continue</button>
           </div>

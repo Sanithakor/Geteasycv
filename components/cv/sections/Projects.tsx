@@ -18,9 +18,9 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
   // Cards variant
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -32,13 +32,13 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-5"
+              className="cv-block p-3.5"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
               }}
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start mb-1">
                 <h3
                   className="text-lg font-semibold"
                   style={{ fontFamily: theme.fontFamily, color: theme.text }}
@@ -61,12 +61,12 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                 )}
               </div>
               <p
-                className="mb-3 text-sm"
+                className="mb-1.5 text-sm"
                 style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
               >
                 {item.description}
               </p>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-1.5">
                 {item.technologies.map((tech, i) => (
                   <span
                     key={i}
@@ -108,9 +108,9 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
   // Grid variant
   if (variant === 'grid') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -122,20 +122,20 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-4"
+              className="cv-block p-4"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
               }}
             >
               <h3
-                className="font-semibold mb-2"
+                className="font-semibold mb-1"
                 style={{ fontFamily: theme.fontFamily, color: theme.text }}
               >
                 {item.name}
               </h3>
               <p
-                className="text-sm mb-2"
+                className="text-sm mb-1"
                 style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
               >
                 {item.description}
@@ -164,9 +164,9 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
 
   // Portfolio variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -174,18 +174,18 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
       >
         Featured Projects
       </h2>
-      <div className="space-y-6">
+      <div className="space-y-3.5">
         {data.map((item, index) => (
           <div
             key={item.id}
-            className="p-6"
+            className="cv-block p-4"
             style={{
               ...cardStyles,
               boxShadow: shadowStyle,
               borderLeft: `4px solid ${theme.primary}`,
             }}
           >
-            <div className="flex justify-between items-start mb-3">
+            <div className="flex justify-between items-start mb-1.5">
               <div>
                 <h3
                   className="text-xl font-semibold"

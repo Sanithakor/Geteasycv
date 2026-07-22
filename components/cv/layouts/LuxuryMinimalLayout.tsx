@@ -36,7 +36,7 @@ const LuxuryMinimalLayout: React.FC<LuxuryMinimalLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '3rem',
+        padding: '2.5rem',
         borderRadius: theme.borderRadius,
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       }}

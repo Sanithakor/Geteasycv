@@ -159,7 +159,7 @@ export default function TemplatesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">
             Resume Templates
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -188,7 +188,7 @@ export default function TemplatesPage() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5.5">
         {filteredTemplates.map((template) => {
           let svgContent = '';
           if (mounted && template.templateObj) {
@@ -205,7 +205,7 @@ export default function TemplatesPage() {
               className="group rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
             >
               {/* Preview Wrapper */}
-              <div className="h-64 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden flex items-center justify-center p-4">
+              <div className="h-64 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden flex items-center justify-center p-3.5">
                 {svgContent ? (
                   <div 
                     className="w-full h-full [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain shadow-md rounded border border-slate-200 dark:border-slate-700/50 bg-white"
@@ -217,17 +217,17 @@ export default function TemplatesPage() {
                 
                 {/* Actions overlay on hover */}
                 <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] group-hover:opacity-100 opacity-0 transition-opacity duration-300 flex items-center justify-center gap-3">
-                  <button className="p-2.5 bg-white hover:bg-slate-50 rounded-lg shadow-lg transition-transform hover:scale-105" title="Preview Layout">
+                  <Link href={`/editor?template=${template.id}`} className="p-2.5 bg-white hover:bg-slate-50 rounded-lg shadow-lg transition-transform hover:scale-105" title="Preview Layout">
                     <Eye className="w-5 h-5 text-slate-900" />
-                  </button>
-                  <button className="p-2.5 bg-white hover:bg-slate-50 rounded-lg shadow-lg transition-transform hover:scale-105" title="Edit Template Config">
+                  </Link>
+                  <Link href={`/editor?template=${template.id}`} className="p-2.5 bg-white hover:bg-slate-50 rounded-lg shadow-lg transition-transform hover:scale-105" title="Edit Template Design">
                     <Edit2 className="w-5 h-5 text-slate-900" />
-                  </button>
+                  </Link>
                 </div>
               </div>
 
               {/* Content */}
-              <div className="p-4 border-t border-slate-100 dark:border-slate-700/50 space-y-3">
+              <div className="p-3.5 border-t border-slate-100 dark:border-slate-700/50 space-y-3">
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white truncate">
                     {template.name}

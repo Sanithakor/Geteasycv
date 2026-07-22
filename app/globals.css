@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 /*
  * Register next/font CSS variables as Tailwind v4 theme tokens.
  * The actual variable *values* are injected by next/font at build time

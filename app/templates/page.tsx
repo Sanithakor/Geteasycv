@@ -22,108 +22,52 @@ function templateCategory(template: GeneratedTemplate) {
 }
 
 function TemplatePreview({ template }: { template: GeneratedTemplate }) {
-  const [previewSrc, setPreviewSrc] = useState<string>('');
-  const [svgContent, setSvgContent] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scale, setScale] = useState(0.28);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
-  // Ensure client-side only execution
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-    
-    const generatePreview = () => {
-      try {
-        // Generate optimized SVG preview with actual template data
-        const svgPreview = generateOptimizedTemplatePreview(template);
-        setSvgContent(svgPreview);
-        
-        // Keep dataUrl as fallback
-        const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgPreview)}`;
-        setPreviewSrc(dataUrl);
-        setLoading(false);
-        setError(false);
-      } catch (err) {
-        console.error('Preview generation failed:', err);
-        setError(true);
-        setLoading(false);
+    if (!mounted || !containerRef.current) return;
+
+    const handleResize = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calculate scale factor relative to 800px width canvas
+        setScale(rect.width / 800);
       }
     };
 
-    generatePreview();
-  }, [template, mounted]);
+    handleResize();
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [mounted]);
 
   return (
-    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-violet-50 border border-slate-200">
-      {/* Only render content after client-side mounting */}
-      {!mounted ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/90">
-          <div className="animate-pulse bg-slate-200 rounded w-full h-full"></div>
+    <div 
+      ref={containerRef}
+      className="relative aspect-[3/4] overflow-hidden rounded-xl bg-slate-50 border border-slate-200/80 flex items-start justify-center"
+    >
+      {mounted && (
+        <div 
+          className="absolute top-0 origin-top transition-transform duration-300 group-hover:translate-y-[-2%]"
+          style={{ 
+            width: 800, 
+            transform: `scale(${scale})` 
+          }}
+        >
+          <TemplateRenderer template={template} data={sampleCV} scale={1} />
         </div>
-      ) : (
-        <>
-          {/* Template preview image */}
-          {svgContent ? (
-            <div 
-              className="absolute inset-0 p-2 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
-              dangerouslySetInnerHTML={{ __html: svgContent }}
-            />
-          ) : (
-            previewSrc && (
-              <div className="absolute inset-0">
-                <Image
-                  src={previewSrc}
-                  alt={`${template.layout.name} - ${template.theme.name} template preview`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-contain p-2 transition-opacity duration-300"
-                  priority={false}
-                  onLoad={() => {
-                    setLoading(false);
-                    setError(false);
-                  }}
-                  onError={() => {
-                    setError(true);
-                    setLoading(false);
-                  }}
-                />
-              </div>
-            )
-          )}
-          
-          {/* Loading indicator */}
-          {loading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-600 mb-2"></div>
-              <p className="text-xs text-slate-600 font-medium">Generating Preview...</p>
-            </div>
-          )}
-          
-          {/* Error state */}
-          {error && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm p-4 text-center">
-              <div className="text-2xl mb-2">🎨</div>
-              <p className="text-sm font-medium text-slate-700 mb-1">{template.layout.name}</p>
-              <p className="text-xs text-slate-500">{template.theme.name} Theme</p>
-            </div>
-          )}
-          
-          {/* Template info overlay */}
-          {!loading && !error && (
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3">
-              <p className="text-white text-xs font-semibold truncate drop-shadow-sm">{template.layout.name}</p>
-              <p className="text-white/90 text-xs truncate drop-shadow-sm">{template.theme.name}</p>
-            </div>
-          )}
-        </>
       )}
     </div>
   );
 }
+
 
 const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
   return (
@@ -141,47 +85,26 @@ const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; total
 
 const StepsGuide = () => {
   const steps = [
-    {
-      number: 1,
-      title: "Browse Templates",
-      description: "Explore our collection of professionally designed resume templates",
-      icon: "🎨"
-    },
-    {
-      number: 2,
-      title: "Choose Your Style", 
-      description: "Select a template that matches your industry and personal brand",
-      icon: "✨"
-    },
-    {
-      number: 3,
-      title: "Customize Content",
-      description: "Use our editor to add your experience, education, and skills",
-      icon: "✏️"
-    },
-    {
-      number: 4,
-      title: "Download & Apply",
-      description: "Export your resume as PDF or image and start applying to jobs",
-      icon: "📁"
-    }
+    { number: 1, title: "Browse Templates", description: "Explore our collection of professionally designed resume templates", icon: "🎨" },
+    { number: 2, title: "Choose Your Style", description: "Select a template that matches your industry and personal brand", icon: "✨" },
+    { number: 3, title: "Customize Content", description: "Use our editor to add your experience, education, and skills", icon: "✏️" },
+    { number: 4, title: "Download & Apply", description: "Export your resume as PDF or image and start applying to jobs", icon: "📁" }
   ];
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-white/60 p-6 shadow-lg">
-      <h3 className="text-lg font-semibold text-slate-950 mb-6">How to Create Your Resume</h3>
-      <div className="space-y-6">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 p-4 shadow-sm mt-6">
+      <h3 className="text-sm font-bold text-slate-950 mb-3 flex items-center gap-2">
+        <span>✨</span> How to Create Your Resume in 4 Easy Steps
+      </h3>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((step) => (
-          <div key={step.number} className="flex items-start space-x-4">
-            <div className="flex-shrink-0 w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center">
-              <span className="text-xl">{step.icon}</span>
+          <div key={step.number} className="flex items-start space-x-3 bg-white/50 p-2.5 rounded-xl border border-slate-100">
+            <div className="flex-shrink-0 w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center text-sm font-bold text-violet-700">
+              {step.icon}
             </div>
-            <div className="flex-1 min-w-0 space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <h4 className="text-sm font-semibold text-slate-900 flex-1 min-w-0">{step.title}</h4>
-                <StepIndicator currentStep={step.number} totalSteps={steps.length} />
-              </div>
-              <p className="text-sm text-slate-600 leading-relaxed pr-4">{step.description}</p>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-xs font-bold text-slate-900 leading-none mb-1">{step.number}. {step.title}</h4>
+              <p className="text-[10px] text-slate-500 leading-normal line-clamp-2">{step.description}</p>
             </div>
           </div>
         ))}
@@ -225,50 +148,37 @@ export default function TemplatesPage() {
     <>
       <Navigation />
       <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#ecfeff,#f8fafc_35%,#ffffff_70%)]">
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
-          <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:items-start">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-700">Template gallery</p>
-              <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
+        <section className="mx-auto max-w-[1800px] px-4 py-6 sm:py-8">
+          {/* Full-width header block */}
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-4xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-700">Template gallery</p>
+              <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
                 Choose a polished resume template that fits your next role.
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 Browse {stats.totalTemplates} template combinations with live previews, role-focused categories, and export-ready layouts.
               </p>
-              
-              <div className="mt-6 rounded-3xl border border-white/80 bg-white/80 p-4 shadow-xl shadow-slate-200/60 backdrop-blur lg:hidden">
-                <label className="text-sm font-semibold text-slate-700" htmlFor="template-search-mobile">Search templates</label>
-                <input
-                  id="template-search-mobile"
-                  value={search}
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                    setPage(1);
-                  }}
-                  placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                />
-              </div>
             </div>
             
-            <div className="space-y-6">
-              <div className="hidden lg:block rounded-3xl border border-white/80 bg-white/80 p-4 shadow-xl shadow-slate-200/60 backdrop-blur">
-                <label className="text-sm font-semibold text-slate-700" htmlFor="template-search">Search templates</label>
-                <input
-                  id="template-search"
-                  value={search}
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                    setPage(1);
-                  }}
-                  placeholder="Search ATS, creative, modern..."
-                  className="mt-2 h-12 w-full max-w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                />
-              </div>
-              
-              <StepsGuide />
+            {/* Search widget on right */}
+            <div className="w-full max-w-md shrink-0 rounded-2xl border border-white/80 bg-white/80 p-3 shadow-md shadow-slate-200/50 backdrop-blur">
+              <label className="text-xs font-bold text-slate-700" htmlFor="template-search">Search templates</label>
+              <input
+                id="template-search"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search ATS, creative, modern, executive..."
+                className="mt-1.5 h-10 w-full max-w-full rounded-xl border border-slate-200 bg-white px-3 text-xs outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+              />
             </div>
           </div>
+
+          {/* Horizontal steps guide */}
+          <StepsGuide />
 
           <div className="mt-8 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map((category) => (
@@ -330,40 +240,41 @@ export default function TemplatesPage() {
               <p className="mt-2 text-slate-500">Try a broader search or choose another category.</p>
             </div>
           ) : (
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {pagedTemplates.map((template) => (
-                <article key={template.id} className="group overflow-hidden rounded-3xl border border-white/80 bg-white shadow-lg shadow-slate-200/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                  <div className="relative p-3">
+                <article key={template.id} className="group rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between">
+                  <div className="relative">
                     <TemplatePreview template={template} />
-                    <div className="absolute left-6 top-6 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
+                    <div className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-bold text-slate-700 shadow-sm backdrop-blur uppercase tracking-wide">
                       {templateCategory(template)}
                     </div>
                     <button
                       type="button"
                       onClick={() => setFavorites((prev) => prev.includes(template.id) ? prev.filter((id) => id !== template.id) : [...prev, template.id])}
-                      className={`absolute right-6 top-6 rounded-full px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur transition-colors ${
-                        favorites.includes(template.id) ? 'bg-amber-100 text-amber-800' : 'bg-white/90 text-slate-600 hover:bg-white'
+                      className={`absolute right-3 top-3 rounded-full p-1.5 text-xs font-semibold shadow-sm backdrop-blur transition-colors shrink-0 cursor-pointer ${
+                        favorites.includes(template.id) ? 'bg-amber-50 text-amber-500 hover:bg-amber-100' : 'bg-white/90 text-slate-400 hover:bg-white'
                       }`}
                     >
-                      {favorites.includes(template.id) ? '💾 Saved' : '💾 Save'}
+                      ★
                     </button>
-                    <div className="absolute inset-x-6 bottom-6 grid translate-y-2 gap-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                      <Link href={`/editor?template=${template.id}`} className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white shadow-xl hover:bg-slate-800 transition-colors">
+                    {/* Hover actions overlay */}
+                    <div className="absolute inset-x-3 bottom-3 grid gap-1.5 opacity-0 translate-y-1 transition duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      <Link href={`/editor?template=${template.id}`} className="rounded-lg bg-slate-950 px-3 py-2 text-center text-xs font-bold text-white shadow-md hover:bg-slate-800 transition-colors">
                         Use Template
                       </Link>
-                      <button type="button" onClick={() => setSelectedTemplate(template)} className="rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-xl backdrop-blur hover:bg-white transition-colors">
+                      <button type="button" onClick={() => setSelectedTemplate(template)} className="rounded-lg bg-white/95 px-3 py-2 text-center text-xs font-bold text-slate-900 shadow-md backdrop-blur hover:bg-white transition-colors cursor-pointer">
                         Preview
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-3 px-5 pb-5 pt-2">
+                  <div className="mt-3 flex flex-col justify-between flex-1">
                     <div>
-                      <h2 className="line-clamp-1 text-base font-semibold text-slate-950">{template.layout.name}</h2>
-                      <p className="mt-1 line-clamp-2 text-sm text-slate-500">{template.description}</p>
+                      <h2 className="line-clamp-1 text-xs font-bold text-slate-950">{template.layout.name}</h2>
+                      <p className="mt-1 line-clamp-1 text-[10px] text-slate-500 font-medium">{template.description}</p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700">{template.theme.name}</span>
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{template.category}</span>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[9px] font-bold text-violet-700">{template.theme.name}</span>
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold text-slate-600">{template.category}</span>
                     </div>
                   </div>
                 </article>

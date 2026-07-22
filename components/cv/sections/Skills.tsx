@@ -27,9 +27,9 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
   // Tags variant
   if (variant === 'tags') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -38,7 +38,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
           Skills
         </h2>
         <div
-          className="p-5"
+          className="p-3.5"
           style={{
             ...cardStyles,
             boxShadow: shadowStyle,
@@ -67,9 +67,9 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
   // Progress bars variant
   if (variant === 'progress-bars') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -78,13 +78,13 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
           Skills
         </h2>
         <div
-          className="p-5"
+          className="p-3.5"
           style={{
             ...cardStyles,
             boxShadow: shadowStyle,
           }}
         >
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             {data.map((skill) => (
               <div key={skill.id}>
                 <div className="flex justify-between mb-1">
@@ -124,9 +124,9 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
   // Circles variant
   if (variant === 'circles') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -135,7 +135,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
           Skills
         </h2>
         <div
-          className="p-5"
+          className="p-3.5"
           style={{
             ...cardStyles,
             boxShadow: shadowStyle,
@@ -185,9 +185,9 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
 
   // Pills variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -196,17 +196,17 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
         Skills
       </h2>
       <div
-        className="p-5"
+        className="p-3.5"
         style={{
           ...cardStyles,
           boxShadow: shadowStyle,
         }}
       >
-        <div className="space-y-4">
+        <div className="space-y-2.5">
           {Object.entries(skillsByCategory).map(([category, skills]) => (
             <div key={category}>
               <h3
-                className="text-sm font-semibold mb-2 capitalize"
+                className="text-sm font-semibold mb-1 capitalize"
                 style={{
                   fontFamily: theme.fontFamily,
                   color: theme.primary,

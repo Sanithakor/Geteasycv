@@ -19,9 +19,9 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
   // Cards variant
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -33,13 +33,13 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-5"
+              className="cv-block p-3.5"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
               }}
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start mb-1">
                 <div>
                   <h3
                     className="text-lg font-semibold"
@@ -92,9 +92,9 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
   // Compact variant
   if (variant === 'compact') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -132,9 +132,9 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
 
   // List variant (default)
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -142,10 +142,10 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
       >
         Education
       </h2>
-      <div className="space-y-4">
+      <div className="space-y-2.5">
         {data.map((item, index) => (
-          <div key={item.id}>
-            <div className="flex justify-between items-start mb-2">
+          <div key={item.id} className="cv-block">
+            <div className="flex justify-between items-start mb-1">
               <div>
                 <h3
                   className="text-lg font-semibold"

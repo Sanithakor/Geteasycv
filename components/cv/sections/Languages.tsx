@@ -18,9 +18,9 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
   // Tags variant
   if (variant === 'tags') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -56,9 +56,9 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
   // Flags variant
   if (variant === 'flags') {
     return (
-      <div className="w-full" style={{ marginBottom: '1rem' }}>
+      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
         <h2
-          className="text-xl font-semibold mb-4"
+          className="text-xl font-semibold mb-1"
           style={{
             fontFamily: theme.fontFamilyHeading,
             color: theme.primary,
@@ -76,7 +76,7 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
                 boxShadow: shadowStyle,
               }}
             >
-              <div className="text-2xl mb-2">{item.flag || '🌐'}</div>
+              <div className="text-2xl mb-1">{item.flag || '🌐'}</div>
               <h3
                 className="font-semibold"
                 style={{ fontFamily: theme.fontFamily, color: theme.text }}
@@ -98,9 +98,9 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
 
   // Progress variant
   return (
-    <div className="w-full" style={{ marginBottom: '1rem' }}>
+    <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
       <h2
-        className="text-xl font-semibold mb-4"
+        className="text-xl font-semibold mb-1"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
