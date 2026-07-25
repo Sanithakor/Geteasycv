@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
-import { ProjectsVariant, getCardStyles, getShadowStyle, getGlassStyle } from '../variants/sectionVariants';
+import { ProjectsVariant, getCardStyles, getShadowStyle } from '../variants/sectionVariants';
 import { ProjectItem } from '../../../data/sampleCV';
 
 export type ProjectsProps = {
@@ -15,34 +15,35 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
   const cardStyles = getCardStyles(theme);
   const shadowStyle = getShadowStyle(theme);
 
-  // Cards variant
+  const renderHeader = () => (
+    <div className="flex items-center gap-4 mb-4">
+      <h2
+        className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
+        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+      >
+        Projects
+      </h2>
+      <div className="flex-1 h-px" style={{ backgroundColor: `${theme.primary}20` }} />
+    </div>
+  );
+
   if (variant === 'cards') {
     return (
-      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{
-            fontFamily: theme.fontFamilyHeading,
-            color: theme.primary,
-          }}
-        >
-          Projects
-        </h2>
+      <div className="w-full mb-6">
+        {renderHeader()}
         <div className="grid gap-4">
           {data.map((item) => (
             <div
               key={item.id}
-              className="cv-block p-3.5"
+              className="p-4 rounded-lg border"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
+                borderColor: `${theme.primary}20`,
               }}
             >
-              <div className="flex justify-between items-start mb-1">
-                <h3
-                  className="text-lg font-semibold"
-                  style={{ fontFamily: theme.fontFamily, color: theme.text }}
-                >
+              <div className="flex flex-wrap justify-between items-baseline mb-2 gap-2">
+                <h3 className="text-[13px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
                 {item.link && (
@@ -50,29 +51,30 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm px-3 py-1 rounded-full transition-all hover:scale-105"
+                    className="text-[10px] font-bold px-3 py-1 rounded-sm shrink-0"
                     style={{
                       background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
                       color: '#fff',
                     }}
                   >
-                    View
+                    View Project
                   </a>
                 )}
               </div>
-              <p
-                className="mb-1.5 text-sm"
-                style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
-              >
-                {item.description}
-              </p>
-              <div className="flex flex-wrap gap-2 mb-1.5">
+              
+              {item.description && (
+                <p className="text-[11px] leading-relaxed mb-2.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  {item.description}
+                </p>
+              )}
+              
+              <div className="flex flex-wrap gap-1.5 mb-2">
                 {item.technologies.map((tech, i) => (
                   <span
                     key={i}
-                    className="text-xs px-2 py-1 rounded"
+                    className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm"
                     style={{
-                      backgroundColor: `${theme.primary}15`,
+                      backgroundColor: `${theme.primary}10`,
                       color: theme.primary,
                       fontFamily: theme.fontFamily,
                     }}
@@ -81,18 +83,12 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                   </span>
                 ))}
               </div>
+              
               {item.achievements && item.achievements.length > 0 && (
-                <ul className="space-y-1">
+                <ul className="space-y-1 mt-2.5 pt-2.5 border-t" style={{ borderColor: `${theme.primary}10` }}>
                   {item.achievements.map((achievement, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-sm"
-                      style={{ fontFamily: theme.fontFamily, color: theme.text }}
-                    >
-                      <span
-                        className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: theme.primary }}
-                      />
+                    <li key={i} className="flex items-start gap-2 text-[11px] leading-relaxed" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                      <span className="mt-1.5 w-1 h-1 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                       <span>{achievement}</span>
                     </li>
                   ))}
@@ -105,48 +101,40 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
     );
   }
 
-  // Grid variant
   if (variant === 'grid') {
     return (
-      <div className="w-full" style={{ marginBottom: '0.5rem' }}>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{
-            fontFamily: theme.fontFamilyHeading,
-            color: theme.primary,
-          }}
-        >
-          Projects
-        </h2>
+      <div className="w-full mb-6">
+        {renderHeader()}
         <div className="grid grid-cols-2 gap-4">
           {data.map((item) => (
             <div
               key={item.id}
-              className="cv-block p-4"
+              className="p-4 rounded-lg border"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
+                borderColor: `${theme.primary}20`,
               }}
             >
-              <h3
-                className="font-semibold mb-1"
-                style={{ fontFamily: theme.fontFamily, color: theme.text }}
-              >
-                {item.name}
-              </h3>
-              <p
-                className="text-sm mb-1"
-                style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
-              >
-                {item.description}
-              </p>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap justify-between items-baseline mb-1.5 gap-2">
+                <h3 className="text-[12px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  {item.name}
+                </h3>
+              </div>
+              
+              {item.description && (
+                <p className="text-[10px] leading-relaxed mb-2" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  {item.description}
+                </p>
+              )}
+              
+              <div className="flex flex-wrap gap-1.5 mt-auto">
                 {item.technologies.slice(0, 3).map((tech, i) => (
                   <span
                     key={i}
-                    className="text-xs px-2 py-0.5 rounded"
+                    className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm"
                     style={{
-                      backgroundColor: `${theme.primary}15`,
+                      backgroundColor: `${theme.primary}10`,
                       color: theme.primary,
                       fontFamily: theme.fontFamily,
                     }}
@@ -162,42 +150,42 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
     );
   }
 
-  // Portfolio variant
+  // Portfolio variant (default)
   return (
-    <div className="w-full" style={{ marginBottom: '0.5rem' }}>
-      <h2
-        className="text-xl font-semibold mb-1"
-        style={{
-          fontFamily: theme.fontFamilyHeading,
-          color: theme.primary,
-        }}
-      >
-        Featured Projects
-      </h2>
-      <div className="space-y-3.5">
+    <div className="w-full mb-6">
+      <div className="flex items-center gap-4 mb-4">
+        <h2
+          className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
+          style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        >
+          Featured Projects
+        </h2>
+        <div className="flex-1 h-px" style={{ backgroundColor: `${theme.primary}20` }} />
+      </div>
+      <div className="space-y-4">
         {data.map((item, index) => (
           <div
             key={item.id}
-            className="cv-block p-4"
+            className="p-4 rounded-lg border-l-4 border-t border-r border-b"
             style={{
               ...cardStyles,
               boxShadow: shadowStyle,
-              borderLeft: `4px solid ${theme.primary}`,
+              borderLeftColor: theme.primary,
+              borderTopColor: `${theme.primary}10`,
+              borderRightColor: `${theme.primary}10`,
+              borderBottomColor: `${theme.primary}10`,
             }}
           >
-            <div className="flex justify-between items-start mb-1.5">
+            <div className="flex flex-wrap justify-between items-start mb-2 gap-4">
               <div>
-                <h3
-                  className="text-xl font-semibold"
-                  style={{ fontFamily: theme.fontFamily, color: theme.text }}
-                >
+                <h3 className="text-[14px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {item.technologies.map((tech, i) => (
                     <span
                       key={i}
-                      className="text-xs px-2 py-1 rounded-full"
+                      className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm"
                       style={{
                         background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
                         color: theme.primary,
@@ -214,22 +202,21 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  className="text-[10px] font-bold px-4 py-1.5 rounded-sm shrink-0"
                   style={{
                     background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
                     color: '#fff',
                   }}
                 >
-                  View Project
+                  View Live
                 </a>
               )}
             </div>
-            <p
-              className="text-sm"
-              style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
-            >
-              {item.description}
-            </p>
+            {item.description && (
+              <p className="text-[11px] leading-relaxed mt-2.5 pt-2.5 border-t" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary, borderColor: `${theme.primary}10` }}>
+                {item.description}
+              </p>
+            )}
           </div>
         ))}
       </div>

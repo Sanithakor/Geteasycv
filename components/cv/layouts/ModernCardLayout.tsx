@@ -36,13 +36,13 @@ const ModernCardLayout: React.FC<ModernCardLayoutProps> = ({
 
   return (
     <div
-      className="w-full max-w-[900px] mx-auto p-6"
+      className="w-full  p-6"
       style={{
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
       }}
     >
       {/* Header Card */}

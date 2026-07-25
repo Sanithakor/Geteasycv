@@ -32,14 +32,14 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[700px] mx-auto"
+      className="w-full"
       style={{
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2.5rem',
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        padding: '2rem',
+        
+        
       }}
     >
       {/* Centered Header */}
@@ -69,7 +69,7 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
 
       {data.summary && (
         <div className="mb-8 text-center">
-          <p className="text-lg leading-relaxed max-w-lg mx-auto" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+          <p className="text-lg leading-relaxed max-w-lg" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data.summary}
           </p>
         </div>

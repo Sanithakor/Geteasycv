@@ -32,7 +32,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[1000px] mx-auto p-6"
+      className="w-full  p-6"
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
@@ -41,8 +41,8 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
       }}
     >
       {/* Header Card - Spans 2 columns */}
@@ -50,7 +50,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
         className="col-span-2 p-6"
         style={{
           background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,
-          borderRadius: theme.borderRadius,
+          
           gridColumn: 'span 2',
         }}
       >
@@ -77,7 +77,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
         style={{
           backgroundColor: theme.background,
           border: `1px solid ${theme.border}`,
-          borderRadius: theme.borderRadius,
+          
         }}
       >
         <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
@@ -95,7 +95,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
             gridColumn: 'span 2',
           }}
         >
@@ -111,7 +111,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
           }}
         >
           <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Skills</h3>
@@ -139,7 +139,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
             gridColumn: 'span 2',
           }}
         >
@@ -167,7 +167,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
           }}
         >
           <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Education</h3>
@@ -189,7 +189,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
             gridColumn: 'span 2',
           }}
         >
@@ -212,7 +212,7 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            borderRadius: theme.borderRadius,
+            
           }}
         >
           <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Certifications</h3>

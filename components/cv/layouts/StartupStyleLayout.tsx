@@ -32,15 +32,15 @@ const StartupStyleLayout: React.FC<StartupStyleLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[1000px] mx-auto"
+      className="w-full"
       style={{
         display: 'grid',
         gridTemplateColumns: '280px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
         overflow: 'hidden',
       }}
     >

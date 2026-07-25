@@ -36,15 +36,15 @@ const SidebarRightLayout: React.FC<SidebarRightLayoutProps> = ({
 
   return (
     <div
-      className="w-full max-w-[900px] mx-auto overflow-hidden"
+      className="w-full  overflow-hidden"
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 280px',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
       }}
     >
       {/* Main Content */}

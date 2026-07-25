@@ -78,8 +78,8 @@ export async function POST(req: Request) {
     } catch (dbError) {
       console.warn('[PRISMA_UNAVAILABLE] Falling back to default credential verification:', dbError);
       
-      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@resumebuilder.local').replace(/['"]/g, '');
-      const adminPassword = (process.env.ADMIN_PASSWORD || 'AdminPassword123!').replace(/['"]/g, '');
+      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@example.com').replace(/['"]/g, '');
+      const adminPassword = (process.env.ADMIN_PASSWORD || 'DemoPassword123').replace(/['"]/g, '');
       
       if (sanitized === adminEmail && password === adminPassword) {
         const token = await generateToken('mock-admin-id');

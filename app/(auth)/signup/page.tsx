@@ -75,6 +75,11 @@ export default function SignupPage() {
       return false;
     }
 
+    if (!/[@$!%*?&]/.test(formData.password)) {
+      setFormError('Password must contain a special character (@$!%*?&)');
+      return false;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setFormError('Passwords do not match');
       return false;
@@ -170,7 +175,7 @@ export default function SignupPage() {
               disabled={isLoading}
             />
             <p className="text-xs text-slate-400 mt-2">
-              Must be 8+ characters with uppercase, lowercase, and number
+              Must be 8+ characters with uppercase, lowercase, number and special character (@$!%*?&)
             </p>
           </div>
 

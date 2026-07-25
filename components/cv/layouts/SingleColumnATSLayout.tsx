@@ -31,14 +31,14 @@ const SingleColumnATSLayout: React.FC<SingleColumnATSLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[800px] mx-auto"
+      className="w-full"
       style={{
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2.5rem',
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        padding: '2rem',
+        
+        
       }}
     >
       <Header data={data.personal} theme={theme} variant={headerVariant} />

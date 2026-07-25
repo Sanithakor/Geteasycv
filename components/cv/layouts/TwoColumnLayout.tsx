@@ -25,7 +25,7 @@ const TwoColumnLayout: React.FC<TwoColumnLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[900px] mx-auto"
+      className="w-full"
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
@@ -33,9 +33,9 @@ const TwoColumnLayout: React.FC<TwoColumnLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2.5rem',
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        padding: '2rem',
+        
+        
       }}
     >
       {/* Left Column */}

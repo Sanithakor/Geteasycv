@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
-import { LanguagesVariant, getCardStyles, getShadowStyle, getGlassStyle } from '../variants/sectionVariants';
+import { LanguagesVariant, getCardStyles, getShadowStyle } from '../variants/sectionVariants';
 import { LanguageItem } from '../../../data/sampleCV';
 
 export type LanguagesProps = {
@@ -15,37 +15,34 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
   const cardStyles = getCardStyles(theme);
   const shadowStyle = getShadowStyle(theme);
 
-  // Tags variant
+  const renderHeader = () => (
+    <div className="flex items-center gap-4 mb-4">
+      <h2
+        className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
+        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+      >
+        Languages
+      </h2>
+      <div className="flex-1 h-px" style={{ backgroundColor: `${theme.primary}20` }} />
+    </div>
+  );
+
   if (variant === 'tags') {
     return (
-      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{
-            fontFamily: theme.fontFamilyHeading,
-            color: theme.primary,
-          }}
-        >
-          Languages
-        </h2>
-        <div
-          className="p-4 flex flex-wrap gap-2"
-          style={{
-            ...cardStyles,
-            boxShadow: shadowStyle,
-          }}
-        >
+      <div className="w-full mb-6">
+        {renderHeader()}
+        <div className="flex flex-wrap gap-2">
           {data.map((item) => (
             <span
               key={item.id}
-              className="px-3 py-1.5 text-sm font-medium rounded-lg"
+              className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm"
               style={{
-                background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
+                backgroundColor: `${theme.primary}10`,
                 color: theme.primary,
                 fontFamily: theme.fontFamily,
               }}
             >
-              {item.name} - {item.proficiency}
+              {item.name} <span className="opacity-50 mx-1">-</span> {item.proficiency}
             </span>
           ))}
         </div>
@@ -53,40 +50,26 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
     );
   }
 
-  // Flags variant
   if (variant === 'flags') {
     return (
-      <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{
-            fontFamily: theme.fontFamilyHeading,
-            color: theme.primary,
-          }}
-        >
-          Languages
-        </h2>
+      <div className="w-full mb-6">
+        {renderHeader()}
         <div className="grid grid-cols-3 gap-3">
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-4 text-center"
+              className="p-3.5 text-center rounded-lg border"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
+                borderColor: `${theme.primary}20`,
               }}
             >
-              <div className="text-2xl mb-1">{item.flag || '🌐'}</div>
-              <h3
-                className="font-semibold"
-                style={{ fontFamily: theme.fontFamily, color: theme.text }}
-              >
+              <div className="text-xl mb-1">{item.flag || '🌐'}</div>
+              <h3 className="text-[11px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                 {item.name}
               </h3>
-              <p
-                className="text-sm capitalize"
-                style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
-              >
+              <p className="text-[9px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                 {item.proficiency}
               </p>
             </div>
@@ -96,66 +79,41 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
     );
   }
 
-  // Progress variant
+  // Progress variant (default)
   return (
-    <div className="cv-block w-full" style={{ marginBottom: '0.5rem' }}>
-      <h2
-        className="text-xl font-semibold mb-1"
-        style={{
-          fontFamily: theme.fontFamilyHeading,
-          color: theme.primary,
-        }}
-      >
-        Languages
-      </h2>
-      <div
-        className="p-4"
-        style={{
-          ...cardStyles,
-          boxShadow: shadowStyle,
-        }}
-      >
-        <div className="space-y-3">
-          {data.map((item) => {
-            const proficiencyLevel = {
-              native: 100,
-              fluent: 90,
-              professional: 75,
-              basic: 50,
-            }[item.proficiency];
+    <div className="w-full mb-6">
+      {renderHeader()}
+      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+        {data.map((item) => {
+          const proficiencyLevel = {
+            native: 100,
+            fluent: 85,
+            professional: 70,
+            basic: 40,
+          }[item.proficiency.toLowerCase()] || 50;
 
-            return (
-              <div key={item.id}>
-                <div className="flex justify-between mb-1">
-                  <span
-                    className="font-medium"
-                    style={{ fontFamily: theme.fontFamily, color: theme.text }}
-                  >
-                    {item.name}
-                  </span>
-                  <span
-                    className="text-sm capitalize"
-                    style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}
-                  >
-                    {item.proficiency}
-                  </span>
-                </div>
-                <div
-                  className="w-full h-2 rounded-full overflow-hidden"
-                  style={{ backgroundColor: theme.border }}
-                >
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${proficiencyLevel}%`,
-                      background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
-                    }}
-                  />
-                </div>
+          return (
+            <div key={item.id}>
+              <div className="flex justify-between items-baseline mb-1">
+                <span className="text-[11px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  {item.name}
+                </span>
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  {item.proficiency}
+                </span>
               </div>
-            );
-          })}
-        </div>
+              <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: `${theme.primary}20` }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${proficiencyLevel}%`,
+                    background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

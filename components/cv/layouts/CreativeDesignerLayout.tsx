@@ -32,15 +32,15 @@ const CreativeDesignerLayout: React.FC<CreativeDesignerLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[1000px] mx-auto"
+      className="w-full"
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 300px',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
         overflow: 'hidden',
       }}
     >

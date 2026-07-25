@@ -32,15 +32,15 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[900px] mx-auto"
+      className="w-full"
       style={{
         display: 'grid',
         gridTemplateColumns: '300px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
       }}
     >
       {/* Left Sidebar */}
@@ -101,7 +101,7 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
       <div className="p-6" style={{ backgroundColor: theme.background }}>
         <Header data={data.personal} theme={theme} variant={headerVariant} />
         {data.summary && (
-          <div className="mb-6 p-6" style={{ background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`, borderRadius: theme.borderRadius }}>
+          <div className="mb-6 p-6" style={{ background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,  }}>
             <p className="text-lg leading-relaxed" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
               {data.summary}
             </p>

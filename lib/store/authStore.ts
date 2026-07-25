@@ -35,6 +35,9 @@ interface AuthState {
 }
 
 const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return '/api';
+  }
   let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
   url = url.replace(/['"]/g, '');
   if (url.endsWith('/')) {
@@ -71,7 +74,7 @@ export const useAuthStore = create<AuthState>()(
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Login failed');
+            throw new Error(errorData.error || errorData.message || 'Login failed');
           }
 
           const data: AuthResponse = await response.json();
@@ -111,7 +114,7 @@ export const useAuthStore = create<AuthState>()(
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Signup failed');
+            throw new Error(errorData.error || errorData.message || 'Signup failed');
           }
 
           const data: AuthResponse & { user: { subscriptionTier?: string } } = await response.json();

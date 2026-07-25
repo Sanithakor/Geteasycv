@@ -29,7 +29,22 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: "GetEasyCV - Professional Resume Builder",
   description:
-    "Create professional resumes with our easy-to-use resume builder. Choose from templates and export as PDF.",
+    "Create professional resumes with our easy-to-use resume builder. Choose from ATS-friendly templates, customize easily, and export as PDF in minutes.",
+  keywords: "resume builder, CV maker, ATS friendly resume, professional resume templates",
+  authors: [{ name: "GetEasyCV Team" }],
+  openGraph: {
+    title: "GetEasyCV - Professional Resume Builder",
+    description: "Build your professional resume in minutes with our drag-and-drop editor and expert-designed templates.",
+    url: "https://geteasycv.com",
+    siteName: "GetEasyCV",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GetEasyCV - Professional Resume Builder",
+    description: "Build your professional resume in minutes.",
+  },
 };
 
 export default function RootLayout({

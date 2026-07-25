@@ -22,234 +22,148 @@ export type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered' }) => {
-  const cardStyles = getCardStyles(theme);
-  const shadowStyle = getShadowStyle(theme);
   const avatar = data.avatar || DUMMY_AVATAR;
 
-  // Centered variant
+  // Standardized Contact Bar
+  const renderContactBar = (justifyClass = 'justify-center', textClass = 'text-[11px]') => (
+    <div
+      className={`flex flex-wrap ${justifyClass} gap-x-4 gap-y-1 mt-2 opacity-80`}
+      style={{ color: theme.textSecondary }}
+    >
+      {data.email && (
+        <a href={`mailto:${data.email}`} className="hover:opacity-80 transition-opacity flex items-center gap-1">
+          <span>{data.email}</span>
+        </a>
+      )}
+      {data.phone && <span>{data.phone}</span>}
+      {data.location && <span>{data.location}</span>}
+      {data.website && (
+        <a href={data.website} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+          {data.website.replace(/^https?:\/\//, '')}
+        </a>
+      )}
+      {data.linkedin && (
+        <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+          {data.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, 'linkedin.com/in/')}
+        </a>
+      )}
+    </div>
+  );
+
   if (variant === 'centered') {
     return (
-      <div
-        className="w-full p-8 text-center"
-        style={{
-          background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,
-          borderRadius: theme.borderRadius,
-          marginBottom: '0.5rem',
-        }}
-      >
+      <div className="w-full text-center pb-6">
         {avatar && (
-          <div className="mb-1 flex justify-center">
+          <div className="mb-4 flex justify-center">
             <img
               src={avatar}
               alt={`${data.firstName} ${data.lastName}`}
-              className="w-24 h-24 rounded-full object-cover border-4"
-              style={{
-                borderColor: theme.primary,
-                boxShadow: shadowStyle,
-              }}
+              className="w-20 h-20 rounded-full object-cover shadow-sm border-2"
+              style={{ borderColor: theme.primary }}
             />
           </div>
         )}
         <h1
-          className="text-3xl font-bold mb-1"
-          style={{
-            fontFamily: theme.fontFamilyHeading,
-            color: theme.text,
-          }}
+          className="text-3xl font-bold leading-tight"
+          style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}
         >
           {data.firstName} <span style={{ color: theme.primary }}>{data.lastName}</span>
         </h1>
         <p
-          className="text-xl mb-1"
-          style={{
-            fontFamily: theme.fontFamily,
-            color: theme.textSecondary,
-          }}
+          className="text-[13px] font-medium tracking-wide uppercase mt-1"
+          style={{ fontFamily: theme.fontFamily, color: theme.primary }}
         >
           {data.title}
         </p>
-        <div
-          className="flex flex-wrap justify-center gap-4 text-sm"
-          style={{ color: theme.textSecondary }}
-        >
-          {data.email && (
-            <a
-              href={`mailto:${data.email}`}
-              className="hover:opacity-80 transition-opacity"
-              style={{ color: theme.primary }}
-            >
-              {data.email}
-            </a>
-          )}
-          {data.phone && <span>{data.phone}</span>}
-          {data.location && <span>{data.location}</span>}
-        </div>
-        {(data.website || data.linkedin) && (
-          <div className="flex justify-center gap-4 mt-4">
-            {data.website && (
-              <a
-                href={data.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm px-4 py-2 rounded-full transition-all hover:scale-105"
-                style={{
-                  background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
-                  color: '#fff',
-                }}
-              >
-                Website
-              </a>
-            )}
-            {data.linkedin && (
-              <a
-                href={data.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm px-4 py-2 rounded-full transition-all hover:scale-105"
-                style={{
-                  background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
-                  color: '#fff',
-                }}
-              >
-                LinkedIn
-              </a>
-            )}
-          </div>
-        )}
+        {renderContactBar('justify-center')}
       </div>
     );
   }
 
-  // Split variant
   if (variant === 'split') {
     return (
-      <div
-        className="cv-block w-full p-4"
-        style={{
-          background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`,
-          borderRadius: theme.borderRadius,
-          marginBottom: '0.5rem',
-        }}
-      >
-        <div className="flex items-center gap-4">
-          {avatar && (
-            <img
-              src={avatar}
-              alt={`${data.firstName} ${data.lastName}`}
-              className="w-20 h-20 rounded-full object-cover border-4 border-white"
-            />
-          )}
-          <div className="flex-1">
-            <h1
-              className="text-2xl font-bold text-white"
-              style={{ fontFamily: theme.fontFamilyHeading }}
-            >
-              {data.firstName} {data.lastName}
-            </h1>
-            <p className="text-white/90 text-lg">{data.title}</p>
-          </div>
-          <div className="text-right text-white/90 text-sm space-y-1">
-            {data.email && <div>{data.email}</div>}
-            {data.phone && <div>{data.phone}</div>}
-            {data.location && <div>{data.location}</div>}
-          </div>
-        </div>
-        {(data.website || data.linkedin) && (
-          <div className="flex gap-3 mt-4 pt-4 border-t border-white/20">
-            {data.website && (
-              <a
-                href={data.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-white/80 hover:text-white transition-colors"
-              >
-                Website
-              </a>
-            )}
-            {data.linkedin && (
-              <a
-                href={data.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-white/80 hover:text-white transition-colors"
-              >
-                LinkedIn
-              </a>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Banner variant
-  if (variant === 'banner') {
-    return (
-      <div
-        className="w-full relative overflow-hidden"
-        style={{
-          background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
-          borderRadius: theme.borderRadius,
-          marginBottom: '0.5rem',
-          padding: '3rem 2rem',
-        }}
-      >
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative flex flex-col items-center text-center text-white">
-          {avatar && (
-            <img
-              src={avatar}
-              alt={`${data.firstName} ${data.lastName}`}
-              className="w-28 h-28 rounded-full object-cover border-4 border-white mb-1 shadow-lg"
-            />
-          )}
+      <div className="w-full flex items-center justify-between pb-6 border-b border-slate-200" style={{ borderColor: `${theme.primary}20` }}>
+        <div className="flex-1">
           <h1
-            className="text-4xl font-bold mb-1"
-            style={{ fontFamily: theme.fontFamilyHeading }}
+            className="text-3xl font-bold leading-tight"
+            style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}
           >
-            {data.firstName} {data.lastName}
-          </h1>
-          <p className="text-xl opacity-90 mb-1">{data.title}</p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm opacity-80">
-            {data.email && <span>{data.email}</span>}
-            {data.phone && <span>{data.phone}</span>}
-            {data.location && <span>{data.location}</span>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Minimal variant
-  return (
-    <div className="cv-block w-full p-4 border-b-2" style={{ borderColor: theme.primary, marginBottom: '0.5rem' }}>
-      <div className="flex justify-between items-center">
-        <div>
-          <h1
-            className="text-2xl font-bold"
-            style={{
-              fontFamily: theme.fontFamilyHeading,
-              color: theme.text,
-            }}
-          >
-            {data.firstName} {data.lastName}
+            {data.firstName} <span style={{ color: theme.primary }}>{data.lastName}</span>
           </h1>
           <p
-            className="text-lg"
-            style={{
-              fontFamily: theme.fontFamily,
-              color: theme.primary,
-            }}
+            className="text-[13px] font-medium tracking-wide uppercase mt-1"
+            style={{ fontFamily: theme.fontFamily, color: theme.primary }}
           >
             {data.title}
           </p>
+          {renderContactBar('justify-start')}
         </div>
-        <div className="text-right text-sm" style={{ color: theme.textSecondary }}>
-          {data.email && <div>{data.email}</div>}
-          {data.phone && <div>{data.phone}</div>}
-          {data.location && <div>{data.location}</div>}
+        {avatar && (
+          <div className="pl-6 shrink-0">
+            <img
+              src={avatar}
+              alt={`${data.firstName} ${data.lastName}`}
+              className="w-20 h-20 rounded-lg object-cover shadow-sm border"
+              style={{ borderColor: `${theme.primary}30` }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (variant === 'banner') {
+    return (
+      <div
+        className="w-full relative overflow-hidden rounded-xl mb-6 shadow-sm"
+        style={{
+          background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
+        }}
+      >
+        <div className="relative px-8 py-8 flex items-center gap-6 text-white">
+          {avatar && (
+            <img
+              src={avatar}
+              alt={`${data.firstName} ${data.lastName}`}
+              className="w-20 h-20 rounded-full object-cover border-2 border-white/50 shadow-md shrink-0"
+            />
+          )}
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold leading-tight" style={{ fontFamily: theme.fontFamilyHeading }}>
+              {data.firstName} {data.lastName}
+            </h1>
+            <p className="text-[13px] font-medium tracking-wide uppercase mt-1 text-white/90">
+              {data.title}
+            </p>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-[11px] text-white/80">
+              {data.email && <span>{data.email}</span>}
+              {data.phone && <span>{data.phone}</span>}
+              {data.location && <span>{data.location}</span>}
+              {data.website && <span>{data.website.replace(/^https?:\/\//, '')}</span>}
+              {data.linkedin && <span>{data.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, 'linkedin.com/in/')}</span>}
+            </div>
+          </div>
         </div>
       </div>
+    );
+  }
+
+  // Minimal variant (default fallback)
+  return (
+    <div className="w-full pb-5">
+      <h1
+        className="text-[28px] font-bold leading-tight"
+        style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}
+      >
+        {data.firstName} {data.lastName}
+      </h1>
+      <p
+        className="text-[13px] font-medium tracking-wide uppercase mt-1"
+        style={{ fontFamily: theme.fontFamily, color: theme.primary }}
+      >
+        {data.title}
+      </p>
+      {renderContactBar('justify-start')}
     </div>
   );
 };

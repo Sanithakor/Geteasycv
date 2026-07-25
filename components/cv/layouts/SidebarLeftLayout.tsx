@@ -38,15 +38,15 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
 
   return (
     <div
-      className="w-full max-w-full mx-auto overflow-hidden"
+      className="w-full max-w-full  overflow-hidden"
       style={{
         display: 'grid',
         gridTemplateColumns: '280px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
         minHeight: '297mm', // A4 height for proper canvas rendering
         width: '210mm', // A4 width for proper canvas rendering
       }}

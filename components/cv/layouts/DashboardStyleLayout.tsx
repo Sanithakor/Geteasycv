@@ -32,13 +32,13 @@ const DashboardStyleLayout: React.FC<DashboardStyleLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full max-w-[1000px] mx-auto"
+      className="w-full"
       style={{
         backgroundColor: theme.backgroundAlt,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
         overflow: 'hidden',
       }}
     >
@@ -75,19 +75,19 @@ const DashboardStyleLayout: React.FC<DashboardStyleLayoutProps> = ({
       <div className="p-6" style={{ backgroundColor: theme.backgroundAlt }}>
         {/* Stats Cards */}
         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background,  }}>
             <div className="text-2xl font-bold" style={{ color: theme.primary }}>{data.experience.length}</div>
             <div className="text-sm" style={{ color: theme.textSecondary }}>Experience</div>
           </div>
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background,  }}>
             <div className="text-2xl font-bold" style={{ color: theme.primary }}>{data.skills.length}</div>
             <div className="text-sm" style={{ color: theme.textSecondary }}>Skills</div>
           </div>
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background,  }}>
             <div className="text-2xl font-bold" style={{ color: theme.primary }}>{data.projects?.length || 0}</div>
             <div className="text-sm" style={{ color: theme.textSecondary }}>Projects</div>
           </div>
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.background,  }}>
             <div className="text-2xl font-bold" style={{ color: theme.primary }}>{data.education.length}</div>
             <div className="text-sm" style={{ color: theme.textSecondary }}>Education</div>
           </div>

@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuthStore, useAuthHydrated } from '../../../lib/store/authStore';
 import LoginForm from '../../../components/auth/LoginForm';
 
@@ -55,16 +56,15 @@ export default function LoginPage() {
         {/* Form */}
         <LoginForm />
 
-        {/* Footer */}
         <p className="mt-8 text-center text-xs text-gray-500 dark:text-gray-400">
           By signing in, you agree to our{' '}
-          <a href="/terms" className="hover:underline">
+          <Link href="/terms" className="hover:underline">
             Terms of Service
-          </a>{' '}
+          </Link>{' '}
           and{' '}
-          <a href="/privacy" className="hover:underline">
+          <Link href="/privacy" className="hover:underline">
             Privacy Policy
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -35,11 +35,11 @@ const GlassmorphismLayout: React.FC<GlassmorphismLayoutProps> = ({
 
   return (
     <div
-      className="w-full max-w-[900px] mx-auto p-8"
+      className="w-full  p-8"
       style={{
         background: `linear-gradient(135deg, ${theme.primary}20 0%, ${theme.secondary} 50%, ${theme.primary}10 100%)`,
-        borderRadius: theme.borderRadius,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        
+        
       }}
     >
       <div
