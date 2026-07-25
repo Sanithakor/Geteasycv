@@ -62,29 +62,30 @@ export default function TemplatesPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const allTemplates = generateTemplates();
     
     // Check if there is templates state in localStorage
-    const saved = localStorage.getItem('geteasycv-admin-templates');
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('geteasycv-admin-templates') : null;
+    let initialTemplates: any[] = [];
+
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         // Re-attach templateObj matching by ID or fallback
-        const reattached = parsed.map((item: any) => {
+        initialTemplates = parsed.map((item: any) => {
           const match = allTemplates.find(t => t.id === item.id);
           return {
             ...item,
             templateObj: match || allTemplates[0]
           };
         });
-        setDisplayTemplates(reattached);
       } catch (err) {
         console.error('Failed to parse saved templates:', err);
       }
-    } else {
-      // Merge generated templates with metadata
-      const templatesWithMeta = TEMPLATE_METADATA.map(meta => {
+    }
+    
+    if (initialTemplates.length === 0) {
+      initialTemplates = TEMPLATE_METADATA.map(meta => {
         const match = allTemplates.find(t => t.id === meta.id);
         if (match) {
           return {
@@ -95,30 +96,12 @@ export default function TemplatesPage() {
             templateObj: match
           };
         }
-        return null;
-      }).filter(Boolean);
-
-      let finalTemplates = [];
-      if (templatesWithMeta.length === 0) {
-        finalTemplates = allTemplates.slice(0, 6).map((t, idx) => ({
-          id: t.id,
-          name: t.layout.name,
-          category: t.category,
-          themeName: t.theme.name,
-          status: idx % 3 === 0 ? 'draft' : 'published',
-          downloads: idx * 450 + 200,
-          rating: 4.5 + (idx % 5) * 0.1,
-          templateObj: t
-        }));
-      } else {
-        finalTemplates = templatesWithMeta;
-      }
-      
-      setDisplayTemplates(finalTemplates);
-      // Persist metadata (exclude templateObj to keep JSON small)
-      const toSave = (finalTemplates as any[]).map(({ templateObj, ...rest }) => rest);
-      localStorage.setItem('geteasycv-admin-templates', JSON.stringify(toSave));
+        return meta;
+      });
     }
+
+    setDisplayTemplates(initialTemplates);
+    setMounted(true);
   }, []);
 
   const toggleStatus = (id: string) => {

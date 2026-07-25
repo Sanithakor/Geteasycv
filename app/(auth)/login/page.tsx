@@ -14,7 +14,7 @@ import LoginForm from '../../../components/auth/LoginForm';
 export default function LoginPage() {
   const router = useRouter();
   const isHydrated = useAuthHydrated();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -24,13 +24,14 @@ export default function LoginPage() {
       return;
     }
 
-    console.log('[LoginPage] Store hydrated, checking auth state:', { isAuthenticated });
+    console.log('[LoginPage] Store hydrated, checking auth state:', { isAuthenticated, role: user?.role });
     
     if (isAuthenticated) {
-      console.log('[LoginPage] User is authenticated, redirecting to /admin');
-      router.push('/admin');
+      const targetPath = user?.role === 'admin' ? '/admin' : '/dashboard';
+      console.log(`[LoginPage] User is authenticated as ${user?.role || 'user'}, redirecting to ${targetPath}`);
+      router.push(targetPath);
     }
-  }, [isAuthenticated, isHydrated, router]);
+  }, [isAuthenticated, user, isHydrated, router]);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-950 flex flex-col items-center justify-center p-4">
@@ -43,13 +44,11 @@ export default function LoginPage() {
       {/* Container */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 dark:bg-blue-500 mb-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Resume Builder</h1>
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center justify-center mb-4 group" title="Go to Homepage">
+            <img src="/logo.png" alt="GetEasyCV" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">Create your professional resume in minutes</p>
         </div>
 

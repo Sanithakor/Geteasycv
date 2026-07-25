@@ -362,14 +362,9 @@ export default function Home() {
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {/* Brand */}
             <div className="lg:col-span-1">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-700 to-violet-700 text-sm font-black text-white shadow-lg">
-                  CV
-                </span>
-                <span className="text-lg font-bold tracking-tight text-white">
-                  GetEasyCV
-                </span>
-              </div>
+              <Link href="/" className="inline-flex items-center gap-2 mb-4 group" title="Go to Homepage">
+                <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+              </Link>
               <p className="text-sm leading-relaxed">
                 Professional resume builder with {TEMPLATE_COUNT} templates,{" "}
                 {LAYOUT_COUNT} layouts, and {THEME_COUNT} themes to help you

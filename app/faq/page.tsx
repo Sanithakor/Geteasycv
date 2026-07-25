@@ -1,12 +1,10 @@
+'use client';
+
+import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Frequently Asked Questions — GetEasyCV",
-  description: "Find answers to common questions about GetEasyCV.",
-};
-
-const faqs = [
+const initialFaqs = [
   {
     question: "Is GetEasyCV free to use?",
     answer: "Yes, we offer a free plan that includes access to basic templates and standard export options. For advanced templates, AI features, and high-resolution exports, we offer premium plans."
@@ -30,6 +28,19 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+  const [faqs, setFaqs] = useState(initialFaqs);
+
+  useEffect(() => {
+    fetch('/api/faqs')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.success && Array.isArray(data.data) && data.data.length > 0) {
+          setFaqs(data.data);
+        }
+      })
+      .catch(err => console.warn('Could not fetch dynamic FAQs, using fallback:', err));
+  }, []);
+
   return (
     <>
       <Navigation />

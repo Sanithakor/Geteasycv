@@ -224,3 +224,10 @@ export async function DELETE(
     );
   }
 }
+
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  return PUT(req, context);
+}

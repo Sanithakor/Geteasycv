@@ -10,11 +10,8 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 mb-6">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-violet-700 text-sm font-black text-white shadow-lg">
-              CV
-            </span>
-            <span className="text-lg font-bold tracking-tight text-slate-950">GetEasyCV</span>
+          <Link href="/" className="inline-flex items-center justify-center mb-2 group" title="Go to Homepage">
+            <img src="/logo.png" alt="GetEasyCV" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
           </Link>
         </div>
 

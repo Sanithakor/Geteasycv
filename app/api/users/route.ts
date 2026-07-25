@@ -5,10 +5,10 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getAuthFromRequest } from '@/lib/middleware/auth';
+import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
 
 // In-memory mock data to store updates when DB is offline
-let mockUsersMemory = [
+const mockUsersMemory = [
   { id: '1', name: 'John Doe', email: 'john@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-15T00:00:00.000Z', resumes: 5 },
   { id: '2', name: 'Jane Smith', email: 'jane@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-20T00:00:00.000Z', resumes: 2 },
   { id: '3', name: 'Mike Johnson', email: 'mike@example.com', subscriptionTier: 'pro', role: 'user', isActive: false, isBanned: false, createdAt: '2024-03-10T00:00:00.000Z', resumes: 8 },
@@ -21,6 +21,11 @@ export async function GET(req: Request) {
     const auth = await getAuthFromRequest(req);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     try {
@@ -68,6 +73,11 @@ export async function PATCH(req: Request) {
     const auth = await getAuthFromRequest(req);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     const body = await req.json();

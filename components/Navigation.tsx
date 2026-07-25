@@ -2,7 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
+import {
+  Menu,
+  X,
+  LayoutDashboard
+} from 'lucide-react';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -15,18 +22,28 @@ const navItems = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, user, logout, _hydrated } = useAuthStore();
   const [open, setOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setUserDropdownOpen(false);
+    router.push('/login');
+  };
+
+  const dashboardPath = user?.role === 'admin' ? '/admin' : '/dashboard';
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-950 to-teal-700 text-sm font-black text-white shadow-lg shadow-teal-100">
-            CV
-          </span>
-          <span className="text-lg font-bold tracking-tight text-slate-950">GetEasyCV</span>
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
         </Link>
 
+        {/* Center Nav Links */}
         <div className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => {
             const active = item.href === '/' ? pathname === '/' : item.href.startsWith(pathname) && pathname !== '/';
@@ -44,12 +61,29 @@ export default function Navigation() {
           })}
         </div>
 
+        {/* Right Actions: Login / Signup OR User Account Controls */}
         <div className="hidden items-center gap-3 sm:flex">
-          <Link href="/templates" className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-800">
-            Start building
-          </Link>
+          {_hydrated && isAuthenticated ? (
+            <UserProfileDropdown />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="rounded-full px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-950 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-800"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
 
+        {/* Mobile menu button */}
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
@@ -57,12 +91,13 @@ export default function Navigation() {
           aria-label="Toggle navigation"
           aria-expanded={open}
         >
-          <span className="text-xl leading-none">{open ? 'x' : '='}</span>
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </nav>
 
+      {/* Mobile Drawer */}
       {open && (
-        <div className="border-t border-slate-100 bg-white p-4 shadow-xl lg:hidden">
+        <div className="border-t border-slate-100 bg-white p-4 shadow-xl lg:hidden space-y-3">
           <div className="grid gap-2">
             {navItems.map((item) => (
               <Link
@@ -74,13 +109,47 @@ export default function Navigation() {
                 {item.name}
               </Link>
             ))}
-            <Link
-              href="/templates"
-              onClick={() => setOpen(false)}
-              className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
-            >
-              Start building
-            </Link>
+          </div>
+
+          <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            {_hydrated && isAuthenticated ? (
+              <>
+                <Link
+                  href={dashboardPath}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Go to Dashboard</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    handleLogout();
+                  }}
+                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-center text-sm font-semibold text-red-600"
+                >
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setOpen(false)}
+                  className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

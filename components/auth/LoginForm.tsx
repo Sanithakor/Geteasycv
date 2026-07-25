@@ -57,8 +57,9 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       // Give localStorage time to update
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      console.log('Login successful, redirecting to:', redirectTo);
-      router.push(redirectTo);
+      const targetPath = authState.user?.role === 'admin' ? '/admin' : '/dashboard';
+      console.log('Login successful, redirecting to:', targetPath);
+      router.push(targetPath);
       
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed';

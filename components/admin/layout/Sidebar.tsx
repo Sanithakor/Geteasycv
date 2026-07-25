@@ -89,7 +89,7 @@ const SIDEBAR_GROUPS: SidebarGroup[] = [
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const [showFooterMenu, setShowFooterMenu] = useState(false);
 
   const handleLogout = async () => {
@@ -118,15 +118,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       >
         {/* Logo Section */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center text-white shadow-sm shadow-violet-100 flex-shrink-0">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="block text-sm font-bold tracking-tight text-slate-900 leading-none">CV Builder</span>
-              <span className="block text-[10px] font-semibold text-slate-400 mt-1 uppercase tracking-wider">Admin Panel</span>
-            </div>
-          </div>
+          <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
+            <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+          </Link>
           <button
             onClick={() => setOpen(false)}
             className="lg:hidden p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-slate-800 transition-colors"
@@ -187,12 +181,16 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         {/* User Profile Footer */}
         <div className="border-t border-slate-100 p-4 flex items-center justify-between gap-3 bg-white flex-shrink-0 relative">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200">
-              <img src="https://i.pravatar.cc/100?img=68" alt="Admin" className="w-full h-full object-cover" />
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 flex items-center justify-center font-bold text-slate-600">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name || 'User'} className="w-full h-full object-cover" />
+              ) : (
+                user?.name?.[0]?.toUpperCase() || 'A'
+              )}
             </div>
             <div className="min-w-0">
-              <span className="block text-sm font-bold text-slate-900 truncate">John Admin</span>
-              <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">Super Admin</span>
+              <span className="block text-sm font-bold text-slate-900 truncate">{user?.name || 'Admin User'}</span>
+              <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">{user?.role || 'Admin'}</span>
             </div>
           </div>
           <div className="relative">
@@ -207,14 +205,22 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             {showFooterMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowFooterMenu(false)} />
-                <div className="absolute right-0 bottom-full mb-2 w-44 rounded-[20px] border border-slate-200/70 bg-white p-1.5 shadow-xl z-20">
+                <div className="absolute right-0 bottom-full mb-2 w-48 rounded-[20px] border border-slate-200/70 bg-white p-1.5 shadow-xl z-20 space-y-1">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setShowFooterMenu(false)}
+                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    <FileText className="w-4 h-4 text-slate-400" />
+                    <span>User Dashboard</span>
+                  </Link>
                   <Link
                     href="/admin/settings"
                     onClick={() => setShowFooterMenu(false)}
                     className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     <Settings className="w-4 h-4 text-slate-400" />
-                    <span>Settings</span>
+                    <span>Admin Settings</span>
                   </Link>
                   <button
                     onClick={handleLogout}

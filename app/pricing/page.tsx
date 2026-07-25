@@ -36,6 +36,29 @@ const PLANS = [
 ];
 
 export default function PricingPage() {
+  const [plans, setPlans] = React.useState(PLANS);
+
+  React.useEffect(() => {
+    fetch('/api/plans')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.success && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped = data.data.map((p: any) => ({
+            name: p.name,
+            price: typeof p.price === 'string' ? parseFloat(p.price.replace('$', '')) || 0 : p.price,
+            period: p.billingPeriod || 'month',
+            description: p.description,
+            features: p.features || [],
+            cta: p.ctaText || 'Get Started',
+            href: `/signup?plan=${p.name.toLowerCase()}`,
+            highlight: p.popular || false
+          }));
+          setPlans(mapped);
+        }
+      })
+      .catch(err => console.warn('Could not fetch dynamic plans, using fallback:', err));
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
       {/* Nav */}
@@ -43,9 +66,9 @@ export default function PricingPage() {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-              <span className="text-white text-sm font-bold">RC</span>
+              <span className="text-white text-sm font-bold">CV</span>
             </div>
-            Resume Co
+            GetEasyCV
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Sign in</Link>
@@ -67,7 +90,7 @@ export default function PricingPage() {
 
         {/* Plans */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {PLANS.map(plan => (
+          {plans.map(plan => (
             <div key={plan.name} className={`relative rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-xl ${plan.highlight ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'}`}>
               {plan.highlight && (
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-600" />
@@ -105,7 +128,7 @@ export default function PricingPage() {
         {/* FAQ */}
         <div className="mt-20 text-center">
           <p className="text-slate-600 dark:text-slate-400">
-            Questions? <a href="mailto:support@resumeco.app" className="text-blue-600 dark:text-blue-400 hover:underline">Contact us</a>
+            Questions? <a href="mailto:support@geteasycv.com" className="text-blue-600 dark:text-blue-400 hover:underline">Contact us</a>
           </p>
         </div>
       </div>

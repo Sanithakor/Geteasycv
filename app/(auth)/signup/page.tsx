@@ -98,7 +98,9 @@ export default function SignupPage() {
 
     try {
       await signup(formData.email, formData.password, formData.name);
-      router.push('/admin');
+      const authState = useAuthStore.getState();
+      const targetPath = authState.user?.role === 'admin' ? '/admin' : '/dashboard';
+      router.push(targetPath);
     } catch (err) {
       console.error('Signup error:', err);
     }
@@ -109,9 +111,9 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         {/* Logo / Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-4">
-            <span className="text-white font-bold text-lg">CV</span>
-          </div>
+          <Link href="/" className="inline-flex items-center justify-center mb-4 group" title="Go to Homepage">
+            <img src="/logo.png" alt="GetEasyCV" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+          </Link>
           <h1 className="text-2xl font-bold text-white mb-2">Create Account</h1>
           <p className="text-slate-400">Start building your professional resume today</p>
         </div>

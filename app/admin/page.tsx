@@ -195,20 +195,13 @@ const recentPayments = [
 export default function AdminDashboard() {
   const router = useRouter();
   const { isAuthenticated, user, _hydrated } = useAuthStore();
-  const [isLoading, setIsLoading] = React.useState(true);
-
   useEffect(() => {
-    if (!_hydrated) return;
-
-    if (!isAuthenticated) {
+    if (_hydrated && !isAuthenticated) {
       router.push('/login');
-      return;
     }
-
-    setIsLoading(false);
   }, [isAuthenticated, _hydrated, router]);
 
-  if (!_hydrated || isLoading || !isAuthenticated) {
+  if (!_hydrated || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">

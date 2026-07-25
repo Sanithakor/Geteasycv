@@ -23,11 +23,7 @@ export function HighResolutionPreview({
   const [error, setError] = useState(false);
   const templateRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    generatePreview();
-  }, [template]);
-
-  const generatePreview = async () => {
+  const generatePreview = React.useCallback(async () => {
     try {
       setLoading(true);
       setError(false);
@@ -53,7 +49,11 @@ export function HighResolutionPreview({
       setError(true);
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    generatePreview();
+  }, [template, generatePreview]);
 
   const handleDownload = async () => {
     try {

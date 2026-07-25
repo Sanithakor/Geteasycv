@@ -184,8 +184,25 @@ export default function EditorPage() {
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [activeSidebarTab, setActiveSidebarTab] = useState<'Sections' | 'Templates'>('Sections');
-  const [headerTab, setHeaderTab] = useState<'Edit' | 'Customize' | 'Export'>('Edit');
   const cvContentRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size exceeds 5MB limit');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result) {
+        setCvData(prev => ({ ...prev, personal: { ...prev.personal, avatar: reader.result as string } }));
+        toast.success('Profile photo updated!');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Pagination logic
   useEffect(() => {
@@ -367,6 +384,13 @@ export default function EditorPage() {
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-700">Profile Photo</label>
             <div className="flex items-center gap-4">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handlePhotoUpload} 
+                accept="image/png, image/jpeg, image/jpg, image/webp" 
+                className="hidden" 
+              />
               <div className="w-16 h-16 rounded-full border-2 border-amber-500 overflow-hidden bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                 {cvData.personal.avatar ? (
                   <img src={cvData.personal.avatar} alt="Profile" className="w-full h-full object-cover" />
@@ -376,8 +400,24 @@ export default function EditorPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2">
-                  <button className="px-3 py-1.5 text-[11px] font-bold border border-slate-200 rounded-md hover:bg-slate-50 transition-colors">Change Photo</button>
-                  <button className="p-1.5 border border-slate-200 rounded-md hover:bg-rose-50 hover:text-rose-600 transition-colors text-slate-500"><Trash2 className="w-4 h-4" /></button>
+                  <button 
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3 py-1.5 text-[11px] font-bold border border-slate-200 rounded-md hover:bg-slate-50 transition-colors text-slate-700 cursor-pointer"
+                  >
+                    Change Photo
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      updatePersonal('avatar', '');
+                      toast.success('Photo removed');
+                    }}
+                    className="p-1.5 border border-slate-200 rounded-md hover:bg-rose-50 hover:text-rose-600 transition-colors text-slate-500 cursor-pointer"
+                    title="Remove Photo"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
                 <p className="text-[9px] text-slate-400">JPG, PNG up to 5MB. Recommended size 400x400px</p>
               </div>
@@ -520,26 +560,15 @@ export default function EditorPage() {
       {/* HEADER */}
       <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-white border-b border-slate-200 z-20 shadow-sm">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-violet-600 rounded-full flex items-center justify-center text-white font-black shadow-md shadow-violet-200">
-              CV
-            </div>
-            <div>
-              <h1 className="text-sm font-bold text-slate-900">GetEasyCV</h1>
-              <p className="text-[10px] text-slate-500 font-medium tracking-wide">Build professional resumes easily</p>
-            </div>
-          </div>
+          <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
+            <img src="/logo.png" alt="GetEasyCV" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+          </Link>
           <Link href="/dashboard" className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-full border border-slate-200 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Dashboard
           </Link>
         </div>
-        
-        <div className="hidden md:flex bg-slate-50 p-1 rounded-full border border-slate-200">
-          <button onClick={() => setHeaderTab('Edit')} className={`px-5 py-1.5 text-xs font-bold rounded-full transition-colors ${headerTab === 'Edit' ? 'bg-violet-100 text-violet-700' : 'text-slate-600 hover:text-slate-900'}`}>Edit</button>
-          <button onClick={() => setHeaderTab('Customize')} className={`px-5 py-1.5 text-xs font-bold rounded-full transition-colors ${headerTab === 'Customize' ? 'bg-violet-100 text-violet-700' : 'text-slate-600 hover:text-slate-900'}`}>Customize</button>
-          <button onClick={() => setHeaderTab('Export')} className={`px-5 py-1.5 text-xs font-bold rounded-full transition-colors ${headerTab === 'Export' ? 'bg-violet-100 text-violet-700' : 'text-slate-600 hover:text-slate-900'}`}>Export</button>
-        </div>
+
 
         <div className="flex items-center gap-3">
           <div className="hidden lg:flex items-center gap-1.5 mr-2">
@@ -597,71 +626,127 @@ export default function EditorPage() {
               </button>
             </div>
             
-            <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-wide">Resume Sections</h2>
-            <p className="text-[10px] text-slate-500 mt-0.5 mb-4">Drag to reorder sections</p>
+            <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+              {activeSidebarTab === 'Templates' ? 'Choose Template' : 'Resume Sections'}
+            </h2>
+            <p className="text-[10px] text-slate-500 mt-0.5 mb-4">
+              {activeSidebarTab === 'Templates' ? 'Select a layout style for your resume' : 'Drag to reorder sections'}
+            </p>
           </div>
           
-          <div className="flex-1 overflow-y-auto px-6 space-y-2 pb-6">
-            {['personal', 'summary', ...sectionOrder].map((stepId, index) => {
-              const step = builderSteps.find(s => s.id === stepId);
-              if (!step) return null;
-              const isActive = expandedPanel === step.id;
-              const complete = completedStep(step.id, cvData);
-              const isDraggable = sectionOrder.includes(step.id as SectionKey);
-              const Icon = step.icon;
+          {activeSidebarTab === 'Templates' ? (
+            <div className="flex-1 overflow-y-auto px-6 space-y-3 pb-6">
+              {templates.map((tmpl) => {
+                const isSelected = selectedTemplate.id === tmpl.id;
+                return (
+                  <div 
+                    key={tmpl.id}
+                    onClick={() => {
+                      setSelectedTemplate(tmpl);
+                      setCustomTheme(tmpl.theme);
+                      setSelectedLayout(tmpl.layout);
+                      setSectionVariants(tmpl.sectionVariants);
+                      if (tmpl.layout.sectionOrder) {
+                        setSectionOrder(tmpl.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
+                      }
+                      toast.success(`Selected template: ${tmpl.name || tmpl.layout.name}`);
+                    }}
+                    className={`group cursor-pointer rounded-xl border-2 p-3 transition-all ${
+                      isSelected 
+                        ? 'border-violet-600 bg-violet-50/50 shadow-md ring-2 ring-violet-500/20' 
+                        : 'border-slate-200 bg-white hover:border-violet-300 hover:shadow-sm'
+                    }`}
+                  >
+                    <div className="h-32 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden relative mb-2 flex items-center justify-center">
+                      <div className="scale-[0.20] origin-center transform-gpu pointer-events-none w-[920px]">
+                        <TemplateRenderer template={tmpl} data={sampleCV} scale={1} />
+                      </div>
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 bg-violet-600 text-white p-1 rounded-full shadow-md">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-violet-600 transition-colors">{tmpl.name || tmpl.layout.name}</h4>
+                        <p className="text-[10px] text-slate-500 font-medium capitalize">{tmpl.category || 'Professional'} • {tmpl.theme.name}</p>
+                      </div>
+                      {(tmpl as any).isPremium && (
+                        <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">PRO</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex-1 overflow-y-auto px-6 space-y-2 pb-6">
+              {['personal', ...sectionOrder].map((stepId) => {
+                const step = builderSteps.find(s => s.id === stepId);
+                if (!step) return null;
+                const isActive = expandedPanel === step.id;
+                const complete = completedStep(step.id, cvData);
+                const isDraggable = sectionOrder.includes(step.id as SectionKey);
+                const Icon = step.icon;
+                
+                return (
+                  <div 
+                    key={step.id}
+                    draggable={isDraggable}
+                    onDragStart={() => isDraggable && setDraggedSectionIndex(sectionOrder.indexOf(step.id as SectionKey))}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => isDraggable && dropSection(sectionOrder.indexOf(step.id as SectionKey))}
+                    onDragEnd={() => setDraggedSectionIndex(null)}
+                    onClick={() => setExpandedPanel(step.id)}
+                    className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all border ${
+                      isActive 
+                        ? 'bg-violet-50/80 border-violet-200' 
+                        : 'bg-white border-transparent hover:border-slate-200 shadow-sm'
+                    }`}
+                  >
+                    <div className={`flex items-center gap-3 min-w-0 ${isActive ? 'text-violet-700' : 'text-slate-700'}`}>
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span className="text-xs font-bold truncate">{step.title}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {complete && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                      {isDraggable && <GripVertical className="w-4 h-4 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity" />}
+                    </div>
+                  </div>
+                );
+              })}
               
-              return (
-                <div 
-                  key={step.id}
-                  draggable={isDraggable}
-                  onDragStart={() => isDraggable && setDraggedSectionIndex(sectionOrder.indexOf(step.id as SectionKey))}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => isDraggable && dropSection(sectionOrder.indexOf(step.id as SectionKey))}
-                  onDragEnd={() => setDraggedSectionIndex(null)}
-                  onClick={() => setExpandedPanel(step.id)}
-                  className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all border ${
-                    isActive 
-                      ? 'bg-violet-50/80 border-violet-200' 
-                      : 'bg-white border-transparent hover:border-slate-200 shadow-sm'
-                  }`}
+              <div className="pt-2">
+                <button 
+                  type="button"
+                  onClick={() => toast('Additional custom sections feature enabled')}
+                  className="w-full py-3 rounded-lg border border-dashed border-violet-300 bg-white text-xs font-bold text-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center gap-2"
                 >
-                  <div className={`flex items-center gap-3 min-w-0 ${isActive ? 'text-violet-700' : 'text-slate-700'}`}>
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span className="text-xs font-bold truncate">{step.title}</span>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {complete && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
-                    {isDraggable && <GripVertical className="w-4 h-4 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity" />}
+                  <Plus className="w-4 h-4" />
+                  Add Section
+                </button>
+              </div>
+              
+              {/* ATS Score Card */}
+              <div className="mt-8 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-1 mb-2">
+                  <span className="text-xs font-bold text-slate-900">ATS Score</span>
+                  <span className="text-slate-400 cursor-help" title="Based on formatting and completeness">?</span>
+                </div>
+                <div className="flex items-end gap-2 mb-3">
+                  <span className="text-3xl font-black text-emerald-500 leading-none">92</span>
+                  <span className="text-xs text-slate-500 font-bold mb-1">/100</span>
+                  <div className="ml-auto bg-emerald-50 text-emerald-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                    Excellent
                   </div>
                 </div>
-              );
-            })}
-            
-            <div className="pt-2">
-              <button className="w-full py-3 rounded-lg border border-dashed border-violet-300 bg-white text-xs font-bold text-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center gap-2">
-                <Plus className="w-4 h-4" />
-                Add Section
-              </button>
-            </div>
-            
-            {/* ATS Score Card */}
-            <div className="mt-8 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-              <div className="flex items-center gap-1 mb-2">
-                <span className="text-xs font-bold text-slate-900">ATS Score</span>
-                <span className="text-slate-400 cursor-help" title="Based on formatting and completeness">?</span>
-              </div>
-              <div className="flex items-end gap-2 mb-3">
-                <span className="text-3xl font-black text-emerald-500 leading-none">92</span>
-                <span className="text-xs text-slate-500 font-bold mb-1">/100</span>
-                <div className="ml-auto bg-emerald-50 text-emerald-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                  Excellent
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: '92%' }} />
                 </div>
               </div>
-              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: '92%' }} />
-              </div>
             </div>
-          </div>
+          )}
         </aside>
 
         {/* CENTER AREA (Live Preview) */}

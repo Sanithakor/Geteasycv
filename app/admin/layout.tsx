@@ -27,17 +27,21 @@ export default function AdminLayout({
       router.replace('/login');
       return;
     }
-  }, [_hydrated, isAuthenticated, router]);
+    if (user?.role !== 'admin') {
+      router.replace('/dashboard');
+      return;
+    }
+  }, [_hydrated, isAuthenticated, user, router]);
 
-  // Show nothing while hydrating or redirecting
-  if (!_hydrated || !isAuthenticated) {
+  // Show loading state while hydrating or redirecting
+  if (!_hydrated || !isAuthenticated || user?.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-[20px] bg-violet-600 mb-4 animate-pulse">
             <span className="text-white text-lg">⚙️</span>
           </div>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">Loading…</p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">Verifying Admin Access…</p>
         </div>
       </div>
     );

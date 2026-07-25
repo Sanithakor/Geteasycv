@@ -7,6 +7,7 @@
 import React from 'react';
 import { Menu, Search, Bell, LogOut, Plus, Settings, User } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
+import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import Link from 'next/link';
 
 interface HeaderProps {
@@ -137,53 +138,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
           {/* Divider */}
           <div className="h-6 w-px bg-slate-200 mx-1" />
 
-          {/* User profile dropdown button */}
-          <div className="relative">
-            <button
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 flex-shrink-0 shadow-sm hover:ring-2 hover:ring-violet-100 transition-all"
-            >
-              <img src="https://i.pravatar.cc/100?img=68" alt="Profile" className="w-full h-full object-cover" />
-            </button>
-
-            {/* User Dropdown */}
-            {showUserMenu && (
-              <>
-                <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
-                <div className="absolute right-0 mt-2 w-48 rounded-[20px] border border-slate-200 bg-white p-1.5 shadow-xl z-20">
-                  <div className="px-3 py-2 border-b border-slate-100">
-                    <p className="text-sm font-bold text-slate-900">{user?.name || 'John Admin'}</p>
-                    <p className="text-[11px] text-slate-400 truncate">{user?.email || 'admin@geteasycv.com'}</p>
-                  </div>
-                  <div className="p-1 space-y-[2px]">
-                    <Link
-                      href="/admin/profile"
-                      onClick={() => setShowUserMenu(false)}
-                      className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                    >
-                      <User className="w-4 h-4 text-slate-400" />
-                      <span>My Profile</span>
-                    </Link>
-                    <Link
-                      href="/admin/settings"
-                      onClick={() => setShowUserMenu(false)}
-                      className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                    >
-                      <Settings className="w-4 h-4 text-slate-400" />
-                      <span>Settings</span>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
-                    >
-                      <LogOut className="w-4 h-4 text-red-400" />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          {/* Unified User profile dropdown button */}
+          <UserProfileDropdown />
         </div>
       </div>
     </header>

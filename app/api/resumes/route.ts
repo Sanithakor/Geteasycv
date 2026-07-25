@@ -104,29 +104,30 @@ export async function POST(req: Request) {
     }
 
     try {
-      // Verify template exists only when a templateId is supplied.
+      // Verify if template exists in DB; if not, store title & create resume cleanly
+      let validTemplateId: string | undefined = undefined;
       if (templateId) {
         const template = await prisma.template.findUnique({
           where: { id: templateId },
         });
-
-        if (!template) {
-          return NextResponse.json(
-            { error: 'Template not found' },
-            { status: 404 }
-          );
+        if (template) {
+          validTemplateId = template.id;
         }
       }
 
       // Create resume in db
+      const createData: any = {
+        title,
+        slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        userId: auth.userId,
+        status: 'draft',
+      };
+      if (validTemplateId) {
+        createData.templateId = validTemplateId;
+      }
+
       const resume = await prisma.resume.create({
-        data: {
-          title,
-          slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          userId: auth.userId,
-          ...(templateId ? { templateId } : {}),
-          status: 'draft',
-        },
+        data: createData,
         include: {
           template: {
             select: {
