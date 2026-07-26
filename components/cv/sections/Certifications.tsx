@@ -1,9 +1,10 @@
-// Certifications section component with variant support
+// Certifications section component with variant support & Lucide icons
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
 import { CertificationsVariant, getCardStyles, getShadowStyle } from '../variants/sectionVariants';
 import { CertificationItem } from '../../../data/sampleCV';
+import { Award, CheckCircle } from 'lucide-react';
 
 export type CertificationsProps = {
   data: CertificationItem[];
@@ -16,10 +17,11 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
   const shadowStyle = getShadowStyle(theme);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-3 mb-4">
+      <Award className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
         className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
       >
         Certifications
       </h2>
@@ -29,7 +31,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
 
   if (variant === 'list') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-certifications" className="w-full mb-6">
         {renderHeader()}
         <div className="space-y-2">
           {data.map((item) => (
@@ -73,7 +75,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
 
   if (variant === 'badges') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-certifications" className="w-full mb-6">
         {renderHeader()}
         <div className="flex flex-wrap gap-3">
           {data.map((item) => (
@@ -100,7 +102,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
 
   // Cards variant
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-certifications" className="w-full mb-6">
       {renderHeader()}
       <div className="grid grid-cols-2 gap-4">
         {data.map((item) => (

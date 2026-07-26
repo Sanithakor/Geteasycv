@@ -7,7 +7,7 @@ import Navigation from '@/components/Navigation';
 import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
 import { GeneratedTemplate, generateTemplates, getTemplateStats } from '@/lib/generateTemplates';
-import { generateOptimizedTemplatePreview } from '@/lib/optimizedTemplatePreview';
+import { generateOptimizedTemplatePreviewDataUri } from '@/lib/optimizedTemplatePreview';
 import { useAuthStore } from '@/lib/store/authStore';
 import { Plus, Eye } from 'lucide-react';
 
@@ -25,7 +25,7 @@ function templateCategory(template: GeneratedTemplate) {
 
 function TemplatePreview({ template }: { template: GeneratedTemplate }) {
   const [mounted, setMounted] = useState(false);
-  const [scale, setScale] = useState(0.28);
+  const [scale, setScale] = useState(0.35);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,51 +36,36 @@ function TemplatePreview({ template }: { template: GeneratedTemplate }) {
     if (!mounted || !containerRef.current) return;
 
     const updateScale = () => {
-      if (!containerRef.current) return;
-      const containerWidth = containerRef.current.clientWidth;
-      const targetWidth = 794;
-      const computedScale = Math.max(0.2, Math.min(0.4, containerWidth / targetWidth));
-      setScale(computedScale);
+      if (containerRef.current) {
+        const width = containerRef.current.clientWidth;
+        const computed = width / 794;
+        setScale(computed > 0 ? computed : 0.35);
+      }
     };
 
     updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, [mounted]);
-
-  const svgDataUri = useMemo(() => {
-    return generateOptimizedTemplatePreview(template);
-  }, [template]);
-
-  if (svgDataUri) {
-    return (
-      <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-lg border border-slate-200/80 bg-white shadow-xs">
-        <img
-          src={svgDataUri}
-          alt={template.name}
-          className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-        />
-      </div>
-    );
-  }
 
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[1/1.414] w-full overflow-hidden rounded-lg border border-slate-200/80 bg-white shadow-xs"
+      className="relative aspect-[1/1.414] w-full overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-xs group-hover:border-teal-400/80 group-hover:shadow-md transition-all duration-300"
     >
       {mounted ? (
         <div
-          className="absolute left-1/2 top-0 origin-top -translate-x-1/2 pointer-events-none select-none"
+          className="absolute left-0 top-0 origin-top-left pointer-events-none select-none"
           style={{
             width: '794px',
-            transform: `translateX(-50%) scale(${scale})`,
+            transform: `scale(${scale})`,
           }}
         >
-          <TemplateRenderer template={template} data={sampleCV} />
+          <TemplateRenderer template={template} data={sampleCV} scale={1} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-slate-50 text-slate-400 text-xs font-medium">
+        <div className="flex h-full w-full items-center justify-center bg-slate-50 text-slate-400 text-xs font-semibold">
           Loading Preview...
         </div>
       )}
@@ -288,13 +273,25 @@ export default function TemplatesPage() {
                         {template.description}
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-1 mt-2.5">
+                    <div className="flex flex-wrap items-center gap-1 mt-2.5">
+                      <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold text-emerald-700 border border-emerald-200">
+                        ✓ ATS Ready
+                      </span>
                       <span className="rounded-full bg-violet-50 px-2.5 py-0.5 text-[9px] font-bold text-violet-700">
                         {template.theme.name}
                       </span>
                       <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[9px] font-bold text-slate-600">
                         {template.category}
                       </span>
+                      {(template as any).isPremium ? (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-800">
+                          PRO
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold text-slate-500">
+                          FREE
+                        </span>
+                      )}
                     </div>
                   </div>
                 </article>

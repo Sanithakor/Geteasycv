@@ -1,9 +1,10 @@
-// Projects section component with variant support
+// Projects section component with variant support & Lucide icons
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
 import { ProjectsVariant, getCardStyles, getShadowStyle } from '../variants/sectionVariants';
 import { ProjectItem } from '../../../data/sampleCV';
+import { FolderGit2, ExternalLink } from 'lucide-react';
 
 export type ProjectsProps = {
   data: ProjectItem[];
@@ -16,10 +17,11 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
   const shadowStyle = getShadowStyle(theme);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-3 mb-4">
+      <FolderGit2 className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
         className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
       >
         Projects
       </h2>
@@ -29,7 +31,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
 
   if (variant === 'cards') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-projects" className="w-full mb-6">
         {renderHeader()}
         <div className="grid gap-4">
           {data.map((item) => (
@@ -103,7 +105,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
 
   if (variant === 'grid') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-projects" className="w-full mb-6">
         {renderHeader()}
         <div className="grid grid-cols-2 gap-4">
           {data.map((item) => (
@@ -152,7 +154,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
 
   // Portfolio variant (default)
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-projects" className="w-full mb-6">
       <div className="flex items-center gap-4 mb-4">
         <h2
           className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"

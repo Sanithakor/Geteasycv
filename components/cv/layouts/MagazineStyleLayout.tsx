@@ -99,7 +99,7 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
 
       {/* Main Content */}
       <div className="p-6" style={{ backgroundColor: theme.background }}>
-        <Header data={data.personal} theme={theme} variant={headerVariant} />
+        <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && (
           <div className="mb-6 p-6" style={{ background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,  }}>
             <p className="text-lg leading-relaxed" style={{ fontFamily: theme.fontFamily, color: theme.text }}>

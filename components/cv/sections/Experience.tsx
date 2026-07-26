@@ -1,9 +1,10 @@
-// Experience section component with variant support
+// Experience section component with variant support & Lucide icons
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
 import { ExperienceVariant, getCardStyles, getShadowStyle, getDividerStyle } from '../variants/sectionVariants';
 import { ExperienceItem } from '../../../data/sampleCV';
+import { Briefcase, Calendar, MapPin } from 'lucide-react';
 
 export type ExperienceProps = {
   data: ExperienceItem[];
@@ -17,10 +18,11 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
   const dividerStyle = getDividerStyle(theme);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-3 mb-4">
+      <Briefcase className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
         className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
       >
         Experience
       </h2>
@@ -30,7 +32,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
 
   if (variant === 'timeline') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-experience" className="w-full mb-6">
         {renderHeader()}
         <div className="relative pl-3">
           {/* Timeline line */}
@@ -88,7 +90,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
 
   if (variant === 'cards') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-experience" className="w-full mb-6">
         {renderHeader()}
         <div className="grid gap-4">
           {data.map((item) => (
@@ -141,7 +143,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
 
   if (variant === 'bordered') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-experience" className="w-full mb-6">
         {renderHeader()}
         <div className="space-y-0">
           {data.map((item, index) => (
@@ -190,7 +192,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
 
   // Compact variant (default)
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-experience" className="w-full mb-6">
       {renderHeader()}
       <div className="space-y-4">
         {data.map((item) => (

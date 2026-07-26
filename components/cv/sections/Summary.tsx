@@ -30,7 +30,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   if (variant === 'standard') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-summary" className="w-full mb-6">
         {renderHeader()}
         <p className="text-[11px] leading-relaxed text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
           {data}
@@ -41,7 +41,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   if (variant === 'highlight') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-summary" className="w-full mb-6">
         {renderHeader()}
         <div
           className="p-4 rounded-lg border-l-4"
@@ -60,7 +60,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   // Minimal variant
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-summary" className="w-full mb-6">
       {renderHeader()}
       <p
         className="text-[11px] leading-relaxed italic pl-3 border-l-2"

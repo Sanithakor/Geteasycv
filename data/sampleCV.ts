@@ -99,8 +99,8 @@ export type ContactItem = {
   label?: string;
 };
 
-// Dummy user image - professional placeholder avatar
-export const DUMMY_AVATAR = 'https://i.pravatar.cc/400?img=32';
+// Dummy user image - clean inline SVG avatar (100% offline & fast)
+export const DUMMY_AVATAR = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="64" fill="%23cbd5e1"/><path d="M64 28a24 24 0 1 0 0 48 24 24 0 0 0 0-48zM24 108c0-22.1 17.9-40 40-40s40 17.9 40 40a63.5 63.5 0 0 1-80 0z" fill="%2364748b"/></svg>`;
 
 export const sampleCV: CVData = {
   personal: {

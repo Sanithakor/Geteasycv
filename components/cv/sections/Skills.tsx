@@ -1,9 +1,10 @@
-// Skills section component with variant support
+// Skills section component with variant support & Lucide icons
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
 import { SkillsVariant, getCardStyles, getShadowStyle, getPillStyle } from '../variants/sectionVariants';
 import { SkillItem } from '../../../data/sampleCV';
+import { Code2 } from 'lucide-react';
 
 export type SkillsProps = {
   data: SkillItem[];
@@ -25,10 +26,11 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
   }, {} as Record<string, SkillItem[]>);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-3 mb-4">
+      <Code2 className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
         className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
       >
         Skills
       </h2>
@@ -38,7 +40,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
 
   if (variant === 'tags') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-skills" className="w-full mb-6">
         {renderHeader()}
         <div className="flex flex-wrap gap-2">
           {data.map((skill) => (
@@ -61,7 +63,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
 
   if (variant === 'progress-bars') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-skills" className="w-full mb-6">
         {renderHeader()}
         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
           {data.map((skill) => (
@@ -92,7 +94,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
 
   if (variant === 'circles') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-skills" className="w-full mb-6">
         {renderHeader()}
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
           {data.map((skill) => (
@@ -125,7 +127,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
 
   // Pills variant
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-skills" className="w-full mb-6">
       {renderHeader()}
       <div className="space-y-4">
         {Object.entries(skillsByCategory).map(([category, skills]) => (

@@ -145,7 +145,7 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
       {/* Main Content */}
       <div className="p-6" style={{ backgroundColor: theme.background }}>
-        <Header data={data.personal} theme={theme} variant={headerVariant} />
+        <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && <Summary data={data.summary} theme={theme} variant="highlight" />}
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
         {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}

@@ -154,7 +154,7 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
           willChange: 'transform' // Optimize for canvas rendering
         }}
       >
-        <Header data={data.personal} theme={theme} variant={headerVariant} />
+        <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && <Summary data={data.summary} theme={theme} />}
         {data.experience.length > 0 && (
           <Experience data={data.experience} theme={theme} variant={experienceVariant} />

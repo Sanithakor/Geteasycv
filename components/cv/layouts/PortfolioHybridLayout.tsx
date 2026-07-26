@@ -45,7 +45,7 @@ const PortfolioHybridLayout: React.FC<PortfolioHybridLayoutProps> = ({
     >
       {/* Main Content */}
       <div className="p-6" style={{ backgroundColor: theme.background }}>
-        <Header data={data.personal} theme={theme} variant={headerVariant} />
+        <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && <Summary data={data.summary} theme={theme} />}
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
         {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}

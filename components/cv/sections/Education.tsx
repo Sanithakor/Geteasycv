@@ -1,9 +1,10 @@
-// Education section component with variant support
+// Education section component with variant support & Lucide icons
 
 import React from 'react';
 import { Theme } from '../../../data/themes';
 import { EducationVariant, getCardStyles, getShadowStyle, getDividerStyle } from '../variants/sectionVariants';
 import { EducationItem } from '../../../data/sampleCV';
+import { GraduationCap, Calendar } from 'lucide-react';
 
 export type EducationProps = {
   data: EducationItem[];
@@ -16,10 +17,11 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
   const shadowStyle = getShadowStyle(theme);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-3 mb-4">
+      <GraduationCap className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
         className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
+        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
       >
         Education
       </h2>
@@ -29,7 +31,7 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
 
   if (variant === 'cards') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-education" className="w-full mb-6">
         {renderHeader()}
         <div className="grid gap-4">
           {data.map((item) => (
@@ -83,7 +85,7 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
 
   if (variant === 'compact') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-education" className="w-full mb-6">
         {renderHeader()}
         <div className="space-y-4">
           {data.map((item) => (
@@ -108,7 +110,7 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
 
   // List variant (default)
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-education" className="w-full mb-6">
       {renderHeader()}
       <div className="space-y-0">
         {data.map((item, index) => (

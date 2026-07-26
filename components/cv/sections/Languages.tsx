@@ -29,7 +29,7 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
 
   if (variant === 'tags') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-languages" className="w-full mb-6">
         {renderHeader()}
         <div className="flex flex-wrap gap-2">
           {data.map((item) => (
@@ -52,7 +52,7 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
 
   if (variant === 'flags') {
     return (
-      <div className="w-full mb-6">
+      <div id="cv-section-languages" className="w-full mb-6">
         {renderHeader()}
         <div className="grid grid-cols-3 gap-3">
           {data.map((item) => (
@@ -81,7 +81,7 @@ const Languages: React.FC<LanguagesProps> = ({ data, theme, variant = 'tags' }) 
 
   // Progress variant (default)
   return (
-    <div className="w-full mb-6">
+    <div id="cv-section-languages" className="w-full mb-6">
       {renderHeader()}
       <div className="grid grid-cols-2 gap-x-6 gap-y-4">
         {data.map((item) => {

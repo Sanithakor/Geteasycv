@@ -7,6 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
+import { DUMMY_AVATAR } from '@/data/sampleCV';
 import {
   AreaChart,
   Area,
@@ -170,18 +171,18 @@ const resumesByCategoryData = [
 
 // Bottom lists
 const recentResumes = [
-  { id: 1, name: 'John Doe', role: 'Software Engineer', date: 'May 26, 2025', status: 'Completed', img: 'https://i.pravatar.cc/100?img=11' },
-  { id: 2, name: 'Emily Clark', role: 'UX/UI Designer', date: 'May 26, 2025', status: 'Completed', img: 'https://i.pravatar.cc/100?img=5' },
-  { id: 3, name: 'Michael Brown', role: 'Product Manager', date: 'May 26, 2025', status: 'Completed', img: 'https://i.pravatar.cc/100?img=3' },
-  { id: 4, name: 'Sarah Johnson', role: 'Marketing Specialist', date: 'May 25, 2025', status: 'In Progress', img: 'https://i.pravatar.cc/100?img=9' },
+  { id: 1, name: 'John Doe', role: 'Software Engineer', date: 'May 26, 2025', status: 'Completed', img: DUMMY_AVATAR },
+  { id: 2, name: 'Emily Clark', role: 'UX/UI Designer', date: 'May 26, 2025', status: 'Completed', img: DUMMY_AVATAR },
+  { id: 3, name: 'Michael Brown', role: 'Product Manager', date: 'May 26, 2025', status: 'Completed', img: DUMMY_AVATAR },
+  { id: 4, name: 'Sarah Johnson', role: 'Marketing Specialist', date: 'May 25, 2025', status: 'In Progress', img: DUMMY_AVATAR },
 ];
 
 const recentUsers = [
-  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', date: 'May 26, 2025', tier: 'Premium', img: 'https://i.pravatar.cc/100?img=12' },
-  { id: 2, name: 'Maria Garcia', email: 'maria@example.com', date: 'May 26, 2025', tier: 'Premium', img: 'https://i.pravatar.cc/100?img=16' },
-  { id: 3, name: 'David Wilson', email: 'david@example.com', date: 'May 25, 2025', tier: 'Free', img: 'https://i.pravatar.cc/100?img=15' },
-  { id: 4, name: 'Lisa Anderson', email: 'lisa@example.com', date: 'May 25, 2025', tier: 'Premium', img: 'https://i.pravatar.cc/100?img=20' },
-  { id: 5, name: 'James Taylor', email: 'james@example.com', date: 'May 24, 2025', tier: 'Free', img: 'https://i.pravatar.cc/100?img=33' }
+  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', date: 'May 26, 2025', tier: 'Premium', img: DUMMY_AVATAR },
+  { id: 2, name: 'Maria Garcia', email: 'maria@example.com', date: 'May 26, 2025', tier: 'Premium', img: DUMMY_AVATAR },
+  { id: 3, name: 'David Wilson', email: 'david@example.com', date: 'May 25, 2025', tier: 'Free', img: DUMMY_AVATAR },
+  { id: 4, name: 'Lisa Anderson', email: 'lisa@example.com', date: 'May 25, 2025', tier: 'Premium', img: DUMMY_AVATAR },
+  { id: 5, name: 'James Taylor', email: 'james@example.com', date: 'May 24, 2025', tier: 'Free', img: DUMMY_AVATAR }
 ];
 
 const recentPayments = [

@@ -28,18 +28,22 @@ export default function UserProfileDropdown() {
   const initial = user?.name?.[0]?.toUpperCase() || 'U';
   const tierName = user?.role === 'admin' ? 'ADMIN' : (user?.tier || (user as any)?.subscriptionTier || 'FREE').toUpperCase();
 
+  // Extract First Name and restrict to max 8 characters
+  const rawFirstName = user?.name ? user.name.trim().split(' ')[0] : 'Account';
+  const firstNameDisplay = rawFirstName.length > 8 ? rawFirstName.slice(0, 8) : rawFirstName;
+
   return (
     <div className="relative inline-block text-left">
       {/* Top Profile Pill Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-slate-800 hover:bg-slate-50 transition-all shadow-xs focus:outline-none"
+        className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-slate-800 hover:bg-slate-50 transition-all shadow-xs focus:outline-none cursor-pointer"
       >
         <div className="w-7 h-7 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
           {initial}
         </div>
-        <span className="text-xs font-bold text-slate-800 max-w-[110px] truncate">
-          {user?.name || 'Account'}
+        <span className="text-xs font-bold text-slate-800 truncate">
+          {firstNameDisplay}
         </span>
         <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
       </button>

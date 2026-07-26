@@ -1,4 +1,7 @@
 import Navigation from "@/components/Navigation";
+import HowItWorks from "@/components/sections/HowItWorks";
+import ResumeBuilderFeatures from "@/components/sections/ResumeBuilderFeatures";
+import ResumeCategories from "@/components/sections/ResumeCategories";
 import Link from "next/link";
 import { layouts } from "@/data/layouts";
 import { themes } from "@/data/themes";
@@ -158,6 +161,15 @@ export default function Home() {
           <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
           <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
         </section>
+
+        {/* ── Resume Categories Section ─────────────────────────────── */}
+        <ResumeCategories />
+
+        {/* ── How It Works Section ───────────────────────────────────── */}
+        <HowItWorks />
+
+        {/* ── Reference Resume Builder Features ────────────────────────── */}
+        <ResumeBuilderFeatures />
 
         {/* ── Features ─────────────────────────────────────────────── */}
         <section id="features" className="py-20 bg-white">

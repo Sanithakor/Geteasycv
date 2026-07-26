@@ -1,6 +1,6 @@
 // Accurate template preview generator that matches actual templates exactly
 import { GeneratedTemplate } from './generateTemplates';
-import { sampleCV } from '../data/sampleCV';
+import { sampleCV, DUMMY_AVATAR } from '../data/sampleCV';
 
 // Sanitize and format text properly for SVG
 function sanitizeText(text: string): string {
@@ -12,6 +12,17 @@ function sanitizeText(text: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
     .substring(0, 200); // Reasonable length limit
+}
+
+export function svgToDataUri(svgString: string): string {
+  if (!svgString) return '';
+  if (svgString.startsWith('data:')) return svgString;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString.trim())}`;
+}
+
+export function generateOptimizedTemplatePreviewDataUri(template: GeneratedTemplate): string {
+  const svg = generateOptimizedTemplatePreview(template);
+  return svgToDataUri(svg);
 }
 
 export function generateOptimizedTemplatePreview(template: GeneratedTemplate): string {
@@ -153,7 +164,7 @@ function createAccurateSingleColumnPreview(template: GeneratedTemplate, data: { 
   const email = sanitizeText(data.personal.email);
   const phone = sanitizeText(data.personal.phone);
   const location = sanitizeText(data.personal.location);
-  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
+  const avatar = data.personal.avatar || DUMMY_AVATAR;
   
   // Check layout headerVariant (fallback to centered if not specified)
   const headerVariant = template.sectionVariants?.headerVariant || 'split'; // Default to split for ATS layouts if possible
@@ -301,7 +312,7 @@ function createAccurateSidebarLeftPreview(template: GeneratedTemplate, data: { p
   const email = sanitizeText(data.personal.email);
   const phone = sanitizeText(data.personal.phone);
   const location = sanitizeText(data.personal.location);
-  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
+  const avatar = data.personal.avatar || DUMMY_AVATAR;
   
   return `
     <svg width="400" height="600" xmlns="http://www.w3.org/2000/svg">
@@ -409,7 +420,7 @@ function createAccurateSidebarRightPreview(template: GeneratedTemplate, data: { 
   const email = sanitizeText(data.personal.email);
   const phone = sanitizeText(data.personal.phone);
   const location = sanitizeText(data.personal.location);
-  const avatar = data.personal.avatar || 'https://i.pravatar.cc/400?img=32';
+  const avatar = data.personal.avatar || DUMMY_AVATAR;
   
   return `
     <svg width="400" height="600" xmlns="http://www.w3.org/2000/svg">

@@ -9,6 +9,8 @@ import { TemplateRenderer } from '@/components/cv';
 import { CVData, CertificationItem, EducationItem, ExperienceItem, LanguageItem, ProjectItem, SkillItem, sampleCV } from '@/data/sampleCV';
 import { getAllLayouts, Layout } from '@/data/layouts';
 import { getAllThemes, Theme } from '@/data/themes';
+import { useAuthStore } from '@/lib/store/authStore';
+import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import { GeneratedTemplate, SectionVariant, generateTemplates } from '@/lib/generateTemplates';
 import { 
   User, FileText, Briefcase, GraduationCap, Link as LinkIcon, Folder, Award, 
@@ -156,6 +158,56 @@ const ItemCard = ({ title, subtitle, onRemove, children, icon: Icon }: any) => {
   );
 };
 
+function EditorSidebarTemplatePreview({ template }: { template: GeneratedTemplate }) {
+  const [mounted, setMounted] = useState(false);
+  const [scale, setScale] = useState(0.20);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !containerRef.current) return;
+
+    const handleResize = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.clientWidth;
+        const computed = width / 794;
+        setScale(computed > 0 ? computed : 0.20);
+      }
+    };
+
+    handleResize();
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [mounted]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative aspect-[1/1.414] w-full overflow-hidden rounded-lg bg-white border border-slate-200/80 shadow-2xs"
+    >
+      {mounted ? (
+        <div
+          className="absolute left-0 top-0 origin-top-left pointer-events-none select-none"
+          style={{
+            width: '794px',
+            transform: `scale(${scale})`,
+          }}
+        >
+          <TemplateRenderer template={template} data={sampleCV} scale={1} />
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-slate-50 text-[10px] font-semibold text-slate-400">
+          Loading...
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function EditorPage() {
   const templates = useMemo(() => generateTemplates(), []);
   const allThemes = useMemo(() => getAllThemes(), []);
@@ -164,9 +216,7 @@ export default function EditorPage() {
   const [mounted, setMounted] = useState(false);
   
   const initialTemplate = useMemo(() => {
-    if (typeof window === 'undefined') return templates[0];
-    const templateId = new URLSearchParams(window.location.search).get('template');
-    return templates.find((item) => item.id === templateId) || templates[0];
+    return templates[0];
   }, [templates]);
 
   const [selectedTemplate, setSelectedTemplate] = useState<GeneratedTemplate>(initialTemplate);
@@ -186,6 +236,72 @@ export default function EditorPage() {
   const [activeSidebarTab, setActiveSidebarTab] = useState<'Sections' | 'Templates'>('Sections');
   const cvContentRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const previewScrollRef = useRef<HTMLDivElement | null>(null);
+  const rightPanelRef = useRef<HTMLDivElement | null>(null);
+  const isManualScrollingRef = useRef<boolean>(false);
+
+  // Scroll Sync Helper
+  const scrollToSectionInPreview = (stepId: BuilderStep) => {
+    setExpandedPanel(stepId);
+    isManualScrollingRef.current = true;
+
+    const targetEl = document.getElementById(`cv-section-${stepId}`);
+    if (targetEl && previewScrollRef.current) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    const rightEl = document.getElementById(`panel-form-${stepId}`);
+    if (rightEl && rightPanelRef.current) {
+      rightEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    setTimeout(() => {
+      isManualScrollingRef.current = false;
+    }, 700);
+  };
+
+  const scrollToPage = (pageNumber: number) => {
+    if (!previewScrollRef.current) return;
+    const pageHeight = 1301 * zoom + 40;
+    const targetTop = (pageNumber - 1) * pageHeight;
+    previewScrollRef.current.scrollTo({ top: targetTop, behavior: 'smooth' });
+  };
+
+  // Scroll listener for active section and active page detection
+  useEffect(() => {
+    const container = previewScrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      const pageHeight = 1301 * zoom + 40;
+      const currentPage = Math.max(1, Math.min(totalPages, Math.floor((scrollTop + 250) / pageHeight) + 1));
+      setActivePage(currentPage);
+
+      if (isManualScrollingRef.current) return;
+
+      const steps: BuilderStep[] = ['personal', ...(sectionOrder as BuilderStep[])];
+      for (const stepId of steps) {
+        const el = document.getElementById(`cv-section-${stepId}`);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 380 && rect.bottom >= 120) {
+            setExpandedPanel(stepId);
+            break;
+          }
+        }
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [zoom, totalPages, sectionOrder]);
+
+
+
+  const { token } = useAuthStore();
+  const [resumeId, setResumeId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -245,47 +361,143 @@ export default function EditorPage() {
     }
   }, [cvData, customTheme, selectedLayout, sectionVariants, sectionOrder, mounted]);
 
-  // Draft Auto-Save
-  const saveDraft = useCallback(() => {
-    if (mounted) {
-      const draft = { cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, savedAt: new Date().toISOString() };
+  // Comprehensive Save Function (Local + Remote API)
+  const saveDraft = useCallback(async () => {
+    if (!mounted) return;
+    setIsSaving(true);
+    try {
+      // Save locally
+      const draft = { 
+        cvData, 
+        customTheme, 
+        selectedLayout, 
+        sectionVariants, 
+        visibility, 
+        sectionOrder, 
+        templateId: selectedTemplate.id,
+        savedAt: new Date().toISOString() 
+      };
       localStorage.setItem('geteasycv-draft', JSON.stringify(draft));
-      if (!autoSave) toast.success('Draft saved locally');
-    }
-  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave, mounted]);
+      if (selectedTemplate.id) {
+        localStorage.setItem(`geteasycv-custom-template-${selectedTemplate.id}`, JSON.stringify({
+          theme: customTheme,
+          layout: selectedLayout,
+          sectionVariants,
+          sectionOrder
+        }));
+      }
 
+      // Sync with Backend API
+      const title = `${cvData.personal.firstName || 'My'} ${cvData.personal.lastName || ''} Resume`.trim();
+      const payload = {
+        title: title || 'Untitled Resume',
+        templateId: selectedTemplate.id,
+        summary: cvData.summary,
+        cvData,
+        customTheme,
+        selectedLayout,
+        sectionVariants,
+        sectionOrder,
+      };
+
+      if (resumeId) {
+        await fetch(`/api/resumes/${resumeId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        const res = await fetch('/api/resumes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const resData = await res.json();
+          if (resData.data?.id) {
+            setResumeId(resData.data.id);
+            if (typeof window !== 'undefined') {
+              window.history.replaceState(null, '', `/editor?id=${resData.data.id}&template=${selectedTemplate.id}`);
+            }
+          }
+        }
+      }
+      toast.success('Template & resume saved successfully!');
+    } catch (err) {
+      console.error('Save sync error:', err);
+      toast.success('Draft saved locally');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, selectedTemplate, resumeId, token, mounted]);
+
+  // Load URL Template & Resume Parameters
   useEffect(() => {
     setMounted(true);
     if (typeof window !== 'undefined') {
-      const templateId = new URLSearchParams(window.location.search).get('template');
-      if (templateId) {
-        const saved = localStorage.getItem(`geteasycv-custom-template-${templateId}`);
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (parsed.theme) setCustomTheme(parsed.theme);
-            if (parsed.layout) setSelectedLayout(parsed.layout);
-            if (parsed.sectionVariants) setSectionVariants(parsed.sectionVariants);
-            if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
-          } catch (e) {}
+      const searchParams = new URLSearchParams(window.location.search);
+      const templateId = searchParams.get('template');
+      const paramResumeId = searchParams.get('id');
+
+      if (paramResumeId) {
+        setResumeId(paramResumeId);
+        fetch(`/api/resumes/${paramResumeId}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+          .then((res) => res.json())
+          .then((resData) => {
+            if (resData.success && resData.data) {
+              const r = resData.data;
+              if (r.personal) {
+                setCvData((prev) => ({
+                  ...prev,
+                  personal: { ...prev.personal, ...r.personal },
+                  summary: r.summary || prev.summary,
+                  experience: r.experience?.length ? r.experience : prev.experience,
+                  education: r.education?.length ? r.education : prev.education,
+                  skills: r.skills?.length ? r.skills : prev.skills,
+                  projects: r.projects?.length ? r.projects : prev.projects,
+                  certifications: r.certifications?.length ? r.certifications : prev.certifications,
+                  languages: r.languages?.length ? r.languages : prev.languages,
+                }));
+              }
+              const activeTmplId = r.templateId || templateId;
+              if (activeTmplId) {
+                const match = templates.find((t) => t.id === activeTmplId);
+                if (match) {
+                  setSelectedTemplate(match);
+                  setCustomTheme(match.theme);
+                  setSelectedLayout(match.layout);
+                  setSectionVariants(match.sectionVariants);
+                }
+              }
+            }
+          })
+          .catch(() => {});
+      } else if (templateId) {
+        const match = templates.find((t) => t.id === templateId);
+        if (match) {
+          setSelectedTemplate(match);
+          setCustomTheme(match.theme);
+          setSelectedLayout(match.layout);
+          setSectionVariants(match.sectionVariants);
+          if (match.layout.sectionOrder) {
+            setSectionOrder(match.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
+          }
         }
       }
-      
-      const savedDraft = localStorage.getItem('geteasycv-draft');
-      if (savedDraft) {
-        try {
-          const draft = JSON.parse(savedDraft);
-          if (draft.cvData) setCvData(draft.cvData);
-          if (draft.visibility) setVisibility(draft.visibility);
-          if (draft.sectionOrder) setSectionOrder(draft.sectionOrder);
-        } catch(e) {}
-      }
     }
-  }, []);
+  }, [templates, token]);
 
   useEffect(() => {
     if (autoSave && mounted) {
-      const timeoutId = setTimeout(() => saveDraft(), 2000);
+      const timeoutId = setTimeout(() => saveDraft(), 4000);
       return () => clearTimeout(timeoutId);
     }
   }, [cvData, customTheme, selectedLayout, sectionVariants, visibility, sectionOrder, autoSave, mounted, saveDraft]);
@@ -297,6 +509,15 @@ export default function EditorPage() {
     layout: { ...selectedLayout, sectionOrder },
     sectionVariants,
   }), [customTheme, sectionOrder, sectionVariants, selectedLayout, selectedTemplate]);
+
+  // Compute total pages based on scroll height
+  useEffect(() => {
+    if (cvContentRef.current) {
+      const contentHeight = cvContentRef.current.scrollHeight;
+      const computed = Math.max(1, Math.ceil(contentHeight / 1300));
+      setTotalPages(computed);
+    }
+  }, [cvData, visibleData, customTemplate, selectedLayout]);
 
   // Export functions
   const exportCanvas = async () => {
@@ -558,17 +779,12 @@ export default function EditorPage() {
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[#F3F4F6] text-slate-900 font-sans">
       {/* HEADER */}
-      <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-white border-b border-slate-200 z-20 shadow-sm">
+      <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-white border-b border-slate-200 z-20 shadow-xs">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
             <img src="/logo.png" alt="GetEasyCV" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
           </Link>
-          <Link href="/dashboard" className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-full border border-slate-200 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to Dashboard
-          </Link>
         </div>
-
 
         <div className="flex items-center gap-3">
           <div className="hidden lg:flex items-center gap-1.5 mr-2">
@@ -579,109 +795,122 @@ export default function EditorPage() {
             </div>
           </div>
           
-          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
-            <button onClick={() => toast('Undo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Undo"><Undo2 className="w-4 h-4" /></button>
-            <button onClick={() => toast('Redo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Redo"><Redo2 className="w-4 h-4" /></button>
+          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-2xs">
+            <button type="button" onClick={() => toast('Undo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Undo"><Undo2 className="w-4 h-4" /></button>
+            <button type="button" onClick={() => toast('Redo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Redo"><Redo2 className="w-4 h-4" /></button>
           </div>
           
-          <button type="button" className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors shadow-sm">
-            <Eye className="w-4 h-4" />
-            Preview
-          </button>
-          <button type="button" onClick={saveDraft} className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors shadow-sm">
-            <Save className="w-4 h-4" />
-            Save Draft
+          <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg border border-slate-800 transition-colors shadow-2xs cursor-pointer">
+            <Save className="w-4 h-4 text-teal-400" />
+            <span>{isSaving ? 'Saving...' : 'Save & Update'}</span>
           </button>
           
           <div className="flex">
-            <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="flex items-center gap-2 px-5 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-sm rounded-l-lg border-r border-violet-500">
+            <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="flex items-center gap-2 px-5 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-2xs rounded-lg cursor-pointer">
               <Download className="w-4 h-4" />
-              {isExporting ? 'Exporting...' : 'Download'}
+              {isExporting ? 'Exporting...' : 'Download PDF'}
             </button>
-            <button type="button" className="px-2 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-sm rounded-r-lg">
-              <ChevronDown className="w-4 h-4" />
-            </button>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <UserProfileDropdown />
           </div>
         </div>
       </header>
 
-      {/* MAIN 3-COLUMN LAYOUT */}
-      <main className="flex-1 flex overflow-hidden">
-        
-        {/* LEFT SIDEBAR (Navigation) */}
-        <aside className="w-72 bg-slate-50 border-r border-slate-200 flex flex-col overflow-hidden shrink-0 hidden lg:flex relative z-10">
-          <div className="px-6 pt-6">
-            <div className="flex border-b border-slate-200 mb-6">
-              <button 
-                onClick={() => setActiveSidebarTab('Sections')}
-                className={`pb-3 px-4 text-xs font-bold border-b-2 transition-colors ${activeSidebarTab === 'Sections' ? 'border-violet-600 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
-              >
-                Sections
-              </button>
-              <button 
-                onClick={() => setActiveSidebarTab('Templates')}
-                className={`pb-3 px-4 text-xs font-bold border-b-2 transition-colors ${activeSidebarTab === 'Templates' ? 'border-violet-600 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
-              >
-                Templates
-              </button>
-            </div>
-            
-            <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-wide">
-              {activeSidebarTab === 'Templates' ? 'Choose Template' : 'Resume Sections'}
-            </h2>
-            <p className="text-[10px] text-slate-500 mt-0.5 mb-4">
-              {activeSidebarTab === 'Templates' ? 'Select a layout style for your resume' : 'Drag to reorder sections'}
-            </p>
+      <main className="flex-1 flex overflow-hidden relative">
+        {/* LEFT SIDEBAR (Sections & Templates) */}
+        <aside className={`${activeSidebarTab === 'Templates' ? 'w-[360px]' : 'w-[300px]'} bg-white border-r border-slate-200 flex flex-col shrink-0 z-10 transition-all duration-300`}>
+          <div className="p-4 border-b border-slate-100 flex items-center gap-2">
+            <button 
+              type="button"
+              onClick={() => setActiveSidebarTab('Sections')}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeSidebarTab === 'Sections' ? 'bg-violet-50 text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
+            >
+              Sections
+            </button>
+            <button 
+              type="button"
+              onClick={() => setActiveSidebarTab('Templates')}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeSidebarTab === 'Templates' ? 'bg-violet-50 text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
+            >
+              Templates
+            </button>
           </div>
-          
+
           {activeSidebarTab === 'Templates' ? (
-            <div className="flex-1 overflow-y-auto px-6 space-y-3 pb-6">
-              {templates.map((tmpl) => {
-                const isSelected = selectedTemplate.id === tmpl.id;
-                return (
-                  <div 
-                    key={tmpl.id}
-                    onClick={() => {
-                      setSelectedTemplate(tmpl);
-                      setCustomTheme(tmpl.theme);
-                      setSelectedLayout(tmpl.layout);
-                      setSectionVariants(tmpl.sectionVariants);
-                      if (tmpl.layout.sectionOrder) {
-                        setSectionOrder(tmpl.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
-                      }
-                      toast.success(`Selected template: ${tmpl.name || tmpl.layout.name}`);
-                    }}
-                    className={`group cursor-pointer rounded-xl border-2 p-3 transition-all ${
-                      isSelected 
-                        ? 'border-violet-600 bg-violet-50/50 shadow-md ring-2 ring-violet-500/20' 
-                        : 'border-slate-200 bg-white hover:border-violet-300 hover:shadow-sm'
-                    }`}
-                  >
-                    <div className="h-32 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden relative mb-2 flex items-center justify-center">
-                      <div className="scale-[0.20] origin-center transform-gpu pointer-events-none w-[920px]">
-                        <TemplateRenderer template={tmpl} data={sampleCV} scale={1} />
-                      </div>
-                      {isSelected && (
-                        <div className="absolute top-2 right-2 bg-violet-600 text-white p-1 rounded-full shadow-md">
-                          <CheckCircle2 className="w-4 h-4" />
+            <div className="flex-1 overflow-y-auto p-3">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Select Template</h3>
+                <span className="text-[10px] font-semibold text-slate-400">{templates.length} Designs</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {templates.map((tmpl) => {
+                  const isSelected = selectedTemplate.id === tmpl.id;
+                  return (
+                    <div
+                      key={tmpl.id}
+                      onClick={() => {
+                        setSelectedTemplate(tmpl);
+                        setCustomTheme(tmpl.theme);
+                        setSelectedLayout(tmpl.layout);
+                        setSectionVariants(tmpl.sectionVariants);
+                        if (tmpl.layout.sectionOrder) {
+                          setSectionOrder(tmpl.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
+                        }
+                        toast.success(`Loaded ${tmpl.name || tmpl.layout.name}`);
+                      }}
+                      className={`group relative cursor-pointer rounded-xl border p-2 transition-all flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-violet-600 ring-2 ring-violet-500/20 bg-violet-50/40 shadow-xs'
+                          : 'border-slate-200 hover:border-violet-300 hover:shadow-xs bg-white'
+                      }`}
+                    >
+                      {/* Card Top Preview Wrapper */}
+                      <div className="relative mb-2">
+                        <EditorSidebarTemplatePreview template={tmpl} />
+                        
+                        {/* Selected Checkmark Badge */}
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 z-20 bg-violet-600 text-white rounded-full p-1 shadow-md">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          </div>
+                        )}
+
+                        {/* Category Tag */}
+                        <div className="absolute left-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
+                          {tmpl.category || 'ATS'}
                         </div>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-violet-600 transition-colors">{tmpl.name || tmpl.layout.name}</h4>
-                        <p className="text-[10px] text-slate-500 font-medium capitalize">{tmpl.category || 'Professional'} • {tmpl.theme.name}</p>
                       </div>
-                      {(tmpl as any).isPremium && (
-                        <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">PRO</span>
-                      )}
+
+                      {/* Card Content & Badges */}
+                      <div className="px-0.5 space-y-1">
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-violet-600 transition-colors line-clamp-1">
+                          {tmpl.layout.name || tmpl.name}
+                        </h4>
+                        
+                        <div className="flex flex-wrap items-center gap-1">
+                          <span className="text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-1.5 py-0.5 rounded">
+                            ✓ ATS
+                          </span>
+                          <span className="text-[8px] font-bold bg-violet-50 text-violet-700 px-1.5 py-0.5 rounded truncate max-w-[70px]">
+                            {tmpl.theme.name}
+                          </span>
+                          {(tmpl as any).isPremium ? (
+                            <span className="text-[8px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">PRO</span>
+                          ) : (
+                            <span className="text-[8px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">FREE</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           ) : (
-            <div className="flex-1 overflow-y-auto px-6 space-y-2 pb-6">
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {['personal', ...sectionOrder].map((stepId) => {
                 const step = builderSteps.find(s => s.id === stepId);
                 if (!step) return null;
@@ -698,19 +927,19 @@ export default function EditorPage() {
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={() => isDraggable && dropSection(sectionOrder.indexOf(step.id as SectionKey))}
                     onDragEnd={() => setDraggedSectionIndex(null)}
-                    onClick={() => setExpandedPanel(step.id)}
-                    className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all border ${
+                    onClick={() => scrollToSectionInPreview(step.id as BuilderStep)}
+                    className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all border ${
                       isActive 
-                        ? 'bg-violet-50/80 border-violet-200' 
-                        : 'bg-white border-transparent hover:border-slate-200 shadow-sm'
+                        ? 'bg-violet-50/90 border-violet-300 border-l-4 border-l-violet-600 shadow-xs' 
+                        : 'bg-white border-transparent hover:border-slate-200 shadow-2xs'
                     }`}
                   >
-                    <div className={`flex items-center gap-3 min-w-0 ${isActive ? 'text-violet-700' : 'text-slate-700'}`}>
-                      <Icon className="w-4 h-4 shrink-0" />
-                      <span className="text-xs font-bold truncate">{step.title}</span>
+                    <div className={`flex items-center gap-3 min-w-0 ${isActive ? 'text-violet-700 font-bold' : 'text-slate-700 font-medium'}`}>
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-violet-600' : 'text-slate-400'}`} />
+                      <span className="text-xs truncate">{step.title}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      {complete && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                      {complete && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
                       {isDraggable && <GripVertical className="w-4 h-4 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity" />}
                     </div>
                   </div>
@@ -721,7 +950,7 @@ export default function EditorPage() {
                 <button 
                   type="button"
                   onClick={() => toast('Additional custom sections feature enabled')}
-                  className="w-full py-3 rounded-lg border border-dashed border-violet-300 bg-white text-xs font-bold text-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-lg border border-dashed border-violet-300 bg-white text-xs font-bold text-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   Add Section
@@ -729,7 +958,7 @@ export default function EditorPage() {
               </div>
               
               {/* ATS Score Card */}
-              <div className="mt-8 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+              <div className="mt-8 bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
                 <div className="flex items-center gap-1 mb-2">
                   <span className="text-xs font-bold text-slate-900">ATS Score</span>
                   <span className="text-slate-400 cursor-help" title="Based on formatting and completeness">?</span>
@@ -749,53 +978,108 @@ export default function EditorPage() {
           )}
         </aside>
 
-        {/* CENTER AREA (Live Preview) */}
-        <section className="flex-1 flex flex-col relative bg-[#F1F3F5] min-w-0 z-0">
-          <div className="flex-1 overflow-auto p-4 sm:p-8 flex justify-center pb-24">
-            <div className="printable origin-top transition-transform" style={{ transform: `scale(${zoom})`, width: 920 }}>
-              <div className={`rounded-xl bg-white shadow-xl relative ${mounted && !isExporting ? 'h-[1332.8px] overflow-hidden' : 'min-h-[1300px]'}`}>
-                <div ref={cvContentRef} style={mounted && !isExporting ? { transform: `translateY(-${(activePage - 1) * 1300.8}px)`, transition: 'transform 0.3s ease-in-out' } : undefined}>
-                  <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
-                </div>
+        {/* CENTER AREA (Continuous Multi-Page Live Preview) */}
+        <section 
+          ref={previewScrollRef}
+          className="flex-1 flex flex-col relative bg-[#F1F3F5] min-w-0 z-0 overflow-y-auto"
+        >
+          <div className="flex-1 p-6 sm:p-10 flex flex-col items-center pb-28">
+            <div className="printable origin-top transition-transform duration-200" style={{ transform: `scale(${zoom})`, width: 920 }}>
+              <div className="flex flex-col items-center">
+                {Array.from({ length: totalPages }).map((_, p) => (
+                  <div key={p} className="flex flex-col items-center mb-12 group">
+                    {/* External Page Sheet Header Bar */}
+                    <div className="w-[920px] flex items-center justify-between px-2 mb-2 text-[11px] font-bold text-slate-500 select-none">
+                      <span className="uppercase tracking-wider">A4 Document • Page {p + 1} of {totalPages}</span>
+                      <span className="text-slate-400 font-semibold text-[10px]">210 × 297 mm</span>
+                    </div>
+
+                    {/* Paper Sheet Container */}
+                    <div 
+                      className="relative bg-white shadow-2xl rounded-sm border border-slate-200/80 overflow-hidden transition-all duration-300"
+                      style={{ width: 920, height: 1301 }}
+                    >
+                      {/* Continuous Page View Slice with Top & Bottom Internal Spacing */}
+                      <div 
+                        ref={p === 0 ? cvContentRef : undefined}
+                        style={{ 
+                          transform: `translateY(-${p * 1220}px)`,
+                          paddingTop: p > 0 ? '40px' : '0px',
+                          paddingBottom: '40px',
+                        }}
+                      >
+                        <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           
           {/* BOTTOM TOOLBAR */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl rounded-full px-5 py-2.5 flex items-center gap-4 z-40">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl rounded-full px-5 py-2.5 flex items-center gap-4 z-40">
             <div className="flex items-center gap-2 border-r border-slate-200 pr-4">
-              <button disabled={activePage === 1} onClick={() => setActivePage(p => Math.max(1, p - 1))} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full disabled:opacity-30 transition-colors"><ChevronUp className="w-5 h-5 -rotate-90" /></button>
-              <span className="text-xs font-bold text-slate-700 min-w-[3rem] text-center">{activePage} / {totalPages}</span>
-              <button disabled={activePage === totalPages} onClick={() => setActivePage(p => Math.min(totalPages, p + 1))} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full disabled:opacity-30 transition-colors"><ChevronDown className="w-5 h-5 -rotate-90" /></button>
+              <button 
+                type="button"
+                disabled={activePage === 1} 
+                onClick={() => scrollToPage(activePage - 1)} 
+                className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full disabled:opacity-30 transition-colors cursor-pointer"
+                title="Previous Page"
+              >
+                <ChevronUp className="w-5 h-5 -rotate-90" />
+              </button>
+              <span className="text-xs font-bold text-slate-700 min-w-[3.5rem] text-center">Page {activePage} / {totalPages}</span>
+              <button 
+                type="button"
+                disabled={activePage === totalPages} 
+                onClick={() => scrollToPage(activePage + 1)} 
+                className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full disabled:opacity-30 transition-colors cursor-pointer"
+                title="Next Page"
+              >
+                <ChevronDown className="w-5 h-5 -rotate-90" />
+              </button>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-bold text-slate-600 w-12 text-right">{Math.round(zoom * 100)}%</span>
-              <input type="range" min={0.4} max={1.2} step={0.05} value={zoom} onChange={(event) => setZoom(Number(event.target.value))} className="w-28 accent-violet-600" />
+              <input 
+                type="range" 
+                min={0.4} 
+                max={1.2} 
+                step={0.05} 
+                value={zoom} 
+                onChange={(event) => setZoom(Number(event.target.value))} 
+                className="w-28 accent-violet-600 cursor-pointer" 
+              />
             </div>
           </div>
         </section>
 
-        {/* RIGHT SIDEBAR (Collapsible Property Panels) */}
-        <aside className="w-[340px] bg-white border-l border-slate-200 flex flex-col shrink-0 overflow-y-auto shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.02)] z-10">
+        {/* RIGHT SIDEBAR (Collapsible Property Panels with Scroll Sync) */}
+        <aside 
+          ref={rightPanelRef}
+          className="w-[340px] bg-white border-l border-slate-200 flex flex-col shrink-0 overflow-y-auto shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.02)] z-10"
+        >
           <div className="divide-y divide-slate-100">
             {builderSteps.map(step => {
               const isActive = expandedPanel === step.id;
               const Icon = step.icon;
               return (
-                <div key={step.id} className="bg-white">
+                <div key={step.id} id={`panel-form-${step.id}`} className="bg-white">
                   <button 
-                    onClick={() => setExpandedPanel(isActive ? 'personal' : step.id)}
-                    className={`w-full flex items-center justify-between p-5 text-left transition-colors ${isActive ? 'bg-white' : 'hover:bg-slate-50'}`}
+                    type="button"
+                    onClick={() => scrollToSectionInPreview(step.id as BuilderStep)}
+                    className={`w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer ${isActive ? 'bg-violet-50/40' : 'hover:bg-slate-50'}`}
                   >
                     <div className="flex gap-4">
                       <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-violet-600' : 'text-slate-400'}`} />
                       <div className="flex flex-col">
-                        <span className={`text-xs font-bold uppercase tracking-wider ${isActive ? 'text-slate-900' : 'text-slate-700'}`}>{step.title}</span>
+                        <span className={`text-xs font-bold uppercase tracking-wider ${isActive ? 'text-violet-900' : 'text-slate-700'}`}>{step.title}</span>
                         {isActive && <span className="text-[10px] text-slate-500 mt-1">{step.helper}</span>}
                       </div>
                     </div>
                     {isActive ? (
-                      <ChevronUp className="w-5 h-5 text-slate-400 shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-violet-600 shrink-0" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
                     )}
