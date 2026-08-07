@@ -15,8 +15,15 @@ import { GeneratedTemplate, SectionVariant, generateTemplates } from '@/lib/gene
 import { 
   User, FileText, Briefcase, GraduationCap, Link as LinkIcon, Folder, Award, 
   Languages, Palette, ArrowLeft, Undo2, Redo2, Eye, Save, Download, ChevronUp, 
-  ChevronDown, CheckCircle2, GripVertical, Plus, Trash2, Camera, UserCircle, LineChart
+  ChevronDown, CheckCircle2, GripVertical, Plus, Trash2, Camera, UserCircle, LineChart,
+  BookTemplate, Bookmark
 } from 'lucide-react';
+// AI Assist components & hook
+import AIFieldButton from '@/components/editor/AIFieldButton';
+import AICreditsIndicator from '@/components/editor/AICreditsIndicator';
+import SaveTemplateModal from '@/components/editor/SaveTemplateModal';
+import TemplatePicker from '@/components/editor/TemplatePicker';
+import { useAIAssist } from '@/lib/hooks/useAIAssist';
 
 type EditorTab = 'content' | 'design' | 'layout' | 'settings';
 type ExportType = 'pdf' | 'png' | 'jpg';
@@ -240,6 +247,61 @@ export default function EditorPage() {
   const rightPanelRef = useRef<HTMLDivElement | null>(null);
   const isManualScrollingRef = useRef<boolean>(false);
 
+  // ── AI Assist state ────────────────────────────────────────────────────────
+  const { user } = useAuthStore();
+  const aiAssist = useAIAssist({
+    templateId: selectedTemplate.id,
+    templateCategory: selectedTemplate.category,
+    templateTone: 'professional',
+    jobTitle: cvData.personal.title || 'professional',
+  });
+  /** Which field is currently the active AI target */
+  const [activeAIField, setActiveAIField] = useState<string | null>(null);
+  /** AI credits UI state */
+  const [aiCreditsInfo, setAICreditsInfo] = useState<{
+    creditsRemaining: number | null;
+    creditsLimit: number | null;
+    isUnlimited: boolean;
+    plan: string;
+  }>({ creditsRemaining: null, creditsLimit: null, isUnlimited: false, plan: 'free' });
+
+  /** Save Template modal */
+  const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
+
+  // Fetch AI credits on mount (BR2)
+  useEffect(() => {
+    if (mounted) {
+      aiAssist.fetchCredits().then(() => {
+        setAICreditsInfo({
+          creditsRemaining: aiAssist.creditsRemaining,
+          creditsLimit: aiAssist.creditsLimit,
+          isUnlimited: aiAssist.isUnlimited,
+          plan: user?.tier ?? 'free',
+        });
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted]);
+
+  // Keep credits UI in sync with hook state
+  useEffect(() => {
+    setAICreditsInfo({
+      creditsRemaining: aiAssist.creditsRemaining,
+      creditsLimit: aiAssist.creditsLimit,
+      isUnlimited: aiAssist.isUnlimited,
+      plan: user?.tier ?? 'free',
+    });
+  }, [aiAssist.creditsRemaining, aiAssist.creditsLimit, aiAssist.isUnlimited, user?.tier]);
+
+  /** Helper: build AI context string from resume data */
+  const buildAIContext = useCallback(() => {
+    const parts: string[] = [];
+    if (cvData.personal.title) parts.push(`Job title: ${cvData.personal.title}`);
+    if (selectedTemplate.category) parts.push(`Template style: ${selectedTemplate.category}`);
+    if (selectedTemplate.layout.name) parts.push(`Layout: ${selectedTemplate.layout.name}`);
+    return parts.join('. ');
+  }, [cvData.personal.title, selectedTemplate.category, selectedTemplate.layout.name]);
+
   // Scroll Sync Helper
   const scrollToSectionInPreview = (stepId: BuilderStep) => {
     setExpandedPanel(stepId);
@@ -299,7 +361,7 @@ export default function EditorPage() {
 
 
 
-  const { token } = useAuthStore();
+  const { token } = useAuthStore(); // already have `user` from earlier destructure
   const [resumeId, setResumeId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -663,7 +725,22 @@ export default function EditorPage() {
     }
 
     if (stepId === 'summary') {
-      return <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />;
+      return (
+        <div>
+          <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />
+          <AIFieldButton
+            fieldName="Professional Summary"
+            fieldValue={cvData.summary}
+            onAccept={(text) => setCvData((prev) => ({ ...prev, summary: text }))}
+            context={buildAIContext()}
+            assistHook={aiAssist}
+            isActive={activeAIField === 'summary'}
+            onActivate={() => setActiveAIField('summary')}
+            onDeactivate={() => setActiveAIField(null)}
+            creditsExhausted={aiAssist.status === 'credits_exhausted' || (aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited)}
+          />
+        </div>
+      );
     }
 
     if (stepId === 'experience') {
@@ -674,8 +751,34 @@ export default function EditorPage() {
               <Field label="Position" value={item.position} onChange={(value: any) => updateExperience(item.id, 'position', value)} />
               <Field label="Company" value={item.company} onChange={(value: any) => updateExperience(item.id, 'company', value)} />
               <div className="grid grid-cols-2 gap-4"><Field label="Start" value={item.startDate} onChange={(value: any) => updateExperience(item.id, 'startDate', value)} /><Field label="End" value={item.endDate} onChange={(value: any) => updateExperience(item.id, 'endDate', value)} /></div>
-              <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
-              <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+              <div>
+                <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
+                <AIFieldButton
+                  fieldName={`Role description (${item.company})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => updateExperience(item.id, 'description', text)}
+                  context={`${item.position} at ${item.company}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `exp-desc-${item.id}`}
+                  onActivate={() => setActiveAIField(`exp-desc-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
+              <div>
+                <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+                <AIFieldButton
+                  fieldName={`Achievements (${item.company})`}
+                  fieldValue={item.achievements.join('\n')}
+                  onAccept={(text) => updateExperience(item.id, 'achievements', text.split('\n').filter((l) => l.trim()))}
+                  context={`${item.position} at ${item.company}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `exp-ach-${item.id}`}
+                  onActivate={() => setActiveAIField(`exp-ach-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
             </ItemCard>
           ))}
           <button type="button" onClick={() => setCvData((prev) => ({ ...prev, experience: [...prev.experience, { id: `exp-${Date.now()}`, company: 'Company', position: 'Role', startDate: '2025-01', endDate: 'Present', current: true, description: '', achievements: [], location: '' }] }))} className="w-full rounded-md border border-dashed border-slate-300 bg-white px-3 py-3 text-[11px] font-bold text-violet-600 hover:bg-slate-50 transition-colors">+ Add Experience</button>
@@ -719,7 +822,20 @@ export default function EditorPage() {
           {(cvData.projects || []).map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.technologies.join(', ')} onRemove={() => setCvData((prev) => ({ ...prev, projects: (prev.projects || []).filter((entry) => entry.id !== item.id) }))}>
               <Field label="Project Name" value={item.name} onChange={(value: any) => updateProject(item.id, 'name', value)} />
-              <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+              <div>
+                <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+                <AIFieldButton
+                  fieldName={`Project description (${item.name})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => updateProject(item.id, 'description', text)}
+                  context={`Project: ${item.name}. Technologies: ${item.technologies.join(', ')}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `proj-desc-${item.id}`}
+                  onActivate={() => setActiveAIField(`proj-desc-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
               <TextField label="Technologies (one per line)" value={item.technologies.join('\n')} rows={2} onChange={(value: any) => updateProject(item.id, 'technologies', value.split('\n').filter(Boolean))} />
               <Field label="Link" value={item.link || ''} onChange={(value: any) => updateProject(item.id, 'link', value)} />
             </ItemCard>
@@ -795,10 +911,29 @@ export default function EditorPage() {
             </div>
           </div>
           
+          {/* AI Credits indicator (BR2) */}
+          <AICreditsIndicator
+            creditsRemaining={aiCreditsInfo.creditsRemaining}
+            creditsLimit={aiCreditsInfo.creditsLimit}
+            isUnlimited={aiCreditsInfo.isUnlimited}
+            plan={aiCreditsInfo.plan}
+          />
+          
           <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-2xs">
             <button type="button" onClick={() => toast('Undo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Undo"><Undo2 className="w-4 h-4" /></button>
             <button type="button" onClick={() => toast('Redo is stubbed')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors" title="Redo"><Redo2 className="w-4 h-4" /></button>
           </div>
+          
+          {/* Save as Template button (FR5.1) */}
+          <button
+            type="button"
+            onClick={() => setShowSaveTemplateModal(true)}
+            className="hidden sm:flex items-center gap-2 px-3 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors shadow-2xs cursor-pointer"
+            title="Save as personal template"
+          >
+            <Bookmark className="w-4 h-4 text-violet-500" />
+            <span className="hidden md:inline">Save Template</span>
+          </button>
           
           <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg border border-slate-800 transition-colors shadow-2xs cursor-pointer">
             <Save className="w-4 h-4 text-teal-400" />
@@ -839,76 +974,20 @@ export default function EditorPage() {
           </div>
 
           {activeSidebarTab === 'Templates' ? (
-            <div className="flex-1 overflow-y-auto p-3">
-              <div className="flex items-center justify-between mb-3 px-1">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Select Template</h3>
-                <span className="text-[10px] font-semibold text-slate-400">{templates.length} Designs</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                {templates.map((tmpl) => {
-                  const isSelected = selectedTemplate.id === tmpl.id;
-                  return (
-                    <div
-                      key={tmpl.id}
-                      onClick={() => {
-                        setSelectedTemplate(tmpl);
-                        setCustomTheme(tmpl.theme);
-                        setSelectedLayout(tmpl.layout);
-                        setSectionVariants(tmpl.sectionVariants);
-                        if (tmpl.layout.sectionOrder) {
-                          setSectionOrder(tmpl.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
-                        }
-                        toast.success(`Loaded ${tmpl.name || tmpl.layout.name}`);
-                      }}
-                      className={`group relative cursor-pointer rounded-xl border p-2 transition-all flex flex-col justify-between ${
-                        isSelected
-                          ? 'border-violet-600 ring-2 ring-violet-500/20 bg-violet-50/40 shadow-xs'
-                          : 'border-slate-200 hover:border-violet-300 hover:shadow-xs bg-white'
-                      }`}
-                    >
-                      {/* Card Top Preview Wrapper */}
-                      <div className="relative mb-2">
-                        <EditorSidebarTemplatePreview template={tmpl} />
-                        
-                        {/* Selected Checkmark Badge */}
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 z-20 bg-violet-600 text-white rounded-full p-1 shadow-md">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          </div>
-                        )}
-
-                        {/* Category Tag */}
-                        <div className="absolute left-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
-                          {tmpl.category || 'ATS'}
-                        </div>
-                      </div>
-
-                      {/* Card Content & Badges */}
-                      <div className="px-0.5 space-y-1">
-                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-violet-600 transition-colors line-clamp-1">
-                          {tmpl.layout.name || tmpl.name}
-                        </h4>
-                        
-                        <div className="flex flex-wrap items-center gap-1">
-                          <span className="text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-1.5 py-0.5 rounded">
-                            ✓ ATS
-                          </span>
-                          <span className="text-[8px] font-bold bg-violet-50 text-violet-700 px-1.5 py-0.5 rounded truncate max-w-[70px]">
-                            {tmpl.theme.name}
-                          </span>
-                          {(tmpl as any).isPremium ? (
-                            <span className="text-[8px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">PRO</span>
-                          ) : (
-                            <span className="text-[8px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">FREE</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <TemplatePicker
+              templates={templates}
+              selectedTemplateId={selectedTemplate.id}
+              userTier={(user?.tier as 'free' | 'pro' | 'premium') ?? 'free'}
+              onSelectTemplate={(tmpl) => {
+                setSelectedTemplate(tmpl);
+                setCustomTheme(tmpl.theme);
+                setSelectedLayout(tmpl.layout);
+                setSectionVariants(tmpl.sectionVariants);
+                if (tmpl.layout.sectionOrder) {
+                  setSectionOrder(tmpl.layout.sectionOrder.filter((item): item is SectionKey => item in sectionLabels));
+                }
+              }}
+            />
           ) : (
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {['personal', ...sectionOrder].map((stepId) => {
@@ -1098,6 +1177,19 @@ export default function EditorPage() {
 
       </main>
       <Toaster position="bottom-right" />
+      
+      {/* Save Template Modal (FR5.1) */}
+      <SaveTemplateModal
+        isOpen={showSaveTemplateModal}
+        onClose={() => setShowSaveTemplateModal(false)}
+        onSaved={(templateId, templateName) => {
+          toast.success(`Template "${templateName}" saved to your library!`);
+        }}
+        resumeId={resumeId}
+        customTheme={customTheme}
+        selectedLayout={selectedLayout}
+        sectionVariants={sectionVariants}
+      />
       
       {/* Hidden container for PDF export rendering without scroll interference */}
       <div className="pointer-events-none fixed -left-[10000px] top-0">

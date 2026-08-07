@@ -2,37 +2,34 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-
-type Stage = 'form' | 'sent' | 'error';
+import { Loader2, Mail, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
-  const [stage, setStage] = useState<Stage>('form');
+  const [stage, setStage] = useState<'form' | 'sent' | 'error'>('form');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg('');
-
     try {
       const res = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-
-      // Always show the "check your email" screen regardless of whether the
-      // address exists — this prevents user enumeration.
+      // Always show "check your email" to prevent user enumeration
       if (res.ok || res.status === 404) {
         setStage('sent');
       } else {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Something went wrong. Please try again.');
+        const data = await res.json();
+        setErrorMsg(data?.error || 'Something went wrong. Please try again.');
+        setStage('error');
       }
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
+    } catch {
+      setErrorMsg('Network error. Please check your connection and try again.');
       setStage('error');
     } finally {
       setIsLoading(false);
@@ -40,94 +37,81 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 flex flex-col items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center mb-2 group" title="Go to Homepage">
-            <img src="/logo.png" alt="GetEasyCV" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+        <div className="text-center mb-7">
+          <Link href="/" className="inline-flex items-center justify-center mb-3 group">
+            <img src="/logo.png" alt="GetEasyCV" className="h-11 w-auto object-contain transition-transform group-hover:scale-105" />
           </Link>
+          <h1 className="text-2xl font-black text-slate-900">Reset your password</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {stage === 'sent'
+              ? "We've sent you a reset link"
+              : "Enter your email and we'll send a reset link"}
+          </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-7">
           {stage === 'sent' ? (
-            /* ── Success state ─────────────────────────────────── */
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
-                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            <div className="text-center space-y-5 py-4">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 h-8" aria-hidden="true" />
               </div>
-              <h1 className="text-2xl font-bold text-slate-900 mb-2">Check your email</h1>
-              <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                If <strong>{email}</strong> is registered, you&apos;ll receive a password reset link
-                shortly. Check your spam folder if it doesn&apos;t arrive within a few minutes.
-              </p>
-              <Link
-                href="/login"
-                className="inline-block px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm transition-colors"
-              >
-                Back to sign in
-              </Link>
-            </div>
-          ) : (
-            /* ── Form state ────────────────────────────────────── */
-            <>
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold text-slate-900 mb-1">Reset your password</h1>
-                <p className="text-sm text-slate-500">
-                  Enter your email and we&apos;ll send you a reset link.
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Check your inbox</h3>
+                <p className="text-sm text-slate-500 mt-1 max-w-xs mx-auto">
+                  If <strong>{email}</strong> is registered, you will receive a password reset link shortly.
                 </p>
               </div>
-
+              <p className="text-xs text-slate-400">
+                Did not receive it?{' '}
+                <button onClick={() => setStage('form')} className="text-violet-600 font-bold hover:underline cursor-pointer">
+                  Try again
+                </button>
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               {stage === 'error' && errorMsg && (
-                <div className="mb-4 p-4 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium" role="alert">
+                  <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" aria-hidden="true" />
                   {errorMsg}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Email address
-                  </label>
+              <div className="space-y-1.5">
+                <label htmlFor="email" className="text-[11px] font-bold text-slate-700">Email Address</label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
                   <input
-                    id="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                    id="email" type="email" name="email" required autoComplete="email"
+                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    placeholder="sarah@example.com"
                     disabled={isLoading}
+                    className="w-full h-10 pl-9 pr-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all disabled:opacity-60"
                   />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                      Sending…
-                    </>
-                  ) : (
-                    'Send reset link'
-                  )}
-                </button>
-              </form>
-
-              <p className="mt-6 text-center text-sm text-slate-500">
-                Remember your password?{' '}
-                <Link href="/login" className="text-indigo-600 hover:underline font-medium">
-                  Sign in
-                </Link>
-              </p>
-            </>
+              <button type="submit" disabled={isLoading || !email}
+                className="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-bold text-sm shadow-sm transition-all cursor-pointer">
+                {isLoading && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
+                {isLoading ? 'Sending…' : 'Send Reset Link'}
+              </button>
+            </form>
           )}
+        </div>
+
+        <div className="text-center mt-5">
+          <Link href="/login" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-violet-600 font-semibold transition-colors">
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back to Sign In
+          </Link>
         </div>
       </div>
     </div>

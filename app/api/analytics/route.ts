@@ -98,12 +98,12 @@ async function getUserAnalytics(userId: string, period: string) {
 
   // Calculate stats
   const totalResumes = resumes.length;
-  const totalDownloads = resumes.reduce((sum, r) => sum + r.downloads, 0);
-  const totalViews = resumes.reduce((sum, r) => sum + r.views, 0);
+  const totalDownloads = resumes.reduce((sum: number, r: typeof resumes[number]) => sum + r.downloads, 0);
+  const totalViews = resumes.reduce((sum: number, r: typeof resumes[number]) => sum + r.views, 0);
 
   // Group activities by action
   const activityCounts: Record<string, number> = {};
-  activities.forEach((activity) => {
+  activities.forEach((activity: typeof activities[number]) => {
     activityCounts[activity.action] = (activityCounts[activity.action] || 0) + 1;
   });
 
@@ -120,9 +120,9 @@ async function getUserAnalytics(userId: string, period: string) {
       byType: activityCounts,
     },
     topResumes: resumes
-      .sort((a, b) => b.downloads - a.downloads)
+      .sort((a: { downloads: number }, b: { downloads: number }) => b.downloads - a.downloads)
       .slice(0, 5)
-      .map((r) => ({
+      .map((r: { id: string; downloads: number; views: number }) => ({
         id: r.id,
         downloads: r.downloads,
         views: r.views,

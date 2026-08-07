@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/layout/Footer';
 import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
 import { GeneratedTemplate, generateTemplates, getTemplateStats } from '@/lib/generateTemplates';
@@ -368,6 +369,7 @@ export default function TemplatesPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   );
 }
