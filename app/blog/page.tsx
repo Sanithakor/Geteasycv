@@ -1,91 +1,213 @@
-import Navigation from "@/components/Navigation";
-import Link from "next/link";
+'use client';
 
-export const metadata = {
-  title: "Blog — GetEasyCV",
-  description: "Resume tips, career advice, and product updates from the GetEasyCV team.",
-};
-
-// Placeholder posts — replace with CMS or DB fetch when content is ready.
-const PLACEHOLDER_POSTS = [
-  {
-    slug: "#",
-    title: "How to Write an ATS-Friendly Resume in 2024",
-    excerpt:
-      "Applicant Tracking Systems scan your resume before a human ever reads it. Here's how to make sure yours passes.",
-    date: "Coming soon",
-    tag: "Resume Tips",
-  },
-  {
-    slug: "#",
-    title: "The 5 Most Common Resume Mistakes (and How to Fix Them)",
-    excerpt:
-      "From generic objective statements to inconsistent formatting — avoid these pitfalls to stand out.",
-    date: "Coming soon",
-    tag: "Career Advice",
-  },
-  {
-    slug: "#",
-    title: "Introducing GetEasyCV Templates v2",
-    excerpt:
-      "We redesigned our entire template library with new layouts, themes, and ATS optimisations.",
-    date: "Coming soon",
-    tag: "Product Update",
-  },
-];
+import React, { useState, useEffect } from 'react';
+import Navigation from '@/components/Navigation';
+import ReadyToBuild from '@/components/sections/ReadyToBuild';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import { Calendar, Clock, ArrowRight, BookOpen, Search, User, Sparkles } from 'lucide-react';
+import { BlogPostItem, getStoredBlogPosts } from '@/lib/blogData';
 
 export default function BlogPage() {
+  const [posts, setPosts] = useState<BlogPostItem[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    setPosts(getStoredBlogPosts());
+  }, []);
+
+  const published = posts.filter(p => p.status === 'published');
+  const featured = published.find(p => p.isFeatured) || published[0];
+
+  const categories = ['All', 'Resume Tips', 'Career Advice', 'Design & Layout', 'Executive'];
+
+  const filteredPosts = published.filter(p => {
+    const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
+
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50">
-        {/* Header */}
-        <section className="bg-white border-b border-slate-100 py-16 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">Blog</h1>
-            <p className="text-lg text-slate-600">
-              Resume tips, career advice, and product updates from the GetEasyCV team.
+      <main className="min-h-screen bg-slate-50/50 pb-20">
+        
+        {/* Header Hero */}
+        <section className="bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-950 text-white py-16 sm:py-20 px-4 relative overflow-hidden">
+          <div className="max-w-5xl mx-auto text-center relative z-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-xs font-bold uppercase tracking-wider mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Career & Resume Insights</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+              GetEasyCV Blog
+            </h1>
+            <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+              Expert guides, ATS optimization tips, and design strategies to help you land your dream job faster.
             </p>
           </div>
+
+          <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl"></div>
         </section>
 
-        {/* Posts */}
-        <section className="max-w-4xl mx-auto px-4 py-16">
-          {/* Coming soon banner */}
-          <div className="mb-10 p-4 rounded-xl bg-indigo-50 border border-indigo-100 text-center text-sm text-indigo-700 font-medium">
-            Full blog coming soon — check back later for new articles.
+        {/* Content Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+          
+          {/* Search & Category Nav Bar */}
+          <div className="bg-white rounded-md p-4 border border-slate-200/80 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 mb-12">
+            {/* Categories */}
+            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-md text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === cat
+                      ? 'bg-violet-600 text-white shadow-md'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Search Input */}
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search articles..."
+                className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 bg-slate-50/50"
+              />
+            </div>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {PLACEHOLDER_POSTS.map((post) => (
-              <article
-                key={post.title}
-                className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col gap-3 hover:shadow-lg hover:border-indigo-200 transition-all"
+          {/* Featured Article Banner */}
+          {featured && selectedCategory === 'All' && !searchQuery && (
+            <div className="mb-12">
+              <Link
+                href={`/blog/${featured.slug}`}
+                className="group grid grid-cols-1 lg:grid-cols-12 bg-white rounded-md border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
               >
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 w-fit">
-                  {post.tag}
-                </span>
-                <h2 className="text-lg font-bold text-slate-900 leading-snug">{post.title}</h2>
-                <p className="text-sm text-slate-600 leading-relaxed flex-1">{post.excerpt}</p>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-auto">
-                  <span className="text-xs text-slate-400">{post.date}</span>
-                  <span className="text-xs text-indigo-400 font-medium">Coming soon</span>
+                <div className="lg:col-span-7 aspect-[16/10] relative overflow-hidden bg-slate-100">
+                  <img
+                    src={featured.coverImage || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&auto=format&fit=crop&q=80'}
+                    alt={featured.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute top-4 left-4 bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                    Featured Article
+                  </span>
                 </div>
-              </article>
-            ))}
-          </div>
 
-          <div className="mt-16 text-center">
-            <p className="text-slate-500 text-sm">
-              Want to be notified when we publish?{" "}
-              <Link href="/contact" className="text-indigo-600 hover:underline">
-                Get in touch
+                <div className="lg:col-span-5 p-8 lg:p-10 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-4 text-xs font-bold text-violet-600 mb-3">
+                      <span>{featured.category}</span>
+                      <span>•</span>
+                      <span className="text-slate-400">{featured.readTime}</span>
+                    </div>
+
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4 group-hover:text-violet-600 transition-colors">
+                      {featured.title}
+                    </h2>
+
+                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                      {featured.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+                    <div className="flex items-center gap-2.5 text-xs font-bold text-slate-700">
+                      <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-xs">
+                        {featured.author ? featured.author.charAt(0) : 'A'}
+                      </div>
+                      <span>{featured.author}</span>
+                    </div>
+
+                    <span className="text-sm font-bold text-violet-600 flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                      Read Article
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
               </Link>
-              .
-            </p>
+            </div>
+          )}
+
+          {/* Grid of Articles */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.length === 0 ? (
+              <div className="col-span-full py-16 text-center bg-white rounded-md border border-slate-200">
+                <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-lg font-bold text-slate-900 mb-1">No articles found</h3>
+                <p className="text-sm text-slate-500">Try adjusting your search query or category filter.</p>
+              </div>
+            ) : (
+              filteredPosts.map(post => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="group bg-white rounded-md border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
+                >
+                  <div className="aspect-[16/9] relative overflow-hidden bg-slate-100">
+                    <img
+                      src={post.coverImage || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&auto=format&fit=crop&q=80'}
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute top-3 left-3 bg-violet-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                      {post.category}
+                    </span>
+                  </div>
+
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-4 text-xs font-semibold text-slate-400 mb-3">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-violet-500" />
+                        <span>{post.date}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-violet-500" />
+                        <span>{post.readTime}</span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-bold text-slate-900 text-lg leading-snug group-hover:text-violet-600 transition-colors mb-3 line-clamp-2">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                        <div className="w-6 h-6 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-[10px]">
+                          {post.author ? post.author.charAt(0) : 'A'}
+                        </div>
+                        <span>{post.author}</span>
+                      </div>
+
+                      <span className="text-xs font-bold text-violet-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        Read Article
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
         </section>
       </main>
+      <ReadyToBuild />
+      <Footer />
     </>
   );
 }

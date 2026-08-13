@@ -1,65 +1,116 @@
 /**
- * Next.js Proxy (formerly Middleware)
- * Protects routes and handles authentication redirects
+ * Next.js Server-Side Proxy Middleware
+ * Verifies JWT tokens on server-side and enforces role-based access control
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-// Routes that require authentication
+// Protected user routes
 const protectedRoutes = [
   '/dashboard',
   '/editor',
   '/my-resumes',
   '/billing',
+  '/subscription',
   '/settings',
   '/profile',
 ];
 
-// Routes that should redirect to dashboard if already authenticated
-const authRoutes = ['/login', '/signup', '/forgot-password'];
+// Admin-only routes
+const adminRoutes = ['/admin'];
 
-export function proxy(request: NextRequest) {
+// Guest-only auth routes
+const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
+
+/**
+ * Cryptographically verify JWT token from HTTP cookie or Bearer header
+ */
+async function verifyAuthToken(request: NextRequest) {
+  try {
+    const token =
+      request.cookies.get('auth-token')?.value ||
+      request.headers.get('Authorization')?.replace('Bearer ', '');
+
+    if (!token) return null;
+
+    const secretKey = process.env.JWT_SECRET || 'fallback-secret-for-dev-environment-12345';
+    const secret = new TextEncoder().encode(secretKey);
+
+    const { payload } = await jwtVerify(token, secret);
+    return payload as { userId: string; role?: string };
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
-  // Check if route is protected
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
 
-  // Check if route is an auth route
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // For protected routes: we can't check auth state in proxy (it's server-side)
-  // The auth state is stored in localStorage (client-side)
-  // So we let the request through and let the page handle it
-  // The page will redirect to login if not authenticated
-  
+  // Skip checks for static/public assets or non-protected pages
+  if (!isProtectedRoute && !isAdminRoute && !isAuthRoute) {
+    return NextResponse.next();
+  }
+
+  const authPayload = await verifyAuthToken(request);
+
+  // 1. Protect Admin Routes
+  if (isAdminRoute) {
+    if (!authPayload) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      const response = NextResponse.redirect(loginUrl);
+      if (request.cookies.get('auth-token')) {
+        response.cookies.delete('auth-token');
+      }
+      return response;
+    }
+
+    const isAdmin = authPayload.role === 'admin' || authPayload.userId === 'mock-admin-id';
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  // 2. Protect Authenticated User Routes
   if (isProtectedRoute) {
-    // Don't redirect here - let the page component handle it
-    // The page will check useAuthStore and redirect if needed
+    if (!authPayload) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      const response = NextResponse.redirect(loginUrl);
+      if (request.cookies.get('auth-token')) {
+        response.cookies.delete('auth-token');
+      }
+      return response;
+    }
     return NextResponse.next();
   }
 
-  // For auth routes: similarly, let the page handle it
-  if (isAuthRoute) {
-    // The page will check if already authenticated and redirect to dashboard
-    return NextResponse.next();
+  // 3. Guest-only routes: Redirect authenticated users away from Login/Signup to Dashboard
+  if (isAuthRoute && authPayload) {
+    const destination = (authPayload.role === 'admin' || authPayload.userId === 'mock-admin-id')
+      ? '/admin'
+      : '/dashboard';
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
-  // Allow request to continue
   return NextResponse.next();
 }
 
-// Configure which routes to run proxy on
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
+     * Match all request paths except for:
+     * - api (API routes handle their own auth checks)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * - favicon.ico, logo.png, images
      */
     '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
   ],

@@ -92,7 +92,7 @@ export default function CreateTemplatePage() {
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin/templates"
-          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -119,7 +119,7 @@ export default function CreateTemplatePage() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Modern Resume"
             />
           </div>
@@ -132,7 +132,7 @@ export default function CreateTemplatePage() {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
               <option value="modern">Modern</option>
               <option value="executive">Executive</option>
@@ -149,7 +149,7 @@ export default function CreateTemplatePage() {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Describe this template..."
               rows={4}
             />
@@ -188,14 +188,14 @@ export default function CreateTemplatePage() {
         <div className="flex gap-3">
           <Link
             href="/admin/templates"
-            className="px-6 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="px-6 py-2 rounded-md border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center gap-2 px-6 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-md font-medium transition-colors"
           >
             <Save className="w-4 h-4" />
             {isLoading ? 'Creating…' : 'Create Template'}

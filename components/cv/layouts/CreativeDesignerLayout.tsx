@@ -5,7 +5,6 @@ import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type CreativeDesignerLayoutProps = {
   data: CVData;
@@ -35,53 +34,51 @@ const CreativeDesignerLayout: React.FC<CreativeDesignerLayoutProps> = ({
       className="w-full"
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 300px',
+        gridTemplateColumns: '1fr 280px',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
         overflow: 'hidden',
       }}
     >
       {/* Main Content */}
-      <div className="p-6" style={{ backgroundColor: theme.background }}>
+      <div className="p-5" style={{ backgroundColor: theme.background }}>
         <div
-          className="p-6 mb-6 rounded-xl"
+          className="p-5 mb-5 rounded-md"
           style={{
             background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
             color: '#fff',
           }}
         >
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: theme.fontFamilyHeading }}>
+          <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
             {data.personal.firstName} {data.personal.lastName}
           </h1>
-          <p className="text-lg opacity-90">{data.personal.title}</p>
+          <p className="text-[14px] font-semibold leading-[1.25] opacity-90">{data.personal.title}</p>
         </div>
 
         {data.summary && (
-          <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: `${theme.primary}08` }}>
-            <p style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
+          <div className="mb-5 p-3.5 rounded-md" style={{ backgroundColor: `${theme.primary}08` }}>
+            <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
           </div>
         )}
 
         {data.projects && data.projects.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-4" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Portfolio</h2>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="mb-5">
+            <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-3" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Portfolio</h2>
+            <div className="grid grid-cols-2 gap-3">
               {data.projects.slice(0, 4).map((proj) => (
                 <div
                   key={proj.id}
-                  className="p-4 rounded-lg"
+                  className="p-3 rounded-md"
                   style={{
                     background: `linear-gradient(135deg, ${theme.primary}15 0%, ${theme.secondary} 100%)`,
                   }}
                 >
-                  <h3 className="font-semibold mb-1">{proj.name}</h3>
-                  <p className="text-sm mb-2" style={{ color: theme.textSecondary }}>{proj.description}</p>
+                  <h3 className="text-[13px] font-bold leading-[1.25] mb-1">{proj.name}</h3>
+                  <p className="text-[11.5px] leading-[1.45] mb-2" style={{ color: theme.textSecondary }}>{proj.description}</p>
                   <div className="flex flex-wrap gap-1">
                     {proj.technologies.slice(0, 2).map((tech, i) => (
-                      <span key={i} className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: theme.primary, color: '#fff' }}>
+                      <span key={i} className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ backgroundColor: theme.primary, color: '#fff' }}>
                         {tech}
                       </span>
                     ))}
@@ -97,21 +94,11 @@ const CreativeDesignerLayout: React.FC<CreativeDesignerLayoutProps> = ({
       </div>
 
       {/* Sidebar */}
-      <div className="p-6" style={{ background: `linear-gradient(180deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`, color: '#fff' }}>
-        {data.personal.avatar && (
-          <div className="mb-6">
-            <img
-              src={data.personal.avatar}
-              alt={`${data.personal.firstName} ${data.personal.lastName}`}
-              className="w-full rounded-xl object-cover aspect-square border-4 border-white/30"
-            />
-          </div>
-        )}
-
-        <div className="space-y-6">
+      <div className="p-5" style={{ background: `linear-gradient(180deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`, color: '#fff' }}>
+        <div className="space-y-4">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-3">Contact</h3>
-            <div className="space-y-2 text-sm">
+            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2 text-white/90">Contact</h3>
+            <div className="space-y-1 text-[10.5px] font-medium leading-normal text-white/90">
               <div>{data.personal.email}</div>
               <div>{data.personal.phone}</div>
               <div>{data.personal.location}</div>
@@ -120,37 +107,17 @@ const CreativeDesignerLayout: React.FC<CreativeDesignerLayoutProps> = ({
 
           {data.skills.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-3">Skills</h3>
-              <div className="flex flex-wrap gap-2">
+              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2 text-white/90">Skills</h3>
+              <div className="flex flex-wrap gap-1.5">
                 {data.skills.map((skill) => (
-                  <span key={skill.id} className="text-xs px-2 py-1 rounded-full bg-white/20">
+                  <span
+                    key={skill.id}
+                    className="text-[11px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white"
+                  >
                     {skill.name}
                   </span>
                 ))}
               </div>
-            </div>
-          )}
-
-          {data.certifications && data.certifications.length > 0 && (
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-3">Certifications</h3>
-              {data.certifications.map((cert) => (
-                <div key={cert.id} className="text-sm mb-2">
-                  <div className="font-medium">{cert.name}</div>
-                  <div className="opacity-70">{cert.issuer}</div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {data.languages && data.languages.length > 0 && (
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-3">Languages</h3>
-              {data.languages.map((lang) => (
-                <div key={lang.id} className="text-sm mb-1">
-                  {lang.name} - {lang.proficiency}
-                </div>
-              ))}
             </div>
           )}
         </div>

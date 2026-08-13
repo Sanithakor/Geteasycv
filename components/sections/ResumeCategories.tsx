@@ -152,13 +152,13 @@ export default function ResumeCategories() {
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center justify-center gap-3 mb-3">
             <span className="w-6 h-[1.5px] bg-violet-400/60 rounded-full"></span>
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-violet-600">
+            <span className="text-xs sm:text-5 font-bold uppercase tracking-widest text-violet-600">
               Resume Categories
             </span>
             <span className="w-6 h-[1.5px] bg-violet-400/60 rounded-full"></span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-tight mb-4">
             Find the Perfect Resume for Your Career
           </h2>
 
@@ -178,15 +178,15 @@ export default function ResumeCategories() {
               <Link
                 key={cat.id}
                 href={`/templates?category=${cat.query}`}
-                className="group bg-white rounded-2xl p-6 border border-slate-200/70 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center cursor-pointer relative overflow-hidden"
+                className="group bg-white rounded-md p-6 border border-slate-200/70 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center cursor-pointer relative overflow-hidden"
               >
                 {/* Icon Container */}
-                <div className={`w-14 h-14 rounded-full ${cat.iconBg} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}>
+                <div className={`w-14 h-14 rounded-full ${cat.iconBg} flex items-center justify-center mb-4 `}>
                   <IconComponent className={`w-6 h-6 ${cat.iconColor}`} />
                 </div>
 
                 {/* Title */}
-                <h3 className="font-extrabold text-slate-900 text-base group-hover:text-violet-600 transition-colors">
+                <h3 className="font-bold text-slate-900 text-base group-hover:text-violet-600 transition-colors">
                   {cat.name}
                 </h3>
 
@@ -205,7 +205,7 @@ export default function ResumeCategories() {
         </div>
 
         {/* Bottom Banner Card */}
-        <div className="bg-violet-50/70 border border-violet-100/90 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-5xl mx-auto mb-10 shadow-2xs">
+        <div className="bg-violet-50/70 border border-violet-100/90 rounded-md p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-5xl mx-auto mb-10 shadow-2xs">
           <div className="flex items-center gap-3.5 text-center sm:text-left">
             <div className="w-10 h-10 rounded-full bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-violet-500/20">
               <Star className="w-5 h-5 fill-white text-white" />
@@ -225,7 +225,7 @@ export default function ResumeCategories() {
             className="text-violet-700 hover:text-violet-900 font-bold text-sm flex items-center gap-1.5 group transition-colors cursor-pointer shrink-0"
           >
             <span>Browse All Templates</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-4 h-4 hover:translate-x-1" />
           </Link>
         </div>
 
@@ -233,7 +233,7 @@ export default function ResumeCategories() {
         <div className="flex justify-center">
           <Link
             href="/templates"
-            className="bg-violet-600 hover:bg-violet-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-violet-600/25 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 text-sm sm:text-base cursor-pointer"
+            className="bg-violet-600 hover:bg-violet-700 text-white font-bold px-8 py-3.5 rounded-md shadow-lg shadow-violet-600/25 flex items-center gap-2.5 transition-all active:scale-95 text-sm sm:text-base cursor-pointer"
           >
             <FileText className="w-4 h-4 text-violet-200" />
             <span>Explore All Templates</span>

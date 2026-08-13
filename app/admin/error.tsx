@@ -29,13 +29,13 @@ export default function AdminError({
       <div className="flex gap-3">
         <button
           onClick={reset}
-          className="px-5 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm font-semibold transition-colors"
+          className="px-5 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md text-sm font-semibold transition-colors"
         >
           Try again
         </button>
         <Link
           href="/admin"
-          className="px-5 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold transition-colors"
+          className="px-5 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md text-sm font-semibold transition-colors"
         >
           Back to admin
         </Link>

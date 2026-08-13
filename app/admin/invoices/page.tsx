@@ -1,49 +1,97 @@
 'use client';
-import React from 'react';
-import { Download } from 'lucide-react';
 
-const INVOICES = [
-  { id: 'INV-2024-001', user: 'John Doe', amount: 99, plan: 'Pro', status: 'paid', date: '2024-06-01', due: '2024-06-01' },
-  { id: 'INV-2024-002', user: 'Jane Smith', amount: 199, plan: 'Premium', status: 'paid', date: '2024-06-01', due: '2024-06-01' },
-  { id: 'INV-2024-003', user: 'Mike Lee', amount: 99, plan: 'Pro', status: 'overdue', date: '2024-05-01', due: '2024-05-15' },
-  { id: 'INV-2024-004', user: 'Sara Kim', amount: 99, plan: 'Pro', status: 'pending', date: '2024-06-10', due: '2024-06-25' },
-];
-
-const ST: Record<string, string> = {
-  paid: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  overdue: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-};
+import React, { useEffect, useState } from 'react';
+import { Download, FileText } from 'lucide-react';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function InvoicesPage() {
+  const { token } = useAuthStore();
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [token]);
+
+  const fetchInvoices = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/invoices', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setInvoices(data.data || []);
+      }
+    } catch (err) {
+      console.error('[ADMIN_INVOICES_FETCH_ERROR]', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Invoices</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Billing invoices and receipts</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <FileText className="w-6 h-6 text-violet-600" />
+            <span>Invoices & Billing Receipts</span>
+          </h1>
+          <p className="text-slate-500 text-xs mt-1">Generated customer invoices</p>
+        </div>
       </div>
-      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+
+      <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
-                {['Invoice', 'Customer', 'Plan', 'Amount', 'Status', 'Date', 'Actions'].map(h => (
-                  <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">{h}</th>
+              <tr className="border-b border-slate-200 bg-slate-50">
+                {['Invoice ID', 'User ID', 'Amount', 'Currency', 'Status', 'Date', 'Actions'].map((h) => (
+                  <th key={h} className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-              {INVOICES.map(inv => (
-                <tr key={inv.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">{inv.id}</td>
-                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-white text-sm">{inv.user}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{inv.plan}</td>
-                  <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">${inv.amount}</td>
-                  <td className="px-6 py-4"><span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${ST[inv.status]}`}>{inv.status}</span></td>
-                  <td className="px-6 py-4 text-sm text-slate-500">{inv.date}</td>
-                  <td className="px-6 py-4"><button className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"><Download className="w-4 h-4 text-slate-500" /></button></td>
+            <tbody className="divide-y divide-slate-100">
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-xs text-slate-400 animate-pulse">
+                    Loading invoices...
+                  </td>
                 </tr>
-              ))}
+              ) : invoices.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-xs text-slate-400 font-medium">
+                    No invoices generated yet.
+                  </td>
+                </tr>
+              ) : (
+                invoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 text-xs font-mono font-bold text-slate-900">{inv.id}</td>
+                    <td className="px-6 py-4 text-xs text-slate-700">{inv.userId || 'User'}</td>
+                    <td className="px-6 py-4 font-bold text-slate-900 text-sm">{inv.amount}</td>
+                    <td className="px-6 py-4 text-xs text-slate-500">{inv.currency}</td>
+                    <td className="px-6 py-4">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">
+                        {inv.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-slate-500">{inv.date}</td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => window.open(inv.downloadUrl, '_blank')}
+                        className="p-1.5 hover:bg-slate-100 text-slate-600 hover:text-violet-600 rounded-md transition-colors"
+                        title="Download Invoice"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

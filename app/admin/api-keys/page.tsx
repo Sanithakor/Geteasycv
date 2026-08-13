@@ -20,12 +20,12 @@ export default function APIKeysPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">API Keys</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">Manage API access credentials</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium text-sm transition-colors">
           <Plus className="w-4 h-4" /> Generate Key
         </button>
       </div>
 
-      <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm">
+      <div className="p-4 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm">
         ⚠️ Keep your API keys secret. Never share them publicly or commit them to version control.
       </div>
 
@@ -38,7 +38,7 @@ export default function APIKeysPage() {
                   <h3 className="font-semibold text-slate-900 dark:text-white">{k.name}</h3>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${k.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'}`}>{k.status}</span>
                 </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 font-mono text-sm">
+                <div className="flex items-center gap-2 p-3 rounded-md bg-slate-50 dark:bg-slate-900 font-mono text-sm">
                   <span className="flex-1 truncate text-slate-700 dark:text-slate-300">
                     {visible[k.id] ? k.key : mask(k.key)}
                   </span>
@@ -54,7 +54,7 @@ export default function APIKeysPage() {
                   <span>Last used {k.lastUsed}</span>
                 </div>
               </div>
-              <button className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-red-500 flex-shrink-0">
+              <button className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-red-500 flex-shrink-0">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>

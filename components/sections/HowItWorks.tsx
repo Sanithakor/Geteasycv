@@ -106,26 +106,26 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-[#F8F7FF]/80 via-white to-[#F8F7FF]/60 py-16 sm:py-24 border-t border-purple-50/80 overflow-hidden font-sans">
+    <section className="bg-gradient-to-b from-[#F8F7FF]/80 via-white to-[#F8F7FF]/60 py-12 sm:py-16 border-t border-purple-50/80 overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Top Badge */}
         <div className="flex justify-center mb-6">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#F3F0FF] border border-purple-100/80 text-xs font-extrabold tracking-wider text-[#7C3AED] uppercase shadow-2xs">
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#F3F0FF] border border-purple-100/80 text-xs font-bold tracking-wider text-[#7C3AED] uppercase shadow-2xs">
             HOW IT WORKS
           </span>
         </div>
 
         {/* Section Heading & Subtitle */}
-        <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-3">
           How It Works
         </h2>
-        <p className="text-gray-500 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+        <p className="text-gray-500 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
           Creating your professional resume has never been easier. <br className="hidden sm:inline" />
           Follow these simple steps to land your dream job.
         </p>
 
         {/* Steps Container with Timeline */}
-        <div className="relative mt-12 sm:mt-16 mb-12 sm:mb-16">
+        <div className="relative mt-10 sm:mt-12 mb-10 sm:mb-12">
           {/* Dashed Timeline Connector Line (Desktop) */}
           <div className="hidden lg:block absolute top-[68px] left-[9%] right-[9%] h-0.5 border-t-2 border-dashed border-purple-200/70 z-0">
             {/* Step Connector Nodes */}
@@ -142,7 +142,7 @@ export default function HowItWorks() {
               return (
                 <div
                   key={idx}
-                  className="bg-white rounded-2xl p-6 shadow-xs hover:shadow-xl border border-gray-100/90 flex flex-col items-center text-center transition-all duration-300 transform hover:-translate-y-1.5 h-full group"
+                  className="bg-white rounded-md p-6 shadow-xs hover:shadow-xl border border-gray-100/90 flex flex-col items-center text-center transition-all duration-300 transform h-full group"
                 >
                   {/* Step Number Badge */}
                   <span
@@ -152,8 +152,8 @@ export default function HowItWorks() {
                   </span>
 
                   {/* Dual-Circle Icon Badge */}
-                  <div
-                    className={`w-16 h-16 rounded-full bg-white shadow-md border ${item.outerRing} flex items-center justify-center mb-5 p-1 transition-transform group-hover:scale-105`}
+          <div
+                    className={`w-12 h-12 rounded-full bg-white shadow-md border ${item.outerRing} flex items-center justify-center mb-4 p-1 `}
                   >
                     <div
                       className={`w-full h-full rounded-full ${item.iconBg} flex items-center justify-center`}
@@ -163,7 +163,7 @@ export default function HowItWorks() {
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="font-bold text-gray-900 text-base mb-3 leading-snug">
+                  <h3 className="font-bold text-gray-900 text-sm mb-2 leading-snug">
                     {item.title}
                   </h3>
                   <p className="text-gray-500 text-xs sm:text-sm leading-relaxed mb-6 flex-1">
@@ -181,7 +181,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Bottom Feature Strip */}
-        <div className="bg-[#F9F8FE] border border-purple-100/80 rounded-2xl p-5 sm:p-6 shadow-2xs mb-12 max-w-7xl mx-auto">
+        <div className="bg-[#F9F8FE] border border-purple-100/80 rounded-md p-4 sm:p-5 shadow-2xs mb-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
             {features.map((feat, fIdx) => {
               const FeatIcon = feat.icon;
@@ -210,7 +210,7 @@ export default function HowItWorks() {
         <div className="relative inline-flex items-center justify-center">
           <Link
             href="/editor"
-            className="px-8 py-4 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold rounded-2xl shadow-xl shadow-purple-500/25 inline-flex items-center gap-2.5 transition-all hover:scale-105 cursor-pointer text-base sm:text-lg"
+            className="px-6 py-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold rounded-md shadow-lg shadow-purple-500/25 inline-flex items-center gap-2 transition-all cursor-pointer text-sm sm:text-base"
           >
             Create My Resume Now
             <ArrowRight className="w-5 h-5" />

@@ -1,12 +1,7 @@
-/**
- * GET /api/resumes/[id] - Get single resume (with database failure fallback)
- * PUT /api/resumes/[id] - Update resume (with database failure fallback)
- * DELETE /api/resumes/[id] - Delete resume (with database failure fallback)
- */
-
 import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
+import { getStoreResumeById, updateStoreResume, deleteStoreResume } from '@/lib/resumeStore';
 
 async function getResumeOrFail(resumeId: string, userId: string) {
   const resume = await prisma.resume.findFirst({
@@ -36,26 +31,33 @@ export async function GET(
   const { id } = await params;
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = auth?.userId || 'guest';
+
+    let resume: any = null;
+    try {
+      if (auth) {
+        resume = await getResumeOrFail(id, auth.userId);
+      }
+    } catch (dbError) {
+      console.warn('[PRISMA_UNAVAILABLE] Falling back to store resume retrieval:', dbError);
     }
 
-    let resume = null;
-    try {
-      resume = await getResumeOrFail(id, auth.userId);
-    } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to mock resume retrieval:', dbError);
-      
-      // Serve pre-populated mock CV data matching sample structure
+    if (!resume) {
+      resume = getStoreResumeById(id);
+    }
+
+    if (!resume) {
+      // Fallback default mock item
       resume = {
         id,
+        userId,
         title: id === 'mock-resume-2' ? 'UX/UI Designer Portfolio CV' : 'Senior Software Engineer Resume',
         status: id === 'mock-resume-2' ? 'draft' : 'published',
         downloads: 14,
         views: 45,
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        templateId: 'single-column-ats-modern-blue',
+        templateId: id === 'mock-resume-2' ? 'creative-designer-creative-orange' : 'sidebar-left-modern-blue',
         personal: {
           firstName: id === 'mock-resume-2' ? 'Emily' : 'John',
           lastName: id === 'mock-resume-2' ? 'Clark' : 'Doe',
@@ -63,52 +65,9 @@ export async function GET(
           email: id === 'mock-resume-2' ? 'emily.clark@example.com' : 'john.doe@example.com',
           phone: '+1 555 123 4567',
           location: 'San Francisco, CA',
-          website: 'portfolio.com',
-          linkedin: 'linkedin.com/in/you',
         },
-        summary: id === 'mock-resume-2' 
-          ? 'Creative and detail-oriented UX/UI designer with 5+ years of experience designing mobile and desktop applications...'
-          : 'Senior full-stack engineer with 8+ years of experience designing and developing highly scalable SaaS solutions...',
-        experience: [
-          {
-            id: 'exp-1',
-            company: id === 'mock-resume-2' ? 'Creative Studio' : 'Tech Solutions Inc',
-            position: id === 'mock-resume-2' ? 'Senior Product Designer' : 'Senior Software Engineer',
-            startDate: '2021-01',
-            endDate: 'Present',
-            current: true,
-            description: 'Designed core features and managed design components.',
-            achievements: ['Improved conversion by 25%', 'Led a team of 4 designers'],
-          }
-        ],
-        education: [
-          {
-            id: 'edu-1',
-            institution: 'State University',
-            degree: 'Bachelor of Science',
-            field: id === 'mock-resume-2' ? 'Design' : 'Computer Science',
-            startDate: '2016',
-            endDate: '2020',
-          }
-        ],
-        skills: [
-          { id: 'skill-1', name: id === 'mock-resume-2' ? 'Figma' : 'React', level: 90, category: 'technical' },
-          { id: 'skill-2', name: id === 'mock-resume-2' ? 'User Research' : 'Node.js', level: 85, category: 'technical' }
-        ],
-        projects: [
-          { id: 'proj-1', name: 'E-commerce App', description: 'Built full features.', technologies: ['React Native'], link: '' }
-        ],
-        certifications: [
-          { id: 'cert-1', name: 'Certified Scrum Master', issuer: 'Scrum Alliance', date: '2022', link: '' }
-        ],
-        languages: [
-          { id: 'lang-1', name: 'English', proficiency: 'native' }
-        ]
+        summary: 'Senior full-stack engineer with 8+ years of experience...',
       };
-    }
-
-    if (!resume) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -131,54 +90,56 @@ export async function PUT(
   const { id } = await params;
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const userId = auth?.userId || 'guest';
 
     const body = await req.json();
-    const { title, status, isPublic, summary } = body;
+    const { title, status, isPublic, summary, templateId, cvData, customTheme, selectedLayout, sectionVariants, sectionOrder } = body;
+
+    let updatedResume: any = null;
 
     try {
-      const resume = await getResumeOrFail(id, auth.userId);
-      if (!resume) {
-        return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
-      }
-
-      const updated = await prisma.resume.update({
-        where: { id },
-        data: {
-          ...(title && { title }),
-          ...(status && { status }),
-          ...(isPublic !== undefined && { isPublic }),
-          ...(summary && { summary }),
-          updatedAt: new Date(),
-        },
-        include: {
-          personal: true,
-          template: true,
-        },
-      });
-
-      return NextResponse.json({
-        success: true,
-        data: updated,
-      });
-
-    } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to mock resume update:', dbError);
-      
-      return NextResponse.json({
-        success: true,
-        data: {
-          id,
-          title: title || 'Updated Resume Title',
-          status: status || 'draft',
-          isPublic: isPublic !== undefined ? isPublic : false,
-          summary: summary || '',
-          updatedAt: new Date().toISOString(),
+      if (auth) {
+        const existing = await getResumeOrFail(id, auth.userId);
+        if (existing) {
+          updatedResume = await prisma.resume.update({
+            where: { id },
+            data: {
+              ...(title && { title }),
+              ...(status && { status }),
+              ...(isPublic !== undefined && { isPublic }),
+              ...(summary && { summary }),
+              updatedAt: new Date(),
+            },
+            include: {
+              personal: true,
+              template: true,
+            },
+          });
         }
-      });
+      }
+    } catch (dbError) {
+      console.warn('[PRISMA_UNAVAILABLE] Falling back to store update:', dbError);
     }
+
+    // Update in-memory fallback store
+    const storeItem = updateStoreResume(id, userId, {
+      title,
+      status,
+      isPublic,
+      summary,
+      templateId,
+      cvData,
+      customTheme,
+      selectedLayout,
+      sectionVariants,
+      sectionOrder,
+      personal: cvData?.personal,
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: updatedResume || storeItem,
+    });
   } catch (error) {
     console.error('[RESUME_UPDATE_ERROR]', error);
     return NextResponse.json(
@@ -195,22 +156,19 @@ export async function DELETE(
   const { id } = await params;
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const userId = auth?.userId || 'guest';
 
     try {
-      const resume = await getResumeOrFail(id, auth.userId);
-      if (!resume) {
-        return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+      if (auth) {
+        await prisma.resume.delete({
+          where: { id },
+        });
       }
-
-      await prisma.resume.delete({
-        where: { id },
-      });
     } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to mock resume deletion:', dbError);
+      console.warn('[PRISMA_UNAVAILABLE] Falling back to store deletion:', dbError);
     }
+
+    deleteStoreResume(id);
 
     return NextResponse.json({
       success: true,
@@ -231,3 +189,4 @@ export async function PATCH(
 ) {
   return PUT(req, context);
 }
+

@@ -17,9 +17,9 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
   if (!data) return null;
 
   const renderHeader = () => (
-    <div className="flex items-center gap-4 mb-4">
+    <div className="flex items-center gap-2 mb-2">
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
+        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
       >
         Professional Summary
@@ -30,9 +30,9 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   if (variant === 'standard') {
     return (
-      <div id="cv-section-summary" className="w-full mb-6">
+      <div id="cv-section-summary" className="w-full mb-4">
         {renderHeader()}
-        <p className="text-[11px] leading-relaxed text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+        <p className="text-[11.5px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
           {data}
         </p>
       </div>
@@ -41,16 +41,16 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   if (variant === 'highlight') {
     return (
-      <div id="cv-section-summary" className="w-full mb-6">
+      <div id="cv-section-summary" className="w-full mb-4">
         {renderHeader()}
         <div
-          className="p-4 rounded-lg border-l-4"
+          className="p-3 rounded-md border-l-4"
           style={{
             background: `linear-gradient(135deg, ${theme.primary}05 0%, ${theme.primary}10 100%)`,
             borderLeftColor: theme.primary,
           }}
         >
-          <p className="text-[11px] leading-relaxed text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+          <p className="text-[11.5px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data}
           </p>
         </div>
@@ -60,10 +60,10 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
 
   // Minimal variant
   return (
-    <div id="cv-section-summary" className="w-full mb-6">
+    <div id="cv-section-summary" className="w-full mb-4">
       {renderHeader()}
       <p
-        className="text-[11px] leading-relaxed italic pl-3 border-l-2"
+        className="text-[11.5px] leading-[1.45] italic pl-2.5 border-l-2"
         style={{
           fontFamily: theme.fontFamily,
           color: theme.text,

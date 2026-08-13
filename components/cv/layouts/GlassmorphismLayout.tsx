@@ -6,7 +6,6 @@ import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
 import { getGlassStyle } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type GlassmorphismLayoutProps = {
   data: CVData;
@@ -35,18 +34,16 @@ const GlassmorphismLayout: React.FC<GlassmorphismLayoutProps> = ({
 
   return (
     <div
-      className="w-full  p-8"
+      className="w-full p-6"
       style={{
         background: `linear-gradient(135deg, ${theme.primary}20 0%, ${theme.secondary} 50%, ${theme.primary}10 100%)`,
-        
-        
       }}
     >
       <div
-        className="p-6 mb-6"
+        className="p-5 mb-5 rounded-md"
         style={glassStyle}
       >
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           {data.personal.avatar && (
             <img
               src={data.personal.avatar}
@@ -56,23 +53,24 @@ const GlassmorphismLayout: React.FC<GlassmorphismLayoutProps> = ({
             />
           )}
           <div className="flex-1">
-            <h1 className="text-2xl font-bold" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p style={{ color: theme.primary }}>{data.personal.title}</p>
-            <div className="flex gap-4 mt-2 text-sm" style={{ color: theme.textSecondary }}>
+            <p className="text-[14px] font-semibold leading-[1.25] mt-1" style={{ color: theme.primary }}>{data.personal.title}</p>
+            <div className="flex gap-3 mt-1.5 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
               <span>{data.personal.email}</span>
+              <span>•</span>
               <span>{data.personal.location}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-5">
+        <div className="space-y-4">
           {data.summary && (
-            <div className="p-5" style={glassStyle}>
-              <p className="text-sm" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+            <div className="p-4 rounded-md" style={glassStyle}>
+              <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                 {data.summary}
               </p>
             </div>
@@ -80,7 +78,7 @@ const GlassmorphismLayout: React.FC<GlassmorphismLayoutProps> = ({
           {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
           {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
         </div>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {data.skills.length > 0 && <Skills data={data.skills} theme={theme} variant={skillsVariant} />}
           {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}
           {data.certifications && data.certifications.length > 0 && <Certifications data={data.certifications} theme={theme} variant={certificationsVariant} />}

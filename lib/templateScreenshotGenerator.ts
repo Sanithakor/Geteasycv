@@ -1,5 +1,5 @@
 // Generate actual template screenshots for previews
-import html2canvas from 'html2canvas';
+import safeHtml2Canvas from './safeHtml2Canvas';
 import { GeneratedTemplate } from './generateTemplates';
 import { sampleCV } from '../data/sampleCV';
 
@@ -55,8 +55,8 @@ export async function generateTemplateScreenshot(
     await document.fonts?.ready;
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Capture screenshot using html2canvas
-    const canvas = await html2canvas(tempContainer, {
+    // Capture screenshot using safeHtml2Canvas
+    const canvas = await safeHtml2Canvas(tempContainer, {
       useCORS: true,
       allowTaint: true,
       logging: false,

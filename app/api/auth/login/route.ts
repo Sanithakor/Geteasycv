@@ -7,8 +7,23 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyPassword, generateToken, sanitizeEmail, validateEmail, hashPassword } from '@/lib/utils/auth';
+import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
+  // Apply rate limiting (Max 5 attempts per 15 minutes per IP)
+  const rateLimit = checkRateLimit(req, {
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    keyPrefix: 'auth_login',
+  });
+
+  if (!rateLimit.success) {
+    return createRateLimitResponse(
+      rateLimit.retryAfter,
+      'Too many failed login attempts. Please try again later.'
+    );
+  }
+
   let email = '';
   let password = '';
   try {

@@ -14,10 +14,11 @@ import {
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Templates', href: '/templates' },
-  { name: 'Features', href: '/#features' },
-  { name: 'Pricing', href: '/#pricing' },
-  { name: 'Resume Examples', href: '/templates?category=ATS%20Friendly' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Examples', href: '/resume-examples' },
+  { name: 'Cover Letter', href: '/cover-letter' },
+  { name: 'ATS Checker', href: '/ats-checker' },
+  { name: 'AI Features', href: '/ai-features' },
+  { name: 'Pricing', href: '/pricing' },
 ];
 
 export default function Navigation() {
@@ -40,7 +41,7 @@ export default function Navigation() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+          <img src="/logo.svg" alt="GetEasyCV" className="h-10 w-auto object-contain" />
         </Link>
 
         {/* Center Nav Links */}
@@ -75,7 +76,7 @@ export default function Navigation() {
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-800"
+                className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-slate-200 transition hover:bg-slate-800"
               >
                 Sign Up
               </Link>
@@ -87,7 +88,7 @@ export default function Navigation() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-700 lg:hidden"
+          className="grid h-10 w-10 place-items-center rounded-md border border-slate-200 bg-white text-slate-700 lg:hidden"
           aria-label="Toggle navigation"
           aria-expanded={open}
         >
@@ -104,7 +105,7 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                className="rounded-md px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
               >
                 {item.name}
               </Link>
@@ -117,7 +118,7 @@ export default function Navigation() {
                 <Link
                   href={dashboardPath}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
+                  className="flex items-center justify-center gap-2 rounded-md bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Go to Dashboard</span>
@@ -127,7 +128,7 @@ export default function Navigation() {
                     setOpen(false);
                     handleLogout();
                   }}
-                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-center text-sm font-semibold text-red-600"
+                  className="rounded-md border border-red-200 bg-red-50 px-4 py-2.5 text-center text-sm font-semibold text-red-600"
                 >
                   Log Out
                 </button>
@@ -137,14 +138,14 @@ export default function Navigation() {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800"
+                  className="rounded-md border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setOpen(false)}
-                  className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
+                  className="rounded-md bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white"
                 >
                   Sign Up
                 </Link>

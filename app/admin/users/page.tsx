@@ -194,7 +194,7 @@ export default function UsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
             Users
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -203,7 +203,7 @@ export default function UsersPage() {
         </div>
         <Link
           href="/admin/users/new"
-          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add User
@@ -219,14 +219,14 @@ export default function UsersPage() {
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
         </div>
       </div>
 
       {/* Error */}
       {error && (
-        <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
+        <div className="p-3.5 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
           {error} — <button onClick={fetchUsers} className="underline font-semibold">Retry</button>
         </div>
       )}
@@ -357,7 +357,7 @@ export default function UsersPage() {
                     <td className="px-4.5 py-3 text-right relative">
                       <button
                         onClick={() => setOpenMenuId(openMenuId === user.id ? null : user.id)}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors"
                       >
                         <MoreVertical className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                       </button>
@@ -365,10 +365,10 @@ export default function UsersPage() {
                       {openMenuId === user.id && (
                         <>
                           <div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)} />
-                          <div className="absolute right-6 top-12 w-44 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-xl z-20 text-left">
+                          <div className="absolute right-6 top-12 w-44 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-xl z-20 text-left">
                             <button
                               onClick={() => handleUpdateBan(user.id, !user.isBanned)}
-                              className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                              className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                             >
                               <Ban className="w-4 h-4" />
                               <span>{user.isBanned ? 'Unban User' : 'Ban User'}</span>
@@ -390,13 +390,13 @@ export default function UsersPage() {
             Showing {filteredUsers.length} of {users.length} users
           </p>
           <div className="flex gap-2">
-            <button className="px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <button className="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
               Previous
             </button>
-            <button className="px-3 py-1 rounded-lg bg-violet-600 text-white text-sm font-medium">
+            <button className="px-3 py-1 rounded-md bg-violet-600 text-white text-sm font-medium">
               1
             </button>
-            <button className="px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <button className="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
               Next
             </button>
           </div>

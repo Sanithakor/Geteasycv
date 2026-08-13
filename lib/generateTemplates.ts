@@ -26,6 +26,8 @@ export type TemplateConfig = {
   description: string;
   tags: string[];
   category: string;
+  isPremium?: boolean;
+  isATS?: boolean;
 };
 
 export type GeneratedTemplate = TemplateConfig & {

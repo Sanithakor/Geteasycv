@@ -17,7 +17,7 @@ export default function SubscriptionsPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Subscriptions</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">Manage subscription plans and pricing</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium transition-colors">
           <Plus className="w-4 h-4" /> New Plan
         </button>
       </div>

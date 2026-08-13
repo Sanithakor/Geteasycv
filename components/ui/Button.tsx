@@ -15,7 +15,7 @@ export default function Button({
   className = '',
   ...props 
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variantStyles = {
     primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',

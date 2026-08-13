@@ -44,20 +44,19 @@ export default function UserLayout({ children }: UserLayoutProps) {
   const [showFooterMenu, setShowFooterMenu] = useState(false);
 
   useEffect(() => {
-    if (!_hydrated) return;
-    if (!isAuthenticated) {
+    if (typeof window !== 'undefined' && !isAuthenticated && _hydrated) {
       router.replace('/login');
     }
   }, [_hydrated, isAuthenticated, router]);
 
-  if (!_hydrated || !isAuthenticated) {
+  if (typeof window === 'undefined' || (!isAuthenticated && !_hydrated)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-700">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
+          <div className="w-12 h-12 rounded-md bg-teal-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
             <FileText className="w-6 h-6 text-white" />
           </div>
-          <p className="text-slate-600 text-sm font-semibold">Loading user session…</p>
+          <p className="text-slate-600 text-sm font-semibold">Loading session...</p>
         </div>
       </div>
     );
@@ -92,11 +91,11 @@ export default function UserLayout({ children }: UserLayoutProps) {
         {/* Logo Section */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100 flex-shrink-0">
           <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
-            <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <img src="/logo.svg" alt="GetEasyCV" className="h-10 w-auto object-contain" />
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition-colors"
+            className="lg:hidden p-1.5 hover:bg-slate-100 rounded-md text-slate-500 hover:text-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -104,7 +103,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
         {/* Sidebar Tabs */}
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <div className="px-3 py-1.5 text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">
+          <div className="px-3 py-1.5 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
             Navigation
           </div>
 
@@ -116,7 +115,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-md text-sm font-semibold transition-all ${
                   active
                     ? 'bg-teal-50 text-teal-700 shadow-sm border border-teal-100'
                     : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
@@ -131,13 +130,13 @@ export default function UserLayout({ children }: UserLayoutProps) {
           {/* Admin Control Panel link if Admin */}
           {user?.role === 'admin' && (
             <div className="pt-4 mt-4 border-t border-slate-100">
-              <div className="px-3 py-1 text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">
+              <div className="px-3 py-1 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                 Admin Privilege
               </div>
               <Link
                 href="/admin"
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-violet-700 bg-violet-50 hover:bg-violet-100 transition-all border border-violet-100"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-md text-sm font-bold text-violet-700 bg-violet-50 hover:bg-violet-100 transition-all border border-violet-100"
               >
                 <ShieldCheck className="w-4 h-4 text-violet-600" />
                 <span className="truncate">Admin Control Panel</span>
@@ -150,7 +149,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
         <div className="p-4 border-t border-slate-100">
           <Link
             href="/templates"
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Resume</span>
@@ -180,7 +179,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
           <div className="relative">
             <button
               onClick={() => setShowFooterMenu(!showFooterMenu)}
-              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-colors"
+              className="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-slate-700 transition-colors"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
@@ -188,11 +187,11 @@ export default function UserLayout({ children }: UserLayoutProps) {
             {showFooterMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowFooterMenu(false)} />
-                <div className="absolute right-0 bottom-full mb-2 w-48 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl z-20 space-y-1">
+                <div className="absolute right-0 bottom-full mb-2 w-48 rounded-md border border-slate-200 bg-white p-1.5 shadow-xl z-20 space-y-1">
                   <Link
                     href="/profile"
                     onClick={() => setShowFooterMenu(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     <UserIcon className="w-4 h-4 text-slate-400" />
                     <span>My Profile</span>
@@ -200,14 +199,14 @@ export default function UserLayout({ children }: UserLayoutProps) {
                   <Link
                     href="/settings"
                     onClick={() => setShowFooterMenu(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     <Settings className="w-4 h-4 text-slate-400" />
                     <span>Settings</span>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
                   >
                     <LogOut className="w-4 h-4 text-red-400" />
                     <span>Logout</span>
@@ -226,7 +225,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100"
+              className="lg:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -241,7 +240,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
           <div className="flex items-center gap-3">
             <Link
               href="/templates"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-xs"
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Create Resume</span>
@@ -250,7 +249,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
             {user?.role === 'admin' && (
               <Link
                 href="/admin"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-50 text-violet-700 border border-violet-100 hover:bg-violet-100 text-xs font-bold transition-all"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-violet-50 text-violet-700 border border-violet-100 hover:bg-violet-100 text-xs font-bold transition-all"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-violet-600" />
                 <span>Admin Panel</span>

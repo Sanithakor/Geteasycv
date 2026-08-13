@@ -32,25 +32,22 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
 }) => {
   return (
     <div
-      className="w-full  p-6"
+      className="w-full p-5"
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
         gridTemplateRows: 'auto auto auto auto',
-        gap: '1rem',
+        gap: '0.75rem',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
       }}
     >
       {/* Header Card - Spans 2 columns */}
       <div
-        className="col-span-2 p-6"
+        className="col-span-2 p-5 rounded-md"
         style={{
           background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,
-          
           gridColumn: 'span 2',
         }}
       >
@@ -63,25 +60,24 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
             />
           )}
           <div>
-            <h1 className="text-2xl font-bold" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p style={{ color: theme.primary }}>{data.personal.title}</p>
+            <p className="text-[14px] font-semibold leading-[1.25] mt-0.5" style={{ color: theme.primary }}>{data.personal.title}</p>
           </div>
         </div>
       </div>
 
       {/* Contact Card */}
       <div
-        className="p-4"
+        className="p-4 rounded-md"
         style={{
           backgroundColor: theme.background,
           border: `1px solid ${theme.border}`,
-          
         }}
       >
-        <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
-        <div className="space-y-1 text-sm" style={{ color: theme.textSecondary }}>
+        <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
+        <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <div>{data.personal.email}</div>
           <div>{data.personal.phone}</div>
           <div>{data.personal.location}</div>
@@ -91,139 +87,25 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
       {/* Summary Card - Spans 2 columns */}
       {data.summary && (
         <div
-          className="col-span-2 p-4"
+          className="col-span-2 p-4 rounded-md"
           style={{
             backgroundColor: theme.background,
             border: `1px solid ${theme.border}`,
-            
             gridColumn: 'span 2',
           }}
         >
-          <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Summary</h3>
-          <p className="text-sm" style={{ color: theme.textSecondary }}>{data.summary}</p>
+          <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Summary</h3>
+          <p className="text-[11.5px] leading-[1.45]" style={{ color: theme.text }}>{data.summary}</p>
         </div>
       )}
 
-      {/* Skills Card */}
-      {data.skills.length > 0 && (
-        <div
-          className="p-4"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.border}`,
-            
-          }}
-        >
-          <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Skills</h3>
-          <div className="flex flex-wrap gap-1">
-            {data.skills.slice(0, 8).map((skill) => (
-              <span
-                key={skill.id}
-                className="text-xs px-2 py-0.5 rounded"
-                style={{
-                  backgroundColor: `${theme.primary}15`,
-                  color: theme.primary,
-                }}
-              >
-                {skill.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Experience Card - Spans 2 columns */}
-      {data.experience.length > 0 && (
-        <div
-          className="col-span-2 p-4"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.border}`,
-            
-            gridColumn: 'span 2',
-          }}
-        >
-          <h3 className="font-semibold mb-3" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Experience</h3>
-          <div className="space-y-3">
-            {data.experience.slice(0, 2).map((exp) => (
-              <div key={exp.id}>
-                <div className="flex justify-between">
-                  <span className="font-medium">{exp.position}</span>
-                  <span className="text-sm" style={{ color: theme.textSecondary }}>
-                    {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
-                  </span>
-                </div>
-                <div className="text-sm" style={{ color: theme.primary }}>{exp.company}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Education Card */}
-      {data.education.length > 0 && (
-        <div
-          className="p-4"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.border}`,
-            
-          }}
-        >
-          <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Education</h3>
-          {data.education.map((edu) => (
-            <div key={edu.id} className="mb-2">
-              <div className="font-medium">{edu.institution}</div>
-              <div className="text-sm" style={{ color: theme.textSecondary }}>
-                {edu.degree} in {edu.field}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Projects Card - Spans 2 columns */}
-      {data.projects && data.projects.length > 0 && (
-        <div
-          className="col-span-2 p-4"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.border}`,
-            
-            gridColumn: 'span 2',
-          }}
-        >
-          <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Projects</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {data.projects.slice(0, 4).map((proj) => (
-              <div key={proj.id} className="p-2 rounded" style={{ backgroundColor: `${theme.primary}08` }}>
-                <div className="font-medium text-sm">{proj.name}</div>
-                <div className="text-xs" style={{ color: theme.textSecondary }}>{proj.technologies.slice(0, 3).join(', ')}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Certifications Card */}
-      {data.certifications && data.certifications.length > 0 && (
-        <div
-          className="p-4"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.border}`,
-            
-          }}
-        >
-          <h3 className="font-semibold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Certifications</h3>
-          {data.certifications.map((cert) => (
-            <div key={cert.id} className="text-sm mb-1">
-              <div className="font-medium">{cert.name}</div>
-              <div className="text-xs" style={{ color: theme.textSecondary }}>{cert.issuer}</div>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Main Content Area */}
+      <div className="col-span-3 space-y-4">
+        {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
+        {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
+        {data.skills.length > 0 && <Skills data={data.skills} theme={theme} variant={skillsVariant} />}
+        {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}
+      </div>
     </div>
   );
 };

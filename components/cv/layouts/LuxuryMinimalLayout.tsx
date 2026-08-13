@@ -36,19 +36,17 @@ const LuxuryMinimalLayout: React.FC<LuxuryMinimalLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2rem',
-        
-        
+        padding: '1.5rem',
       }}
     >
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+      <div className="text-center mb-6">
+        <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-lg mb-4" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+        <p className="text-[14px] font-semibold leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
           {data.personal.title}
         </p>
-        <div className="flex justify-center gap-6 text-sm" style={{ color: theme.textSecondary }}>
+        <div className="flex justify-center gap-4 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <span>{data.personal.email}</span>
           <span>{data.personal.phone}</span>
           <span>{data.personal.location}</span>
@@ -56,14 +54,14 @@ const LuxuryMinimalLayout: React.FC<LuxuryMinimalLayoutProps> = ({
       </div>
 
       {data.summary && (
-        <div className="mb-8">
-          <p className="text-lg leading-relaxed" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+        <div className="mb-6 max-w-xl mx-auto text-center">
+          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data.summary}
           </p>
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
         {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
         {data.skills.length > 0 && <Skills data={data.skills} theme={theme} variant={skillsVariant} />}

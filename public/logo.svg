@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48" fill="none">
+  <defs>
+    <linearGradient id="logo-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9333EA" />
+      <stop offset="100%" stop-color="#6B21A8" />
+    </linearGradient>
+    <linearGradient id="logo-stroke-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#7E22CE" />
+    </linearGradient>
+  </defs>
+
+  <!-- Typography: GetEasy -->
+  <text x="0" y="34" font-family="Poppins, Inter, system-ui, -apple-system, sans-serif" font-weight="700" font-size="30" fill="#0F172A" letter-spacing="-0.5px">GetEasy</text>
+
+  <!-- Icon: Overlapping CV Document Cards -->
+  <g transform="translate(142, 6)">
+    <!-- Back Card 2 -->
+    <rect x="14" y="0" width="22" height="30" rx="3.5" stroke="#C084FC" stroke-width="2" fill="none" opacity="0.6" />
+    
+    <!-- Back Card 1 -->
+    <rect x="8" y="3" width="22" height="30" rx="3.5" stroke="#A855F7" stroke-width="2" fill="none" opacity="0.85" />
+
+    <!-- Main Front Card -->
+    <rect x="0" y="6" width="23" height="30" rx="4" fill="#FFFFFF" stroke="url(#logo-stroke-grad)" stroke-width="2.5" />
+
+    <!-- CV Badge Box inside Front Card -->
+    <rect x="3.5" y="9.5" width="16" height="10" rx="2" fill="url(#logo-purple-grad)" />
+    <text x="11.5" y="16.5" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="7" fill="#FFFFFF" text-anchor="middle">CV</text>
+
+    <!-- Content Lines inside Front Card -->
+    <rect x="3.5" y="22" width="16" height="2" rx="1" fill="#9333EA" />
+    <rect x="3.5" y="26.5" width="12" height="2" rx="1" fill="#C084FC" />
+  </g>
+</svg>

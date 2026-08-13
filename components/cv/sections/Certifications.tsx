@@ -4,7 +4,7 @@ import React from 'react';
 import { Theme } from '../../../data/themes';
 import { CertificationsVariant, getCardStyles, getShadowStyle } from '../variants/sectionVariants';
 import { CertificationItem } from '../../../data/sampleCV';
-import { Award, CheckCircle } from 'lucide-react';
+import { Award } from 'lucide-react';
 
 export type CertificationsProps = {
   data: CertificationItem[];
@@ -17,11 +17,11 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
   const shadowStyle = getShadowStyle(theme);
 
   const renderHeader = () => (
-    <div className="flex items-center gap-3 mb-4">
+    <div className="flex items-center gap-2 mb-2">
       <Award className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider whitespace-nowrap"
-        style={{ fontFamily: 'Poppins, sans-serif', color: theme.primary }}
+        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Certifications
       </h2>
@@ -31,25 +31,25 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
 
   if (variant === 'list') {
     return (
-      <div id="cv-section-certifications" className="w-full mb-6">
+      <div id="cv-section-certifications" className="w-full mb-4">
         {renderHeader()}
         <div className="space-y-2">
           {data.map((item) => (
             <div
               key={item.id}
-              className="p-3.5 rounded-lg border flex flex-wrap justify-between items-center gap-4"
+              className="p-2.5 rounded-md border flex flex-wrap justify-between items-center gap-2"
               style={{
                 ...cardStyles,
                 boxShadow: shadowStyle,
                 borderColor: `${theme.primary}20`,
               }}
             >
-              <div>
-                <h3 className="text-[12px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
-                <p className="text-[10px] font-medium mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
-                  {item.issuer} <span className="opacity-50 mx-1">|</span> {item.date}
+                <p className="text-[11.5px] font-medium leading-[1.45] mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  {item.issuer} <span className="opacity-50 mx-1">|</span> <span className="text-[10px]">{item.date}</span>
                 </p>
               </div>
               {item.link && (
@@ -57,7 +57,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-bold px-3 py-1 rounded-sm shrink-0"
+                  className="text-[10px] font-bold px-2 py-0.5 rounded-xs shrink-0 hover:opacity-80 transition-opacity"
                   style={{
                     backgroundColor: `${theme.primary}15`,
                     color: theme.primary,
@@ -73,69 +73,26 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
     );
   }
 
-  if (variant === 'badges') {
-    return (
-      <div id="cv-section-certifications" className="w-full mb-6">
-        {renderHeader()}
-        <div className="flex flex-wrap gap-3">
-          {data.map((item) => (
-            <div
-              key={item.id}
-              className="px-4 py-2.5 rounded-lg text-center"
-              style={{
-                background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}10, ${theme.gradient.end}10)`,
-                border: `1px solid ${theme.primary}20`,
-              }}
-            >
-              <h3 className="text-[11px] font-bold" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
-                {item.name}
-              </h3>
-              <p className="text-[9px] font-semibold uppercase tracking-wide mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
-                {item.issuer}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // Cards variant
+  // Badges / Fallback variant
   return (
-    <div id="cv-section-certifications" className="w-full mb-6">
+    <div id="cv-section-certifications" className="w-full mb-4">
       {renderHeader()}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-wrap gap-2">
         {data.map((item) => (
           <div
             key={item.id}
-            className="p-3.5 rounded-lg border"
+            className="px-3 py-1.5 rounded-md text-left"
             style={{
-              ...cardStyles,
-              boxShadow: shadowStyle,
-              borderColor: `${theme.primary}20`,
+              background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}10, ${theme.gradient.end}10)`,
+              border: `1px solid ${theme.primary}20`,
             }}
           >
-            <div className="flex items-start gap-3">
-              <div
-                className="w-8 h-8 rounded shrink-0 flex items-center justify-center"
-                style={{ background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})` }}
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-[11px] font-bold leading-tight" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
-                  {item.name}
-                </h3>
-                <p className="text-[10px] font-medium mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
-                  {item.issuer}
-                </p>
-                <p className="text-[9px] font-bold mt-1" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
-                  {item.date}
-                </p>
-              </div>
-            </div>
+            <h3 className="text-[12px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+              {item.name}
+            </h3>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+              {item.issuer}
+            </p>
           </div>
         ))}
       </div>

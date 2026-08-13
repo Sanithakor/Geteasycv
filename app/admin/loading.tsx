@@ -2,7 +2,7 @@ export default function AdminLoading() {
   return (
     <div className="space-y-6 animate-pulse">
       {/* Page title */}
-      <div className="h-8 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+      <div className="h-8 w-40 bg-slate-200 dark:bg-slate-700 rounded-md" />
 
       {/* KPI cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -18,11 +18,11 @@ export default function AdminLoading() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
           <div className="h-5 w-40 bg-slate-200 dark:bg-slate-700 rounded mb-6" />
-          <div className="h-72 bg-slate-100 dark:bg-slate-700 rounded-lg" />
+          <div className="h-72 bg-slate-100 dark:bg-slate-700 rounded-md" />
         </div>
         <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
           <div className="h-5 w-32 bg-slate-200 dark:bg-slate-700 rounded mb-6" />
-          <div className="h-64 bg-slate-100 dark:bg-slate-700 rounded-lg" />
+          <div className="h-64 bg-slate-100 dark:bg-slate-700 rounded-md" />
         </div>
       </div>
 

@@ -5,7 +5,6 @@ import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages, Awards } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant, AwardsVariant } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type ExecutiveLayoutProps = {
   data: CVData;
@@ -37,30 +36,28 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
       className="w-full"
       style={{
         display: 'grid',
-        gridTemplateColumns: '350px 1fr',
+        gridTemplateColumns: '300px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
       }}
     >
       {/* Left Sidebar */}
-      <div className="p-6" style={{ backgroundColor: theme.backgroundAlt }}>
+      <div className="p-5" style={{ backgroundColor: theme.backgroundAlt }}>
         {data.personal.avatar && (
-          <div className="mb-6">
+          <div className="mb-5">
             <img
               src={data.personal.avatar}
               alt={`${data.personal.firstName} ${data.personal.lastName}`}
-              className="w-full rounded-xl object-cover aspect-square"
+              className="w-full rounded-md object-cover aspect-square"
             />
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Contact</h3>
-            <div className="space-y-2 text-sm" style={{ color: theme.textSecondary }}>
+            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
+            <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
               <div className="break-words">{data.personal.email}</div>
               <div>{data.personal.phone}</div>
               <div>{data.personal.location}</div>
@@ -71,12 +68,12 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.skills.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Core Competencies</h3>
-              <div className="flex flex-wrap gap-2">
+              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Core Competencies</h3>
+              <div className="flex flex-wrap gap-1.5">
                 {data.skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="text-xs px-2 py-1 rounded"
+                    className="text-[11px] font-semibold px-2 py-0.5 rounded-xs"
                     style={{
                       backgroundColor: `${theme.primary}15`,
                       color: theme.primary,
@@ -91,14 +88,14 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.education.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Education</h3>
+              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Education</h3>
               {data.education.map((edu) => (
-                <div key={edu.id} className="mb-3">
-                  <div className="font-medium">{edu.institution}</div>
-                  <div className="text-sm" style={{ color: theme.textSecondary }}>
+                <div key={edu.id} className="mb-2.5">
+                  <div className="text-[13px] font-bold leading-[1.25]">{edu.institution}</div>
+                  <div className="text-[12px] font-semibold leading-[1.45]" style={{ color: theme.textSecondary }}>
                     {edu.degree} in {edu.field}
                   </div>
-                  <div className="text-xs" style={{ color: theme.textMuted }}>
+                  <div className="text-[10px] font-medium leading-normal" style={{ color: theme.textMuted }}>
                     {edu.startDate} - {edu.endDate}
                   </div>
                 </div>
@@ -108,11 +105,11 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.certifications && data.certifications.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Certifications</h3>
+              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Certifications</h3>
               {data.certifications.map((cert) => (
-                <div key={cert.id} className="mb-2 text-sm">
-                  <div className="font-medium">{cert.name}</div>
-                  <div style={{ color: theme.textSecondary }}>{cert.issuer}</div>
+                <div key={cert.id} className="mb-2">
+                  <div className="text-[13px] font-bold leading-[1.25]">{cert.name}</div>
+                  <div className="text-[11.5px] font-medium leading-[1.45]" style={{ color: theme.textSecondary }}>{cert.issuer}</div>
                 </div>
               ))}
             </div>
@@ -120,22 +117,10 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.languages && data.languages.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Languages</h3>
+              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Languages</h3>
               {data.languages.map((lang) => (
-                <div key={lang.id} className="text-sm mb-1" style={{ color: theme.textSecondary }}>
+                <div key={lang.id} className="text-[11.5px] font-medium leading-snug mb-1" style={{ color: theme.textSecondary }}>
                   {lang.name} - {lang.proficiency}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {data.awards && data.awards.length > 0 && (
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Awards</h3>
-              {data.awards.map((award) => (
-                <div key={award.id} className="mb-2 text-sm">
-                  <div className="font-medium">{award.name}</div>
-                  <div style={{ color: theme.textSecondary }}>{award.issuer}</div>
                 </div>
               ))}
             </div>
@@ -144,7 +129,7 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
       </div>
 
       {/* Main Content */}
-      <div className="p-6" style={{ backgroundColor: theme.background }}>
+      <div className="p-5" style={{ backgroundColor: theme.background }}>
         <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && <Summary data={data.summary} theme={theme} variant="highlight" />}
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}

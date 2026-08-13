@@ -22,7 +22,7 @@ export default function Page() {
             Manage and customize color schemes, typography, and spacing for resumes ({themes.length} total)
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium transition-colors">
           <Plus className="w-4 h-4" />
           Create Theme
         </button>
@@ -36,7 +36,7 @@ export default function Page() {
           placeholder="Search themes by name or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       </div>
 
@@ -57,7 +57,7 @@ export default function Page() {
               }}
             >
               <div className="absolute inset-0 bg-black/5 opacity-40 group-hover:opacity-0 transition-opacity" />
-              <Paintbrush className="w-8 h-8 text-white relative z-10 drop-shadow-md group-hover:scale-110 transition-transform" />
+              <Paintbrush className="w-8 h-8 text-white relative z-10 drop-shadow-md group- transition-transform" />
             </div>
 
             {/* Theme Info */}
@@ -75,7 +75,7 @@ export default function Page() {
               </div>
 
               {/* Color Swatches */}
-              <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 space-y-2">
+              <div className="bg-slate-50 dark:bg-slate-900/50 rounded-md p-3 space-y-2">
                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wider">Color Palette</p>
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col items-center">
@@ -115,10 +115,10 @@ export default function Page() {
                   <span className="w-2 h-2 rounded-full bg-green-500" /> Active
                 </span>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 text-slate-600 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <button className="p-2 text-slate-600 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <button className="p-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

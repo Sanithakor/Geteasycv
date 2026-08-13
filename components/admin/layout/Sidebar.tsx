@@ -51,8 +51,6 @@ const SIDEBAR_GROUPS: SidebarGroup[] = [
     items: [
       { title: 'Users', icon: Users, href: '/admin/users' },
       { title: 'Resumes', icon: FileText, href: '/admin/resumes' },
-      { title: 'Templates', icon: LayoutTemplate, href: '/admin/templates' },
-      { title: 'Template Categories', icon: FolderTree, href: '/admin/template-categories' },
       { title: 'Sections', icon: Columns, href: '/admin/sections' },
       { title: 'AI Content', icon: Sparkles, href: '/admin/ai-settings' },
       { title: 'Media Library', icon: Image, href: '/admin/media' },
@@ -119,11 +117,11 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         {/* Logo Section */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100 flex-shrink-0">
           <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
-            <img src="/logo.png" alt="GetEasyCV" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <img src="/logo.svg" alt="GetEasyCV" className="h-10 w-auto object-contain" />
           </Link>
           <button
             onClick={() => setOpen(false)}
-            className="lg:hidden p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-slate-800 transition-colors"
+            className="lg:hidden p-1.5 hover:bg-slate-50 rounded-md text-slate-500 hover:text-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -136,7 +134,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <Link
               href="/admin"
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-bold transition-all ${
                 pathname === '/admin'
                   ? 'bg-violet-50 text-violet-600'
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
@@ -150,7 +148,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           {/* Grouped Links */}
           {SIDEBAR_GROUPS.map((group) => (
             <div key={group.groupName} className="space-y-1">
-              <div className="px-6 py-1.5 text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">
+              <div className="px-6 py-1.5 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                 {group.groupName}
               </div>
               <div className="px-3 space-y-[2px]">
@@ -162,7 +160,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold transition-all ${
                         active
                           ? 'bg-violet-50 text-violet-600'
                           : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
@@ -196,7 +194,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           <div className="relative">
             <button
               onClick={() => setShowFooterMenu(!showFooterMenu)}
-              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-slate-700 transition-colors"
+              className="p-1.5 hover:bg-slate-50 rounded-md text-slate-400 hover:text-slate-700 transition-colors"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
@@ -209,7 +207,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                   <Link
                     href="/dashboard"
                     onClick={() => setShowFooterMenu(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     <FileText className="w-4 h-4 text-slate-400" />
                     <span>User Dashboard</span>
@@ -217,14 +215,14 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                   <Link
                     href="/admin/settings"
                     onClick={() => setShowFooterMenu(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     <Settings className="w-4 h-4 text-slate-400" />
                     <span>Admin Settings</span>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
                   >
                     <LogOut className="w-4 h-4 text-red-400" />
                     <span>Logout</span>

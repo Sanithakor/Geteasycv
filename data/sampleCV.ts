@@ -74,6 +74,7 @@ export type CertificationItem = {
   date: string;
   expiryDate?: string;
   link?: string;
+  credentialId?: string;
   logo?: string;
 };
 
@@ -86,7 +87,7 @@ export type LanguageItem = {
 
 export type AwardItem = {
   id: string;
-  name: string;
+  title: string;
   issuer: string;
   date: string;
   description?: string;
@@ -99,14 +100,14 @@ export type ContactItem = {
   label?: string;
 };
 
-// Dummy user image - clean inline SVG avatar (100% offline & fast)
-export const DUMMY_AVATAR = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="64" fill="%23cbd5e1"/><path d="M64 28a24 24 0 1 0 0 48 24 24 0 0 0 0-48zM24 108c0-22.1 17.9-40 40-40s40 17.9 40 40a63.5 63.5 0 0 1-80 0z" fill="%2364748b"/></svg>`;
+// Default user image for all CV layouts
+export const DUMMY_AVATAR = '/default-avatar.jpg';
 
 export const sampleCV: CVData = {
   personal: {
     firstName: 'Sarah',
     lastName: 'Johnson',
-    title: 'Senior Full Stack Developer',
+    title: 'Senior Full Stack Engineer',
     email: 'sarah.johnson@email.com',
     phone: '+1 (555) 123-4567',
     location: 'San Francisco, CA',
@@ -114,173 +115,261 @@ export const sampleCV: CVData = {
     linkedin: 'https://linkedin.com/in/sarahjohnson',
     avatar: DUMMY_AVATAR,
   },
+
   summary:
-    'Results-driven Senior Full Stack Developer with 8+ years of experience building scalable web applications. Proven track record of leading technical teams, optimizing performance, and delivering high-quality solutions. Passionate about clean code, best practices, and continuous learning.',
+    'Results-driven Senior Full Stack Engineer with 8+ years of experience designing, building, and scaling enterprise web applications used by millions of users worldwide. Deep expertise in React, TypeScript, Node.js, and cloud infrastructure. Proven track record of leading cross-functional teams, driving architectural decisions, and delivering measurable business impact. Passionate about clean code, developer experience, and building products that make a real difference.',
+
   experience: [
     {
       id: 'exp1',
       company: 'TechCorp Inc.',
-      position: 'Senior Full Stack Developer',
-      startDate: '2021-03',
+      position: 'Senior Full Stack Engineer',
+      startDate: 'Mar 2021',
       endDate: 'Present',
       current: true,
-      description:
-        'Leading the development of enterprise-level web applications serving 1M+ users.',
-      achievements: [
-        'Reduced application load time by 40% through performance optimization',
-        'Led a team of 5 developers, conducting code reviews and mentoring junior engineers',
-        'Architected and implemented microservices architecture, improving system scalability',
-        'Introduced CI/CD pipelines, reducing deployment time by 60%',
-      ],
       location: 'San Francisco, CA',
+      description:
+        'Lead engineer on a platform serving 2M+ active users, owning the full product lifecycle from architecture to deployment across web and API layers.',
+      achievements: [
+        'Reduced average page load time by 42% via code-splitting, lazy loading, and CDN optimization — directly improving user retention by 18%',
+        'Architected a microservices migration from a monolith, enabling independent deployments and cutting release cycles from 2 weeks to daily',
+        'Led a team of 6 engineers through agile sprints, code reviews, and quarterly OKR planning',
+        'Introduced infrastructure-as-code using Terraform and GitHub Actions, reducing manual DevOps effort by 70%',
+        'Designed and shipped a real-time notifications system processing 500K+ events/day with zero downtime',
+      ],
     },
     {
       id: 'exp2',
       company: 'StartupXYZ',
       position: 'Full Stack Developer',
-      startDate: '2018-06',
-      endDate: '2021-02',
+      startDate: 'Jun 2018',
+      endDate: 'Feb 2021',
       current: false,
-      description:
-        'Developed and maintained multiple client-facing web applications using React and Node.js.',
-      achievements: [
-        'Built real-time collaboration features used by 50,000+ daily active users',
-        'Implemented automated testing coverage increasing from 30% to 85%',
-        'Mentored 3 junior developers through onboarding and skill development',
-      ],
       location: 'New York, NY',
+      description:
+        'Core engineer on a fast-growing B2B SaaS product, collaborating closely with product and design teams to ship new features every two weeks.',
+      achievements: [
+        'Built a real-time collaborative editing feature using WebSockets and CRDT algorithms, adopted by 50,000+ daily active users',
+        'Grew test coverage from 28% to 87%, enabling confident refactors and reducing production bugs by 55%',
+        'Integrated Stripe billing and subscription management, supporting 12 pricing tiers and $3M+ in ARR',
+        'Mentored 3 junior engineers, running weekly 1:1s and pair programming sessions that accelerated their growth',
+      ],
     },
     {
       id: 'exp3',
-      company: 'WebAgency Co.',
+      company: 'Pixel & Craft Agency',
       position: 'Frontend Developer',
-      startDate: '2016-01',
-      endDate: '2018-05',
+      startDate: 'Jan 2016',
+      endDate: 'May 2018',
       current: false,
-      description:
-        'Created responsive, accessible web interfaces for diverse client projects.',
-      achievements: [
-        'Delivered 20+ client projects on time and under budget',
-        'Implemented design system used across all client projects',
-        'Improved website accessibility compliance to WCAG 2.1 AA standards',
-      ],
       location: 'Los Angeles, CA',
+      description:
+        'Developed responsive, high-performance web interfaces for 30+ clients across e-commerce, media, and finance sectors.',
+      achievements: [
+        'Delivered 25+ client projects on schedule and within budget, achieving a 98% client satisfaction rate',
+        'Built a reusable component library that cut UI development time by 35% across all client projects',
+        'Improved Lighthouse performance scores from an average of 54 to 91 across 10 client sites',
+        'Achieved WCAG 2.1 AA accessibility compliance on all new projects, expanding client user bases',
+      ],
+    },
+    {
+      id: 'exp4',
+      company: 'DataViz Labs',
+      position: 'Junior Web Developer',
+      startDate: 'Jul 2014',
+      endDate: 'Dec 2015',
+      current: false,
+      location: 'Austin, TX',
+      description:
+        'Contributed to data visualization tools and internal dashboards used by analysts and data scientists.',
+      achievements: [
+        'Developed interactive chart components using D3.js and SVG, used across 5 internal analytics tools',
+        'Reduced dashboard data-load time by 30% by implementing API response caching and pagination',
+        'Collaborated with data scientists to translate complex datasets into intuitive visual interfaces',
+      ],
     },
   ],
+
   skills: [
-    { id: 's1', name: 'React', level: 95, category: 'technical' },
-    { id: 's2', name: 'TypeScript', level: 90, category: 'technical' },
-    { id: 's3', name: 'Node.js', level: 88, category: 'technical' },
-    { id: 's4', name: 'Next.js', level: 92, category: 'technical' },
-    { id: 's5', name: 'PostgreSQL', level: 85, category: 'technical' },
-    { id: 's6', name: 'GraphQL', level: 80, category: 'technical' },
-    { id: 's7', name: 'AWS', level: 75, category: 'technical' },
-    { id: 's8', name: 'Docker', level: 78, category: 'technical' },
-    { id: 's9', name: 'Team Leadership', level: 90, category: 'soft' },
-    { id: 's10', name: 'Problem Solving', level: 95, category: 'soft' },
-    { id: 's11', name: 'Communication', level: 88, category: 'soft' },
-    { id: 's12', name: 'Project Management', level: 82, category: 'soft' },
+    { id: 's1',  name: 'React',             level: 95, category: 'technical' },
+    { id: 's2',  name: 'TypeScript',         level: 92, category: 'technical' },
+    { id: 's3',  name: 'Node.js',            level: 88, category: 'technical' },
+    { id: 's4',  name: 'Next.js',            level: 93, category: 'technical' },
+    { id: 's5',  name: 'PostgreSQL',         level: 84, category: 'technical' },
+    { id: 's6',  name: 'GraphQL',            level: 80, category: 'technical' },
+    { id: 's7',  name: 'AWS',                level: 78, category: 'technical' },
+    { id: 's8',  name: 'Docker',             level: 76, category: 'technical' },
+    { id: 's9',  name: 'Redis',              level: 74, category: 'technical' },
+    { id: 's10', name: 'Tailwind CSS',       level: 96, category: 'technical' },
+    { id: 's11', name: 'Python',             level: 70, category: 'technical' },
+    { id: 's12', name: 'CI/CD',              level: 82, category: 'tool' },
+    { id: 's13', name: 'Git & GitHub',       level: 94, category: 'tool' },
+    { id: 's14', name: 'Figma',              level: 72, category: 'tool' },
+    { id: 's15', name: 'Team Leadership',    level: 90, category: 'soft' },
+    { id: 's16', name: 'System Design',      level: 86, category: 'soft' },
+    { id: 's17', name: 'Problem Solving',    level: 95, category: 'soft' },
+    { id: 's18', name: 'Communication',      level: 90, category: 'soft' },
   ],
+
   education: [
     {
       id: 'edu1',
       institution: 'Stanford University',
       degree: 'Master of Science',
       field: 'Computer Science',
-      startDate: '2014-09',
-      endDate: '2016-06',
-      gpa: '3.9/4.0',
-      honors: ["Dean's List", 'Graduate Research Fellowship'],
+      startDate: 'Sep 2012',
+      endDate: 'Jun 2014',
+      gpa: '3.9 / 4.0',
+      honors: ["Dean's List", 'Graduate Research Fellowship', 'Best Thesis Award'],
     },
     {
       id: 'edu2',
       institution: 'UC Berkeley',
       degree: 'Bachelor of Science',
-      field: 'Computer Science',
-      startDate: '2010-09',
-      endDate: '2014-05',
-      gpa: '3.8/4.0',
-      honors: ['Summa Cum Laude', "President's Honor Roll"],
+      field: 'Computer Science & Mathematics',
+      startDate: 'Sep 2008',
+      endDate: 'May 2012',
+      gpa: '3.8 / 4.0',
+      honors: ['Summa Cum Laude', "President's Honor Roll", 'Phi Beta Kappa'],
     },
   ],
+
   projects: [
     {
       id: 'proj1',
-      name: 'E-Commerce Platform',
+      name: 'ShopFlow — E-Commerce Platform',
       description:
-        'Built a full-featured e-commerce platform with real-time inventory management.',
-      technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Stripe'],
-      link: 'https://github.com/sarahjohnson/ecommerce',
+        'Full-featured multi-vendor e-commerce platform with real-time inventory, AI-powered recommendations, and seamless checkout. Handles 10K+ concurrent users with sub-200ms response times.',
+      technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Redis', 'Stripe', 'AWS S3'],
+      link: 'https://github.com/sarahjohnson/shopflow',
       achievements: [
-        'Processed $1M+ in transactions in the first year',
-        'Achieved 99.9% uptime through robust error handling',
+        'Processed over $2M in transactions in the first 12 months after launch',
+        'Achieved 99.95% uptime with automated health checks and zero-downtime deployments',
+        'AI recommendation engine increased average order value by 22%',
       ],
     },
     {
       id: 'proj2',
-      name: 'Task Management App',
+      name: 'Collab — Real-Time Task Manager',
       description:
-        'Collaborative task management application with real-time updates.',
-      technologies: ['React', 'Node.js', 'Socket.io', 'MongoDB'],
-      link: 'https://github.com/sarahjohnson/taskapp',
+        'Collaborative task and project management app with live cursor sharing, real-time comments, and Kanban boards. Built for remote-first teams of up to 500 members.',
+      technologies: ['React', 'Node.js', 'Socket.io', 'MongoDB', 'Docker'],
+      link: 'https://github.com/sarahjohnson/collab',
+      achievements: [
+        'Adopted by 200+ teams and 8,000+ users within 3 months of public launch',
+        'Real-time sync latency under 50ms even at peak load',
+      ],
     },
     {
       id: 'proj3',
-      name: 'Analytics Dashboard',
-      description: 'Real-time analytics dashboard with interactive charts and visualizations.',
-      technologies: ['Vue.js', 'D3.js', 'Python', 'FastAPI'],
-      link: 'https://github.com/sarahjohnson/analytics',
+      name: 'PulseBoard — Analytics Dashboard',
+      description:
+        'Real-time business analytics dashboard with customizable widgets, drill-down charts, and automated reporting. Integrates with 15+ data sources including Salesforce, HubSpot, and Google Analytics.',
+      technologies: ['Vue.js', 'D3.js', 'Python', 'FastAPI', 'ClickHouse'],
+      link: 'https://github.com/sarahjohnson/pulseboard',
+      achievements: [
+        'Reduced weekly reporting time from 4 hours to 10 minutes for 50+ business users',
+        'Handles 1M+ data points per dashboard with smooth 60fps chart animations',
+      ],
+    },
+    {
+      id: 'proj4',
+      name: 'AuthKit — Open Source Auth Library',
+      description:
+        'Lightweight, framework-agnostic authentication library supporting OAuth 2.0, SAML, and passwordless flows. Published on npm with full TypeScript support.',
+      technologies: ['TypeScript', 'OAuth 2.0', 'JWT', 'PKCE', 'WebAuthn'],
+      link: 'https://github.com/sarahjohnson/authkit',
+      achievements: [
+        'Reached 1,200+ GitHub stars and 15,000+ weekly npm downloads within 6 months',
+        'Zero critical security vulnerabilities since initial release, audited quarterly',
+      ],
     },
   ],
+
   certifications: [
     {
       id: 'cert1',
-      name: 'AWS Solutions Architect Professional',
+      name: 'AWS Solutions Architect — Professional',
       issuer: 'Amazon Web Services',
-      date: '2023-01',
+      date: 'Jan 2023',
+      credentialId: 'AWS-SAP-2023-001',
       link: 'https://aws.amazon.com/certification',
     },
     {
       id: 'cert2',
-      name: 'Google Cloud Professional',
-      issuer: 'Google',
-      date: '2022-06',
+      name: 'Google Cloud Professional Cloud Architect',
+      issuer: 'Google Cloud',
+      date: 'Aug 2022',
+      credentialId: 'GCP-PCA-2022-447',
     },
     {
       id: 'cert3',
-      name: 'React Developer Certification',
+      name: 'Meta React Developer Certificate',
       issuer: 'Meta',
-      date: '2021-09',
+      date: 'Mar 2022',
+      credentialId: 'META-REACT-2022-883',
+    },
+    {
+      id: 'cert4',
+      name: 'Certified Kubernetes Administrator (CKA)',
+      issuer: 'Cloud Native Computing Foundation',
+      date: 'Nov 2021',
+      credentialId: 'CKA-2021-5512',
     },
   ],
+
   languages: [
-    { id: 'lang1', name: 'English', proficiency: 'native' },
-    { id: 'lang2', name: 'Spanish', proficiency: 'professional' },
-    { id: 'lang3', name: 'Mandarin', proficiency: 'basic' },
+    { id: 'lang1', name: 'English',  proficiency: 'native',       flag: '🇺🇸' },
+    { id: 'lang2', name: 'Spanish',  proficiency: 'fluent',        flag: '🇪🇸' },
+    { id: 'lang3', name: 'French',   proficiency: 'professional',  flag: '🇫🇷' },
+    { id: 'lang4', name: 'Mandarin', proficiency: 'basic',         flag: '🇨🇳' },
   ],
-  interests: ['Open Source Contributing', 'Tech Blogging', 'Hiking', 'Photography', 'Travel'],
+
+  interests: [
+    'Open Source Contributing',
+    'Technical Blogging',
+    'UI/UX Design',
+    'Rock Climbing',
+    'Photography',
+    'Travel & Culture',
+    'Mentoring',
+    'Coffee Enthusiast',
+  ],
+
   awards: [
     {
       id: 'award1',
-      name: 'Employee of the Year',
+      title: 'Engineer of the Year',
       issuer: 'TechCorp Inc.',
       date: '2023',
-      description: 'Recognized for outstanding contributions to company success',
+      description:
+        'Awarded to one engineer company-wide for exceptional technical leadership, innovation, and measurable impact on product quality and team growth.',
     },
     {
       id: 'award2',
-      name: 'Best Innovation Award',
+      title: 'Best Innovation Award',
       issuer: 'StartupXYZ',
       date: '2020',
-      description: 'Awarded for developing a novel real-time collaboration feature',
+      description:
+        'Recognized for designing and shipping the real-time collaboration feature that became the product\'s highest-rated capability in customer surveys.',
+    },
+    {
+      id: 'award3',
+      title: 'Open Source Contributor of the Month',
+      issuer: 'DEV Community',
+      date: '2022',
+      description:
+        'Featured for AuthKit library contributions and community support, with 200+ merged pull requests in major open source projects.',
     },
   ],
+
   contact: [
-    { id: 'c1', type: 'email', value: 'sarah.johnson@email.com', label: 'Email' },
-    { id: 'c2', type: 'phone', value: '+1 (555) 123-4567', label: 'Phone' },
+    { id: 'c1', type: 'email',    value: 'sarah.johnson@email.com',      label: 'Email'    },
+    { id: 'c2', type: 'phone',    value: '+1 (555) 123-4567',            label: 'Phone'    },
     { id: 'c3', type: 'linkedin', value: 'linkedin.com/in/sarahjohnson', label: 'LinkedIn' },
-    { id: 'c4', type: 'github', value: 'github.com/sarahjohnson', label: 'GitHub' },
-    { id: 'c5', type: 'website', value: 'sarahjohnson.dev', label: 'Website' },
+    { id: 'c4', type: 'github',   value: 'github.com/sarahjohnson',      label: 'GitHub'   },
+    { id: 'c5', type: 'website',  value: 'sarahjohnson.dev',             label: 'Website'  },
+    { id: 'c6', type: 'twitter',  value: 'twitter.com/sarahj_dev',       label: 'Twitter'  },
   ],
 };
 

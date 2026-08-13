@@ -5,7 +5,6 @@ import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type CenteredLayoutProps = {
   data: CVData;
@@ -37,28 +36,26 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2rem',
-        
-        
+        padding: '1.5rem',
       }}
     >
       {/* Centered Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         {data.personal.avatar && (
-          <div className="mb-4 flex justify-center">
+          <div className="mb-3 flex justify-center">
             <img
               src={data.personal.avatar}
               alt={`${data.personal.firstName} ${data.personal.lastName}`}
-              className="w-24 h-24 rounded-full object-cover border-4"
+              className="w-20 h-20 rounded-full object-cover border-2"
               style={{ borderColor: theme.primary }}
             />
           </div>
         )}
-        <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+        <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-lg mb-3" style={{ color: theme.primary }}>{data.personal.title}</p>
-        <div className="flex justify-center gap-4 text-sm" style={{ color: theme.textSecondary }}>
+        <p className="text-[14px] font-semibold leading-[1.25] mb-2" style={{ color: theme.primary }}>{data.personal.title}</p>
+        <div className="flex justify-center gap-3 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <span>{data.personal.email}</span>
           <span>|</span>
           <span>{data.personal.phone}</span>
@@ -68,14 +65,14 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
       </div>
 
       {data.summary && (
-        <div className="mb-8 text-center">
-          <p className="text-lg leading-relaxed max-w-lg" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+        <div className="mb-6 text-center max-w-xl mx-auto">
+          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data.summary}
           </p>
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
         {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
         {data.skills.length > 0 && <Skills data={data.skills} theme={theme} variant={skillsVariant} />}

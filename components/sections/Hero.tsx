@@ -10,7 +10,7 @@ export default function Hero() {
           <p className="mb-6">
             Build modern resumes in minutes.
           </p>
-          <button className="bg-white text-primary px-6 py-3 rounded-xl">
+          <button className="bg-white text-primary px-6 py-3 rounded-md">
             Build My CV
           </button>
         </div>
@@ -19,7 +19,7 @@ export default function Hero() {
           <img
             src="/images/resume.webp"
             alt="CV Preview"
-            className="rounded-xl shadow-xl"
+            className="rounded-md shadow-xl"
           />
         </div>
 

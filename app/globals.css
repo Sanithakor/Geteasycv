@@ -9,11 +9,11 @@
  * Fallback stacks ensure graceful degradation if a font hasn't loaded yet.
  */
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-heading: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-serif: var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
+  --radius: 6px;
+  --font-roboto: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -27,13 +27,82 @@
     /* slate-50 — matches the bg-slate-50 class used project-wide */
     background: #f8fafc;
     color: #111827;
-    font-family: var(--font-sans);
+    font-family: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
   }
+}
+
+:root {
+  --cv-name-size: 28px;
+  --cv-name-lh: 1.15;
+  --cv-title-size: 14px;
+  --cv-title-lh: 1.25;
+  --cv-section-size: 14px;
+  --cv-section-lh: 1.25;
+  --cv-job-title-size: 13px;
+  --cv-job-title-lh: 1.25;
+  --cv-company-size: 12px;
+  --cv-company-lh: 1.45;
+  --cv-body-size: 11.5px;
+  --cv-body-lh: 1.45;
+  --cv-small-size: 10px;
+  --cv-small-lh: 1.4;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* CV Standardized Typography Utilities */
+  .cv-text-name {
+    font-size: var(--cv-name-size, 28px) !important;
+    line-height: var(--cv-name-lh, 1.15) !important;
+  }
+
+  .cv-text-title {
+    font-size: var(--cv-title-size, 14px) !important;
+    line-height: var(--cv-title-lh, 1.25) !important;
+  }
+
+  .cv-text-section {
+    font-size: var(--cv-section-size, 14px) !important;
+    line-height: var(--cv-section-lh, 1.25) !important;
+  }
+
+  .cv-text-job {
+    font-size: var(--cv-job-title-size, 13px) !important;
+    line-height: var(--cv-job-title-lh, 1.25) !important;
+  }
+
+  .cv-text-company {
+    font-size: var(--cv-company-size, 12px) !important;
+    line-height: var(--cv-company-lh, 1.45) !important;
+  }
+
+  .cv-text-body {
+    font-size: var(--cv-body-size, 11.5px) !important;
+    line-height: var(--cv-body-lh, 1.45) !important;
+  }
+
+  .cv-text-contact {
+    font-size: 10.5px !important;
+    line-height: 1.4 !important;
+  }
+
+  .cv-text-small {
+    font-size: var(--cv-small-size, 10px) !important;
+    line-height: var(--cv-small-lh, 1.4) !important;
+  }
+
+  /* Enforce maximum font weight bold across the site */
+  .font-extrabold,
+  .font-black {
+    font-weight: 700 !important;
+  }
+
+  /* Enforce uniform 6px border radius on container rounded utility classes */
+  .rounded-md {
+    border-radius: 6px !important;
   }
 }
 
@@ -217,8 +286,7 @@ textarea,
   transition: all 0.3s ease;
 }
 .card-hover:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transform: translateY(-0.25rem);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 /* Focus styles */

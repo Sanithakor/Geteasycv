@@ -86,7 +86,7 @@ export default function ResumesPage() {
             Monitor and view all resumes created by platform users ({RESUMES.length} total)
           </p>
         </div>
-        <Link href="/editor" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-700 hover:to-violet-800 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl text-sm">
+        <Link href="/editor" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-700 hover:to-violet-800 text-white rounded-md font-semibold transition-all shadow-lg hover:shadow-xl text-sm">
           <Plus className="w-4 h-4" />
           Create Resume
         </Link>
@@ -100,7 +100,7 @@ export default function ResumesPage() {
           placeholder="Search by title, owner name or email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 text-sm"
+          className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 text-sm"
         />
       </div>
 
@@ -124,7 +124,7 @@ export default function ResumesPage() {
                 <tr key={res.id} className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50/50 transition-colors">
                   <td className="py-3.5 px-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center flex-shrink-0">
+                      <div className="w-9 h-9 rounded-md bg-violet-50 text-violet-600 flex items-center justify-center flex-shrink-0">
                         <FileText className="w-4 h-4" />
                       </div>
                       <span className="text-sm font-semibold text-slate-950 truncate max-w-xs" title={res.title}>
@@ -161,13 +161,13 @@ export default function ResumesPage() {
                   </td>
                   <td className="py-3.5 px-5 text-right">
                     <div className="flex items-center justify-end gap-1.5">
-                      <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-violet-600 transition-colors" title="View PDF">
+                      <button className="p-2 hover:bg-slate-100 rounded-md text-slate-600 hover:text-violet-600 transition-colors" title="View PDF">
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-violet-600 transition-colors" title="Download">
+                      <button className="p-2 hover:bg-slate-100 rounded-md text-slate-600 hover:text-violet-600 transition-colors" title="Download">
                         <Download className="w-4 h-4" />
                       </button>
-                      <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-red-600 transition-colors" title="Delete">
+                      <button className="p-2 hover:bg-slate-100 rounded-md text-slate-600 hover:text-red-600 transition-colors" title="Delete">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

@@ -1,29 +1,16 @@
 import type { Metadata } from "next";
-import { Inter, Poppins, Playfair_Display } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import "../styles/enhanced.css";
 
 // ── Fonts ────────────────────────────────────────────────────────────────────
-// Inter is the primary UI font (variable font — no weight needed)
-const inter = Inter({
+// Single global Roboto font loader for Turbopack & Next.js
+const roboto = Roboto({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700", "900"],
   display: "swap",
-  variable: "--font-inter",
-});
-
-// Poppins is used for headings in several themes
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-});
-
-// Playfair Display is used for luxury/editorial themes
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-roboto",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -55,16 +42,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${inter.variable} ${poppins.variable} ${playfairDisplay.variable}`}
+      className={`h-full antialiased ${roboto.variable}`}
       suppressHydrationWarning
     >
-      {/*
-       * bg-slate-50 is the canonical background for this project.
-       * globals.css sets the same value (#f8fafc) on body directly —
-       * the Tailwind class here keeps Tailwind-generated purge working
-       * and removes the previous bg-gray-50 mismatch.
-       */}
-      <body className="min-h-full flex flex-col bg-slate-50">{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-slate-50 font-roboto">{children}</body>
     </html>
   );
 }

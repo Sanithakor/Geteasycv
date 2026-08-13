@@ -5,7 +5,6 @@ import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type TimelineLayoutProps = {
   data: CVData;
@@ -37,27 +36,25 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2rem',
-        
-        
+        padding: '1.5rem',
       }}
     >
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-6">
         {data.personal.avatar && (
           <img
             src={data.personal.avatar}
             alt={`${data.personal.firstName} ${data.personal.lastName}`}
-            className="w-24 h-24 rounded-full object-cover border-4 mb-4"
+            className="w-20 h-20 rounded-full object-cover border-2 mb-3"
             style={{ borderColor: theme.primary }}
           />
         )}
-        <h1 className="text-3xl font-bold text-center" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+        <h1 className="text-[28px] font-bold text-center leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-lg text-center" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+        <p className="text-[14px] font-semibold text-center leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
           {data.personal.title}
         </p>
-        <p className="text-sm text-center mt-2" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+        <p className="text-[10.5px] font-medium text-center leading-normal" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
           {data.personal.location} | {data.personal.email}
         </p>
       </div>

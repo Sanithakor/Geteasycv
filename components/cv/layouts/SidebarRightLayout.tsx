@@ -36,19 +36,17 @@ const SidebarRightLayout: React.FC<SidebarRightLayoutProps> = ({
 
   return (
     <div
-      className="w-full  overflow-hidden"
+      className="w-full overflow-hidden"
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 280px',
+        gridTemplateColumns: '1fr 260px',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
       }}
     >
       {/* Main Content */}
-      <div className="p-6" style={{ backgroundColor: theme.background }}>
+      <div className="p-5" style={{ backgroundColor: theme.background }}>
         <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
         {data.summary && <Summary data={data.summary} theme={theme} />}
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
@@ -60,45 +58,45 @@ const SidebarRightLayout: React.FC<SidebarRightLayoutProps> = ({
 
       {/* Sidebar */}
       <div
-        className="p-6"
+        className="p-5"
         style={{
           background: `linear-gradient(180deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`,
           color: '#fff',
         }}
       >
         {avatar && (
-          <div className="mb-6 flex justify-center">
+          <div className="mb-5 flex justify-center">
             <img
               src={avatar}
               alt={`${data.personal.firstName} ${data.personal.lastName}`}
-              className="w-28 h-28 rounded-full object-cover border-4 border-white/30"
+              className="w-24 h-24 rounded-full object-cover border-4 border-white/30"
             />
           </div>
         )}
-        <div className="text-center mb-6">
-          <h1 className="text-xl font-bold mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
+        <div className="text-center mb-5">
+          <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
             {data.personal.firstName} {data.personal.lastName}
           </h1>
-          <p className="text-sm opacity-90" style={{ fontFamily: theme.fontFamily }}>
+          <p className="text-[14px] font-semibold leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             {data.personal.title}
           </p>
         </div>
-        <div className="space-y-3 mb-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider opacity-70" style={{ fontFamily: theme.fontFamily }}>
+        <div className="space-y-3 mb-5">
+          <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             Contact
           </h2>
-          {data.personal.email && <div className="text-sm break-words">{data.personal.email}</div>}
-          {data.personal.phone && <div className="text-sm">{data.personal.phone}</div>}
-          {data.personal.location && <div className="text-sm">{data.personal.location}</div>}
+          {data.personal.email && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.email}</div>}
+          {data.personal.phone && <div className="text-[10.5px] font-medium leading-normal">{data.personal.phone}</div>}
+          {data.personal.location && <div className="text-[10.5px] font-medium leading-normal">{data.personal.location}</div>}
         </div>
         {data.skills.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider opacity-70" style={{ fontFamily: theme.fontFamily }}>
+            <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
               Skills
             </h2>
-            <div className="flex flex-wrap gap-2">
-              {data.skills.slice(0, 10).map((skill) => (
-                <span key={skill.id} className="text-xs px-2 py-1 rounded-full bg-white/20" style={{ fontFamily: theme.fontFamily }}>
+            <div className="flex flex-wrap gap-1.5">
+              {data.skills.map((skill) => (
+                <span key={skill.id} className="text-[11px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white">
                   {skill.name}
                 </span>
               ))}

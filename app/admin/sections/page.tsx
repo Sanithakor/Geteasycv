@@ -104,7 +104,7 @@ export default function Page() {
             Configure default and custom layout sections, field constraints, and AI configurations ({SECTIONS.length} total)
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium transition-colors">
           <Plus className="w-4 h-4" />
           Add Custom Section
         </button>
@@ -118,7 +118,7 @@ export default function Page() {
           placeholder="Search layout sections..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       </div>
 
@@ -133,7 +133,7 @@ export default function Page() {
               {/* Heading */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-md bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 flex items-center justify-center">
                     <LayoutGrid className="w-5 h-5" />
                   </div>
                   <div>
@@ -189,10 +189,10 @@ export default function Page() {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <button className="p-2 text-slate-600 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <button className="p-2 text-slate-600 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                   <Edit2 className="w-4 h-4" />
                 </button>
-                <button className="p-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <button className="p-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>

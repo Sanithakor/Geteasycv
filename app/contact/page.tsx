@@ -1,4 +1,6 @@
 import Navigation from "@/components/Navigation";
+import ReadyToBuild from "@/components/sections/ReadyToBuild";
+import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export const metadata = {
@@ -12,19 +14,19 @@ export default function ContactPage() {
       <Navigation />
       <main className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center px-4 py-20">
         <div className="max-w-lg w-full text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 mb-6 shadow-lg shadow-indigo-200">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-md bg-gradient-to-br from-indigo-600 to-purple-600 mb-6 shadow-lg shadow-indigo-200">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Contact Us</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Contact Us</h1>
           <p className="text-lg text-slate-600 mb-8 leading-relaxed">
             Have a question, found a bug, or want to share feedback? We&apos;d love to
             hear from you.
           </p>
 
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 text-left space-y-6">
+          <div className="bg-white rounded-md shadow-lg border border-slate-100 p-8 text-left space-y-6">
             <div>
               <p className="text-sm font-semibold text-slate-700 mb-1">Email</p>
               <a
@@ -47,20 +49,10 @@ export default function ContactPage() {
               </p>
             </div>
           </div>
-
-          <p className="mt-8 text-sm text-slate-500">
-            Looking for answers?{" "}
-            <Link href="/#features" className="text-indigo-600 hover:underline">
-              Browse our features
-            </Link>{" "}
-            or check our{" "}
-            <Link href="/pricing" className="text-indigo-600 hover:underline">
-              pricing page
-            </Link>
-            .
-          </p>
         </div>
       </main>
+      <ReadyToBuild />
+      <Footer />
     </>
   );
 }

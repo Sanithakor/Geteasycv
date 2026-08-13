@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
+import ReadyToBuild from "@/components/sections/ReadyToBuild";
+import Footer from "@/components/Footer";
 import Link from "next/link";
 
 const initialFaqs = [
@@ -46,27 +48,29 @@ export default function FAQPage() {
       <Navigation />
       <main className="min-h-screen bg-slate-50 flex justify-center px-4 py-20">
         <div className="max-w-3xl w-full">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2 text-center">Frequently Asked Questions</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2 text-center">Frequently Asked Questions</h1>
           <p className="text-center text-slate-500 mb-10">Everything you need to know about the product and billing.</p>
           
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+              <div key={index} className="bg-white rounded-md shadow-sm border border-slate-200 p-6">
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">{faq.question}</h3>
                 <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center bg-indigo-50 rounded-2xl p-8 border border-indigo-100">
+          <div className="mt-12 text-center bg-indigo-50 rounded-md p-8 border border-indigo-100">
             <h3 className="text-xl font-semibold text-indigo-900 mb-2">Still have questions?</h3>
             <p className="text-indigo-700 mb-6">Our support team is here to help.</p>
-            <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
+            <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
               Contact Support
             </Link>
           </div>
         </div>
       </main>
+      <ReadyToBuild />
+      <Footer />
     </>
   );
 }

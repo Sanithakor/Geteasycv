@@ -31,7 +31,7 @@ export default function TemplateSelector({
             <div
               key={template.id}
               onClick={() => setSelected(template.id)}
-              className={`group relative cursor-pointer rounded-3xl overflow-hidden border bg-white transition hover:shadow-2xl ${
+              className={`group relative cursor-pointer rounded-md overflow-hidden border bg-white transition hover:shadow-2xl ${
                 selected === template.id
                   ? "border-indigo-500 ring-2 ring-indigo-400"
                   : "border-gray-200"

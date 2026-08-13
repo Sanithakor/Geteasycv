@@ -81,7 +81,7 @@ export function KPICard({
       </div>
 
       {/* Accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-violet-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-violet-600 transform scale-x-0 group- transition-transform duration-300" />
     </div>
   );
 }

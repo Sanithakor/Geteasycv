@@ -116,32 +116,32 @@ export default function ResumeBuilderFeatures() {
   ];
 
   return (
-    <section className="bg-[#F8F9FE] py-16 sm:py-24 border-t border-gray-100/80 overflow-hidden font-sans">
+    <section className="bg-[#F8F9FE] py-12 sm:py-16 border-t border-gray-100/80 overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Badge */}
-        <div className="flex justify-center mb-8 sm:mb-12">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-purple-100 shadow-xs text-xs font-bold tracking-wider text-[#7C3AED] uppercase">
             POWERFUL &amp; EASY TO USE
           </span>
         </div>
 
         {/* Top Split Header & Interactive App Preview */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-16 sm:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center mb-12 sm:mb-14">
           {/* Left Column: Heading & CTAs */}
           <div className="lg:col-span-5 text-left">
-            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
               Resume Builder <br />
               <span className="text-[#7C3AED]">Features</span>
             </h2>
-            <p className="mt-5 text-gray-600 text-base sm:text-lg leading-relaxed max-w-lg">
+            <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed max-w-lg">
               Everything you need to create a professional resume that gets you
               hired. Built for modern job seekers.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href="/editor"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold rounded-xl shadow-lg shadow-purple-500/20 transition-all hover:scale-[1.02] text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold rounded-md shadow-md shadow-purple-500/20 transition-all text-xs sm:text-sm"
               >
                 Create My Resume
                 <ArrowRight className="w-4 h-4" />
@@ -149,7 +149,7 @@ export default function ResumeBuilderFeatures() {
 
               <Link
                 href="/templates"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-xl border border-gray-200/90 shadow-xs transition-all hover:scale-[1.02] text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-md border border-gray-200/90 shadow-xs transition-all text-xs sm:text-sm"
               >
                 Explore Templates
               </Link>
@@ -158,10 +158,10 @@ export default function ResumeBuilderFeatures() {
 
           {/* Right Column: Resume Builder Editor UI Mockup */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl p-4 sm:p-5">
+            <div className="bg-white rounded-md border border-gray-100 shadow-2xl p-4 sm:p-5">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-start">
                 {/* 1. Left Panel: Sections Menu (md:col-span-3) */}
-                <div className="md:col-span-3 bg-gray-50/70 border border-gray-100 rounded-2xl p-2.5">
+                <div className="md:col-span-3 bg-gray-50/70 border border-gray-100 rounded-md p-2.5">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2 px-1 text-left">
                     Sections
                   </div>
@@ -171,7 +171,7 @@ export default function ResumeBuilderFeatures() {
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between px-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                          className={`flex items-center justify-between px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
                             sec.selected
                               ? "bg-purple-50 text-[#7C3AED] font-semibold border border-purple-100"
                               : "bg-white text-gray-700 hover:bg-gray-100/80 border border-gray-100/60"
@@ -191,14 +191,14 @@ export default function ResumeBuilderFeatures() {
                     })}
                   </div>
 
-                  <button className="w-full mt-3 py-1.5 px-2 bg-purple-50 hover:bg-purple-100 text-[#7C3AED] text-[11px] font-semibold rounded-lg border border-purple-100/80 flex items-center justify-center gap-1 transition-colors cursor-pointer">
+                  <button className="w-full mt-3 py-1.5 px-2 bg-purple-50 hover:bg-purple-100 text-[#7C3AED] text-[11px] font-semibold rounded-md border border-purple-100/80 flex items-center justify-center gap-1 transition-colors cursor-pointer">
                     <Plus className="w-3 h-3" />
                     <span>Add Section</span>
                   </button>
                 </div>
 
                 {/* 2. Middle Panel: Resume Canvas Preview (md:col-span-6) */}
-                <div className="md:col-span-6 bg-white border border-gray-200/70 rounded-2xl p-4 shadow-xs text-left font-sans space-y-3">
+                <div className="md:col-span-6 bg-white border border-gray-200/70 rounded-md p-4 shadow-xs text-left font-sans space-y-3">
                   {/* Profile Header */}
                   <div className="flex items-center gap-3 pb-2 border-b border-gray-100">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-xs overflow-hidden">
@@ -295,13 +295,13 @@ export default function ResumeBuilderFeatures() {
                 </div>
 
                 {/* 3. Right Panel: Formatting Controls (md:col-span-3) */}
-                <div className="md:col-span-3 bg-gray-50/70 border border-gray-100 rounded-2xl p-3 text-left space-y-3">
+                <div className="md:col-span-3 bg-gray-50/70 border border-gray-100 rounded-md p-3 text-left space-y-3">
                   {/* Template Select */}
                   <div>
                     <label className="block text-[10px] font-medium text-gray-500 mb-1">
                       Template
                     </label>
-                    <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
+                    <div className="bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
                       <span>Modern</span>
                       <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                     </div>
@@ -314,11 +314,11 @@ export default function ResumeBuilderFeatures() {
                     </label>
                     <div className="flex items-center gap-1.5">
                       <span className="w-4 h-4 rounded-full bg-blue-500 ring-2 ring-blue-500 ring-offset-1 cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-teal-500 hover:scale-110 transition-transform cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-orange-500 hover:scale-110 transition-transform cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-red-500 hover:scale-110 transition-transform cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-slate-800 hover:scale-110 transition-transform cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-purple-600 hover:scale-110 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-teal-500 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-orange-500 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-red-500 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-slate-800 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-purple-600 transition-transform cursor-pointer"></span>
                     </div>
                   </div>
 
@@ -327,7 +327,7 @@ export default function ResumeBuilderFeatures() {
                     <label className="block text-[10px] font-medium text-gray-500 mb-1">
                       Font
                     </label>
-                    <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
+                    <div className="bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
                       <span>Inter</span>
                       <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                     </div>
@@ -338,7 +338,7 @@ export default function ResumeBuilderFeatures() {
                     <label className="block text-[10px] font-medium text-gray-500 mb-1">
                       Spacing
                     </label>
-                    <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
+                    <div className="bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-xs text-gray-800 font-medium flex items-center justify-between shadow-2xs">
                       <span>Normal</span>
                       <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                     </div>
@@ -346,12 +346,12 @@ export default function ResumeBuilderFeatures() {
 
                   {/* Action Buttons */}
                   <div className="pt-2 space-y-2">
-                    <button className="w-full py-1.5 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer">
+                    <button className="w-full py-1.5 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer">
                       <Eye className="w-3.5 h-3.5 text-gray-500" />
                       <span>Preview</span>
                     </button>
 
-                    <button className="w-full py-1.5 px-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer">
+                    <button className="w-full py-1.5 px-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer">
                       <Download className="w-3.5 h-3.5 text-white" />
                       <span>Download PDF</span>
                     </button>
@@ -363,20 +363,20 @@ export default function ResumeBuilderFeatures() {
         </div>
 
         {/* 10 Feature Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
           {featureCards.map((card, idx) => {
             const Icon = card.icon;
             return (
               <div
                 key={idx}
-                className="bg-white border border-gray-100 rounded-2xl p-6 shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-left flex flex-col justify-start items-start"
+                className="bg-white border border-gray-100 rounded-md p-5 shadow-xs hover:shadow-md transition-all duration-300 text-left flex flex-col justify-start items-start"
               >
                 <div
-                  className={`w-11 h-11 rounded-2xl ${card.iconBg} flex items-center justify-center mb-5 shrink-0`}
+                  className={`w-10 h-10 rounded-md ${card.iconBg} flex items-center justify-center mb-4 shrink-0`}
                 >
-                  <Icon className="w-5.5 h-5.5" />
+                  <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2 leading-snug">
+                <h3 className="font-bold text-gray-900 text-sm mb-2 leading-snug">
                   {card.title}
                 </h3>
                 <p className="text-gray-500 text-xs leading-relaxed">

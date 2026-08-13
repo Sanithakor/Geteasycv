@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
-      _hydrated: false,
+      _hydrated: typeof window !== 'undefined',
 
       // Login with email/password
       login: async (email: string, password: string) => {
@@ -79,7 +79,6 @@ export const useAuthStore = create<AuthState>()(
 
           const data: AuthResponse = await response.json();
           
-          // Normalise subscriptionTier → tier (API returns DB column name).
           const user = {
             ...data.user,
             tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
@@ -91,6 +90,7 @@ export const useAuthStore = create<AuthState>()(
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
+            _hydrated: true,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Login failed';
@@ -119,14 +119,10 @@ export const useAuthStore = create<AuthState>()(
 
           const data: AuthResponse & { user: { subscriptionTier?: string } } = await response.json();
 
-          // The signup API returns `subscriptionTier` from Prisma, but our
-          // User type and authStore use `tier`. Normalise here so downstream
-          // code never sees the raw DB field name.
           const user = {
             ...data.user,
             tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
           } as User;
-          // Remove the raw DB field if present
           delete (user as any).subscriptionTier;
 
           set({
@@ -134,6 +130,7 @@ export const useAuthStore = create<AuthState>()(
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
+            _hydrated: true,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Signup failed';
@@ -165,6 +162,7 @@ export const useAuthStore = create<AuthState>()(
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
+            _hydrated: true,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Google login failed';
@@ -196,6 +194,7 @@ export const useAuthStore = create<AuthState>()(
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
+            _hydrated: true,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'GitHub login failed';
@@ -207,53 +206,49 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Logout
+      // Logout user
       logout: async () => {
+        set({ isLoading: true });
         try {
           await fetch(`${API_BASE_URL}/auth/logout`, {
             method: 'POST',
-            headers: {
-              Authorization: `Bearer ${get().token}`,
-            },
           });
         } catch (error) {
-          console.error('Logout error:', error);
+          console.error('Logout API call failed:', error);
         } finally {
           set({
             user: null,
             token: null,
             isAuthenticated: false,
+            isLoading: false,
             error: null,
+            _hydrated: true,
           });
         }
       },
 
-      // Refresh token
+      // Refresh authentication token
       refreshToken: async () => {
+        const currentToken = get().token;
+        if (!currentToken) return;
+
         try {
           const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             headers: {
-              Authorization: `Bearer ${get().token}`,
+              Authorization: `Bearer ${currentToken}`,
             },
           });
 
-          if (!response.ok) {
-            throw new Error('Token refresh failed');
+          if (response.ok) {
+            const data: AuthResponse = await response.json();
+            set({
+              token: data.token,
+              user: data.user,
+            });
           }
-
-          const data: AuthResponse = await response.json();
-          set({
-            token: data.token,
-            user: data.user,
-          });
         } catch (error) {
-          set({
-            token: null,
-            user: null,
-            isAuthenticated: false,
-          });
-          throw error;
+          console.error('Token refresh failed:', error);
         }
       },
 
@@ -298,14 +293,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-store',
-      // Only persist user identity and auth flag — NOT the raw token.
-      // The token is set as an httpOnly cookie by the API on login/signup,
-      // so API routes that rely on cookies work automatically.
-      // Client-side fetches that need the token explicitly can still read
-      // it from state (it's kept in memory), but it won't be written to
-      // localStorage, avoiding the confused dual-token state.
       partialize: (state) => ({
         user: state.user,
+        token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {

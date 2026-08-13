@@ -1,5 +1,5 @@
 // Template Preview Image Generator
-import html2canvas from 'html2canvas';
+import safeHtml2Canvas from './safeHtml2Canvas';
 import { GeneratedTemplate } from './generateTemplates';
 import { sampleCV } from '../data/sampleCV';
 
@@ -47,7 +47,7 @@ export async function generateTemplatePreview(template: GeneratedTemplate): Prom
     });
 
     // Generate canvas from the rendered template
-    const canvas = await html2canvas(tempContainer, {
+    const canvas = await safeHtml2Canvas(tempContainer, {
       useCORS: true,
       allowTaint: true,
       logging: false,

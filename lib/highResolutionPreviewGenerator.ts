@@ -42,12 +42,12 @@ export async function generateHighResPreviewImage(
   }
 
   try {
-    // Dynamically import html2canvas (client-side only)
-    const html2canvas = (await import('html2canvas')).default;
+    // Dynamically import safeHtml2Canvas (client-side only)
+    const safeHtml2Canvas = (await import('./safeHtml2Canvas')).default;
     
     // Render the element at high DPI scale
     const scale = options?.scale ?? 2; // 2x for high quality
-    const canvas = await html2canvas(element, {
+    const canvas = await safeHtml2Canvas(element, {
       scale: scale,
       useCORS: true,
       logging: false,

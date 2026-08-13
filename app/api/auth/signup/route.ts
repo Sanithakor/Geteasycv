@@ -7,8 +7,24 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword, generateToken, validatePassword, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
+import { createSystemNotification } from '@/lib/notifications';
+import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
+  // Apply rate limiting (Max 10 signups per 15 minutes per IP)
+  const rateLimit = checkRateLimit(req, {
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    keyPrefix: 'auth_signup',
+  });
+
+  if (!rateLimit.success) {
+    return createRateLimitResponse(
+      rateLimit.retryAfter,
+      'Too many registration requests. Please try again later.'
+    );
+  }
+
   try {
     const body = await req.json();
     const { email, password, name } = body;
@@ -117,6 +133,15 @@ export async function POST(req: Request) {
     }
 
     const token = await generateToken(user.id);
+
+    // Dispatch real notification for user registration
+    await createSystemNotification({
+      title: 'New User Registered',
+      message: `${user.email} joined GetEasyCV`,
+      type: 'user_signup',
+      target: 'all',
+      userId: user.id,
+    });
 
     const response = NextResponse.json(
       {

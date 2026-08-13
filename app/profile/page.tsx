@@ -49,19 +49,19 @@ export default function UserProfilePage() {
     <UserLayout>
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-            <User className="w-7 h-7 text-teal-600" />
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+            <User className="w-6 h-6 text-teal-600" />
             <span>Profile Settings</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Manage your account profile details and personal information.
           </p>
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-8 shadow-xs">
+        <div className="bg-white border border-slate-200 rounded-md p-6 sm:p-8 space-y-8 shadow-xs">
           <div className="flex items-center gap-6 pb-6 border-b border-slate-100">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-blue-600 text-white font-black text-3xl flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-500 to-blue-600 text-white font-bold text-2xl flex items-center justify-center flex-shrink-0 shadow-md">
               {formData.name?.[0]?.toUpperCase() || 'U'}
             </div>
             <div>
@@ -74,7 +74,7 @@ export default function UserProfilePage() {
           </div>
 
           {success && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-700 text-sm font-semibold">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md flex items-center gap-3 text-emerald-700 text-sm font-semibold">
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               <span>Profile details updated successfully!</span>
             </div>
@@ -93,7 +93,7 @@ export default function UserProfilePage() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                     required
                   />
                 </div>
@@ -110,7 +110,7 @@ export default function UserProfilePage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                     required
                   />
                 </div>
@@ -127,7 +127,7 @@ export default function UserProfilePage() {
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                   />
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function UserProfilePage() {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                   />
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default function UserProfilePage() {
                   name="website"
                   value={formData.website}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                 />
               </div>
             </div>
@@ -174,7 +174,7 @@ export default function UserProfilePage() {
                 rows={4}
                 value={formData.bio}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
+                className="w-full p-4 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
               />
             </div>
 
@@ -182,7 +182,7 @@ export default function UserProfilePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all shadow-md"
+                className="flex items-center gap-2 px-6 py-3 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all shadow-md"
               >
                 <Save className="w-4 h-4" />
                 <span>{saving ? 'Saving Changes...' : 'Save Profile'}</span>

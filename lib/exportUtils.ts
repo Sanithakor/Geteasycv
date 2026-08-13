@@ -1,5 +1,5 @@
 // Enhanced export utilities for GetEasyCV
-import html2canvas from 'html2canvas';
+import safeHtml2Canvas from './safeHtml2Canvas';
 import { jsPDF } from 'jspdf';
 
 export interface ExportOptions {
@@ -28,7 +28,7 @@ export async function captureElement(element: HTMLElement, options: Partial<Expo
   // Give a moment for any pending renders
   await new Promise(resolve => setTimeout(resolve, 500));
   
-  return html2canvas(element, {
+  return safeHtml2Canvas(element, {
     useCORS: true,
     allowTaint: true,
     logging: false,

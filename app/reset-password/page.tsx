@@ -11,11 +11,11 @@ export default function ResetPasswordPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center mb-2 group" title="Go to Homepage">
-            <img src="/logo.png" alt="GetEasyCV" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+            <img src="/logo.svg" alt="GetEasyCV" className="h-12 w-auto object-contain" />
           </Link>
         </div>
 
-        <React.Suspense fallback={<div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 text-center">Loading...</div>}>
+        <React.Suspense fallback={<div className="bg-white rounded-md shadow-lg border border-slate-100 p-8 text-center">Loading...</div>}>
           <ResetPasswordForm />
         </React.Suspense>
       </div>
@@ -75,7 +75,7 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+    <div className="bg-white rounded-md shadow-lg border border-slate-100 p-8">
       {success ? (
         /* ── Success state ─────────────────────────────────── */
         <div className="text-center">
@@ -90,7 +90,7 @@ function ResetPasswordForm() {
           </p>
           <Link
             href="/login"
-            className="inline-block px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm transition-colors"
+            className="inline-block px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-md font-semibold text-sm transition-colors"
           >
             Go to login now
           </Link>
@@ -106,7 +106,7 @@ function ResetPasswordForm() {
           </div>
 
           {errorMsg && (
-            <div className="mb-4 p-4 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
+            <div className="mb-4 p-4 rounded-md bg-red-50 border border-red-100 text-sm text-red-600">
               {errorMsg}
             </div>
           )}
@@ -122,7 +122,7 @@ function ResetPasswordForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                className="w-full px-4 py-2.5 rounded-md border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
                 disabled={isLoading || !token}
                 minLength={8}
               />
@@ -137,7 +137,7 @@ function ResetPasswordForm() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                className="w-full px-4 py-2.5 rounded-md border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
                 disabled={isLoading || !token}
                 minLength={8}
               />
@@ -146,7 +146,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={isLoading || !token}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-md text-sm transition-colors flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>

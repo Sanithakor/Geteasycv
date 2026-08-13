@@ -63,7 +63,7 @@ export default function CreateUserPage() {
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin/users"
-          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -90,7 +90,7 @@ export default function CreateUserPage() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="John Doe"
             />
           </div>
@@ -105,7 +105,7 @@ export default function CreateUserPage() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="john@example.com"
             />
           </div>
@@ -120,7 +120,7 @@ export default function CreateUserPage() {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="••••••••"
             />
           </div>
@@ -134,7 +134,7 @@ export default function CreateUserPage() {
                 name="tier"
                 value={formData.tier}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <option value="free">Free</option>
                 <option value="pro">Pro</option>
@@ -149,7 +149,7 @@ export default function CreateUserPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
@@ -162,14 +162,14 @@ export default function CreateUserPage() {
         <div className="flex gap-3">
           <Link
             href="/admin/users"
-            className="px-6 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="px-6 py-2 rounded-md border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center gap-2 px-6 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-md font-medium transition-colors"
           >
             <Save className="w-4 h-4" />
             {isLoading ? 'Creating…' : 'Create User'}

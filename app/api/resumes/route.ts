@@ -1,81 +1,113 @@
-/**
- * GET /api/resumes - List user resumes (with database failure fallback)
- * POST /api/resumes - Create new resume (with database failure fallback)
- */
-
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
+import { createSystemNotification } from '@/lib/notifications';
+import { getStoreResumes, saveStoreResume, ResumeStoreItem } from '@/lib/resumeStore';
+
+async function ensureTemplateExists(templateId: string, userId: string): Promise<string | undefined> {
+  if (!templateId) return undefined;
+  try {
+    const existing = await prisma.template.findUnique({
+      where: { id: templateId },
+    });
+    if (existing) return existing.id;
+
+    // Check by slug
+    const bySlug = await prisma.template.findUnique({
+      where: { slug: templateId },
+    });
+    if (bySlug) return bySlug.id;
+
+    // Check if any theme exists
+    let theme = await prisma.themeConfig.findFirst();
+    if (!theme) {
+      theme = await prisma.themeConfig.create({
+        data: {
+          name: 'Default Theme',
+          slug: `theme-${Date.now()}`,
+          primary: '#4F46E5',
+          secondary: '#64748B',
+          accent: '#10B981',
+          background: '#FFFFFF',
+          text: '#0F172A',
+          textMuted: '#64748B',
+          border: '#E2E8F0',
+          fontFamily: 'Inter',
+          fontSizeBase: 16,
+          lineHeight: 1.5,
+          borderRadius: '12px',
+        },
+      });
+    }
+
+    // Create template row dynamically
+    const created = await prisma.template.create({
+      data: {
+        id: templateId,
+        slug: `${templateId}-${Date.now()}`,
+        name: templateId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+        category: 'professional',
+        layout: 'standard',
+        blocks: {},
+        thumbnail: '/templates/default.png',
+        createdById: userId,
+        themeId: theme.id,
+        isATS: true,
+        status: 'active',
+      },
+    });
+    return created.id;
+  } catch (err) {
+    console.warn('[ENSURE_TEMPLATE_WARN] Foreign key placeholder fallback:', err);
+    try {
+      const anyTmpl = await prisma.template.findFirst();
+      return anyTmpl?.id;
+    } catch {
+      return undefined;
+    }
+  }
+}
 
 export async function GET(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const userId = auth?.userId || 'guest';
 
-    let resumes = [];
+    let dbResumes: any[] = [];
     try {
-      resumes = await prisma.resume.findMany({
-        where: { userId: auth.userId },
-        include: {
-          personal: true,
-          template: {
-            select: {
-              id: true,
-              name: true,
-              thumbnail: true,
+      if (auth) {
+        dbResumes = await prisma.resume.findMany({
+          where: { userId: auth.userId },
+          include: {
+            personal: true,
+            template: {
+              select: {
+                id: true,
+                name: true,
+                thumbnail: true,
+              },
             },
           },
-        },
-        orderBy: { updatedAt: 'desc' },
-      });
+          orderBy: { updatedAt: 'desc' },
+        });
+      }
     } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to mock resumes list:', dbError);
-      // Failover Mock Resumes List
-      resumes = [
-        {
-          id: 'mock-resume-1',
-          title: 'Senior Software Engineer Resume',
-          status: 'published',
-          downloads: 14,
-          views: 45,
-          updatedAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          personal: {
-            firstName: 'John',
-            lastName: 'Doe'
-          },
-          template: {
-            id: 'single-column-ats-modern-blue',
-            name: 'Single Column ATS',
-            thumbnail: null
-          }
-        },
-        {
-          id: 'mock-resume-2',
-          title: 'UX/UI Designer Portfolio CV',
-          status: 'draft',
-          downloads: 8,
-          views: 22,
-          updatedAt: new Date(Date.now() - 86400000).toISOString(),
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          personal: {
-            firstName: 'Emily',
-            lastName: 'Clark'
-          },
-          template: {
-            id: 'two-column-split-creative-orange',
-            name: 'Two Column Split',
-            thumbnail: null
-          }
-        }
-      ];
+      console.warn('[PRISMA_UNAVAILABLE] Falling back to store resumes:', dbError);
+    }
+
+    const storeResumes = getStoreResumes(userId);
+    
+    // Merge DB resumes with in-memory store resumes (avoiding duplicates)
+    const combined = [...dbResumes];
+    for (const storeItem of storeResumes) {
+      if (!combined.some((r) => r.id === storeItem.id)) {
+        combined.push(storeItem);
+      }
     }
 
     return NextResponse.json({
       success: true,
-      data: resumes,
+      data: combined,
     });
   } catch (error) {
     console.error('[RESUMES_LIST_ERROR]', error);
@@ -89,84 +121,109 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const userId = auth?.userId || 'guest';
 
     const body = await req.json();
-    const { title, templateId } = body;
+    const { title, templateId, summary, cvData, customTheme, selectedLayout, sectionVariants, sectionOrder } = body;
 
-    if (!title) {
-      return NextResponse.json(
-        { error: 'Title is required' },
-        { status: 400 }
-      );
-    }
+    const requestedTitle = title || `${(cvData?.personal?.firstName || 'New')} Resume`.trim();
+    const targetTemplateId = templateId || 'sidebar-left-modern-blue';
+    const resumeId = `resume-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+
+    let createdResume: any = null;
 
     try {
-      // Verify if template exists in DB; if not, store title & create resume cleanly
-      let validTemplateId: string | undefined = undefined;
-      if (templateId) {
-        const template = await prisma.template.findUnique({
-          where: { id: templateId },
-        });
-        if (template) {
-          validTemplateId = template.id;
-        }
-      }
-
-      // Create resume in db
-      const createData: any = {
-        title,
-        slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        userId: auth.userId,
-        status: 'draft',
-      };
-      if (validTemplateId) {
-        createData.templateId = validTemplateId;
-      }
-
-      const resume = await prisma.resume.create({
-        data: createData,
-        include: {
-          template: {
-            select: {
-              id: true,
-              name: true,
-              thumbnail: true,
+      if (auth) {
+        const validTemplateId = await ensureTemplateExists(targetTemplateId, auth.userId);
+        
+        if (validTemplateId) {
+          const resume = await prisma.resume.create({
+            data: {
+              title: requestedTitle,
+              slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+              userId: auth.userId,
+              templateId: validTemplateId,
+              status: 'draft',
+              summary: summary || cvData?.summary || '',
+              ...(cvData?.personal && {
+                personal: {
+                  create: {
+                    firstName: cvData.personal.firstName || '',
+                    lastName: cvData.personal.lastName || '',
+                    email: cvData.personal.email || '',
+                    phone: cvData.personal.phone || '',
+                    location: cvData.personal.location || '',
+                    website: cvData.personal.website || '',
+                    linkedin: cvData.personal.linkedin || '',
+                  },
+                },
+              }),
             },
-          },
-        },
-      });
+            include: {
+              personal: true,
+              template: {
+                select: {
+                  id: true,
+                  name: true,
+                  thumbnail: true,
+                },
+              },
+            },
+          });
 
-      return NextResponse.json({
-        success: true,
-        data: resume,
-      }, { status: 201 });
+          createdResume = {
+            ...resume,
+            templateId: targetTemplateId, // Preserve exact dynamic templateId
+          };
 
-    } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to mock resume creation:', dbError);
-      
-      const mockCreated = {
-        id: `mock-resume-${Date.now()}`,
-        title: title || 'Untitled Resume',
-        status: 'draft',
-        downloads: 0,
-        views: 0,
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        template: {
-          id: templateId || 'single-column-ats-modern-blue',
-          name: 'Template Layout',
-          thumbnail: null
+          createSystemNotification({
+            title: 'New Resume Created',
+            message: `"${resume.title}" was created`,
+            type: 'resume_created',
+            target: 'all',
+            userId: auth.userId,
+          }).catch(() => {});
         }
-      };
-
-      return NextResponse.json({
-        success: true,
-        data: mockCreated,
-      }, { status: 201 });
+      }
+    } catch (dbError) {
+      console.warn('[PRISMA_UNAVAILABLE] Falling back to in-memory resume store:', dbError);
     }
+
+    // Save to in-memory store so it persists cleanly
+    const storeItem: ResumeStoreItem = createdResume || {
+      id: resumeId,
+      userId,
+      title: requestedTitle,
+      slug: `resume-${Date.now()}`,
+      templateId: targetTemplateId,
+      status: 'draft',
+      downloads: 0,
+      views: 0,
+      updatedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      summary: summary || cvData?.summary || '',
+      personal: cvData?.personal || { firstName: 'John', lastName: 'Doe' },
+      cvData,
+      customTheme,
+      selectedLayout,
+      sectionVariants,
+      sectionOrder,
+      template: {
+        id: targetTemplateId,
+        name: targetTemplateId.replace(/-/g, ' '),
+        thumbnail: null,
+      },
+    };
+
+    saveStoreResume(storeItem);
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: storeItem,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('[RESUME_CREATE_ERROR]', error);
     return NextResponse.json(
@@ -175,3 +232,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

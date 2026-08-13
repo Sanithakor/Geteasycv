@@ -5,7 +5,6 @@ import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
 import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages } from '../sections';
 import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
-import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type MagazineStyleLayoutProps = {
   data: CVData;
@@ -35,30 +34,28 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
       className="w-full"
       style={{
         display: 'grid',
-        gridTemplateColumns: '300px 1fr',
+        gridTemplateColumns: '260px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
       }}
     >
       {/* Left Sidebar */}
-      <div className="p-6" style={{ backgroundColor: theme.backgroundAlt }}>
+      <div className="p-5" style={{ backgroundColor: theme.backgroundAlt }}>
         {data.personal.avatar && (
-          <div className="mb-6">
+          <div className="mb-5">
             <img
               src={data.personal.avatar}
               alt={`${data.personal.firstName} ${data.personal.lastName}`}
-              className="w-full rounded-xl object-cover aspect-square"
-              style={{ border: `4px solid ${theme.primary}` }}
+              className="w-full rounded-md object-cover aspect-square"
+              style={{ border: `3px solid ${theme.primary}` }}
             />
           </div>
         )}
         
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Contact</h3>
-          <div className="space-y-2 text-sm" style={{ color: theme.textSecondary }}>
+        <div className="mb-5">
+          <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
+          <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
             <div className="break-words">{data.personal.email}</div>
             <div>{data.personal.phone}</div>
             <div>{data.personal.location}</div>
@@ -66,13 +63,13 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
         </div>
 
         {data.skills.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Skills</h3>
-            <div className="flex flex-wrap gap-2">
+          <div className="mb-5">
+            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Skills</h3>
+            <div className="flex flex-wrap gap-1.5">
               {data.skills.map((skill) => (
                 <span
                   key={skill.id}
-                  className="text-xs px-2 py-1 rounded"
+                  className="text-[11px] font-semibold px-2 py-0.5 rounded"
                   style={{
                     backgroundColor: `${theme.primary}15`,
                     color: theme.primary,
@@ -87,9 +84,9 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
 
         {data.languages && data.languages.length > 0 && (
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: theme.primary }}>Languages</h3>
+            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Languages</h3>
             {data.languages.map((lang) => (
-              <div key={lang.id} className="text-sm mb-1" style={{ color: theme.textSecondary }}>
+              <div key={lang.id} className="text-[11px] font-medium leading-snug mb-1" style={{ color: theme.textSecondary }}>
                 {lang.name} - {lang.proficiency}
               </div>
             ))}
@@ -98,15 +95,9 @@ const MagazineStyleLayout: React.FC<MagazineStyleLayoutProps> = ({
       </div>
 
       {/* Main Content */}
-      <div className="p-6" style={{ backgroundColor: theme.background }}>
+      <div className="p-5" style={{ backgroundColor: theme.background }}>
         <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
-        {data.summary && (
-          <div className="mb-6 p-6" style={{ background: `linear-gradient(135deg, ${theme.primary}10 0%, ${theme.secondary} 100%)`,  }}>
-            <p className="text-lg leading-relaxed" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
-              {data.summary}
-            </p>
-          </div>
-        )}
+        {data.summary && <Summary data={data.summary} theme={theme} />}
         {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
         {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
         {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}

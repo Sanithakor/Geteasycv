@@ -13,25 +13,32 @@ export interface AuthPayload {
  */
 export async function getAuthFromRequest(req: Request): Promise<AuthPayload | null> {
   try {
+    let token = '';
+
+    // 1. Try Authorization header
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.log('[AUTH] No Authorization header');
-      return null;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.replace('Bearer ', '');
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    // 2. Try Cookie header
     if (!token) {
-      console.log('[AUTH] No token in Authorization header');
+      const cookieHeader = req.headers.get('cookie') || '';
+      const match = cookieHeader.match(/auth-token=([^;]+)/);
+      if (match) {
+        token = match[1];
+      }
+    }
+
+    if (!token) {
       return null;
     }
 
     const payload = await verifyToken(token);
     if (!payload) {
-      console.log('[AUTH] Token verification failed');
       return null;
     }
 
-    console.log('[AUTH] Token verified for user:', payload.userId);
     return payload;
   } catch (err) {
     console.error('[AUTH_ERROR]', err);

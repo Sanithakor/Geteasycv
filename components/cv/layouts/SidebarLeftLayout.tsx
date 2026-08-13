@@ -3,8 +3,8 @@
 import React, { memo } from 'react';
 import { Theme } from '../../../data/themes';
 import { CVData } from '../../../data/sampleCV';
-import { Header, Summary, Experience, Education, Projects, Certifications, Languages } from '../sections';
-import { HeaderVariant, ExperienceVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant } from '../variants/sectionVariants';
+import { Header, Summary, Experience, Education, Projects, Certifications, Languages, Awards } from '../sections';
+import { HeaderVariant, ExperienceVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant, AwardsVariant } from '../variants/sectionVariants';
 import { DUMMY_AVATAR } from '../../../data/sampleCV';
 
 export type SidebarLeftLayoutProps = {
@@ -30,30 +30,25 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
 }) => {
   const avatar = data.personal.avatar || DUMMY_AVATAR;
   
-  // Optimize skills rendering for canvas
-  const displaySkills = React.useMemo(() => 
-    data.skills.slice(0, 8), // Limit to 8 skills for performance
-    [data.skills]
-  );
+  // Optimize skills rendering for canvas — show all skills, no arbitrary cap
+  const displaySkills = React.useMemo(() => data.skills, [data.skills]);
 
   return (
     <div
-      className="w-full max-w-full  overflow-hidden"
+      className="w-full max-w-full overflow-hidden"
       style={{
         display: 'grid',
-        gridTemplateColumns: '280px 1fr',
+        gridTemplateColumns: '260px 1fr',
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        
-        
         minHeight: '297mm', // A4 height for proper canvas rendering
         width: '210mm', // A4 width for proper canvas rendering
       }}
     >
       {/* Sidebar - Optimized for Canvas */}
       <div
-        className="p-6"
+        className="p-5"
         style={{
           background: `linear-gradient(180deg, ${theme.primary} 0%, ${theme.primary}CC 100%)`,
           color: '#fff',
@@ -61,82 +56,65 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
         }}
       >
         {avatar && (
-          <div className="mb-6 flex justify-center">
+          <div className="mb-5 flex justify-center">
             <div
               style={{
-                width: '112px',
-                height: '112px',
+                width: '100px',
+                height: '100px',
                 borderRadius: '50%',
                 backgroundImage: `url(${avatar})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                border: '4px solid rgba(255, 255, 255, 0.3)',
-                imageRendering: 'auto' as const, // Better canvas rendering
+                border: '3px solid rgba(255, 255, 255, 0.4)',
+                imageRendering: 'auto' as const,
               }}
               aria-label={`${data.personal.firstName} ${data.personal.lastName} profile photo`}
             />
           </div>
         )}
         
-        <div className="text-center mb-6">
+        <div className="text-center mb-5">
           <h1 
-            className="text-xl font-bold mb-1" 
+            className="text-[28px] font-bold leading-[1.15] mb-1" 
             style={{ 
               fontFamily: theme.fontFamilyHeading,
-              lineHeight: '1.2',
               wordWrap: 'break-word'
             }}
           >
             {data.personal.firstName} {data.personal.lastName}
           </h1>
           <p 
-            className="text-sm opacity-90" 
+            className="text-[14px] font-semibold leading-[1.25] opacity-90" 
             style={{ 
               fontFamily: theme.fontFamily,
-              lineHeight: '1.3'
             }}
           >
             {data.personal.title}
           </p>
         </div>
         
-        <div className="space-y-3 mb-6">
-          <h2 
-            className="text-xs font-semibold uppercase tracking-wider opacity-70" 
-            style={{ fontFamily: theme.fontFamily }}
-          >
+        <div className="space-y-3 mb-5">
+          <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             Contact
           </h2>
-          {data.personal.email && (
-            <div className="text-sm break-words" style={{ wordBreak: 'break-all' }}>
-              {data.personal.email}
-            </div>
-          )}
-          {data.personal.phone && (
-            <div className="text-sm">{data.personal.phone}</div>
-          )}
-          {data.personal.location && (
-            <div className="text-sm">{data.personal.location}</div>
-          )}
+          {data.personal.email && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.email}</div>}
+          {data.personal.phone && <div className="text-[10.5px] font-medium leading-normal">{data.personal.phone}</div>}
+          {data.personal.location && <div className="text-[10.5px] font-medium leading-normal">{data.personal.location}</div>}
+          {data.personal.website && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.website}</div>}
+          {data.personal.linkedin && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.linkedin}</div>}
         </div>
-        
-        {displaySkills.length > 0 && (
-          <div className="space-y-3">
-            <h2 
-              className="text-xs font-semibold uppercase tracking-wider opacity-70" 
-              style={{ fontFamily: theme.fontFamily }}
-            >
+
+        {displaySkills && displaySkills.length > 0 && (
+          <div className="space-y-3 mb-5">
+            <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
               Skills
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {displaySkills.map((skill) => (
-                <span 
-                  key={skill.id} 
-                  className="text-xs px-2 py-1 rounded-full bg-white/20" 
-                  style={{ 
-                    fontFamily: theme.fontFamily,
-                    whiteSpace: 'nowrap'
-                  }}
+                <span
+                  key={skill.id}
+                  className="text-[11px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white"
+                  style={{ fontFamily: theme.fontFamily }}
                 >
                   {skill.name}
                 </span>
@@ -146,31 +124,14 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
         )}
       </div>
 
-      {/* Main Content - Optimized for Canvas */}
-      <div 
-        className="p-6" 
-        style={{ 
-          backgroundColor: theme.background,
-          willChange: 'transform' // Optimize for canvas rendering
-        }}
-      >
-        <Header data={data.personal} theme={theme} variant={headerVariant} hideAvatar={true} />
+      {/* Main Content Area */}
+      <div className="p-5" style={{ backgroundColor: theme.background }}>
         {data.summary && <Summary data={data.summary} theme={theme} />}
-        {data.experience.length > 0 && (
-          <Experience data={data.experience} theme={theme} variant={experienceVariant} />
-        )}
-        {data.education.length > 0 && (
-          <Education data={data.education} theme={theme} variant={educationVariant} />
-        )}
-        {data.projects && data.projects.length > 0 && (
-          <Projects data={data.projects} theme={theme} variant={projectsVariant} />
-        )}
-        {data.certifications && data.certifications.length > 0 && (
-          <Certifications data={data.certifications} theme={theme} variant={certificationsVariant} />
-        )}
-        {data.languages && data.languages.length > 0 && (
-          <Languages data={data.languages} theme={theme} variant={languagesVariant} />
-        )}
+        {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
+        {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
+        {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}
+        {data.certifications && data.certifications.length > 0 && <Certifications data={data.certifications} theme={theme} variant={certificationsVariant} />}
+        {data.languages && data.languages.length > 0 && <Languages data={data.languages} theme={theme} variant={languagesVariant} />}
       </div>
     </div>
   );

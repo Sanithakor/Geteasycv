@@ -90,7 +90,7 @@ export function HighResolutionPreview({
 
       {/* Loading State */}
       {loading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm rounded-lg">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm rounded-md">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-sm text-gray-600 font-medium">Generating High-Res Preview...</p>
           <p className="text-xs text-gray-500 mt-1">Creating exact 1:1 visual copy</p>
@@ -99,13 +99,13 @@ export function HighResolutionPreview({
 
       {/* Error State */}
       {error && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-50 rounded-lg p-6 text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-50 rounded-md p-6 text-center">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
           <p className="text-sm font-medium text-red-700 mb-2">Preview Generation Failed</p>
           <p className="text-xs text-red-600">Unable to create high-resolution preview</p>
           <button 
             onClick={generatePreview}
-            className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium transition-colors"
+            className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-md text-sm font-medium transition-colors"
           >
             Retry
           </button>
@@ -118,12 +118,12 @@ export function HighResolutionPreview({
           <img
             src={previewSrc}
             alt={`High-resolution preview of ${template.name}`}
-            className="w-full h-auto rounded-lg shadow-lg border border-gray-200"
+            className="w-full h-auto rounded-md shadow-lg border border-gray-200"
             style={{ aspectRatio: '210/297' }} // A4 aspect ratio
           />
           
           {/* Template Info Overlay */}
-          <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-sm rounded-lg p-3">
+          <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-sm rounded-md p-3">
             <h3 className="text-white font-semibold text-sm">{template.name}</h3>
             <p className="text-white/80 text-xs">{template.theme.name} • {template.layout.name}</p>
             <p className="text-white/60 text-xs mt-1">Exact 1:1 Visual Copy • Print-Ready Quality</p>
@@ -133,7 +133,7 @@ export function HighResolutionPreview({
           {showDownloadButton && (
             <button
               onClick={handleDownload}
-              className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
+              className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

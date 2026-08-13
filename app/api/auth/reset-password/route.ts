@@ -7,8 +7,23 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword, validatePassword } from '@/lib/utils/auth';
+import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
+  // Apply rate limiting (Max 5 attempts per 15 minutes per IP)
+  const rateLimit = checkRateLimit(req, {
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    keyPrefix: 'auth_reset_password',
+  });
+
+  if (!rateLimit.success) {
+    return createRateLimitResponse(
+      rateLimit.retryAfter,
+      'Too many password reset attempts. Please try again later.'
+    );
+  }
+
   try {
     const body = await req.json();
     const { token, newPassword } = body;

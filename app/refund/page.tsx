@@ -1,4 +1,6 @@
 import Navigation from "@/components/Navigation";
+import ReadyToBuild from "@/components/sections/ReadyToBuild";
+import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export const metadata = {
@@ -12,8 +14,8 @@ export default function RefundPolicyPage() {
       <Navigation />
       <main className="min-h-screen bg-slate-50 flex justify-center px-4 py-20">
         <div className="max-w-3xl w-full">
-          <h1 className="text-4xl font-bold text-slate-900 mb-8">Refund Policy</h1>
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-slate-700 space-y-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Refund Policy</h1>
+          <div className="bg-white rounded-md shadow-sm border border-slate-200 p-8 text-slate-700 space-y-6">
             <p className="text-sm text-slate-500">Last updated: {new Date().toLocaleDateString()}</p>
             
             <section>
@@ -38,6 +40,8 @@ export default function RefundPolicyPage() {
           </div>
         </div>
       </main>
+      <ReadyToBuild />
+      <Footer />
     </>
   );
 }

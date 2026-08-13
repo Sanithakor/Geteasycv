@@ -60,7 +60,7 @@ export default function PreviewDemoPage() {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Controls Panel */}
             <div className="space-y-6">
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-md shadow-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Template Configuration</h2>
                 
                 {/* Layout Selector */}
@@ -71,7 +71,7 @@ export default function PreviewDemoPage() {
                   <select
                     value={selectedLayout}
                     onChange={(e) => setSelectedLayout(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {layouts.map((layout) => (
                       <option key={layout.id} value={layout.id}>
@@ -89,7 +89,7 @@ export default function PreviewDemoPage() {
                   <select
                     value={selectedTheme}
                     onChange={(e) => setSelectedTheme(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {themes.map((theme) => (
                       <option key={theme.id} value={theme.id}>
@@ -100,7 +100,7 @@ export default function PreviewDemoPage() {
                 </div>
 
                 {/* Template Info */}
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="bg-gray-50 rounded-md p-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Current Template</h3>
                   <div className="space-y-1 text-sm text-gray-600">
                     <p><span className="font-medium">Name:</span> {currentTemplate?.name}</p>
@@ -112,7 +112,7 @@ export default function PreviewDemoPage() {
               </div>
 
               {/* Preview Features */}
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-md shadow-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Preview Features</h3>
                 <div className="space-y-3">
                   <div className="flex items-center">
@@ -156,7 +156,7 @@ export default function PreviewDemoPage() {
             </div>
 
             {/* High-Resolution Preview */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white rounded-md shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Ultra HD Preview</h3>
               {currentTemplate && (
                 <HighResolutionPreview
@@ -169,7 +169,7 @@ export default function PreviewDemoPage() {
           </div>
 
           {/* Technical Details */}
-          <div className="mt-12 bg-gray-900 rounded-xl p-8 text-white">
+          <div className="mt-12 bg-gray-900 rounded-md p-8 text-white">
             <h3 className="text-2xl font-bold mb-6">Technical Specifications</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>

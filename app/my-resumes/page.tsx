@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Sparkles
 } from 'lucide-react';
+import ResumeCreationButton from '@/components/ui/ResumeCreationButton';
 
 export default function MyResumesPage() {
   const router = useRouter();
@@ -141,26 +142,24 @@ export default function MyResumesPage() {
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-              <FileText className="w-7 h-7 text-teal-600" />
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+              <FileText className="w-6 h-6 text-teal-600" />
               <span>My Resumes</span>
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
               Directly edit, rename, duplicate, and manage all your saved resumes.
             </p>
           </div>
 
-          <button
-            onClick={() => router.push('/templates')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
-          >
-            <Plus className="w-4 h-4 text-teal-400" />
-            <span>Add CV from Templates</span>
-          </button>
+          <ResumeCreationButton 
+            variant="secondary"
+            text="Create Smart Resume"
+            className="shadow-md"
+          />
         </div>
 
         {/* Filter and Controls */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-white border border-slate-200 rounded-md p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Search */}
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -169,7 +168,7 @@ export default function MyResumesPage() {
               placeholder="Search resumes..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2 rounded-md bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-teal-500 transition-colors"
             />
           </div>
 
@@ -180,7 +179,7 @@ export default function MyResumesPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-teal-500"
+                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-md px-3 py-2 focus:outline-none focus:border-teal-500"
               >
                 <option value="all">All Statuses</option>
                 <option value="draft">Drafts</option>
@@ -189,10 +188,10 @@ export default function MyResumesPage() {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-1">
+            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-md p-1">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-md transition-colors ${
                   viewMode === 'grid' ? 'bg-white shadow-xs text-teal-600 font-bold' : 'text-slate-500 hover:text-slate-900'
                 }`}
                 title="Grid View"
@@ -201,7 +200,7 @@ export default function MyResumesPage() {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-md transition-colors ${
                   viewMode === 'list' ? 'bg-white shadow-xs text-teal-600 font-bold' : 'text-slate-500 hover:text-slate-900'
                 }`}
                 title="List View"
@@ -214,12 +213,12 @@ export default function MyResumesPage() {
 
         {/* Resumes Content */}
         {loading ? (
-          <div className="bg-white border border-slate-200 rounded-2xl p-16 text-center text-slate-400 animate-pulse shadow-xs">
+          <div className="bg-white border border-slate-200 rounded-md p-16 text-center text-slate-400 animate-pulse shadow-xs">
             Loading your resumes...
           </div>
         ) : filteredResumes.length === 0 ? (
-          <div className="bg-white border border-slate-200 border-dashed rounded-3xl p-16 text-center space-y-4 shadow-xs">
-            <div className="w-16 h-16 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto border border-teal-100">
+          <div className="bg-white border border-slate-200 border-dashed rounded-md p-16 text-center space-y-4 shadow-xs">
+            <div className="w-16 h-16 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center mx-auto border border-teal-100">
               <FileText className="w-8 h-8" />
             </div>
             <div>
@@ -228,28 +227,25 @@ export default function MyResumesPage() {
                 {search ? 'Try clearing your search query or status filter.' : 'Choose from ATS-optimized designs and add your first resume.'}
               </p>
             </div>
-            <button
-              onClick={() => router.push('/templates')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-all cursor-pointer"
-            >
-              <Plus className="w-4 h-4 text-teal-400" />
-              <span>Browse Templates & Create</span>
-            </button>
+            <ResumeCreationButton 
+              text="Create Smart Resume" 
+              className="shadow-xs" 
+            />
           </div>
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredResumes.map((resume) => (
               <div
                 key={resume.id}
-                className="group bg-white border border-slate-200 hover:border-teal-500 rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
+                className="group bg-white border border-slate-200 hover:border-teal-500 rounded-md p-6 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold border border-teal-100">
+                    <div className="w-12 h-12 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center font-bold border border-teal-100">
                       <FileText className="w-6 h-6" />
                     </div>
                     <span
-                      className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase ${
+                      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
                         resume.status === 'published'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : 'bg-slate-100 text-slate-600 border border-slate-200'
@@ -266,7 +262,7 @@ export default function MyResumesPage() {
                           type="text"
                           value={editingTitle}
                           onChange={(e) => setEditingTitle(e.target.value)}
-                          className="w-full px-2 py-1 rounded-lg border border-teal-500 bg-teal-50/50 text-sm font-bold text-slate-900 focus:outline-none"
+                          className="w-full px-2 py-1 rounded-md border border-teal-500 bg-teal-50/50 text-sm font-bold text-slate-900 focus:outline-none"
                           autoFocus
                         />
                         <button type="submit" disabled={savingTitle} className="p-1 text-teal-600 hover:bg-teal-50 rounded-md">
@@ -279,7 +275,10 @@ export default function MyResumesPage() {
                     ) : (
                       <div className="flex items-center justify-between group/title">
                         <h3
-                          onClick={() => router.push(`/editor?id=${resume.id}`)}
+                          onClick={() => {
+                            const tmpl = resume.templateId || resume.template?.id || 'sidebar-left-modern-blue';
+                            router.push(`/editor?id=${resume.id}&template=${tmpl}`);
+                          }}
                           className="text-lg font-bold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-1 cursor-pointer"
                         >
                           {resume.title || 'Untitled Resume'}
@@ -294,7 +293,7 @@ export default function MyResumesPage() {
                       </div>
                     )}
                     <p className="text-xs text-slate-500 mt-1 line-clamp-1">
-                      Template: {resume.template?.name || 'Single Column ATS'}
+                      Template: {resume.template?.name || (resume.templateId ? resume.templateId.replace(/-/g, ' ') : 'Single Column ATS')}
                     </p>
                   </div>
                 </div>
@@ -309,14 +308,14 @@ export default function MyResumesPage() {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={(e) => handleDuplicate(resume, e)}
-                        className="p-1.5 hover:bg-slate-100 text-slate-500 hover:text-blue-600 rounded-lg transition-colors"
+                        className="p-1.5 hover:bg-slate-100 text-slate-500 hover:text-blue-600 rounded-md transition-colors"
                         title="Duplicate Resume"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(resume.id, e)}
-                        className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors"
+                        className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-md transition-colors"
                         title="Delete Resume"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -326,8 +325,11 @@ export default function MyResumesPage() {
 
                   {/* Primary Direct Edit Action Button */}
                   <button
-                    onClick={() => router.push(`/editor?id=${resume.id}`)}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
+                    onClick={() => {
+                      const tmpl = resume.templateId || resume.template?.id || 'sidebar-left-modern-blue';
+                      router.push(`/editor?id=${resume.id}&template=${tmpl}`);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
                   >
                     <Edit className="w-3.5 h-3.5 text-teal-400" />
                     <span>Edit Resume</span>
@@ -337,7 +339,7 @@ export default function MyResumesPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-xs">
             <div className="divide-y divide-slate-100">
               {filteredResumes.map((resume) => (
                 <div
@@ -345,7 +347,7 @@ export default function MyResumesPage() {
                   className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold flex-shrink-0 border border-teal-100">
+                    <div className="w-10 h-10 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center font-bold flex-shrink-0 border border-teal-100">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div>
@@ -380,7 +382,7 @@ export default function MyResumesPage() {
 
                   <div className="flex items-center gap-4">
                     <span
-                      className={`hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                      className={`hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                         resume.status === 'published'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : 'bg-slate-100 text-slate-600 border border-slate-200'
@@ -390,8 +392,11 @@ export default function MyResumesPage() {
                     </span>
 
                     <button
-                      onClick={() => router.push(`/editor?id=${resume.id}`)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white font-bold text-xs hover:bg-slate-800"
+                      onClick={() => {
+                        const tmpl = resume.templateId || resume.template?.id || 'sidebar-left-modern-blue';
+                        router.push(`/editor?id=${resume.id}&template=${tmpl}`);
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 text-white font-bold text-xs hover:bg-slate-800"
                     >
                       <Edit className="w-3.5 h-3.5 text-teal-400" />
                       <span>Edit</span>
@@ -400,14 +405,14 @@ export default function MyResumesPage() {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={(e) => handleDuplicate(resume, e)}
-                        className="p-1.5 hover:bg-slate-100 text-slate-600 hover:text-blue-600 rounded-lg"
+                        className="p-1.5 hover:bg-slate-100 text-slate-600 hover:text-blue-600 rounded-md"
                         title="Duplicate"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(resume.id, e)}
-                        className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg"
+                        className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-md"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />

@@ -1,62 +1,105 @@
 'use client';
-import React, { useState } from 'react';
-import { Edit2, Eye } from 'lucide-react';
 
-const TEMPLATES = [
-  { id: 1, name: 'Welcome Email', trigger: 'user.signup', subject: 'Welcome to Resume Co! 🎉', status: 'active', lastEdited: '2024-06-01' },
-  { id: 2, name: 'Password Reset', trigger: 'auth.resetPassword', subject: 'Reset your password', status: 'active', lastEdited: '2024-05-15' },
-  { id: 3, name: 'Subscription Confirmed', trigger: 'payment.success', subject: 'Your Pro subscription is active ✅', status: 'active', lastEdited: '2024-04-20' },
-  { id: 4, name: 'Payment Failed', trigger: 'payment.failed', subject: 'Action required: Payment failed', status: 'active', lastEdited: '2024-04-20' },
-  { id: 5, name: 'Trial Ending Reminder', trigger: 'subscription.trialEndingSoon', subject: 'Your trial ends in 3 days', status: 'inactive', lastEdited: '2024-03-10' },
-];
+import React, { useEffect, useState } from 'react';
+import { Mail, Eye, Edit2 } from 'lucide-react';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function EmailTemplatesPage() {
-  const [selected, setSelected] = useState<number | null>(null);
-  const tmpl = TEMPLATES.find(t => t.id === selected);
+  const { token } = useAuthStore();
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchEmailTemplates();
+  }, [token]);
+
+  const fetchEmailTemplates = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/email-templates', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data.data || []);
+        if (data.data?.length) {
+          setSelectedId(data.data[0].id);
+        }
+      }
+    } catch (err) {
+      console.error('[ADMIN_EMAIL_TEMPLATES_FETCH_ERROR]', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectedTemplate = templates.find((t) => t.id === selectedId);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Email Templates</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Manage transactional email templates</p>
+        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <Mail className="w-6 h-6 text-violet-600" />
+          <span>Email Templates</span>
+        </h1>
+        <p className="text-slate-500 text-xs mt-1">Manage transactional email subjects and dynamic placeholders</p>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
-          {TEMPLATES.map(t => (
-            <button key={t.id} onClick={() => setSelected(t.id)} className={`w-full text-left p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors ${selected === t.id ? 'bg-violet-50 dark:bg-violet-900/20' : ''}`}>
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-medium text-sm text-slate-900 dark:text-white">{t.name}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${t.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'}`}>{t.status}</span>
-              </div>
-              <p className="text-xs text-slate-500 font-mono">{t.trigger}</p>
-            </button>
-          ))}
+        <div className="rounded-md border border-slate-200 bg-white divide-y divide-slate-100 shadow-2xs overflow-hidden">
+          {loading ? (
+            <div className="p-6 text-center text-xs text-slate-400 animate-pulse">Loading templates...</div>
+          ) : (
+            templates.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setSelectedId(t.id)}
+                className={`w-full text-left p-4 hover:bg-slate-50 transition-colors cursor-pointer ${
+                  selectedId === t.id ? 'bg-violet-50/70 font-bold' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-slate-900">{t.name}</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">
+                    Active
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 font-mono">slug: {t.slug}</p>
+              </button>
+            ))
+          )}
         </div>
-        <div className="lg:col-span-2 rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
-          {tmpl ? (
+
+        <div className="lg:col-span-2 rounded-md border border-slate-200 bg-white p-6 shadow-2xs">
+          {selectedTemplate ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-slate-900 dark:text-white">{tmpl.name}</h2>
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"><Eye className="w-4 h-4" /> Preview</button>
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm font-medium transition-colors"><Edit2 className="w-4 h-4" /> Edit</button>
-                </div>
+                <h2 className="font-bold text-slate-900 text-base">{selectedTemplate.name}</h2>
               </div>
+
               <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Trigger</label>
-                <code className="text-sm text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2 py-1 rounded">{tmpl.trigger}</code>
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Template Slug</label>
+                <code className="text-xs font-mono text-violet-700 bg-violet-50 px-2 py-1 rounded-md border border-violet-100">
+                  {selectedTemplate.slug}
+                </code>
               </div>
+
               <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Subject Line</label>
-                <p className="text-sm text-slate-900 dark:text-white font-medium">{tmpl.subject}</p>
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject Line</label>
+                <p className="text-sm font-bold text-slate-900">{selectedTemplate.subject}</p>
               </div>
-              <div className="h-48 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 text-sm">
-                Email preview will appear here
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">HTML Body Preview</label>
+                <div
+                  className="p-4 rounded-md bg-slate-50 border border-slate-200 text-xs text-slate-800 font-mono overflow-x-auto max-h-48"
+                  dangerouslySetInnerHTML={{ __html: selectedTemplate.body }}
+                />
               </div>
-              <p className="text-xs text-slate-500">Last edited: {tmpl.lastEdited}</p>
             </div>
           ) : (
-            <div className="h-full flex items-center justify-center text-slate-400 text-sm">Select a template to preview</div>
+            <div className="h-48 flex items-center justify-center text-xs text-slate-400">Select a template to view details</div>
           )}
         </div>
       </div>

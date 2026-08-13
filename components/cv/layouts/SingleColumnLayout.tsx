@@ -4,8 +4,8 @@ import React from 'react';
 import { Theme } from '../../../data/themes';
 import { Layout } from '../../../data/layouts';
 import { CVData } from '../../../data/sampleCV';
-import { Header, Summary, Experience, Skills, Education } from '../sections';
-import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant } from '../variants/sectionVariants';
+import { Header, Summary, Experience, Skills, Education, Projects, Certifications, Languages, Awards } from '../sections';
+import { HeaderVariant, ExperienceVariant, SkillsVariant, EducationVariant, ProjectsVariant, CertificationsVariant, LanguagesVariant, AwardsVariant } from '../variants/sectionVariants';
 
 export type SingleColumnLayoutProps = {
   data: CVData;
@@ -14,6 +14,10 @@ export type SingleColumnLayoutProps = {
   experienceVariant?: ExperienceVariant;
   skillsVariant?: SkillsVariant;
   educationVariant?: EducationVariant;
+  projectsVariant?: ProjectsVariant;
+  certificationsVariant?: CertificationsVariant;
+  languagesVariant?: LanguagesVariant;
+  awardsVariant?: AwardsVariant;
 };
 
 const SingleColumnLayout: React.FC<SingleColumnLayoutProps> = ({
@@ -23,6 +27,10 @@ const SingleColumnLayout: React.FC<SingleColumnLayoutProps> = ({
   experienceVariant = 'timeline',
   skillsVariant = 'tags',
   educationVariant = 'list',
+  projectsVariant = 'cards',
+  certificationsVariant = 'list',
+  languagesVariant = 'tags',
+  awardsVariant = 'cards',
 }) => {
   return (
     <div
@@ -31,31 +39,18 @@ const SingleColumnLayout: React.FC<SingleColumnLayoutProps> = ({
         backgroundColor: theme.background,
         fontFamily: theme.fontFamily,
         color: theme.text,
-        padding: '2rem',
-        
-        
+        padding: '1.5rem',
       }}
     >
-      {/* Header Section */}
       <Header data={data.personal} theme={theme} variant={headerVariant} />
-
-      {/* Summary Section */}
       {data.summary && <Summary data={data.summary} theme={theme} />}
-
-      {/* Experience Section */}
-      {data.experience.length > 0 && (
-        <Experience data={data.experience} theme={theme} variant={experienceVariant} />
-      )}
-
-      {/* Education Section */}
-      {data.education.length > 0 && (
-        <Education data={data.education} theme={theme} variant={educationVariant} />
-      )}
-
-      {/* Skills Section */}
-      {data.skills.length > 0 && (
-        <Skills data={data.skills} theme={theme} variant={skillsVariant} />
-      )}
+      {data.experience.length > 0 && <Experience data={data.experience} theme={theme} variant={experienceVariant} />}
+      {data.education.length > 0 && <Education data={data.education} theme={theme} variant={educationVariant} />}
+      {data.skills.length > 0 && <Skills data={data.skills} theme={theme} variant={skillsVariant} />}
+      {data.projects && data.projects.length > 0 && <Projects data={data.projects} theme={theme} variant={projectsVariant} />}
+      {data.certifications && data.certifications.length > 0 && <Certifications data={data.certifications} theme={theme} variant={certificationsVariant} />}
+      {data.languages && data.languages.length > 0 && <Languages data={data.languages} theme={theme} variant={languagesVariant} />}
+      {data.awards && data.awards.length > 0 && <Awards data={data.awards} theme={theme} variant={awardsVariant} />}
     </div>
   );
 };
