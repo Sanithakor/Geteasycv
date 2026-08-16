@@ -1,17 +1,6 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import "./globals.css";
 import "../styles/enhanced.css";
-
-// ── Fonts ────────────────────────────────────────────────────────────────────
-// Single global Roboto font loader for Turbopack & Next.js
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
-  display: "swap",
-  variable: "--font-roboto",
-  fallback: ["system-ui", "sans-serif"],
-});
 
 export const metadata: Metadata = {
   title: "GetEasyCV - Professional Resume Builder",
@@ -42,9 +31,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${roboto.variable}`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-slate-50 font-roboto">{children}</body>
     </html>
   );
