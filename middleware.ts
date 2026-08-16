@@ -1,10 +1,12 @@
 /**
- * Next.js Server-Side Proxy Middleware
- * Verifies JWT tokens on server-side, enforces Coming Soon Mode, and manages role-based access control.
+ * Next.js Edge Middleware (Compatible with Cloudflare Workers & Cloudflare Pages)
+ * Verifies JWT tokens using Web Crypto (jose) on the Edge.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
+
+export const runtime = 'experimental-edge';
 
 // Protected user routes
 const protectedRoutes = [
@@ -27,17 +29,18 @@ const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
 const comingSoonAllowed = ['/coming-soon', '/login', '/signup', '/forgot-password', '/reset-password'];
 
 /**
- * Cryptographically verify JWT token from HTTP cookie or Bearer header
+ * Cryptographically verify JWT token from HTTP cookie or Bearer header on Edge
  */
 async function verifyAuthToken(request: NextRequest) {
   try {
     const token =
       request.cookies.get('auth-token')?.value ||
+      request.cookies.get('token')?.value ||
       request.headers.get('Authorization')?.replace('Bearer ', '');
 
     if (!token) return null;
 
-    const secretKey = process.env.JWT_SECRET || 'fallback-secret-for-dev-environment-12345';
+    const secretKey = process.env.JWT_SECRET || 'your-secret-key-here-change-in-production';
     const secret = new TextEncoder().encode(secretKey);
 
     const { payload } = await jwtVerify(token, secret);
@@ -47,13 +50,13 @@ async function verifyAuthToken(request: NextRequest) {
   }
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const authPayload = await verifyAuthToken(request);
   const isAdmin = authPayload?.role === 'admin' || authPayload?.userId === 'mock-admin-id';
 
-  // Check Coming Soon Mode state (Default: active pre-launch unless disabled via admin cookie/header flag)
-  const isComingSoonActive = request.cookies.get('coming_soon_mode')?.value !== 'false';
+  // Check Coming Soon Mode state
+  const isComingSoonActive = request.cookies.get('coming_soon_mode')?.value === 'true';
 
   // 1. Coming Soon Server-Side Enforcement (for non-admin public visitors)
   if (isComingSoonActive && !isAdmin) {
