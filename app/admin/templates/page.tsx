@@ -143,13 +143,28 @@ export default function AdminTemplatesPage() {
       isPremium: Boolean(t.isPremium ?? (index % 3 === 0)),
       isATS: Boolean(t.isATS ?? true),
       status: index % 5 === 4 ? 'draft' : 'active',
-      usersCount: 500 + (index * 137) % 2450,
-      downloadCount: 1200 + (index * 412) % 6800,
+      usersCount: 0,
+      downloadCount: 0,
       updatedAt: new Date(Date.now() - index * 86400000 * 2).toISOString(),
     }));
 
     setTemplateList(extended);
     localStorage.setItem('admin_managed_templates_v2', JSON.stringify(extended));
+
+    // Fetch live download counts
+    fetch('/api/templates/download')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.counts) {
+          setTemplateList((prev) =>
+            prev.map((tmpl) => ({
+              ...tmpl,
+              downloadCount: data.counts[tmpl.id] ?? tmpl.downloadCount ?? 0,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
   }, [baseTemplates]);
 
   const persistTemplates = (updated: ExtendedTemplate[]) => {

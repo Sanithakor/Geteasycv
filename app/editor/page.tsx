@@ -26,6 +26,7 @@ import ATSAnalyzerModal from '@/components/editor/ATSAnalyzerModal';
 import ShareResumeModal from '@/components/editor/ShareResumeModal';
 import AICoverLetterModal from '@/components/editor/AICoverLetterModal';
 import AIImprovementModal from '@/components/editor/AIImprovementModal';
+import DownloadLimitModal from '@/components/editor/DownloadLimitModal';
 import A4MultiPageContainer from '@/components/cv/A4MultiPageContainer';
 import { useAIAssist } from '@/lib/hooks/useAIAssist';
 
@@ -315,6 +316,8 @@ export default function EditorPage() {
   const [showATSModal, setShowATSModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCoverLetterModal, setShowCoverLetterModal] = useState(false);
+  const [showDownloadLimitModal, setShowDownloadLimitModal] = useState(false);
+  const [downloadLimitModalData, setDownloadLimitModalData] = useState<{ message?: string; redirectUrl?: string }>({});
   const [aiImproveModal, setAiImproveModal] = useState<{
     isOpen: boolean;
     initialText: string;
@@ -837,23 +840,38 @@ export default function EditorPage() {
 
       if (!checkRes.ok || checkData.allowed === false) {
         setIsExporting(false);
-        toast.error('Free account download limit reached (1/1 downloads used). Redirecting to pricing...');
-        setTimeout(() => {
-          window.location.href = checkData.redirectUrl || '/pricing?reason=download_limit';
-        }, 1200);
+        setDownloadLimitModalData({
+          message: checkData.message || checkData.error || 'You have used your 1 free CV download. Upgrade your account to unlock unlimited downloads in PDF, Word, and Image formats.',
+          redirectUrl: checkData.redirectUrl || '/pricing?reason=download_limit',
+        });
+        setShowDownloadLimitModal(true);
         return;
       }
     } catch (checkErr) {
       console.warn('[DOWNLOAD_CHECK_WARN]', checkErr);
     }
 
+    const activeTmplId = customTemplate?.id || (selectedLayout?.id && customTheme?.id ? `${selectedLayout.id}-${customTheme.id}` : selectedLayout?.id) || 'sidebar-left-modern-blue';
+
+    const recordTemplateDownload = () => {
+      if (activeTmplId) {
+        fetch('/api/templates/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ templateId: activeTmplId }),
+        }).catch(() => {});
+      }
+    };
+
     try {
       if (type === 'txt') {
         exportAsTxt(cvData);
+        recordTemplateDownload();
         return;
       }
       if (type === 'docx') {
         exportAsDocx(cvData);
+        recordTemplateDownload();
         return;
       }
       const canvas = await exportCanvas();
@@ -881,14 +899,7 @@ export default function EditorPage() {
         }
         pdf.save(fileName(cvData, 'pdf'));
         toast.success('PDF downloaded successfully!', { id: 'pdf' });
-
-        if (selectedTemplate?.id) {
-          fetch('/api/templates/download', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ templateId: selectedTemplate.id }),
-          }).catch(() => {});
-        }
+        recordTemplateDownload();
       } else {
         toast.loading(`Generating ${type.toUpperCase()}...`, { id: 'image' });
         const link = document.createElement('a');
@@ -898,14 +909,7 @@ export default function EditorPage() {
         link.click();
         document.body.removeChild(link);
         toast.success(`${type.toUpperCase()} downloaded successfully!`, { id: 'image' });
-
-        if (selectedTemplate?.id) {
-          fetch('/api/templates/download', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ templateId: selectedTemplate.id }),
-          }).catch(() => {});
-        }
+        recordTemplateDownload();
       }
     } catch (error) {
       console.error('Export failed:', error);
@@ -2097,6 +2101,14 @@ export default function EditorPage() {
           aiImproveModal.onAccept(newText);
           setAiImproveModal(prev => ({ ...prev, isOpen: false }));
         }}
+      />
+
+      {/* Download Limit & Upgrade Modal */}
+      <DownloadLimitModal
+        isOpen={showDownloadLimitModal}
+        onClose={() => setShowDownloadLimitModal(false)}
+        message={downloadLimitModalData.message}
+        redirectUrl={downloadLimitModalData.redirectUrl}
       />
       
       {/* Hidden container for PDF export rendering without scroll interference */}

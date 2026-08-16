@@ -29,8 +29,8 @@ const convertToLegacyFormat = (template: GeneratedTemplate): LegacyTemplate => (
       .filter(([_, value]) => value)
       .map(([key, value]) => `${key}: ${value}`),
   ],
-  rating: 4.5 + Math.random() * 0.5,
-  downloads: 100 + Math.floor(Math.random() * 900),
+  rating: 5.0,
+  downloads: 0,
 });
 
 // Get all templates (legacy format)

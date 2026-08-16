@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Star, ArrowRight, Download, CheckCircle2, Sparkles } from "lucide-react";
 import { generateTemplates, GeneratedTemplate } from "@/lib/generateTemplates";
 import { sampleCV } from "@/data/sampleCV";
+import { formatDownloadCount } from "@/lib/templateStatsStore";
 import TemplateRenderer from "@/components/cv/TemplateRenderer";
 
 /**
@@ -53,8 +54,18 @@ function DynamicTemplatePreview({ template }: { template: GeneratedTemplate }) {
 
 export default function TemplateShowcase() {
   const [displayedTemplates, setDisplayedTemplates] = useState<GeneratedTemplate[]>([]);
+  const [downloadCounts, setDownloadCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    fetch('/api/templates/download')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.counts) {
+          setDownloadCounts(data.counts);
+        }
+      })
+      .catch(() => {});
+
     const allTemplates = generateTemplates();
     
     // Pick 3 distinct layout categories for maximum visual variety
@@ -166,7 +177,9 @@ export default function TemplateShowcase() {
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-500">
                     <Download className="w-3.5 h-3.5 text-indigo-500" />
-                    <span className="font-semibold text-slate-700">1.5k+ Uses</span>
+                    <span className="font-semibold text-slate-700">
+                      {formatDownloadCount(downloadCounts[template.id] || 0)} Downloads
+                    </span>
                   </div>
                 </div>
               </div>
