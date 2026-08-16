@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const { planId = 'pro', successUrl, cancelUrl } = body;
 
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
     if (!stripeSecretKey) {
       console.warn('[STRIPE_NOT_CONFIGURED] Stripe Secret Key missing. Simulating checkout session:');

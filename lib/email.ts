@@ -62,7 +62,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string) {
       <h2 style="color: #0f172a;">Welcome to GetEasyCV, ${userName}! 👋</h2>
       <p>Thank you for creating an account with GetEasyCV. You now have access to our ATS-friendly resume templates, real-time builder, and PDF exports.</p>
       <div style="margin: 30px 0;">
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" style="background-color: #0f172a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Go to Dashboard</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com'}/dashboard" style="background-color: #0f172a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Go to Dashboard</a>
       </div>
       <p style="font-size: 12px; color: #94a3b8;">If you didn't create this account, please ignore this email.</p>
     </div>
@@ -74,7 +74,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string) {
  * Send Password Reset Link Email
  */
 export async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com'}/reset-password?token=${resetToken}`;
   const subject = 'Reset Your GetEasyCV Password';
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #334155;">
@@ -107,7 +107,7 @@ export async function sendPaymentSuccessEmail(toEmail: string, planName: string,
         </ul>
       </div>
       <div style="margin: 30px 0;">
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/editor" style="background-color: #7c3aed; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Open Resume Editor</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com'}/editor" style="background-color: #7c3aed; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Open Resume Editor</a>
       </div>
     </div>
   `;
@@ -128,7 +128,7 @@ export async function sendSubscriptionNoticeEmail(toEmail: string, type: 'cancel
         ? 'Your GetEasyCV Pro subscription has been cancelled. You will continue to have access until the end of your current billing period.' 
         : 'Your GetEasyCV Pro subscription is expiring soon. Renew now to maintain unlimited PDF downloads and AI features.'}</p>
       <div style="margin: 30px 0;">
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pricing" style="background-color: #0f172a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Plans</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com'}/pricing" style="background-color: #0f172a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Plans</a>
       </div>
     </div>
   `;

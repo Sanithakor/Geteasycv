@@ -1,6 +1,6 @@
 /**
  * Next.js Server-Side Proxy Middleware
- * Verifies JWT tokens on server-side and enforces role-based access control
+ * Verifies JWT tokens on server-side, enforces Coming Soon Mode, and manages role-based access control.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,6 +22,9 @@ const adminRoutes = ['/admin'];
 
 // Guest-only auth routes
 const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
+
+// Allowed public routes during Coming Soon Mode
+const comingSoonAllowed = ['/coming-soon', '/login', '/signup', '/forgot-password', '/reset-password'];
 
 /**
  * Cryptographically verify JWT token from HTTP cookie or Bearer header
@@ -46,19 +49,22 @@ async function verifyAuthToken(request: NextRequest) {
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const authPayload = await verifyAuthToken(request);
+  const isAdmin = authPayload?.role === 'admin' || authPayload?.userId === 'mock-admin-id';
 
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
-  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+  // Check Coming Soon Mode state (Default: active pre-launch unless disabled via admin cookie/header flag)
+  const isComingSoonActive = request.cookies.get('coming_soon_mode')?.value !== 'false';
 
-  // Skip checks for static/public assets or non-protected pages
-  if (!isProtectedRoute && !isAdminRoute && !isAuthRoute) {
-    return NextResponse.next();
+  // 1. Coming Soon Server-Side Enforcement (for non-admin public visitors)
+  if (isComingSoonActive && !isAdmin) {
+    const isAllowed = comingSoonAllowed.some((route) => pathname.startsWith(route));
+    if (!isAllowed) {
+      return NextResponse.redirect(new URL('/coming-soon', request.url));
+    }
   }
 
-  const authPayload = await verifyAuthToken(request);
-
-  // 1. Protect Admin Routes
+  // 2. Protect Admin Routes
+  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
   if (isAdminRoute) {
     if (!authPayload) {
       const loginUrl = new URL('/login', request.url);
@@ -70,7 +76,6 @@ export async function proxy(request: NextRequest) {
       return response;
     }
 
-    const isAdmin = authPayload.role === 'admin' || authPayload.userId === 'mock-admin-id';
     if (!isAdmin) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
@@ -78,7 +83,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Protect Authenticated User Routes
+  // 3. Protect Authenticated User Routes
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
   if (isProtectedRoute) {
     if (!authPayload) {
       const loginUrl = new URL('/login', request.url);
@@ -92,11 +98,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Guest-only routes: Redirect authenticated users away from Login/Signup to Dashboard
+  // 4. Guest-only routes: Redirect authenticated users to Dashboard or Admin
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
   if (isAuthRoute && authPayload) {
-    const destination = (authPayload.role === 'admin' || authPayload.userId === 'mock-admin-id')
-      ? '/admin'
-      : '/dashboard';
+    const destination = isAdmin ? '/admin' : '/dashboard';
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
@@ -105,13 +110,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for:
-     * - api (API routes handle their own auth checks)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, logo.png, images
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|public).*)',
   ],
 };

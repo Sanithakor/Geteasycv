@@ -6,7 +6,7 @@
 import type { ApiResponse, PaginatedResponse } from '../../types';
 
 const getApiBaseUrl = () => {
-  let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  let url = process.env.NEXT_PUBLIC_API_URL || 'https://geteasycv.com';
   url = url.replace(/['"]/g, '');
   if (url.endsWith('/')) {
     url = url.slice(0, -1);

@@ -142,30 +142,21 @@ export default function SignupPage() {
     setIsGoogleLoading(true);
     setFormError('');
     try {
-      const res = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          googleUser: {
-            email: 'alex.google@example.com',
-            name: 'Alex Johnson',
-          },
-        }),
-      });
+      const { triggerGoogleSignIn } = await import('@/lib/auth/googleAuth');
+      const result = await triggerGoogleSignIn();
 
-      if (res.ok) {
-        const data = await res.json();
+      if (result.success && result.user) {
         useAuthStore.setState({
-          user: data.user,
-          token: data.token,
+          user: result.user,
+          token: result.token,
           isAuthenticated: true,
         });
-        const targetPath = data.user?.role === 'admin' ? '/admin' : '/dashboard';
+        const targetPath = result.user?.role === 'admin' ? '/admin' : '/dashboard';
         router.push(targetPath);
       } else {
-        setFormError('Google sign up failed');
+        setFormError(result.error || 'Google sign up failed');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Google Auth Error:', err);
       setFormError('Failed to sign up with Google');
     } finally {

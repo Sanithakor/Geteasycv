@@ -19,7 +19,7 @@ interface AuthState {
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
-  loginWithGoogle: (token: string) => Promise<void>;
+  loginWithGoogle: (googlePayload: string | { credential?: string; accessToken?: string; googleUser?: any }) => Promise<any>;
   loginWithGithub: (token: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
@@ -38,7 +38,7 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return '/api';
   }
-  let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  let url = process.env.NEXT_PUBLIC_API_URL || 'https://geteasycv.com';
   url = url.replace(/['"]/g, '');
   if (url.endsWith('/')) {
     url = url.slice(0, -1);
@@ -143,17 +143,19 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // Login with Google OAuth
-      loginWithGoogle: async (token: string) => {
+      loginWithGoogle: async (googlePayload: string | { credential?: string; accessToken?: string; googleUser?: any }) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await fetch(`${API_BASE_URL}/auth/google`, {
+          const body = typeof googlePayload === 'string' ? { credential: googlePayload } : googlePayload;
+          const response = await fetch('/api/auth/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token }),
+            body: JSON.stringify(body),
           });
 
           if (!response.ok) {
-            throw new Error('Google login failed');
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || 'Google login failed');
           }
 
           const data: AuthResponse = await response.json();

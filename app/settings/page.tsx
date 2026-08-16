@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import UserLayout from '@/components/layout/UserLayout';
-import { Settings, Lock, Bell, Save, CheckCircle2 } from 'lucide-react';
+import { Settings, Lock, Bell, Save, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function UserSettingsPage() {
   const [passwords, setPasswords] = useState({
@@ -16,17 +16,49 @@ export default function UserSettingsPage() {
     weeklyDigest: false,
     productUpdates: true,
   });
+  const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+
     if (passwords.newPassword !== passwords.confirmPassword) {
-      alert('Passwords do not match');
+      setErrorMsg('New passwords do not match');
       return;
     }
-    setSuccessMsg('Password updated successfully!');
-    setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setTimeout(() => setSuccessMsg(''), 3000);
+
+    if (passwords.newPassword.length < 8) {
+      setErrorMsg('Password must be at least 8 characters long');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/users/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSuccessMsg('Password updated successfully!');
+        setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setTimeout(() => setSuccessMsg(''), 4000);
+      } else {
+        setErrorMsg(data.error || 'Failed to update password.');
+      }
+    } catch (err) {
+      setErrorMsg('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -42,9 +74,16 @@ export default function UserSettingsPage() {
           </p>
         </div>
 
+        {errorMsg && (
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded-md flex items-center gap-3 text-rose-700 text-sm font-semibold">
+            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
         {successMsg && (
           <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md flex items-center gap-3 text-emerald-700 text-sm font-semibold">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}

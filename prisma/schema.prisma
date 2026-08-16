@@ -684,6 +684,7 @@ model SystemConfig {
   
   // Settings
   maintenanceMode       Boolean   @default(false)
+  comingSoonMode        Boolean   @default(true)
   registrationOpen      Boolean   @default(true)
   
   // Limits
@@ -696,4 +697,10 @@ model SystemConfig {
   enableSocialShare     Boolean   @default(true)
   
   updatedAt             DateTime  @updatedAt
+}
+
+model Waitlist {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

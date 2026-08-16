@@ -25,6 +25,7 @@ import SaveTemplateModal from '@/components/editor/SaveTemplateModal';
 import ATSAnalyzerModal from '@/components/editor/ATSAnalyzerModal';
 import ShareResumeModal from '@/components/editor/ShareResumeModal';
 import AICoverLetterModal from '@/components/editor/AICoverLetterModal';
+import AIImprovementModal from '@/components/editor/AIImprovementModal';
 import A4MultiPageContainer from '@/components/cv/A4MultiPageContainer';
 import { useAIAssist } from '@/lib/hooks/useAIAssist';
 
@@ -314,6 +315,17 @@ export default function EditorPage() {
   const [showATSModal, setShowATSModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCoverLetterModal, setShowCoverLetterModal] = useState(false);
+  const [aiImproveModal, setAiImproveModal] = useState<{
+    isOpen: boolean;
+    initialText: string;
+    fieldName: string;
+    onAccept: (newText: string) => void;
+  }>({
+    isOpen: false,
+    initialText: '',
+    fieldName: '',
+    onAccept: () => {},
+  });
   const [showExportDropdown, setShowExportDropdown] = useState(false);
   const [lastSavedTime, setLastSavedTime] = useState<string | null>('Just now');
   const [resumeId, setResumeId] = useState<string | null>(null);
@@ -2054,6 +2066,19 @@ export default function EditorPage() {
         defaultJobTitle={cvData.personal.title || ''}
         candidateName={`${cvData.personal.firstName || ''} ${cvData.personal.lastName || ''}`.trim() || 'Job Seeker'}
         skills={cvData.skills?.map(s => s.name) || []}
+      />
+
+      {/* AI Resume Improvement Modal */}
+      <AIImprovementModal
+        isOpen={aiImproveModal.isOpen}
+        onClose={() => setAiImproveModal(prev => ({ ...prev, isOpen: false }))}
+        initialText={aiImproveModal.initialText}
+        fieldName={aiImproveModal.fieldName}
+        jobTitle={cvData.personal.title || ''}
+        onAccept={(newText) => {
+          aiImproveModal.onAccept(newText);
+          setAiImproveModal(prev => ({ ...prev, isOpen: false }));
+        }}
       />
       
       {/* Hidden container for PDF export rendering without scroll interference */}

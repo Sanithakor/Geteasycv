@@ -90,18 +90,86 @@ export default function HeroNew() {
                   <div className="text-xs font-medium text-slate-500">Resume Editor</div>
                 </div>
 
-                {/* Mock Content */}
-                <div className="space-y-3">
-                  <div className="h-8 bg-gradient-to-r from-slate-200 to-slate-100 rounded-lg w-3/4"></div>
-                  <div className="h-4 bg-slate-100 rounded w-full"></div>
-                  <div className="h-4 bg-slate-100 rounded w-5/6"></div>
-                  <div className="h-4 bg-slate-100 rounded w-4/6"></div>
-                  
-                  <div className="pt-3 space-y-2">
-                    <div className="h-6 bg-purple-100 rounded w-1/2"></div>
-                    <div className="h-3 bg-slate-100 rounded w-full"></div>
-                    <div className="h-3 bg-slate-100 rounded w-full"></div>
-                    <div className="h-3 bg-slate-100 rounded w-3/4"></div>
+                {/* Mock Content: Purple Sidebar Reference Resume Preview */}
+                <div className="rounded-xl overflow-hidden shadow-sm border border-purple-100 bg-white grid grid-cols-[135px_1fr] sm:grid-cols-[165px_1fr] text-left">
+                  {/* Left Column (Purple Sidebar) */}
+                  <div className="bg-[#8B5CF6] text-white p-3 sm:p-4 flex flex-col items-center text-center select-none">
+                    <img 
+                      src="/default-avatar.jpg" 
+                      alt="Sarah Johnson" 
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/90 object-cover shadow-sm mb-2 mt-0.5" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop';
+                      }}
+                    />
+                    <h3 className="text-xs sm:text-sm font-extrabold text-white leading-tight">Sarah Johnson</h3>
+                    <p className="text-[8px] sm:text-[9.5px] text-purple-100 font-medium mt-0.5 leading-snug">Senior Full Stack Engineer</p>
+
+                    <div className="w-full text-left mt-3 pt-2 border-t border-white/20">
+                      <h4 className="text-[7.5px] sm:text-[8.5px] font-extrabold text-white uppercase tracking-wider mb-1.5">CONTACT</h4>
+                      <div className="space-y-1 text-[7px] sm:text-[8px] text-white/90 font-normal leading-tight break-all">
+                        <p className="truncate">sarah.johnson@email.com</p>
+                        <p>+1 (555) 123-4567</p>
+                        <p>San Francisco, CA</p>
+                        <p className="truncate">https://sarahjohnson.dev</p>
+                        <p className="truncate">https://linkedin.com/in/sarahjohnson</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column (White Content Area) */}
+                  <div className="p-3 sm:p-4 space-y-2.5 bg-white text-left select-none">
+                    {/* Section 1: Professional Summary */}
+                    <div>
+                      <h4 className="text-[9px] sm:text-[10px] font-extrabold text-[#8B5CF6] uppercase tracking-wider mb-1">
+                        PROFESSIONAL SUMMARY
+                      </h4>
+                      <p className="text-[7px] sm:text-[8px] text-slate-700 leading-relaxed">
+                        Results-driven Senior Full Stack Engineer with 8+ years of experience designing, building, and scaling enterprise web applications used by millions of users worldwide. Deep expertise in React, TypeScript, Node.js, and cloud infrastructure. Proven track record of leading cross-functional teams, driving architectural decisions, and delivering measurable business impact. Passionate about clean code, developer experience, and building products that make a real difference.
+                      </p>
+                    </div>
+
+                    {/* Section 2: Experience */}
+                    <div className="pt-0.5">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[10px] font-extrabold text-[#8B5CF6] uppercase tracking-wider mb-1 border-t border-slate-100 pt-2">
+                        <svg className="w-2.5 h-2.5 text-[#8B5CF6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <span>EXPERIENCE</span>
+                      </div>
+
+                      <div>
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-[8px] sm:text-[9px] font-bold text-slate-900">Senior Full Stack Engineer</span>
+                          <span className="text-[7px] sm:text-[7.5px] text-slate-400 font-medium">Mar 2021 - Present</span>
+                        </div>
+                        <div className="flex items-baseline justify-between text-[7.5px] sm:text-[8.5px]">
+                          <span className="font-semibold text-[#8B5CF6]">TechCorp Inc.</span>
+                          <span className="text-slate-400">San Francisco, CA</span>
+                        </div>
+                        <p className="text-[7px] sm:text-[7.5px] text-slate-600 mt-0.5 leading-snug">
+                          Lead engineer on a platform serving 2M+ active users, owning the full product lifecycle from architecture to deployment across web and API layers.
+                        </p>
+                        <ul className="mt-1 space-y-0.5 text-[6.5px] sm:text-[7.5px] text-slate-600 pl-1 leading-tight">
+                          <li className="flex items-start gap-1">
+                            <span className="text-[#8B5CF6] font-bold text-[8px]">•</span>
+                            <span>Reduced average page load time by 42% via code-splitting, lazy loading, and CDN optimization — directly improving user retention by 18%</span>
+                          </li>
+                          <li className="flex items-start gap-1">
+                            <span className="text-[#8B5CF6] font-bold text-[8px]">•</span>
+                            <span>Architected a microservices migration from a monolith, enabling independent deployments and cutting release cycles from 2 weeks to daily</span>
+                          </li>
+                          <li className="flex items-start gap-1">
+                            <span className="text-[#8B5CF6] font-bold text-[8px]">•</span>
+                            <span>Led a team of 6 engineers through agile sprints, code reviews, and quarterly OKR planning</span>
+                          </li>
+                          <li className="flex items-start gap-1">
+                            <span className="text-[#8B5CF6] font-bold text-[8px]">•</span>
+                            <span>Introduced infrastructure-as-code using Terraform and GitHub Actions, reducing manual...</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

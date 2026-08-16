@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.LEMONSQUEEZY_API_KEY;
     const storeId = process.env.LEMONSQUEEZY_STORE_ID;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
     if (!apiKey || !storeId) {
       console.warn('[LEMONSQUEEZY_NOT_CONFIGURED] Lemon Squeezy keys not configured. Simulating checkout:');

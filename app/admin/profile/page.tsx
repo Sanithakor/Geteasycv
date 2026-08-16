@@ -15,9 +15,40 @@ export default function AdminProfilePage() {
   });
   const [saved, setSaved] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  const [err, setErr] = useState('');
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaved(false);
+    setErr('');
+
+    if (form.currentPassword || form.newPassword) {
+      if (form.newPassword !== form.confirmPassword) {
+        setErr('New passwords do not match');
+        return;
+      }
+      try {
+        const res = await fetch('/api/users/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currentPassword: form.currentPassword,
+            newPassword: form.newPassword,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          setErr(data.error || 'Failed to update password');
+          return;
+        }
+      } catch (e) {
+        setErr('Failed to update password');
+        return;
+      }
+    }
+
     setSaved(true);
+    setForm(p => ({ ...p, currentPassword: '', newPassword: '', confirmPassword: '' }));
     setTimeout(() => setSaved(false), 3000);
   };
 
@@ -49,6 +80,7 @@ export default function AdminProfilePage() {
       <form onSubmit={handleSave} className="space-y-6">
         <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
           <h2 className="font-semibold text-slate-900 dark:text-white">Account Details</h2>
+          {err && <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-md text-sm">✕ {err}</div>}
           {saved && <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-md text-sm">✓ Changes saved</div>}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>

@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { randomBytes } from 'crypto';
+import { sendPasswordResetEmail } from '@/lib/email';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
@@ -62,8 +63,10 @@ export async function POST(req: Request) {
         },
       });
 
-      // Stub: password reset email is not sent yet, logging token for dev purposes
-      console.log(`[FORGOT_PASSWORD] Reset link: http://localhost:3000/reset-password?token=${token}`);
+      // Dispatch real transactional password reset email
+      await sendPasswordResetEmail(user.email, token).catch((err) => {
+        console.warn('[FORGOT_PASSWORD_EMAIL_WARN]', err);
+      });
     }
 
     return NextResponse.json(

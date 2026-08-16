@@ -6,8 +6,9 @@ const defaultSettings = {
   appName: 'GetEasyCV',
   logo: '/logo.svg',
   favicon: '/favicon.ico',
-  primaryColor: '#2563EB',
+  primaryColor: '#7c3aed',
   maintenanceMode: false,
+  comingSoonMode: true,
   registrationOpen: true,
   maxUploadSize: 10485760,
   enableAI: true,
@@ -56,13 +57,14 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     try {
-      const updated = await prisma.systemConfig.upsert({
+      const updated = await (prisma.systemConfig as any).upsert({
         where: { id: 'system' },
         update: {
           ...(body.appName && { appName: body.appName }),
           ...(body.logo && { logo: body.logo }),
           ...(body.primaryColor && { primaryColor: body.primaryColor }),
           ...(body.maintenanceMode !== undefined && { maintenanceMode: body.maintenanceMode }),
+          ...(body.comingSoonMode !== undefined && { comingSoonMode: body.comingSoonMode }),
           ...(body.registrationOpen !== undefined && { registrationOpen: body.registrationOpen }),
           ...(body.enableAI !== undefined && { enableAI: body.enableAI }),
           ...(body.enableTemplateStore !== undefined && { enableTemplateStore: body.enableTemplateStore }),
@@ -74,6 +76,7 @@ export async function PATCH(req: Request) {
           logo: body.logo || defaultSettings.logo,
           primaryColor: body.primaryColor || defaultSettings.primaryColor,
           maintenanceMode: body.maintenanceMode ?? false,
+          comingSoonMode: body.comingSoonMode ?? true,
           registrationOpen: body.registrationOpen ?? true,
           enableAI: body.enableAI ?? true,
           enableTemplateStore: body.enableTemplateStore ?? true,

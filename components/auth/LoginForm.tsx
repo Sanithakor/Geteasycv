@@ -58,30 +58,21 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
     setIsGoogleLoading(true);
     setLocalError('');
     try {
-      const res = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          googleUser: {
-            email: 'alex.google@example.com',
-            name: 'Alex Johnson',
-          },
-        }),
-      });
+      const { triggerGoogleSignIn } = await import('@/lib/auth/googleAuth');
+      const result = await triggerGoogleSignIn();
 
-      if (res.ok) {
-        const data = await res.json();
+      if (result.success && result.user) {
         useAuthStore.setState({
-          user: data.user,
-          token: data.token,
+          user: result.user,
+          token: result.token,
           isAuthenticated: true,
         });
-        const targetPath = data.user?.role === 'admin' ? '/admin' : redirectTo;
+        const targetPath = result.user?.role === 'admin' ? '/admin' : redirectTo;
         router.push(targetPath);
       } else {
-        setLocalError('Google authentication failed');
+        setLocalError(result.error || 'Google authentication failed');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Google Auth Error:', err);
       setLocalError('Failed to sign in with Google');
     } finally {
