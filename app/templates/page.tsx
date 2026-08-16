@@ -1101,6 +1101,7 @@ function TemplatesContent() {
         )}
       </main>
       <ReadyToBuild />
+
       <Footer />
     </>
   );

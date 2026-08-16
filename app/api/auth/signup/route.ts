@@ -7,8 +7,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword, generateToken, validatePassword, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
-import { createSystemNotification } from '@/lib/notifications';
+import { sendWelcomeEmail } from '@/lib/email';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
+import { createSystemNotification } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   // Apply rate limiting (Max 10 signups per 15 minutes per IP)
@@ -52,19 +53,11 @@ export async function POST(req: Request) {
       );
     }
 
-    let existingUser = null;
-    let isDbAvailable = true;
+    const existingUser = await prisma.user.findUnique({
+      where: { email: sanitized },
+    });
 
-    try {
-      existingUser = await prisma.user.findUnique({
-        where: { email: sanitized },
-      });
-    } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Signup falling back to mock database mode:', dbError);
-      isDbAvailable = false;
-    }
-
-    if (isDbAvailable && existingUser) {
+    if (existingUser) {
       return Response.json(
         { error: 'Email already registered' },
         { status: 409 }
@@ -72,67 +65,46 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await hashPassword(password);
-    let user: any = null;
 
-    if (isDbAvailable) {
-      try {
-        user = await prisma.user.create({
-          data: {
-            email: sanitized,
-            password: hashedPassword,
-            name,
-            subscriptionTier: 'free',
-            role: 'user',
-            profile: {
-              create: {
-                timezone: 'UTC',
-                language: 'en',
-              },
-            },
-            subscription: {
-              create: {
-                plan: 'free',
-                status: 'active',
-                resumes: 3,
-                storage: 100,
-                aiCredits: 10,
-              },
-            },
-          },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatar: true,
-            role: true,
-            subscriptionTier: true,
-          },
-        });
-      } catch (createErr: any) {
-        console.warn('[PRISMA_CREATE_ERROR]', createErr);
-        if (createErr?.code === 'P2002') {
-          return Response.json(
-            { error: 'Email already registered' },
-            { status: 409 }
-          );
-        }
-        isDbAvailable = false;
-      }
-    }
-
-    if (!isDbAvailable || !user) {
-      // Mock user creation fallback when PostgreSQL database is offline
-      user = {
-        id: `mock-user-${Date.now()}`,
+    const user = await prisma.user.create({
+      data: {
         email: sanitized,
-        name: name,
-        avatar: null,
-        role: 'user',
+        password: hashedPassword,
+        name,
         subscriptionTier: 'free',
-      };
-    }
+        role: 'user',
+        profile: {
+          create: {
+            timezone: 'UTC',
+            language: 'en',
+          },
+        },
+        subscription: {
+          create: {
+            plan: 'free',
+            status: 'active',
+            resumes: 3,
+            storage: 100,
+            aiCredits: 10,
+          },
+        },
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        role: true,
+        subscriptionTier: true,
+      },
+    });
 
     const token = await generateToken(user.id);
+
+    // Send transactional welcome email
+    sendWelcomeEmail(user.email, user.name).catch((err) => {
+      console.warn('[WELCOME_EMAIL_ERROR]', err);
+    });
 
     // Dispatch real notification for user registration
     await createSystemNotification({

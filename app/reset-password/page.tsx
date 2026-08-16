@@ -1,165 +1,190 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-export default function ResetPasswordPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center mb-2 group" title="Go to Homepage">
-            <img src="/logo.svg" alt="GetEasyCV" className="h-12 w-auto object-contain" />
-          </Link>
-        </div>
-
-        <React.Suspense fallback={<div className="bg-white rounded-md shadow-lg border border-slate-100 p-8 text-center">Loading...</div>}>
-          <ResetPasswordForm />
-        </React.Suspense>
-      </div>
-    </div>
-  );
-}
+import { Loader2, Eye, EyeOff, CheckCircle2, AlertCircle, ArrowLeft, Lock } from 'lucide-react';
 
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState({ password: '', confirmPassword: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [stage, setStage] = useState<'form' | 'success' | 'error'>('form');
   const [errorMsg, setErrorMsg] = useState('');
-  const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    if (!token) {
-      setErrorMsg('Invalid or missing reset token.');
-    }
-  }, [token]);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorMsg('Passwords do not match.');
-      return;
-    }
-
-    setIsLoading(true);
     setErrorMsg('');
 
+    if (formData.password.length < 8) { setErrorMsg('Password must be at least 8 characters'); return; }
+    if (formData.password !== formData.confirmPassword) { setErrorMsg('Passwords do not match'); return; }
+    if (!token) { setErrorMsg('Invalid or missing reset token. Request a new link.'); return; }
+
+    setIsLoading(true);
     try {
       const res = await fetch('/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, newPassword: password }),
+        body: JSON.stringify({ token, password: formData.password }),
       });
-
-      const data = await res.json();
-      
       if (res.ok) {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push('/login');
-        }, 3000);
+        setStage('success');
+        setTimeout(() => router.push('/login'), 3000);
       } else {
-        throw new Error(data.error || 'Something went wrong. Please try again.');
+        const data = await res.json();
+        setErrorMsg(data?.error || 'Reset failed. The link may have expired.');
+        setStage('error');
       }
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
+    } catch {
+      setErrorMsg('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  if (stage === 'success') {
+    return (
+      <div className="text-center space-y-4 py-3">
+        <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-2xs">
+          <CheckCircle2 className="w-8 h-8" aria-hidden="true" />
+        </div>
+        <div>
+          <h3 className="text-base font-bold text-slate-900">Password updated!</h3>
+          <p className="text-xs text-slate-500 mt-1">Redirecting you to sign in…</p>
+        </div>
+        <Link href="/login" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4F39F6] hover:underline">
+          Go to Sign In now
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-md shadow-lg border border-slate-100 p-8">
-      {success ? (
-        /* ── Success state ─────────────────────────────────── */
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
-            <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Password reset successful</h1>
-          <p className="text-slate-600 text-sm leading-relaxed mb-6">
-            Your password has been successfully updated. Redirecting to login...
-          </p>
-          <Link
-            href="/login"
-            className="inline-block px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-md font-semibold text-sm transition-colors"
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      {!token && (
+        <div className="flex items-start gap-2 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold" role="alert">
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-amber-600" />
+          <span>
+            No reset token found. Please{' '}
+            <Link href="/forgot-password" className="underline font-bold">request a new link</Link>.
+          </span>
+        </div>
+      )}
+
+      {errorMsg && (
+        <div className="flex items-start gap-2 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold" role="alert">
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-rose-600" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      <div className="space-y-1.5">
+        <label htmlFor="password" className="block text-xs font-bold text-slate-700">New Password</label>
+        <div className="relative">
+          <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            required
+            autoComplete="new-password"
+            value={formData.password}
+            onChange={(e) => setFormData((p) => ({ ...p, password: e.target.value }))}
+            placeholder="Min. 8 characters"
+            disabled={isLoading}
+            className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all disabled:opacity-60"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
-            Go to login now
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <label htmlFor="confirmPassword" className="block text-xs font-bold text-slate-700">Confirm New Password</label>
+        <div className="relative">
+          <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirm ? 'text' : 'password'}
+            required
+            autoComplete="new-password"
+            value={formData.confirmPassword}
+            onChange={(e) => setFormData((p) => ({ ...p, confirmPassword: e.target.value }))}
+            placeholder="Repeat new password"
+            disabled={isLoading}
+            className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all disabled:opacity-60"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
+            aria-label={showConfirm ? 'Hide password' : 'Show password'}
+          >
+            {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        </div>
+        {formData.confirmPassword && formData.password === formData.confirmPassword && (
+          <p className="flex items-center gap-1 text-[11px] text-emerald-600 font-semibold mt-1">
+            <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" /> Passwords match
+          </p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isLoading || !token}
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] disabled:opacity-50 text-white font-bold text-sm shadow-md shadow-[#4F39F6]/25 transition-all cursor-pointer mt-2"
+      >
+        {isLoading && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
+        <span>{isLoading ? 'Updating password…' : 'Set New Password'}</span>
+      </button>
+    </form>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 flex flex-col items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="text-center mb-7">
+          <Link href="/" className="inline-flex items-center justify-center mb-3 group cursor-pointer">
+            <span className="text-2xl font-extrabold tracking-tight text-slate-900">
+              Get<span className="text-[#4F39F6]">EasyCV</span>
+            </span>
+          </Link>
+          <h1 className="text-2xl font-black text-slate-900">Set a new password</h1>
+          <p className="mt-1 text-sm text-slate-500 font-medium">Choose a strong password for your account</p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-7">
+          <Suspense fallback={<div className="py-8 text-center text-slate-400 text-xs font-medium">Loading form…</div>}>
+            <ResetPasswordForm />
+          </Suspense>
+        </div>
+
+        <div className="text-center mt-5">
+          <Link href="/login" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#4F39F6] font-bold transition-colors">
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back to Sign In
           </Link>
         </div>
-      ) : (
-        /* ── Form state ────────────────────────────────────── */
-        <>
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-slate-900 mb-1">Create new password</h1>
-            <p className="text-sm text-slate-500">
-              Please enter your new password below.
-            </p>
-          </div>
-
-          {errorMsg && (
-            <div className="mb-4 p-4 rounded-md bg-red-50 border border-red-100 text-sm text-red-600">
-              {errorMsg}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
-                New Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-md border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
-                disabled={isLoading || !token}
-                minLength={8}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-md border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
-                disabled={isLoading || !token}
-                minLength={8}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading || !token}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-md text-sm transition-colors flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Resetting…
-                </>
-              ) : (
-                'Reset password'
-              )}
-            </button>
-          </form>
-        </>
-      )}
+      </div>
     </div>
   );
 }

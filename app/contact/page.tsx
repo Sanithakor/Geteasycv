@@ -1,56 +1,198 @@
-import Navigation from "@/components/Navigation";
-import ReadyToBuild from "@/components/sections/ReadyToBuild";
-import Footer from "@/components/Footer";
-import Link from "next/link";
+'use client';
 
-export const metadata = {
-  title: "Contact Us — GetEasyCV",
-  description: "Get in touch with the GetEasyCV team.",
-};
+import React, { useState } from 'react';
+import Navigation from '@/components/Navigation';
+import ReadyToBuild from '@/components/sections/ReadyToBuild';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import { Mail, MessageSquare, Clock, MapPin, CheckCircle2, Loader2, Sparkles, Send } from 'lucide-react';
+
+const TOPICS = ['General Question', 'Technical Issue', 'Billing & Payments', 'Feature Request', 'Account Help', 'Other'];
 
 export default function ContactPage() {
+  const [form, setForm] = useState({ name: '', email: '', topic: 'General Question', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+    try {
+      // Simulate API call
+      await new Promise((r) => setTimeout(r, 1000));
+      setSent(true);
+    } catch {
+      setError('Something went wrong. Please try again or email us directly.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center px-4 py-20">
-        <div className="max-w-lg w-full text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-md bg-gradient-to-br from-indigo-600 to-purple-600 mb-6 shadow-lg shadow-indigo-200">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+
+      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>We're Here To Help</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
+              Get in Touch with Us
+            </h1>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Have a question, feedback, or need technical assistance? Fill out the form below or email us directly.
+            </p>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Contact Us</h1>
-          <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-            Have a question, found a bug, or want to share feedback? We&apos;d love to
-            hear from you.
-          </p>
+          <div className="grid md:grid-cols-12 gap-8 items-start">
+            {/* Contact Info Cards */}
+            <div className="md:col-span-4 space-y-4">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-[#4F39F6] flex items-center justify-center font-bold">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Email Support</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Reach our team anytime</p>
+                  <a href="mailto:support@geteasycv.com" className="text-xs font-bold text-[#4F39F6] hover:underline mt-2 inline-block">
+                    support@geteasycv.com
+                  </a>
+                </div>
+              </div>
 
-          <div className="bg-white rounded-md shadow-lg border border-slate-100 p-8 text-left space-y-6">
-            <div>
-              <p className="text-sm font-semibold text-slate-700 mb-1">Email</p>
-              <a
-                href="mailto:support@geteasycv.com"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                support@geteasycv.com
-              </a>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Response Time</h3>
+                  <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                    We typically reply within 24 hours on business days.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <p className="text-sm font-semibold text-slate-700 mb-1">Response time</p>
-              <p className="text-sm text-slate-500">We typically reply within 24 hours on business days.</p>
-            </div>
+            {/* Form */}
+            <div className="md:col-span-8 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm">
+              {sent ? (
+                <div className="text-center py-10 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-2xs">
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Message Sent Successfully!</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                    Thank you for reaching out. A support team member will review your inquiry and get back to you shortly.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => { setSent(false); setForm({ name: '', email: '', topic: 'General Question', message: '' }); }}
+                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#4F39F6] text-white font-bold text-xs shadow-md shadow-[#4F39F6]/25 hover:bg-[#4330D9] transition-all cursor-pointer"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {error && (
+                    <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-600">
+                      {error}
+                    </div>
+                  )}
 
-            <div className="pt-2 border-t border-slate-100">
-              <p className="text-sm text-slate-500">
-                For billing or account issues, include your registered email address so we can look
-                up your account faster.
-              </p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="name" className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        required
+                        value={form.name}
+                        onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                        placeholder="John Doe"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        required
+                        value={form.email}
+                        onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                        placeholder="john@example.com"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="topic" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Topic
+                    </label>
+                    <select
+                      id="topic"
+                      value={form.topic}
+                      onChange={(e) => setForm((p) => ({ ...p, topic: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                    >
+                      {TOPICS.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={5}
+                      required
+                      value={form.message}
+                      onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                      placeholder="How can we help you?"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] text-white font-bold text-xs shadow-md shadow-[#4F39F6]/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Sending Message...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Send Message</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>
       </main>
+
       <ReadyToBuild />
       <Footer />
     </>

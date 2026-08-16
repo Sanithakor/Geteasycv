@@ -8,8 +8,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuthStore, useAuthHydrated } from '../../../lib/store/authStore';
-import LoginForm from '../../../components/auth/LoginForm';
+import { useAuthStore, useAuthHydrated } from '@/lib/store/authStore';
+import LoginForm from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
   const router = useRouter();

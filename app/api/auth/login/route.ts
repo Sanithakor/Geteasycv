@@ -91,67 +91,10 @@ export async function POST(req: Request) {
         });
       }
     } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Falling back to default credential verification:', dbError);
-      
-      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@example.com').replace(/['"]/g, '');
-      const adminPassword = (process.env.ADMIN_PASSWORD || 'DemoPassword123').replace(/['"]/g, '');
-      
-      if (sanitized === adminEmail && password === adminPassword) {
-        const token = await generateToken('mock-admin-id');
-        const response = NextResponse.json({
-          success: true,
-          user: {
-            id: 'mock-admin-id',
-            email: adminEmail,
-            name: 'John Admin',
-            avatar: null,
-            role: 'admin',
-            subscriptionTier: 'premium',
-          },
-          token,
-        });
-
-        response.cookies.set('auth-token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-
-        return response;
-      }
-
-      // Default demo user fallback
-      if (sanitized === 'demo@geteasycv.com' || sanitized === 'demo@resumebuilder.local') {
-        const token = await generateToken('mock-user-id');
-        const response = NextResponse.json({
-          success: true,
-          user: {
-            id: 'mock-user-id',
-            email: sanitized,
-            name: 'Demo User',
-            avatar: null,
-            role: 'user',
-            subscriptionTier: 'free',
-          },
-          token,
-        });
-
-        response.cookies.set('auth-token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-
-        return response;
-      }
-
+      console.error('[DATABASE_ERROR] Login query failed:', dbError);
       return Response.json(
-        { error: 'Invalid email or password (database offline)' },
-        { status: 401 }
+        { error: 'Authentication service temporarily unavailable. Please try again.' },
+        { status: 503 }
       );
     }
 

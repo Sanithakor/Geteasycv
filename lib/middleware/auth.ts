@@ -66,34 +66,13 @@ export async function getCurrentUser(auth: AuthPayload | null) {
     });
 
     if (!user) {
-      if (auth.userId.startsWith('mock-')) {
-        return {
-          id: auth.userId,
-          email: auth.userId === 'mock-admin-id' ? 'admin@example.com' : 'user@example.com',
-          name: auth.userId === 'mock-admin-id' ? 'John Admin' : 'Demo User',
-          avatar: null,
-          role: auth.userId === 'mock-admin-id' ? 'admin' : 'user',
-          subscriptionTier: auth.userId === 'mock-admin-id' ? 'premium' : 'free',
-        };
-      }
       console.log('[AUTH] User not found:', auth.userId);
       return null;
     }
 
-    console.log('[AUTH] Current user:', user.email);
     return user;
   } catch (err) {
     console.error('[GET_CURRENT_USER_ERROR]', err);
-    if (auth.userId.startsWith('mock-')) {
-      return {
-        id: auth.userId,
-        email: auth.userId === 'mock-admin-id' ? 'admin@example.com' : 'user@example.com',
-        name: auth.userId === 'mock-admin-id' ? 'John Admin' : 'Demo User',
-        avatar: null,
-        role: auth.userId === 'mock-admin-id' ? 'admin' : 'user',
-        subscriptionTier: auth.userId === 'mock-admin-id' ? 'premium' : 'free',
-      };
-    }
     return null;
   }
 }
@@ -119,10 +98,6 @@ export async function protectRoute(req: Request) {
 export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
   if (!auth) return false;
 
-  if (auth.userId === 'mock-admin-id') {
-    return true;
-  }
-
   try {
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },
@@ -136,8 +111,7 @@ export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
     return isAdmin;
   } catch (err) {
     console.error('[ADMIN_CHECK_ERROR]', err);
-    // When DB is offline, allow mock-admin-id
-    return auth.userId === 'mock-admin-id';
+    return false;
   }
 }
 

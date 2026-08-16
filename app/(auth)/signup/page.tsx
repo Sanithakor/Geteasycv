@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, Eye, EyeOff, UserPlus, Info, Sparkles } from 'lucide-react';
-import { useAuthStore } from '@/lib/store/authStore';
+import { User, Mail, Lock, Eye, EyeOff, UserPlus, Info } from 'lucide-react';
+import { useAuthStore, useAuthHydrated } from '@/lib/store/authStore';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signup, isLoading, error, clearError } = useAuthStore();
+  const isHydrated = useAuthHydrated();
+  const { signup, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +23,14 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formError, setFormError] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (isAuthenticated) {
+      router.push(user?.role === 'admin' ? '/admin' : '/dashboard');
+    }
+  }, [isAuthenticated, user, isHydrated, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -1,63 +1,31 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://geteasycv.com';
-  const lastModified = new Date();
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
-  return [
-    {
-      url: baseUrl,
-      lastModified,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/templates`,
-      lastModified,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/faq`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/refund`,
-      lastModified,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
+  const routes = [
+    '',
+    '/templates',
+    '/pricing',
+    '/about',
+    '/blog',
+    '/contact',
+    '/faq',
+    '/ats-checker',
+    '/cover-letter',
+    '/privacy',
+    '/terms',
+    '/refund',
+    '/cookie-policy',
+    '/help-center',
+    '/reviews',
+    '/resume-examples',
   ];
+
+  return routes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date().toISOString().split('T')[0],
+    changeFrequency: route === '' || route === '/templates' ? 'daily' : 'weekly',
+    priority: route === '' ? 1.0 : route === '/templates' || route === '/pricing' ? 0.9 : 0.7,
+  }));
 }

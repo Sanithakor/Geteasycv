@@ -88,3 +88,50 @@ export async function sendPasswordResetEmail(toEmail: string, resetToken: string
   `;
   return sendEmail({ to: toEmail, subject, html });
 }
+
+/**
+ * Send Payment Success & Pro Subscription Activated Email
+ */
+export async function sendPaymentSuccessEmail(toEmail: string, planName: string, amountPaid: string) {
+  const subject = `Payment Confirmed — GetEasyCV ${planName} Activated! 🎉`;
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #334155;">
+      <h2 style="color: #0f172a;">Payment Successful! 🎉</h2>
+      <p>Thank you for upgrading to <strong>GetEasyCV ${planName}</strong> (${amountPaid}). Your pro subscription is now active!</p>
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+        <p style="margin: 0 0 8px 0; font-weight: bold; color: #0f172a;">Unlocked Features:</p>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Unlimited PDF & Word downloads</li>
+          <li>Access to all premium ATS resume templates</li>
+          <li>AI Resume Assistant & ATS scoring</li>
+        </ul>
+      </div>
+      <div style="margin: 30px 0;">
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/editor" style="background-color: #7c3aed; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Open Resume Editor</a>
+      </div>
+    </div>
+  `;
+  return sendEmail({ to: toEmail, subject, html });
+}
+
+/**
+ * Send Subscription Notice Email (Cancellation / Expiration)
+ */
+export async function sendSubscriptionNoticeEmail(toEmail: string, type: 'cancelled' | 'expiring') {
+  const subject = type === 'cancelled' 
+    ? 'Your GetEasyCV Subscription Has Been Cancelled' 
+    : 'Your GetEasyCV Pro Subscription is Expiring Soon';
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #334155;">
+      <h2 style="color: #0f172a;">Subscription Update</h2>
+      <p>${type === 'cancelled' 
+        ? 'Your GetEasyCV Pro subscription has been cancelled. You will continue to have access until the end of your current billing period.' 
+        : 'Your GetEasyCV Pro subscription is expiring soon. Renew now to maintain unlimited PDF downloads and AI features.'}</p>
+      <div style="margin: 30px 0;">
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pricing" style="background-color: #0f172a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Plans</a>
+      </div>
+    </div>
+  `;
+  return sendEmail({ to: toEmail, subject, html });
+}
+

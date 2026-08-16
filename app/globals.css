@@ -313,3 +313,34 @@ select:focus {
     transform: rotate(360deg);
   }
 }
+
+/* Page Break Utilities */
+.page-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.page-break-avoid {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header, nav, footer, button, .no-print {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
+

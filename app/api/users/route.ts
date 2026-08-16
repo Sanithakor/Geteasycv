@@ -46,7 +46,7 @@ export async function GET(req: Request) {
         orderBy: { createdAt: 'desc' }
       });
 
-      const formatted = dbUsers.map(u => ({
+      const formatted = dbUsers.map((u: typeof dbUsers[number]) => ({
         id: u.id,
         name: u.name,
         email: u.email,

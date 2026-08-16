@@ -1,12 +1,14 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/dashboard', '/my-resumes', '/settings', '/editor', '/profile'],
+      disallow: ['/admin/', '/api/', '/dashboard/'],
     },
-    sitemap: 'https://geteasycv.com/sitemap.xml',
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

@@ -131,6 +131,7 @@ export default function PricingPage() {
           <div className="flex items-center justify-center gap-3 mb-12 sm:mb-16">
             <div className="bg-slate-200/70 p-1 rounded-md inline-flex items-center gap-1 border border-slate-300/50">
               <button
+                type="button"
                 onClick={() => setBillingCycle('monthly')}
                 className={`px-5 py-2 rounded-md text-xs font-bold transition-all cursor-pointer ${
                   billingCycle === 'monthly'
@@ -141,6 +142,7 @@ export default function PricingPage() {
                 Monthly Billing
               </button>
               <button
+                type="button"
                 onClick={() => setBillingCycle('yearly')}
                 className={`px-5 py-2 rounded-md text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   billingCycle === 'yearly'

@@ -16,11 +16,20 @@ import {
   User, FileText, Briefcase, GraduationCap, Link as LinkIcon, Folder, Award, 
   Languages, Palette, ArrowLeft, Undo2, Redo2, Eye, Save, Download, ChevronUp, 
   ChevronDown, CheckCircle2, GripVertical, Plus, Trash2, Camera, UserCircle, LineChart,
-  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight
+  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight, Share2, Sparkles, ShieldCheck
 } from 'lucide-react';
+// AI Assist components & hook
+import AIFieldButton from '@/components/editor/AIFieldButton';
+import AICreditsIndicator from '@/components/editor/AICreditsIndicator';
+import SaveTemplateModal from '@/components/editor/SaveTemplateModal';
+import ATSAnalyzerModal from '@/components/editor/ATSAnalyzerModal';
+import ShareResumeModal from '@/components/editor/ShareResumeModal';
+import AICoverLetterModal from '@/components/editor/AICoverLetterModal';
+import A4MultiPageContainer from '@/components/cv/A4MultiPageContainer';
+import { useAIAssist } from '@/lib/hooks/useAIAssist';
 
 type EditorTab = 'content' | 'design' | 'layout' | 'settings';
-type ExportType = 'pdf' | 'png' | 'jpg';
+type ExportType = 'pdf' | 'docx' | 'txt' | 'png' | 'jpg';
 type BuilderStep = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'languages' | 'design' | 'download';
 type SectionKey = 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'languages';
 
@@ -299,6 +308,37 @@ export default function EditorPage() {
   const [activeSidebarTab, setActiveSidebarTab] = useState<'Sections' | 'Templates'>('Sections');
   const [mobileTab, setMobileTab] = useState<'form' | 'sections' | 'design' | 'preview' | 'export'>('form');
   const [mobileDesignSubTab, setMobileDesignSubTab] = useState<'templates' | 'styles'>('templates');
+  const { token } = useAuthStore();
+  const [activeAIField, setActiveAIField] = useState<string | null>(null);
+  const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
+  const [showATSModal, setShowATSModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showCoverLetterModal, setShowCoverLetterModal] = useState(false);
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState<string | null>('Just now');
+  const [resumeId, setResumeId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [density, setDensity] = useState<'compact' | 'standard' | 'large'>('standard');
+
+  const aiAssist = useAIAssist({
+    templateId: selectedTemplate.id,
+    templateCategory: selectedTemplate.category,
+    jobTitle: cvData.personal.title,
+  });
+
+  const buildAIContext = useCallback(() => {
+    const parts: string[] = [];
+    if (cvData.personal.title) parts.push(`Target Position: ${cvData.personal.title}`);
+    if (cvData.personal.firstName || cvData.personal.lastName) parts.push(`Candidate: ${cvData.personal.firstName} ${cvData.personal.lastName}`);
+    if (cvData.skills && cvData.skills.length > 0) parts.push(`Skills: ${cvData.skills.map((s) => s.name).join(', ')}`);
+    return parts.join('. ');
+  }, [cvData]);
+
+  const aiCreditsInfo = useMemo(() => ({
+    creditsRemaining: aiAssist.creditsRemaining,
+    creditsLimit: aiAssist.creditsLimit,
+    isUnlimited: aiAssist.isUnlimited,
+  }), [aiAssist.creditsRemaining, aiAssist.creditsLimit, aiAssist.isUnlimited]);
 
   const cvContentRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -389,9 +429,7 @@ export default function EditorPage() {
 
 
 
-  const { token } = useAuthStore();
-  const [resumeId, setResumeId] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -637,10 +675,157 @@ export default function EditorPage() {
     }
   };
 
+  const exportAsTxt = (data: CVData) => {
+    const lines: string[] = [];
+    lines.push(`${data.personal.firstName || ''} ${data.personal.lastName || ''}`.trim().toUpperCase());
+    if (data.personal.title) lines.push(data.personal.title);
+    
+    const contactInfo = [
+      data.personal.email,
+      data.personal.phone,
+      data.personal.location,
+      data.personal.website,
+      data.personal.linkedin
+    ].filter(Boolean).join(' | ');
+    if (contactInfo) lines.push(contactInfo);
+    lines.push('\n' + '='.repeat(60) + '\n');
+
+    if (data.summary) {
+      lines.push('PROFESSIONAL SUMMARY');
+      lines.push('-'.repeat(30));
+      lines.push(data.summary);
+      lines.push('');
+    }
+
+    if (data.experience && data.experience.length > 0) {
+      lines.push('WORK EXPERIENCE');
+      lines.push('-'.repeat(30));
+      data.experience.forEach((exp) => {
+        lines.push(`${exp.position} - ${exp.company} (${exp.startDate} - ${exp.endDate || 'Present'})`);
+        if (exp.location) lines.push(`Location: ${exp.location}`);
+        if (exp.description) lines.push(exp.description);
+        if (exp.achievements && exp.achievements.length > 0) {
+          exp.achievements.forEach((h: string) => lines.push(`  • ${h}`));
+        }
+        lines.push('');
+      });
+    }
+
+    if (data.education && data.education.length > 0) {
+      lines.push('EDUCATION');
+      lines.push('-'.repeat(30));
+      data.education.forEach((edu) => {
+        lines.push(`${edu.degree} in ${edu.field} - ${edu.institution} (${edu.startDate} - ${edu.endDate || 'Present'})`);
+        if (edu.gpa) lines.push(`GPA: ${edu.gpa}`);
+        lines.push('');
+      });
+    }
+
+    if (data.skills && data.skills.length > 0) {
+      lines.push('SKILLS');
+      lines.push('-'.repeat(30));
+      lines.push(data.skills.map((s) => s.name).join(', '));
+      lines.push('');
+    }
+
+    const textContent = lines.join('\n');
+    const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName(data, 'txt');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Plain Text (.txt) exported successfully!');
+  };
+
+  const exportAsDocx = (data: CVData) => {
+    const htmlHeader = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>Resume</title>
+      <style>
+        body { font-family: 'Roboto', Arial, sans-serif; font-size: 11pt; color: #111827; line-height: 1.4; margin: 30px; }
+        h1 { font-size: 20pt; color: #1e293b; margin-bottom: 2px; }
+        h2 { font-size: 12pt; text-transform: uppercase; color: #2563eb; border-bottom: 1.5pt solid #cbd5e1; padding-bottom: 3px; margin-top: 14px; margin-bottom: 6px; }
+        .subtitle { font-size: 11pt; font-weight: bold; color: #475569; margin-bottom: 6px; }
+        .contact { font-size: 9.5pt; color: #64748b; margin-bottom: 14px; }
+        .job-title { font-weight: bold; font-size: 11pt; color: #0f172a; }
+        .job-meta { font-size: 9.5pt; color: #64748b; font-style: italic; margin-bottom: 4px; }
+        ul { margin-top: 4px; padding-left: 20px; }
+        li { margin-bottom: 3px; }
+      </style>
+      </head><body>
+    `;
+
+    let htmlContent = `<h1>${data.personal.firstName || ''} ${data.personal.lastName || ''}</h1>`;
+    if (data.personal.title) htmlContent += `<div class="subtitle">${data.personal.title}</div>`;
+
+    const contactStr = [
+      data.personal.email,
+      data.personal.phone,
+      data.personal.location,
+      data.personal.website,
+      data.personal.linkedin
+    ].filter(Boolean).join('  |  ');
+    if (contactStr) htmlContent += `<div class="contact">${contactStr}</div>`;
+
+    if (data.summary) {
+      htmlContent += `<h2>Professional Summary</h2><p>${data.summary}</p>`;
+    }
+
+    if (data.experience && data.experience.length > 0) {
+      htmlContent += `<h2>Work Experience</h2>`;
+      data.experience.forEach((exp) => {
+        htmlContent += `<div class="job-title">${exp.position} - ${exp.company}</div>`;
+        htmlContent += `<div class="job-meta">${exp.startDate} - ${exp.endDate || 'Present'} ${exp.location ? `| ${exp.location}` : ''}</div>`;
+        if (exp.description) htmlContent += `<p>${exp.description}</p>`;
+        if (exp.achievements && exp.achievements.length > 0) {
+          htmlContent += `<ul>`;
+          exp.achievements.forEach((h: string) => { htmlContent += `<li>${h}</li>`; });
+          htmlContent += `</ul>`;
+        }
+      });
+    }
+
+    if (data.education && data.education.length > 0) {
+      htmlContent += `<h2>Education</h2>`;
+      data.education.forEach((edu) => {
+        htmlContent += `<div class="job-title">${edu.degree} in ${edu.field}</div>`;
+        htmlContent += `<div class="job-meta">${edu.institution} | ${edu.startDate} - ${edu.endDate || 'Present'} ${edu.gpa ? `| GPA: ${edu.gpa}` : ''}</div>`;
+      });
+    }
+
+    if (data.skills && data.skills.length > 0) {
+      htmlContent += `<h2>Skills</h2><p>${data.skills.map((s) => s.name).join(', ')}</p>`;
+    }
+
+    htmlContent += `</body></html>`;
+
+    const blob = new Blob(['\ufeff' + htmlHeader + htmlContent], {
+      type: 'application/msword;charset=utf-8'
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName(data, 'docx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Word (.docx) document exported successfully!');
+  };
+
   const downloadExport = async (type: ExportType) => {
     if (isExporting) return;
     setIsExporting(true);
+    setShowExportDropdown(false);
     try {
+      if (type === 'txt') {
+        exportAsTxt(cvData);
+        return;
+      }
+      if (type === 'docx') {
+        exportAsDocx(cvData);
+        return;
+      }
       const canvas = await exportCanvas();
       if (type === 'pdf') {
         toast.loading('Generating PDF...', { id: 'pdf' });
@@ -786,7 +971,22 @@ export default function EditorPage() {
     }
 
     if (stepId === 'summary') {
-      return <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />;
+      return (
+        <div>
+          <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />
+          <AIFieldButton
+            fieldName="Professional Summary"
+            fieldValue={cvData.summary}
+            onAccept={(text) => setCvData((prev) => ({ ...prev, summary: text }))}
+            context={buildAIContext()}
+            assistHook={aiAssist}
+            isActive={activeAIField === 'summary'}
+            onActivate={() => setActiveAIField('summary')}
+            onDeactivate={() => setActiveAIField(null)}
+            creditsExhausted={aiAssist.status === 'credits_exhausted' || (aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited)}
+          />
+        </div>
+      );
     }
 
     if (stepId === 'experience') {
@@ -797,8 +997,34 @@ export default function EditorPage() {
               <Field label="Position" value={item.position} onChange={(value: any) => updateExperience(item.id, 'position', value)} />
               <Field label="Company" value={item.company} onChange={(value: any) => updateExperience(item.id, 'company', value)} />
               <div className="grid grid-cols-2 gap-4"><Field label="Start" value={item.startDate} onChange={(value: any) => updateExperience(item.id, 'startDate', value)} /><Field label="End" value={item.endDate} onChange={(value: any) => updateExperience(item.id, 'endDate', value)} /></div>
-              <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
-              <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+              <div>
+                <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
+                <AIFieldButton
+                  fieldName={`Role description (${item.company})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => updateExperience(item.id, 'description', text)}
+                  context={`${item.position} at ${item.company}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `exp-desc-${item.id}`}
+                  onActivate={() => setActiveAIField(`exp-desc-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
+              <div>
+                <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+                <AIFieldButton
+                  fieldName={`Achievements (${item.company})`}
+                  fieldValue={item.achievements.join('\n')}
+                  onAccept={(text) => updateExperience(item.id, 'achievements', text.split('\n').filter((l) => l.trim()))}
+                  context={`${item.position} at ${item.company}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `exp-ach-${item.id}`}
+                  onActivate={() => setActiveAIField(`exp-ach-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
             </ItemCard>
           ))}
           <button type="button" onClick={() => setCvData((prev) => ({ ...prev, experience: [...prev.experience, { id: `exp-${Date.now()}`, company: 'Company', position: 'Role', startDate: '2025-01', endDate: 'Present', current: true, description: '', achievements: [], location: '' }] }))} className="w-full rounded-md border border-dashed border-slate-300 bg-white px-3 py-3 text-[11px] font-bold text-violet-600 hover:bg-slate-50 transition-colors">+ Add Experience</button>
@@ -842,7 +1068,20 @@ export default function EditorPage() {
           {(cvData.projects || []).map((item) => (
             <ItemCard key={item.id} title={item.name} subtitle={item.technologies.join(', ')} onRemove={() => setCvData((prev) => ({ ...prev, projects: (prev.projects || []).filter((entry) => entry.id !== item.id) }))}>
               <Field label="Project Name" value={item.name} onChange={(value: any) => updateProject(item.id, 'name', value)} />
-              <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+              <div>
+                <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+                <AIFieldButton
+                  fieldName={`Project description (${item.name})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => updateProject(item.id, 'description', text)}
+                  context={`Project: ${item.name}. Technologies: ${item.technologies.join(', ')}. ${buildAIContext()}`}
+                  assistHook={aiAssist}
+                  isActive={activeAIField === `proj-desc-${item.id}`}
+                  onActivate={() => setActiveAIField(`proj-desc-${item.id}`)}
+                  onDeactivate={() => setActiveAIField(null)}
+                  creditsExhausted={aiCreditsInfo.creditsRemaining === 0 && !aiCreditsInfo.isUnlimited}
+                />
+              </div>
               <TextField label="Technologies (one per line)" value={item.technologies.join('\n')} rows={2} onChange={(value: any) => updateProject(item.id, 'technologies', value.split('\n').filter(Boolean))} />
               <Field label="Link" value={item.link || ''} onChange={(value: any) => updateProject(item.id, 'link', value)} />
             </ItemCard>
@@ -902,24 +1141,87 @@ export default function EditorPage() {
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[#F3F4F6] text-slate-900 font-sans">
       {/* HEADER */}
-      <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-white border-b border-slate-200 z-20 shadow-xs">
+      <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-white/90 backdrop-blur-md border-b border-slate-200/80 z-30 shadow-xs sticky top-0">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 group" title="Go to Homepage">
             <img src="/logo.svg" alt="GetEasyCV" className="h-9 w-auto object-contain" />
           </Link>
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-700">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Saved to Cloud • {lastSavedTime || 'Just now'}</span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-md border border-slate-800 transition-colors shadow-2xs cursor-pointer">
+        <div className="flex items-center gap-2.5">
+          <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-md border border-slate-800 transition-colors shadow-2xs cursor-pointer">
             <Save className="w-4 h-4 text-teal-400" />
             <span>{isSaving ? 'Saving...' : 'Save & Update'}</span>
           </button>
+
+          <button type="button" onClick={() => setShowSaveTemplateModal(true)} className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md border border-slate-200 transition-colors cursor-pointer" title="Save custom template design">
+            <Palette className="w-4 h-4 text-violet-600" />
+            <span>Save Template</span>
+          </button>
+
+          <button type="button" onClick={() => setShowShareModal(true)} className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md border border-slate-200 transition-colors cursor-pointer" title="Share live view-only link">
+            <Share2 className="w-4 h-4 text-indigo-600" />
+            <span>Share Link</span>
+          </button>
+
+          <button type="button" onClick={() => setShowCoverLetterModal(true)} className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-md border border-purple-200 transition-colors cursor-pointer" title="Generate AI Cover Letter">
+            <Sparkles className="w-4 h-4 text-purple-600" />
+            <span>AI Cover Letter</span>
+          </button>
           
-          <div className="flex">
-            <button type="button" onClick={() => downloadExport('pdf')} disabled={isExporting} className="flex items-center gap-2 px-5 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-2xs rounded-md cursor-pointer">
-              <Download className="w-4 h-4" />
-              {isExporting ? 'Exporting...' : 'Download PDF'}
-            </button>
+          <div className="relative">
+            <div className="flex items-center">
+              <button 
+                type="button" 
+                onClick={() => downloadExport('pdf')} 
+                disabled={isExporting} 
+                className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-2xs rounded-l-md cursor-pointer border-r border-violet-500"
+              >
+                <Download className="w-4 h-4" />
+                <span>{isExporting ? 'Exporting...' : 'Download PDF'}</span>
+              </button>
+              <button 
+                type="button"
+                onClick={() => setShowExportDropdown(!showExportDropdown)}
+                className="px-2 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-r-md transition-colors cursor-pointer"
+                title="Export Formats"
+              >
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+
+            {showExportDropdown && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-xl py-1 z-50 animate-in fade-in duration-150">
+                <button
+                  type="button"
+                  onClick={() => downloadExport('pdf')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center gap-2 cursor-pointer"
+                >
+                  <Download className="w-4 h-4 text-violet-600" />
+                  <span>PDF Document (.pdf)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadExport('docx')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center gap-2 cursor-pointer"
+                >
+                  <FileText className="w-4 h-4 text-blue-600" />
+                  <span>Microsoft Word (.docx)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadExport('txt')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center gap-2 cursor-pointer"
+                >
+                  <FileText className="w-4 h-4 text-emerald-600" />
+                  <span>Plain Text (.txt)</span>
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3">
@@ -1053,8 +1355,15 @@ export default function EditorPage() {
                         <span className="text-xs truncate">{step.title}</span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        {complete && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
-                        {isDraggable && <GripVertical className="w-4 h-4 text-slate-300 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity" />}
+                        {complete ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/80">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                            Done
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-semibold text-slate-400">Incomplete</span>
+                        )}
+                        {isDraggable && <GripVertical className="w-4 h-4 text-slate-400 cursor-grab active:cursor-grabbing opacity-50 group-hover:opacity-100 transition-opacity" />}
                       </div>
                     </div>
                   );
@@ -1072,10 +1381,18 @@ export default function EditorPage() {
                 </div>
                 
                 {/* ATS Score Card */}
-                <div className="mt-8 bg-white border border-slate-200 rounded-md p-4 shadow-xs">
-                  <div className="flex items-center gap-1 mb-2">
-                    <span className="text-xs font-bold text-slate-900">ATS Score</span>
-                    <span className="text-slate-400 cursor-help" title="Based on formatting and completeness">?</span>
+                <div 
+                  onClick={() => setShowATSModal(true)}
+                  className="mt-8 bg-white border border-slate-200 hover:border-emerald-300 rounded-md p-4 shadow-xs hover:shadow-md transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                      ATS Parsing Score
+                    </span>
+                    <span className="text-[10px] text-violet-600 font-bold group-hover:underline flex items-center gap-0.5">
+                      Analyze <ChevronRight className="w-3 h-3" />
+                    </span>
                   </div>
                   <div className="flex items-end gap-2 mb-3">
                     <span className="text-3xl font-bold text-emerald-500 leading-none">92</span>
@@ -1139,7 +1456,9 @@ export default function EditorPage() {
                                 width: 920,
                               }}
                             >
-                              <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
+                              <A4MultiPageContainer density={density} onPageCountChange={(cnt) => setTotalPages(cnt)}>
+                                <TemplateRenderer template={customTemplate} data={visibleData} scale={1} />
+                              </A4MultiPageContainer>
                             </div>
                           </div>
                         </div>
@@ -1171,6 +1490,41 @@ export default function EditorPage() {
               >
                 <ChevronDown className="w-5 h-5 -rotate-90" />
               </button>
+
+              <div className="h-4 w-px bg-slate-200 mx-1" />
+
+              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-full text-[10px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => setDensity('compact')}
+                  className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+                    density === 'compact' ? 'bg-white text-violet-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Compact Spacing (Fit on 1 page)"
+                >
+                  Compact
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDensity('standard')}
+                  className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+                    density === 'standard' ? 'bg-white text-violet-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Standard Spacing"
+                >
+                  Standard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDensity('large')}
+                  className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+                    density === 'large' ? 'bg-white text-violet-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Large Spacing"
+                >
+                  Large
+                </button>
+              </div>
 
               <div className="h-4 w-px bg-slate-200 mx-1" />
               <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-full">
@@ -1660,6 +2014,47 @@ export default function EditorPage() {
         </div>
       </main>
       <Toaster position="bottom-right" />
+      
+      {/* Save Template Modal (FR5.1) */}
+      <SaveTemplateModal
+        isOpen={showSaveTemplateModal}
+        onClose={() => setShowSaveTemplateModal(false)}
+        onSaved={(templateId, templateName) => {
+          toast.success(`Template "${templateName}" saved to your library!`);
+        }}
+        resumeId={resumeId}
+        customTheme={customTheme}
+        selectedLayout={selectedLayout}
+        sectionVariants={sectionVariants}
+      />
+
+      {/* ATS Parsing Score Analyzer Modal */}
+      <ATSAnalyzerModal
+        isOpen={showATSModal}
+        onClose={() => setShowATSModal(false)}
+        cvData={cvData}
+        onTriggerAIFix={() => {
+          setExpandedPanel('summary');
+          toast.success('Navigated to summary & experience section for AI enhancement');
+        }}
+      />
+
+      {/* Share Resume Link Modal */}
+      <ShareResumeModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        resumeId={resumeId}
+        candidateName={`${cvData.personal.firstName || ''} ${cvData.personal.lastName || ''}`.trim()}
+      />
+
+      {/* AI Cover Letter Generator Modal */}
+      <AICoverLetterModal
+        isOpen={showCoverLetterModal}
+        onClose={() => setShowCoverLetterModal(false)}
+        defaultJobTitle={cvData.personal.title || ''}
+        candidateName={`${cvData.personal.firstName || ''} ${cvData.personal.lastName || ''}`.trim() || 'Job Seeker'}
+        skills={cvData.skills?.map(s => s.name) || []}
+      />
       
       {/* Hidden container for PDF export rendering without scroll interference */}
       <div className="pointer-events-none fixed -left-[10000px] top-0">

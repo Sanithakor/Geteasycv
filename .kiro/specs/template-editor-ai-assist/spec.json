@@ -1,0 +1,12 @@
+{
+  "name": "CV Builder Template Editor + AI Assist",
+  "description": "Add template-driven resume editor with AI-powered field-level content optimization",
+  "status": "requirements",
+  "createdAt": "2026-08-07T00:00:00.000Z",
+  "updatedAt": "2026-08-07T00:00:00.000Z",
+  "version": "1.0",
+  "owner": "user",
+  "priority": "high",
+  "tags": ["template", "editor", "ai", "resume-builder", "content-optimization"],
+  "workflow": "requirements-first"
+}
