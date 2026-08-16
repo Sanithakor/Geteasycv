@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   CheckCircle2,
   Sparkles,
@@ -101,8 +101,10 @@ const FAQS = [
   },
 ];
 
-export default function PricingPage() {
+function PricingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const reason = searchParams.get('reason');
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const handleSelectPlan = async (planId: string) => {
@@ -144,6 +146,13 @@ export default function PricingPage() {
       <Navigation />
       <main className="min-h-screen bg-slate-50 font-sans py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {reason === 'download_limit' && (
+            <div className="max-w-2xl mx-auto mb-8 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2.5 animate-in fade-in duration-200">
+              <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+              <span>You've reached the free account limit (1 download used). Select a plan below to continue downloading your CV!</span>
+            </div>
+          )}
+
           {/* Header Badge */}
           <div className="flex justify-center mb-6">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-bold tracking-wider text-purple-600 uppercase shadow-2xs">
@@ -320,3 +329,16 @@ export default function PricingPage() {
     </>
   );
 }
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500 font-semibold text-sm">
+        Loading pricing options...
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
+  );
+}
+
