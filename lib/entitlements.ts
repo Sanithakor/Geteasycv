@@ -60,6 +60,26 @@ export function canCreateCV(userPayload: any, currentCount: number): { allowed: 
   return { allowed: true };
 }
 
+export function canDownloadCV(userPayload: any, downloadsCompleted: number = 0): { allowed: boolean; redirectUrl?: string; reason?: string } {
+  const entitlements = getUserEntitlements(userPayload);
+
+  // Paid users (Starter, Pro, Lifetime) have unlimited downloads under their active entitlement
+  if (entitlements.isPaid) {
+    return { allowed: true };
+  }
+
+  // Free users are allowed exactly 1 download
+  if (downloadsCompleted >= 1) {
+    return {
+      allowed: false,
+      redirectUrl: '/pricing?reason=download_limit',
+      reason: 'Free tier includes 1 download. Please select a plan to download your CV again.',
+    };
+  }
+
+  return { allowed: true };
+}
+
 export function canUsePremiumTemplate(userPayload: any): boolean {
   return getUserEntitlements(userPayload).canUsePremiumTemplates;
 }

@@ -829,6 +829,24 @@ export default function EditorPage() {
     if (isExporting) return;
     setIsExporting(true);
     setShowExportDropdown(false);
+
+    // Enforce 1-download limit for free users
+    try {
+      const checkRes = await fetch('/api/users/download-count', { method: 'POST' });
+      const checkData = await checkRes.json();
+
+      if (!checkRes.ok || checkData.allowed === false) {
+        setIsExporting(false);
+        toast.error('Free account download limit reached (1/1 downloads used). Redirecting to pricing...');
+        setTimeout(() => {
+          window.location.href = checkData.redirectUrl || '/pricing?reason=download_limit';
+        }, 1200);
+        return;
+      }
+    } catch (checkErr) {
+      console.warn('[DOWNLOAD_CHECK_WARN]', checkErr);
+    }
+
     try {
       if (type === 'txt') {
         exportAsTxt(cvData);

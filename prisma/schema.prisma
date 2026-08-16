@@ -57,6 +57,7 @@ model User {
   notifications         Notification[]
   
   // Metadata
+  downloadCount         Int       @default(0)
   lastLoginAt           DateTime?
   isActive              Boolean   @default(true)
   isBanned              Boolean   @default(false)
