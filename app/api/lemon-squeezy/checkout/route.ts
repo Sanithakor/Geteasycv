@@ -1,43 +1,52 @@
 /**
- * POST /api/lemon-squeezy/checkout - Create Lemon Squeezy Checkout URL
+ * POST /api/lemon-squeezy/checkout
+ * Production-ready server-side checkout creation for Lemon Squeezy
  */
 
 import { NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 
+const ALLOWED_PLANS: Record<string, string | undefined> = {
+  starter: process.env.LEMONSQUEEZY_STARTER_VARIANT_ID,
+  pro: process.env.LEMONSQUEEZY_PRO_VARIANT_ID,
+  lifetime: process.env.LEMONSQUEEZY_LIFETIME_VARIANT_ID,
+};
+
 export async function POST(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!auth?.userId) {
+      return NextResponse.json(
+        { error: 'Authentication required. Please sign in to choose a plan.' },
+        { status: 401 }
+      );
     }
 
     const body = await req.json();
-    const { variantId, plan = 'pro', customRedirectUrl } = body;
+    const requestedPlan = (body.plan || 'pro').toLowerCase();
+
+    if (!['starter', 'pro', 'lifetime'].includes(requestedPlan)) {
+      return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
+    }
 
     const apiKey = process.env.LEMONSQUEEZY_API_KEY;
     const storeId = process.env.LEMONSQUEEZY_STORE_ID;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
+    // Fallback simulation for test environment when API keys are not filled yet
     if (!apiKey || !storeId) {
-      console.warn('[LEMONSQUEEZY_NOT_CONFIGURED] Lemon Squeezy keys not configured. Simulating checkout:');
+      console.warn('[LEMONSQUEEZY_SIMULATION] API keys missing. Simulating checkout for plan:', requestedPlan);
       return NextResponse.json({
         success: true,
         simulated: true,
-        url: `${appUrl}/subscription?status=success&plan=${plan}`,
+        url: `${appUrl}/payment/success?plan=${requestedPlan}&simulated=true`,
       });
     }
 
-    // Determine variant ID (from body or environment variables)
-    const targetVariantId =
-      variantId ||
-      (plan === 'premium'
-        ? process.env.LEMONSQUEEZY_PREMIUM_VARIANT_ID
-        : process.env.LEMONSQUEEZY_PRO_VARIANT_ID);
-
+    const targetVariantId = ALLOWED_PLANS[requestedPlan];
     if (!targetVariantId) {
       return NextResponse.json(
-        { error: 'Lemon Squeezy Variant ID not configured' },
+        { error: `Lemon Squeezy Variant ID for plan '${requestedPlan}' is not configured in environment.` },
         { status: 400 }
       );
     }
@@ -58,17 +67,18 @@ export async function POST(req: Request) {
               email: auth.email || body.email,
               custom: {
                 user_id: auth.userId,
+                plan: requestedPlan,
               },
             },
             product_options: {
-              redirect_url: customRedirectUrl || `${appUrl}/subscription?status=success`,
+              redirect_url: `${appUrl}/payment/success?plan=${requestedPlan}`,
             },
           },
           relationships: {
             store: {
               data: {
                 type: 'stores',
-                id: storeId,
+                id: storeId.toString(),
               },
             },
             variant: {
@@ -97,7 +107,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('[LEMONSQUEEZY_CHECKOUT_ERROR]', error);
     return NextResponse.json(
-      { error: (error as Error).message || 'Internal server error' },
+      { error: (error as Error).message || 'Checkout initialization failed' },
       { status: 500 }
     );
   }

@@ -447,16 +447,25 @@ model Subscription {
   userId                String    @unique
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  plan                  String    // free, pro, premium
+  plan                  String    // free, starter, pro, lifetime
   status                String    @default("active") // active, canceled, expired, paused
   
   // Stripe Integration
   stripeCustomerId      String?
   stripeSubscriptionId  String?
   
-  // Billing
+  // Lemon Squeezy Integration
+  lemonSqueezyCustomerId     String?
+  lemonSqueezySubscriptionId String?
+  lemonSqueezyOrderId        String?
+  lemonSqueezyProductId      String?
+  lemonSqueezyVariantId      String?
+  
+  // Billing & Lifecycle
   currentPeriodStart    DateTime?
   currentPeriodEnd      DateTime?
+  renewsAt              DateTime?
+  endsAt                DateTime?
   canceledAt            DateTime?
   
   // Features
@@ -472,6 +481,7 @@ model Subscription {
   
   @@index([userId])
   @@index([stripeSubscriptionId])
+  @@index([lemonSqueezySubscriptionId])
 }
 
 model Payment {
@@ -479,13 +489,20 @@ model Payment {
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  amount                Int       // in cents
-  currency              String    @default("USD")
+  amount                Int       // in cents / rupees
+  currency              String    @default("INR")
   status                String    @default("pending") // pending, completed, failed, refunded
   
   // Stripe Integration
   stripePaymentId       String?   @unique
   stripeInvoiceId       String?
+  
+  // Lemon Squeezy Integration
+  lemonSqueezyOrderId        String?   @unique
+  lemonSqueezySubscriptionId String?
+  lemonSqueezyVariantId      String?
+  userEmail                  String?
+  orderIdentifier            String?
   
   // Details
   description           String?
@@ -501,6 +518,7 @@ model Payment {
   
   @@index([userId])
   @@index([stripePaymentId])
+  @@index([lemonSqueezyOrderId])
   @@index([status])
 }
 

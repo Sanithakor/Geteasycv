@@ -129,16 +129,32 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-md p-4 shadow-2xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 border border-amber-100/80">
-              <Star className="w-5 h-5" />
+          <div className="bg-white border border-slate-200/80 rounded-md p-4 shadow-2xs flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 border border-purple-100">
+                <Star className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-500">Current Plan</p>
+                <p className="text-sm font-extrabold text-purple-700 capitalize mt-0.5">
+                  {((user as any)?.subscriptionTier || user?.tier || 'Free') === 'lifetime'
+                    ? '✨ Lifetime Access'
+                    : ((user as any)?.subscriptionTier || user?.tier || 'Free') === 'pro'
+                    ? '⚡ Pro Monthly'
+                    : ((user as any)?.subscriptionTier || user?.tier || 'Free') === 'starter'
+                    ? '🎯 Starter'
+                    : 'Free Tier'}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-bold text-slate-500">Subscription</p>
-              <p className="text-sm font-bold text-amber-600 capitalize mt-0.5">
-                {user?.tier || (user as any)?.subscriptionTier || 'Free'}
-              </p>
-            </div>
+            {((user as any)?.subscriptionTier || 'free') === 'free' && (
+              <Link
+                href="/pricing"
+                className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded transition-colors"
+              >
+                Upgrade
+              </Link>
+            )}
           </div>
         </div>
 

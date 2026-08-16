@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
+    "@sentry/nextjs": "^10.70.0",
     "@types/html2canvas": "^0.5.35",
     "axios": "^1.6.5",
     "bcryptjs": "^3.0.3",
