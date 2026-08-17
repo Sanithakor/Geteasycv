@@ -1,12 +1,10 @@
 /**
- * Next.js Edge Middleware (Compatible with Cloudflare Workers & Cloudflare Pages)
- * Verifies JWT tokens using Web Crypto (jose) on the Edge.
+ * Next.js 16 Server-Side Proxy Middleware
+ * Verifies JWT tokens using Web Crypto (jose) on Node.js / Server runtime.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
-
-export const runtime = 'experimental-edge';
 
 // Protected user routes
 const protectedRoutes = [
@@ -50,7 +48,7 @@ async function verifyAuthToken(request: NextRequest) {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const authPayload = await verifyAuthToken(request);
   const isAdmin = authPayload?.role === 'admin' || authPayload?.userId === 'mock-admin-id';
@@ -110,9 +108,3 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|public).*)',
-  ],
-};
