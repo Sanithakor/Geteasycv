@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export const config = {
-  runtime: 'edge',
+  runtime: 'experimental-edge',
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|public).*)',
   ],
