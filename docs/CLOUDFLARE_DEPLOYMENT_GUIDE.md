@@ -24,12 +24,10 @@ Add the following environment variables in your Cloudflare Pages Dashboard under
 | `DATABASE_URL` | `postgresql://...:6543/postgres?pgbouncer=true&connection_limit=1` | Supabase Transaction Pooler (Port 6543) |
 | `DIRECT_URL` | `postgresql://...:5432/postgres` | Supabase Direct Connection (Port 5432) |
 | `JWT_SECRET` | `your_secure_jwt_secret` | HMAC-SHA256 JWT Secret |
-| `LEMONSQUEEZY_API_KEY` | `your_api_key` | Lemon Squeezy Secret API Key |
-| `LEMONSQUEEZY_STORE_ID` | `your_store_id` | Lemon Squeezy Store ID |
-| `LEMONSQUEEZY_WEBHOOK_SECRET` | `your_webhook_secret` | Lemon Squeezy HMAC Webhook Signing Secret |
-| `LEMONSQUEEZY_STARTER_VARIANT_ID` | `your_variant_id` | Starter Variant ID (₹49) |
-| `LEMONSQUEEZY_PRO_VARIANT_ID` | `your_variant_id` | Pro Variant ID (₹199/mo) |
-| `LEMONSQUEEZY_LIFETIME_VARIANT_ID` | `your_variant_id` | Lifetime Variant ID (₹999) |
+| `RAZORPAY_KEY_ID` | `rzp_test_your_key_id` | Razorpay Key ID |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID` | `rzp_test_your_key_id` | Public Razorpay Key ID for Client Checkout Modal |
+| `RAZORPAY_KEY_SECRET` | `your_key_secret` | Razorpay Key Secret for Order Creation & Verification |
+| `RAZORPAY_WEBHOOK_SECRET` | `your_webhook_secret` | Razorpay HMAC Webhook Signing Secret |
 
 ---
 

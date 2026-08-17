@@ -5,13 +5,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
   let isComingSoon = true;
-  try {
-    const config = await (prisma.systemConfig as any).findUnique({ where: { id: 'system' } });
-    if (config && config.comingSoonMode === false) {
-      isComingSoon = false;
+  // Guard Prisma call at build time if DATABASE_URL is not set
+  if (process.env.DATABASE_URL) {
+    try {
+      const config = await (prisma.systemConfig as any).findUnique({ where: { id: 'system' } });
+      if (config && config.comingSoonMode === false) {
+        isComingSoon = false;
+      }
+    } catch (err) {
+      // Default pre-launch state
     }
-  } catch (err) {
-    // Default pre-launch state
   }
 
   if (isComingSoon) {

@@ -58,7 +58,7 @@ function PaymentSuccessContent() {
           Welcome to GetEasyCV {planFormatted}!
         </h1>
         <p className="text-slate-600 text-sm leading-relaxed">
-          Thank you for upgrading. Your transaction has been processed securely via Lemon Squeezy.
+          Thank you for upgrading. Your transaction has been processed securely via Razorpay.
         </p>
       </div>
 

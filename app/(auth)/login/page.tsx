@@ -1,36 +1,38 @@
 /**
  * Login Page
- * User authentication
+ * User authentication with callback URL redirection support
  */
 
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore, useAuthHydrated } from '@/lib/store/authStore';
 import LoginForm from '@/components/auth/LoginForm';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || searchParams.get('redirectTo') || '/dashboard';
   const isHydrated = useAuthHydrated();
   const { isAuthenticated, user } = useAuthStore();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!isHydrated) return;
-    
+
     if (isAuthenticated) {
-      const targetPath = user?.role === 'admin' ? '/admin' : '/dashboard';
+      const targetPath = user?.role === 'admin' ? '/admin' : callbackUrl;
       router.push(targetPath);
     }
-  }, [isAuthenticated, user, isHydrated, router]);
+  }, [isAuthenticated, user, isHydrated, router, callbackUrl]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 sm:p-6">
       {/* Main Card */}
       <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 sm:p-10 my-auto">
-        <LoginForm />
+        <LoginForm redirectTo={callbackUrl} />
       </div>
 
       {/* Legal Footer */}
@@ -45,5 +47,17 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-slate-500 font-semibold text-sm">
+        Loading login...
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

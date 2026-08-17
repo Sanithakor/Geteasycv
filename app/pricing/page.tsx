@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
 import Footer from '@/components/Footer';
@@ -105,7 +105,23 @@ function PricingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason');
+  const autoPlan = searchParams.get('plan');
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [autoCheckoutTriggered, setAutoCheckoutTriggered] = useState(false);
+
+  const loadRazorpayScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
 
   const handleSelectPlan = async (planId: string) => {
     setLoadingPlan(planId);
@@ -116,30 +132,106 @@ function PricingContent() {
 
       if (!authRes.ok || !authData.user) {
         toast.error('Please sign in or create an account to choose a plan.');
-        router.push(`/login?callbackUrl=/pricing`);
+        const targetCallback = encodeURIComponent(`/pricing?plan=${planId}`);
+        router.push(`/login?callbackUrl=${targetCallback}`);
         return;
       }
 
-      // 2. Initialize Lemon Squeezy Checkout
-      const checkoutRes = await fetch('/api/lemon-squeezy/checkout', {
+      // 2. Load Razorpay Checkout Script
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        toast.error('Could not load Razorpay payment gateway. Please check your internet connection.');
+        setLoadingPlan(null);
+        return;
+      }
+
+      // 3. Create Razorpay Order Server-Side
+      const orderRes = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId }),
       });
 
-      const checkoutData = await checkoutRes.json();
+      const orderData = await orderRes.json();
 
-      if (checkoutRes.ok && checkoutData.url) {
-        window.location.href = checkoutData.url;
-      } else {
-        toast.error(checkoutData.error || 'Could not start checkout. Please try again.');
+      if (!orderRes.ok || !orderData.orderId) {
+        toast.error(orderData.error || 'Failed to create payment order. Please try again.');
         setLoadingPlan(null);
+        return;
       }
+
+      // 4. Trigger Razorpay Payment Modal
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency || 'INR',
+        name: 'GetEasyCV',
+        description: `GetEasyCV ${planId.toUpperCase()} Plan Upgrade`,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          toast.loading('Verifying payment...', { id: 'razorpay-verify' });
+          try {
+            const verifyRes = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                plan: planId,
+                isSimulation: orderData.isSimulation,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+
+            if (verifyRes.ok && verifyData.success) {
+              toast.success('Payment verified! Activating plan...', { id: 'razorpay-verify' });
+              router.push(`/payment/success?plan=${planId}`);
+            } else {
+              toast.error(verifyData.error || 'Payment verification failed.', { id: 'razorpay-verify' });
+              setLoadingPlan(null);
+            }
+          } catch (verifyErr) {
+            toast.error('Error verifying payment response.', { id: 'razorpay-verify' });
+            setLoadingPlan(null);
+          }
+        },
+        prefill: {
+          name: authData.user?.name || '',
+          email: authData.user?.email || '',
+        },
+        theme: {
+          color: '#9333ea',
+        },
+        modal: {
+          ondismiss: function () {
+            setLoadingPlan(null);
+          },
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
     } catch (err) {
       toast.error('Network error starting checkout. Please try again.');
       setLoadingPlan(null);
     }
   };
+
+  useEffect(() => {
+    if (autoPlan && !autoCheckoutTriggered) {
+      setAutoCheckoutTriggered(true);
+      fetch('/api/auth/me')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.user) {
+            handleSelectPlan(autoPlan);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [autoPlan, autoCheckoutTriggered]);
 
   return (
     <>
@@ -270,8 +362,8 @@ function PricingContent() {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Lemon Squeezy Security</h4>
-                <p className="text-slate-500 text-xs">Encrypted 256-Bit SSL Checkout</p>
+                <h4 className="font-bold text-slate-900 text-sm">Razorpay Secure Payments</h4>
+                <p className="text-slate-500 text-xs">256-Bit SSL Encrypted PCI-DSS Gateway</p>
               </div>
             </div>
 

@@ -6,7 +6,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, Sparkles, User } from 'lucide-react';
 import { useAuthStore } from '../../lib/store/authStore';
@@ -17,6 +17,8 @@ interface LoginFormProps {
 
 export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const targetRedirect = searchParams.get('callbackUrl') || searchParams.get('redirectTo') || redirectTo;
   const { login, isLoading, error, clearError } = useAuthStore();
 
   const [formData, setFormData] = useState({
@@ -45,7 +47,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       await login(formData.email, formData.password);
       
       const authState = useAuthStore.getState();
-      const targetPath = authState.user?.role === 'admin' ? '/admin' : redirectTo;
+      const targetPath = authState.user?.role === 'admin' ? '/admin' : targetRedirect;
       
       router.push(targetPath);
     } catch (err) {

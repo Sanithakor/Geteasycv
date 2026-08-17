@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import UserLayout from '@/components/layout/UserLayout';
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { CreditCard, Check, Sparkles, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -35,41 +36,14 @@ const PLANS = [
 ];
 
 export default function UserSubscriptionPage() {
+  const router = useRouter();
   const { user, token } = useAuthStore();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const currentTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
-  const handleCheckout = async (planId: string) => {
+  const handleCheckout = (planId: string) => {
     if (planId === 'free') return;
-    setLoadingPlan(planId);
-    toast.loading('Redirecting to checkout...', { id: 'checkout' });
-
-    try {
-      // 1. Try Lemon Squeezy API
-      const res = await fetch('/api/lemon-squeezy/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : '',
-        },
-        body: JSON.stringify({ plan: planId }),
-      });
-
-      const data = await res.json();
-      toast.dismiss('checkout');
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast.success(`Upgraded to ${planId.toUpperCase()} plan!`);
-      }
-    } catch (err) {
-      console.error('[CHECKOUT_ERROR]', err);
-      toast.dismiss('checkout');
-      toast.error('Checkout failed. Please try again.');
-    } finally {
-      setLoadingPlan(null);
-    }
+    router.push('/pricing');
   };
 
   return (

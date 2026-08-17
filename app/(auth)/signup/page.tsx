@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { User, Mail, Lock, Eye, EyeOff, UserPlus, Info } from 'lucide-react';
 import { useAuthStore, useAuthHydrated } from '@/lib/store/authStore';
 
-export default function SignupPage() {
+function SignupContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || searchParams.get('redirectTo') || '/dashboard';
   const isHydrated = useAuthHydrated();
   const { signup, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
 
@@ -28,9 +30,9 @@ export default function SignupPage() {
   useEffect(() => {
     if (!isHydrated) return;
     if (isAuthenticated) {
-      router.push(user?.role === 'admin' ? '/admin' : '/dashboard');
+      router.push(user?.role === 'admin' ? '/admin' : callbackUrl);
     }
-  }, [isAuthenticated, user, isHydrated, router]);
+  }, [isAuthenticated, user, isHydrated, router, callbackUrl]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,7 +44,6 @@ export default function SignupPage() {
     clearError();
   };
 
-  // Calculate password strength (0 to 4)
   const getPasswordStrength = () => {
     const pass = formData.password;
     if (!pass) return 0;
@@ -130,7 +131,7 @@ export default function SignupPage() {
     try {
       await signup(formData.email, formData.password, formData.name);
       const authState = useAuthStore.getState();
-      const targetPath = authState.user?.role === 'admin' ? '/admin' : '/dashboard';
+      const targetPath = authState.user?.role === 'admin' ? '/admin' : callbackUrl;
       router.push(targetPath);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Signup failed';
@@ -151,7 +152,7 @@ export default function SignupPage() {
           token: result.token,
           isAuthenticated: true,
         });
-        const targetPath = result.user?.role === 'admin' ? '/admin' : '/dashboard';
+        const targetPath = result.user?.role === 'admin' ? '/admin' : callbackUrl;
         router.push(targetPath);
       } else {
         setFormError(result.error || 'Google sign up failed');
@@ -168,15 +169,11 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 sm:p-6">
-      {/* Main Card */}
       <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 sm:p-10 my-auto">
-        
-        {/* Top Header Badge */}
         <div className="w-16 h-16 rounded-full bg-[#EEECFF] text-[#4F39F6] flex items-center justify-center mx-auto mb-4 shadow-2xs">
           <UserPlus className="w-7 h-7 text-[#4F39F6]" />
         </div>
 
-        {/* Title & Subtitle */}
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             Create Your <span className="text-[#4F39F6]">Account</span>
@@ -186,16 +183,13 @@ export default function SignupPage() {
           </p>
         </div>
 
-        {/* Error Alert */}
         {(formError || error) && (
           <div className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-600">
             {formError || error}
           </div>
         )}
 
-        {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Full Name Field */}
           <div>
             <label htmlFor="name" className="block text-xs font-bold text-slate-700 mb-1.5">
               Full Name
@@ -215,7 +209,6 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Email Address Field */}
           <div>
             <label htmlFor="email" className="block text-xs font-bold text-slate-700 mb-1.5">
               Email Address
@@ -235,7 +228,6 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Password Field */}
           <div>
             <label htmlFor="password" className="block text-xs font-bold text-slate-700 mb-1.5">
               Password
@@ -261,7 +253,6 @@ export default function SignupPage() {
               </button>
             </div>
 
-            {/* Password Strength Indicator Bar */}
             <div className="mt-2.5">
               <div className="grid grid-cols-4 gap-1.5">
                 {[1, 2, 3, 4].map((step) => (
@@ -285,7 +276,6 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Confirm Password Field */}
           <div>
             <label htmlFor="confirmPassword" className="block text-xs font-bold text-slate-700 mb-1.5">
               Confirm Password
@@ -312,7 +302,6 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Terms & Privacy Checkbox */}
           <div className="pt-1">
             <label className="flex items-start gap-2 cursor-pointer text-xs font-medium text-slate-600 select-none">
               <input
@@ -334,7 +323,6 @@ export default function SignupPage() {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
@@ -344,7 +332,6 @@ export default function SignupPage() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="relative my-5 text-center">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-slate-200" />
@@ -354,7 +341,6 @@ export default function SignupPage() {
           </span>
         </div>
 
-        {/* Google OAuth Button */}
         <button
           type="button"
           onClick={handleGoogleSignup}
@@ -370,11 +356,10 @@ export default function SignupPage() {
           <span>{isGoogleLoading ? 'Connecting...' : 'Sign up with Google'}</span>
         </button>
 
-        {/* Footer Login Link */}
         <div className="mt-6 text-center text-xs text-slate-500 font-medium">
           Already have an account?{' '}
           <Link
-            href="/login"
+            href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}
             className="text-[#4F39F6] font-bold hover:underline"
           >
             Login
@@ -382,5 +367,17 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-slate-500 font-semibold text-sm">
+        Loading signup...
+      </div>
+    }>
+      <SignupContent />
+    </Suspense>
   );
 }

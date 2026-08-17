@@ -455,12 +455,13 @@ model Subscription {
   stripeCustomerId      String?
   stripeSubscriptionId  String?
   
-  // Lemon Squeezy Integration
-  lemonSqueezyCustomerId     String?
-  lemonSqueezySubscriptionId String?
-  lemonSqueezyOrderId        String?
-  lemonSqueezyProductId      String?
-  lemonSqueezyVariantId      String?
+  // Razorpay Integration
+  razorpayOrderId        String?
+  razorpayPaymentId      String?
+  razorpaySignature      String?
+  razorpaySubscriptionId String?
+  razorpayPlanId         String?
+  razorpayCustomerId     String?
   
   // Billing & Lifecycle
   currentPeriodStart    DateTime?
@@ -481,8 +482,9 @@ model Subscription {
   updatedAt             DateTime  @updatedAt
   
   @@index([userId])
-  @@index([stripeSubscriptionId])
-  @@index([lemonSqueezySubscriptionId])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
+  @@index([razorpaySubscriptionId])
 }
 
 model Payment {
@@ -490,20 +492,17 @@ model Payment {
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  amount                Int       // in cents / rupees
+  amount                Int       // in rupees / paise
   currency              String    @default("INR")
   status                String    @default("pending") // pending, completed, failed, refunded
   
-  // Stripe Integration
-  stripePaymentId       String?   @unique
-  stripeInvoiceId       String?
-  
-  // Lemon Squeezy Integration
-  lemonSqueezyOrderId        String?   @unique
-  lemonSqueezySubscriptionId String?
-  lemonSqueezyVariantId      String?
-  userEmail                  String?
-  orderIdentifier            String?
+  // Razorpay Integration
+  razorpayOrderId        String?   @unique
+  razorpayPaymentId      String?   @unique
+  razorpaySignature      String?
+  razorpaySubscriptionId String?
+  userEmail              String?
+  orderIdentifier        String?
   
   // Details
   description           String?
@@ -518,8 +517,8 @@ model Payment {
   updatedAt             DateTime  @updatedAt
   
   @@index([userId])
-  @@index([stripePaymentId])
-  @@index([lemonSqueezyOrderId])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
   @@index([status])
 }
 

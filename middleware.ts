@@ -1,10 +1,12 @@
-/**
- * Next.js 16 Server-Side Proxy Middleware
- * Verifies JWT tokens using Web Crypto (jose) on Node.js / Server runtime.
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
+
+export const config = {
+  runtime: 'edge',
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|public).*)',
+  ],
+};
 
 // Protected user routes
 const protectedRoutes = [
@@ -27,7 +29,7 @@ const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
 const comingSoonAllowed = ['/coming-soon', '/login', '/signup', '/forgot-password', '/reset-password'];
 
 /**
- * Cryptographically verify JWT token from HTTP cookie or Bearer header on Edge
+ * Cryptographically verify JWT token from HTTP cookie or Bearer header on Edge using Web Crypto
  */
 async function verifyAuthToken(request: NextRequest) {
   try {
@@ -48,7 +50,7 @@ async function verifyAuthToken(request: NextRequest) {
   }
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const authPayload = await verifyAuthToken(request);
   const isAdmin = authPayload?.role === 'admin' || authPayload?.userId === 'mock-admin-id';
