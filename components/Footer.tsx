@@ -14,7 +14,7 @@ export default function Footer() {
               <img src="/logo.svg" alt="GetEasyCV" className="h-8 w-auto object-contain" />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Professional resume builder with ATS-friendly templates, custom layouts, and modern themes to help you land your next job faster.
+              aProfessional resume builder with ATS-friendly templates, custom layouts, and modern themes to help you land your next job faster.
             </p>
           </div>
 

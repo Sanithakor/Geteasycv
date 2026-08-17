@@ -21,7 +21,7 @@ export interface Html2CanvasOptions {
   scrollY?: number;
   windowWidth?: number;
   windowHeight?: number;
-}
+}   
 
 // Reusable canvas 2D context for fast color resolution
 let sharedCanvasCtx: CanvasRenderingContext2D | null = null;
