@@ -92,7 +92,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push('/');
   };
 
   const isLinkActive = (href: string) => {

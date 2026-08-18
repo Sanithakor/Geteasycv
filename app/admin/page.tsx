@@ -75,7 +75,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && _hydrated && !isAuthenticated) {
-      router.push('/login');
+      router.push('/?openAuth=login');
       return;
     }
 

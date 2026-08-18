@@ -82,7 +82,7 @@ export async function createSystemNotification(params: {
   };
 
   try {
-    const dbNotif = await (prisma as any).notification.create({
+    const dbNotif = await prisma.notification.create({
       data: {
         title,
         message,
@@ -114,7 +114,7 @@ export async function createSystemNotification(params: {
 
 export async function getSystemNotifications(userId?: string) {
   try {
-    const dbNotifications = await (prisma as any).notification.findMany({
+    const dbNotifications = await prisma.notification.findMany({
       where: userId
         ? {
             OR: [
@@ -141,7 +141,7 @@ export async function markNotificationAsRead(id?: string) {
   if (!id || id === 'all') {
     memoryNotifications = memoryNotifications.map(n => ({ ...n, isRead: true }));
     try {
-      await (prisma as any).notification.updateMany({
+      await prisma.notification.updateMany({
         data: { isRead: true },
       });
     } catch (e) {
@@ -156,7 +156,7 @@ export async function markNotificationAsRead(id?: string) {
   }
 
   try {
-    await (prisma as any).notification.update({
+    await prisma.notification.update({
       where: { id },
       data: { isRead: true },
     });

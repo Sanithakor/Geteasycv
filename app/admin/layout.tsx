@@ -24,7 +24,7 @@ export default function AdminLayout({
   useEffect(() => {
     if (typeof window !== 'undefined' && _hydrated) {
       if (!isAuthenticated) {
-        router.replace('/login');
+        router.replace('/?openAuth=login');
       } else if (user?.role !== 'admin') {
         router.replace('/dashboard');
       }

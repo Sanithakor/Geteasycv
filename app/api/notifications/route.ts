@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     const auth = await getAuthFromRequest(req);
     const notifications = await getSystemNotifications(auth?.userId);
 
-    const unreadCount = notifications.filter((n: any) => !n.isRead).length;
+    const unreadCount = notifications.filter((n) => !n.isRead).length;
 
     return NextResponse.json({
       success: true,

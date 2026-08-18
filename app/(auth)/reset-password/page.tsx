@@ -65,7 +65,7 @@ function ResetPasswordContent() {
       }
 
       setSuccess(true);
-      setTimeout(() => router.push('/login'), 3000);
+      setTimeout(() => router.push('/?openAuth=login'), 3000);
     } catch {
       setError('Unable to connect. Please check your connection and try again.');
     } finally {
@@ -124,7 +124,7 @@ function ResetPasswordContent() {
               Your password has been updated successfully. Redirecting you to login...
             </p>
             <Link
-              href="/login"
+              href="/?openAuth=login"
               className="inline-block py-3 px-6 rounded-xl bg-[#4F39F6] text-white font-bold text-sm hover:bg-[#4330D9] transition-colors"
             >
               Go to Login
@@ -251,7 +251,7 @@ function ResetPasswordContent() {
 
             <div className="mt-6 text-center text-xs text-slate-500 font-medium">
               Remember your password?{' '}
-              <Link href="/login" className="text-[#4F39F6] font-bold hover:underline">
+              <Link href="/?openAuth=login" className="text-[#4F39F6] font-bold hover:underline">
                 Back to Login
               </Link>
             </div>

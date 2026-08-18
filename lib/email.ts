@@ -135,7 +135,7 @@ export async function sendSubscriptionNoticeEmail(toEmail: string, type: 'cancel
   return sendEmail({ to: toEmail, subject, html });
 }
 
-export const sendSubscriptionCancelEmail = (toEmail: string, endDate?: string) =>
+export const sendSubscriptionCancelEmail = (toEmail: string) =>
   sendSubscriptionNoticeEmail(toEmail, 'cancelled');
 
 

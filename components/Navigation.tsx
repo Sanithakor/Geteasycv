@@ -19,7 +19,7 @@ const navItems = [
 ];
 
 /**
- * Small inner component that reads ?openAuth and fires the modal.
+ * Small inner component that reads ?openAuth and ?callbackUrl and fires the modal.
  * Wrapped in Suspense in the parent so pages without Suspense boundaries don't break.
  */
 function OpenAuthWatcher() {
@@ -29,11 +29,17 @@ function OpenAuthWatcher() {
   useEffect(() => {
     const param = searchParams.get('openAuth');
     if (!param) return;
-    if (param === 'signup') openSignup();
-    else openLogin();
-    // Strip the param without a full navigation
+
+    // Respect callbackUrl so post-login redirect goes to the right place
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
+    if (param === 'signup') openSignup(callbackUrl);
+    else openLogin(callbackUrl);
+
+    // Strip auth params from URL without a full navigation
     const url = new URL(window.location.href);
     url.searchParams.delete('openAuth');
+    url.searchParams.delete('callbackUrl');
     window.history.replaceState({}, '', url.toString());
   }, [searchParams, openLogin, openSignup]);
 

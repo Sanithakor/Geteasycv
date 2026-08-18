@@ -57,7 +57,7 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     try {
-      const updated = await (prisma.systemConfig as any).upsert({
+      const updated = await prisma.systemConfig.upsert({
         where: { id: 'system' },
         update: {
           ...(body.appName && { appName: body.appName }),

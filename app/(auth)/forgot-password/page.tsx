@@ -87,7 +87,7 @@ function ForgotPasswordContent() {
               </button>.
             </p>
             <Link
-              href="/login"
+              href="/?openAuth=login"
               className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-950 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -146,7 +146,7 @@ function ForgotPasswordContent() {
 
             <div className="mt-6 text-center">
               <Link
-                href="/login"
+                href="/?openAuth=login"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

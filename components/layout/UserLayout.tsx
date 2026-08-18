@@ -45,7 +45,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !isAuthenticated && _hydrated) {
-      router.replace('/login');
+      router.replace('/?openAuth=login');
     }
   }, [_hydrated, isAuthenticated, router]);
 
@@ -64,7 +64,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push('/');
   };
 
   const isNavActive = (href: string) => {
