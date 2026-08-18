@@ -1,50 +1,30 @@
 /**
  * POST /api/auth/logout
- * Logout current user
- * Clears auth cookie and token
+ * Logout current user — clears the auth cookie.
+ * Does NOT require authentication so it always works even with an expired token.
  */
 
 import { NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/middleware/auth';
 
-export async function POST(req: Request) {
+export async function POST(_req: Request) {
   try {
-    console.log('[LOGOUT] Logging out user...');
-
-    // 1. Verify user is authenticated
-    const auth = await getAuthFromRequest(req);
-    if (!auth) {
-      console.log('[LOGOUT] No authenticated user');
-      return Response.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    console.log('[LOGOUT] Logging out user:', auth.userId);
-
-    // 2. Create response
     const response = NextResponse.json({
       success: true,
       message: 'Logged out successfully',
     });
 
-    // 3. Clear auth cookie
+    // Clear auth cookie immediately
     response.cookies.set('auth-token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 0, // Expires immediately
+      maxAge: 0,
       path: '/',
     });
 
-    console.log('[LOGOUT] User logged out successfully');
     return response;
   } catch (error) {
     console.error('[LOGOUT_ERROR]', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

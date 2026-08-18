@@ -69,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
           const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
 
@@ -109,6 +110,7 @@ export const useAuthStore = create<AuthState>()(
           const response = await fetch(`${API_BASE_URL}/auth/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ email, password, name }),
           });
 
@@ -150,6 +152,7 @@ export const useAuthStore = create<AuthState>()(
           const response = await fetch('/api/auth/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify(body),
           });
 
@@ -159,13 +162,20 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const data: AuthResponse = await response.json();
+          const user = {
+            ...data.user,
+            tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
+          } as User;
+          delete (user as any).subscriptionTier;
+
           set({
-            user: data.user,
+            user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
             _hydrated: true,
           });
+          return { success: true, user, token: data.token };
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Google login failed';
           set({
@@ -214,6 +224,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await fetch(`${API_BASE_URL}/auth/logout`, {
             method: 'POST',
+            credentials: 'include',
           });
         } catch (error) {
           console.error('Logout API call failed:', error);

@@ -21,7 +21,7 @@ export default function UserProfileDropdown() {
   const handleLogout = async () => {
     setOpen(false);
     await logout();
-    router.push('/login');
+    router.push('/');
   };
 
   const dashboardPath = user?.role === 'admin' ? '/admin' : '/dashboard';

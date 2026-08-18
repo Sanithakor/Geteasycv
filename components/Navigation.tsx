@@ -31,7 +31,7 @@ export default function Navigation() {
   const handleLogout = async () => {
     await logout();
     setUserDropdownOpen(false);
-    router.push('/login');
+    router.push('/');
   };
 
   const dashboardPath = user?.role === 'admin' ? '/admin' : '/dashboard';

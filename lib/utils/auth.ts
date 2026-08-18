@@ -37,12 +37,16 @@ export const comparePassword = verifyPassword;
 /**
  * Generate JWT token
  * @param userId - User ID to encode in token
+ * @param role - Optional user role (included so middleware can read it without a DB call)
  * @returns JWT token string
  */
-export async function generateToken(userId: string): Promise<string> {
+export async function generateToken(userId: string, role?: string): Promise<string> {
   const secret = getJWTSecret();
-  
-  const token = await new SignJWT({ userId })
+
+  const payload: Record<string, string> = { userId };
+  if (role) payload.role = role;
+
+  const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('30d')

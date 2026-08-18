@@ -117,7 +117,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = await generateToken(user.id);
+    const token = await generateToken(user.id, user.role);
 
     try {
       await prisma.user.update({
