@@ -32,11 +32,14 @@ export const toTitleCase = (text: string): string => {
 // FORMATTING UTILITIES
 // ============================================
 
-export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
+export const formatCurrency = (amount: number, currency: string = 'INR'): string => {
+  if (currency.toUpperCase() === 'INR' || currency.toUpperCase() === 'RS') {
+    return `₹${Number(amount).toLocaleString('en-IN')}`;
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-  }).format(amount / 100);
+  }).format(amount);
 };
 
 export const formatFileSize = (bytes: number): string => {

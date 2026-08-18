@@ -37,7 +37,7 @@ export default function PaymentsPage() {
     }
   };
 
-  const totalRevenueCents = payments
+  const totalRevenueRupees = payments
     .filter((p) => p.status === 'succeeded' || p.status === 'completed')
     .reduce((s, p) => s + (p.amount || 0), 0);
 
@@ -57,7 +57,7 @@ export default function PaymentsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="rounded-md border border-slate-200 bg-white p-6 shadow-2xs">
           <p className="text-xs font-bold text-slate-400 uppercase">Total Revenue</p>
-          <p className="text-3xl font-bold text-slate-900 mt-1">${(totalRevenueCents / 100).toFixed(2)}</p>
+          <p className="text-3xl font-bold text-slate-900 mt-1">₹{totalRevenueRupees.toLocaleString('en-IN')}</p>
           <p className="text-xs text-slate-500 mt-1">Live payments</p>
         </div>
         <div className="rounded-md border border-slate-200 bg-white p-6 shadow-2xs">
@@ -108,9 +108,9 @@ export default function PaymentsPage() {
                     <td className="px-6 py-4 text-xs font-mono text-slate-700">{p.id}</td>
                     <td className="px-6 py-4 text-xs font-bold text-slate-900">{p.userId || 'User'}</td>
                     <td className="px-6 py-4 font-bold text-slate-900 text-sm">
-                      ${(p.amount / 100).toFixed(2)}
+                      ₹{Number(p.amount || 0).toLocaleString('en-IN')}
                     </td>
-                    <td className="px-6 py-4 text-xs text-slate-600 capitalize">{p.provider || 'Stripe'}</td>
+                    <td className="px-6 py-4 text-xs text-slate-600 capitalize">{p.provider || 'Razorpay'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${STATUS_STYLES[p.status] || 'bg-slate-100 text-slate-600'}`}>
                         {p.status}

@@ -203,7 +203,7 @@ async function getAdminAnalytics(period: string) {
       topTemplates,
     },
     revenue: {
-      total: (payments._sum.amount || 0) / 100, // Convert from cents
+      total: payments._sum.amount || 0, // Amounts stored directly in INR Rupees
     },
   };
 }

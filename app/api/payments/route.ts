@@ -30,9 +30,9 @@ export async function GET(req: Request) {
         id: p.id,
         userId: p.userId,
         amount: p.amount,
-        currency: p.currency,
+        currency: (p.currency || 'inr').toLowerCase(),
         status: p.status,
-        provider: 'stripe',
+        provider: 'razorpay',
         invoiceUrl: p.invoiceUrl || `/invoice/${p.id}.pdf`,
         createdAt: p.createdAt.toISOString(),
       }));
@@ -42,10 +42,10 @@ export async function GET(req: Request) {
         {
           id: 'pay_101',
           userId: auth.userId,
-          amount: 1200,
-          currency: 'usd',
+          amount: 199,
+          currency: 'inr',
           status: 'completed',
-          provider: 'stripe',
+          provider: 'razorpay',
           paymentMethod: 'card',
           invoiceUrl: '/invoice/pay_101.pdf',
           createdAt: new Date().toISOString(),
@@ -71,14 +71,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { amount, currency = 'usd', description = 'Subscription Plan' } = body;
+    const { amount, currency = 'inr', description = 'Subscription Plan' } = body;
 
     let payment: any = null;
     try {
       const created = await prisma.payment.create({
         data: {
           userId: auth.userId,
-          amount: Number(amount) || 1200,
+          amount: Number(amount) || 199,
           currency,
           status: 'completed',
           description,
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
         amount: created.amount,
         currency: created.currency,
         status: created.status,
-        provider: 'stripe',
+        provider: 'razorpay',
         createdAt: created.createdAt.toISOString(),
       };
     } catch (dbErr) {
@@ -98,10 +98,10 @@ export async function POST(req: Request) {
       payment = {
         id: `pay_${Date.now()}`,
         userId: auth.userId,
-        amount: Number(amount) || 1200,
+        amount: Number(amount) || 199,
         currency,
         status: 'completed',
-        provider: 'stripe',
+        provider: 'razorpay',
         createdAt: new Date().toISOString(),
       };
     }
