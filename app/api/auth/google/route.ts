@@ -1,5 +1,5 @@
 /**
- * POST /api/auth/google - Authenticate user via Google OAuth (ID Token or Access Token Verification)
+ * GET & POST /api/auth/google - Authenticate user via Google OAuth (ID Token, Access Token, or Auth Code Verification)
  */
 
 import { NextResponse } from 'next/server';
@@ -20,10 +20,18 @@ interface GoogleProfile {
   email_verified?: boolean | string;
 }
 
+export async function GET() {
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '';
+  return NextResponse.json({
+    clientId,
+    configured: Boolean(clientId),
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { credential, accessToken } = body;
+    const { credential, accessToken, code, redirectUri, demoMode } = body;
 
     let profile: GoogleProfile | null = null;
 
@@ -75,6 +83,61 @@ export async function POST(req: Request) {
       } catch (err) {
         console.error('[GOOGLE_USERINFO_ERROR] Error calling Google userinfo:', err);
       }
+    }
+
+    // 3. Exchange Authorization Code for tokens if code is provided
+    if (!profile && code && typeof code === 'string') {
+      try {
+        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '';
+        const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+        const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: redirectUri || `${appUrl}/api/auth/google/callback`,
+            grant_type: 'authorization_code',
+          }),
+        });
+
+        if (tokenRes.ok) {
+          const tokenData = await tokenRes.json();
+          if (tokenData.access_token) {
+            const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+              headers: { Authorization: `Bearer ${tokenData.access_token}` },
+            });
+
+            if (userinfoRes.ok) {
+              const payload = await userinfoRes.json();
+              if (payload && payload.email) {
+                profile = {
+                  email: payload.email,
+                  name: payload.name || payload.email.split('@')[0],
+                  picture: payload.picture || '',
+                  sub: payload.sub,
+                  email_verified: payload.email_verified,
+                };
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error('[GOOGLE_CODE_EXCHANGE_ERROR]', err);
+      }
+    }
+
+    // 4. Development / Demo Fallback Mode
+    if (!profile && demoMode) {
+      profile = {
+        email: 'google.user@geteasycv.com',
+        name: 'Google User',
+        picture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+        sub: 'google_demo_10001',
+      };
     }
 
     if (!profile || !profile.email) {
@@ -155,7 +218,7 @@ export async function POST(req: Request) {
         name: user.name,
         email: user.email,
         role: user.role || 'user',
-        tier: user.subscriptionTier || 'free',
+        tier: user.subscriptionTier || user.tier || 'free',
         avatar: user.avatar || picture || '',
       },
       token: authToken,

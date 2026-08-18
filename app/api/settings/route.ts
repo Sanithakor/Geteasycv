@@ -1,48 +1,14 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { prisma, safeDbQuery } from '@/lib/db';
 import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
-
-const defaultSettings = {
-  appName: 'GetEasyCV',
-  logo: '/logo.svg',
-  favicon: '/favicon.ico',
-  primaryColor: '#7c3aed',
-  maintenanceMode: false,
-  comingSoonMode: true,
-  registrationOpen: true,
-  maxUploadSize: 10485760,
-  enableAI: true,
-  enableTemplateStore: true,
-  enableSocialShare: true,
-  contactEmail: 'support@geteasycv.com',
-  companyName: 'GetEasyCV Inc.',
-  socialLinks: {
-    twitter: 'https://twitter.com/geteasycv',
-    github: 'https://github.com/geteasycv',
-    linkedin: 'https://linkedin.com/company/geteasycv'
-  }
-};
+import { getSystemSettings, DEFAULT_SYSTEM_SETTINGS } from '@/lib/settings';
 
 export async function GET() {
   try {
-    const config = await prisma.systemConfig.findUnique({
-      where: { id: 'system' }
-    });
-
-    if (config) {
-      return NextResponse.json({
-        success: true,
-        data: {
-          ...defaultSettings,
-          ...config
-        }
-      });
-    }
-
-    return NextResponse.json({ success: true, data: defaultSettings });
-  } catch (error) {
-    console.warn('[SETTINGS_API] Fallback to default settings:', error);
-    return NextResponse.json({ success: true, data: defaultSettings });
+    const settings = await getSystemSettings();
+    return NextResponse.json({ success: true, data: settings });
+  } catch {
+    return NextResponse.json({ success: true, data: DEFAULT_SYSTEM_SETTINGS });
   }
 }
 
@@ -56,8 +22,8 @@ export async function PATCH(req: Request) {
 
     const body = await req.json();
 
-    try {
-      const updated = await prisma.systemConfig.upsert({
+    const updated = await safeDbQuery(async () => {
+      const result = await (prisma as any).systemConfig.upsert({
         where: { id: 'system' },
         update: {
           ...(body.appName && { appName: body.appName }),
@@ -72,23 +38,21 @@ export async function PATCH(req: Request) {
         },
         create: {
           id: 'system',
-          appName: body.appName || defaultSettings.appName,
-          logo: body.logo || defaultSettings.logo,
-          primaryColor: body.primaryColor || defaultSettings.primaryColor,
+          appName: body.appName || DEFAULT_SYSTEM_SETTINGS.appName,
+          logo: body.logo || DEFAULT_SYSTEM_SETTINGS.logo,
+          primaryColor: body.primaryColor || DEFAULT_SYSTEM_SETTINGS.primaryColor,
           maintenanceMode: body.maintenanceMode ?? false,
           comingSoonMode: body.comingSoonMode ?? true,
           registrationOpen: body.registrationOpen ?? true,
           enableAI: body.enableAI ?? true,
           enableTemplateStore: body.enableTemplateStore ?? true,
           enableSocialShare: body.enableSocialShare ?? true,
-        }
+        },
       });
+      return result;
+    }, { ...DEFAULT_SYSTEM_SETTINGS, ...body });
 
-      return NextResponse.json({ success: true, data: updated });
-    } catch (dbErr) {
-      console.warn('[SETTINGS_API] DB update failed, returning modified mock payload:', dbErr);
-      return NextResponse.json({ success: true, data: { ...defaultSettings, ...body } });
-    }
+    return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }

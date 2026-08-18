@@ -9,29 +9,45 @@ import toast from 'react-hot-toast';
 
 const PLANS = [
   {
-    id: 'free',
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    description: 'Essential tools to create your first professional resume.',
-    features: ['3 Resumes', '10 AI Credits / month', 'PDF Export', 'Standard Templates'],
+    id: 'starter',
+    name: 'Starter',
+    price: '₹49',
+    period: 'one-time payment',
+    description: 'Perfect for quick single resume creation.',
+    features: [
+      '1 CV Creation',
+      'High-resolution PDF download',
+      'Access to core templates',
+      'No recurring payment',
+    ],
   },
   {
     id: 'pro',
     name: 'Pro',
-    price: '$12',
+    price: '₹199',
     period: 'per month',
-    description: 'Supercharge your job search with AI optimizations and unlimited downloads.',
-    features: ['Unlimited Resumes', '500 AI Credits / month', 'PDF, PNG, JPG Exports', 'All Premium Templates', 'ATS Resume Match Score'],
+    description: 'For active job seekers looking to maximize interviews.',
+    features: [
+      'Unlimited CVs & Downloads',
+      'All premium templates',
+      'PDF, PNG, JPG Exports',
+      'AI Resume Bullet Rewriter',
+      'Cancel anytime',
+    ],
     popular: true,
   },
   {
-    id: 'premium',
-    name: 'Premium',
-    price: '$29',
-    period: 'per month',
-    description: 'Complete career toolkit with 1-on-1 AI cover letter & LinkedIn generator.',
-    features: ['Everything in Pro', 'Unlimited AI Credits', 'Custom Branding & Domains', 'Priority Support', 'Cover Letter Builder'],
+    id: 'lifetime',
+    name: 'Lifetime',
+    price: '₹999',
+    period: 'one-time payment',
+    description: 'Permanent access for serious career growth.',
+    features: [
+      'Everything in Pro',
+      'Lifetime Unlimited Access',
+      'Future Premium Templates',
+      'Priority Customer Support',
+    ],
   },
 ];
 
@@ -42,8 +58,7 @@ export default function UserSubscriptionPage() {
   const currentTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
   const handleCheckout = (planId: string) => {
-    if (planId === 'free') return;
-    router.push('/pricing');
+    router.push(`/pricing?plan=${planId}`);
   };
 
   return (
