@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Auth Modal Store (Zustand)
+ * Auth Modal Store (Zustand)s
  * Controls the global login/signup modal visibility and active tab.
  */
 
