@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
+import { sendSms } from '@/lib/sms';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 const OTP_EXPIRY_MINUTES = 10;
@@ -168,22 +169,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, message: 'OTP sent to your email.' }, { status: 200 });
     }
 
-    // Phone: no SMS provider — return code in dev, acknowledge in production
-    console.log(`[OTP_PHONE] ${normalized} → ${otp} (${purpose})`);
+    // Deliver SMS OTP
+    const smsResult = await sendSms({
+      to: normalized,
+      otp,
+      message: `Your GetEasyCV verification code is: ${otp}. It expires in ${OTP_EXPIRY_MINUTES} minutes.`,
+    });
 
     if (process.env.NODE_ENV !== 'production') {
       return NextResponse.json(
         {
           success: true,
-          message: 'OTP generated (no SMS provider — dev mode).',
+          message: 'OTP sent to your phone number.',
           _dev_otp: otp,
-          _dev_note: 'Use this code to test. This field is never returned in production.',
+          _dev_note: 'Development mode active. Use this code to verify.',
+          provider: smsResult?.provider || 'simulated',
         },
         { status: 200 },
       );
     }
 
-    // Production with no SMS provider: inform user gracefully
     return NextResponse.json(
       { success: true, message: 'OTP sent to your phone number.' },
       { status: 200 },
