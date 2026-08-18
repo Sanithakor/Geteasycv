@@ -11,7 +11,7 @@ const apiKey = process.env.OPENAI_API_KEY?.trim() || '';
 
 let openaiClient: OpenAI | null = null;
 
-if (apiKey && apiKey !== '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') {
+if (apiKey) {
   openaiClient = new OpenAI({
     apiKey: apiKey,
   });

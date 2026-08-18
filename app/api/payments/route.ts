@@ -26,7 +26,7 @@ export async function GET(req: Request) {
         where: isUserAdmin ? {} : { userId: auth.userId },
         orderBy: { createdAt: 'desc' },
       });
-      payments = dbPayments.map((p) => ({
+      payments = dbPayments.map((p: typeof dbPayments[number]) => ({
         id: p.id,
         userId: p.userId,
         amount: p.amount,

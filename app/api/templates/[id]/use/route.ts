@@ -36,7 +36,7 @@ export async function POST(
     const resume = await prisma.resume.create({
       data: {
         title: title || `${template.name} Resume`,
-        slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        slug: `resume-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         userId: auth.userId,
         templateId: template.id,
         status: 'draft',

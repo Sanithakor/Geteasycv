@@ -4,9 +4,13 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-here-change-in-production';
+const getJWTSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET is not set');
+  return new TextEncoder().encode(secret);
+};
 
 interface GoogleProfile {
   email: string;
@@ -19,7 +23,7 @@ interface GoogleProfile {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { credential, accessToken, googleUser } = body;
+    const { credential, accessToken } = body;
 
     let profile: GoogleProfile | null = null;
 
@@ -71,16 +75,6 @@ export async function POST(req: Request) {
       } catch (err) {
         console.error('[GOOGLE_USERINFO_ERROR] Error calling Google userinfo:', err);
       }
-    }
-
-    // 3. Fallback to client-provided googleUser if available (dev / fallback)
-    if (!profile && googleUser && googleUser.email) {
-      profile = {
-        email: googleUser.email,
-        name: googleUser.name || googleUser.email.split('@')[0],
-        picture: googleUser.picture || googleUser.avatar || '',
-        sub: googleUser.sub || googleUser.id,
-      };
     }
 
     if (!profile || !profile.email) {
@@ -135,29 +129,24 @@ export async function POST(req: Request) {
         });
       }
     } catch (dbError) {
-      console.warn('[PRISMA_UNAVAILABLE] Google Auth DB fallback:', dbError);
-      user = {
-        id: `google-user-${sub || Date.now()}`,
-        email,
-        name,
-        role: 'user',
-        avatar: picture || '',
-        subscriptionTier: 'free',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      console.error('[PRISMA_ERROR] Google Auth DB error:', dbError);
+      return NextResponse.json(
+        { error: 'Authentication failed. Please try again.' },
+        { status: 500 }
+      );
     }
 
-    // Generate JWT auth token
-    const authToken = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        role: user.role || 'user',
-      },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    // Generate JWT auth token using jose (edge-compatible)
+    const secret = getJWTSecret();
+    const authToken = await new SignJWT({
+      userId: user.id,
+      email: user.email,
+      role: user.role || 'user',
+    })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('30d')
+      .sign(secret);
 
     const response = NextResponse.json({
       success: true,
@@ -172,12 +161,12 @@ export async function POST(req: Request) {
       token: authToken,
     });
 
-    // Set cookie for browser session persistence
-    response.cookies.set('token', authToken, {
-      httpOnly: false,
+    // Set httpOnly cookie for browser session persistence
+    response.cookies.set('auth-token', authToken, {
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
 

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export const config = {
-  runtime: 'experimental-edge',
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|public).*)',
   ],
@@ -40,7 +39,8 @@ async function verifyAuthToken(request: NextRequest) {
 
     if (!token) return null;
 
-    const secretKey = process.env.JWT_SECRET || 'your-secret-key-here-change-in-production';
+    const secretKey = process.env.JWT_SECRET;
+    if (!secretKey) return null;
     const secret = new TextEncoder().encode(secretKey);
 
     const { payload } = await jwtVerify(token, secret);
@@ -53,10 +53,10 @@ async function verifyAuthToken(request: NextRequest) {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const authPayload = await verifyAuthToken(request);
-  const isAdmin = authPayload?.role === 'admin' || authPayload?.userId === 'mock-admin-id';
+  const isAdmin = authPayload?.role === 'admin';
 
-  // Check Coming Soon Mode state
-  const isComingSoonActive = request.cookies.get('coming_soon_mode')?.value === 'true';
+  // Check Coming Soon Mode state from environment variable (set via wrangler.toml [vars] or env)
+  const isComingSoonActive = process.env.COMING_SOON_MODE === 'true';
 
   // 1. Coming Soon Server-Side Enforcement (for non-admin public visitors)
   if (isComingSoonActive && !isAdmin) {

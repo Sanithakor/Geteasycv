@@ -11,6 +11,15 @@ import { sendWelcomeEmail } from '@/lib/email';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 import { createSystemNotification } from '@/lib/notifications';
 
+/** Validate international phone number (E.164 basic check) */
+function validatePhone(phone: string): boolean {
+  return /^\+?[1-9]\d{6,14}$/.test(phone.replace(/[\s\-()]/g, ''));
+}
+
+function normalizePhone(phone: string): string {
+  return phone.replace(/[\s\-()]/g, '').toLowerCase();
+}
+
 export async function POST(req: Request) {
   // Apply rate limiting (Max 10 signups per 15 minutes per IP)
   const rateLimit = checkRateLimit(req, {
@@ -28,21 +37,42 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { email, password, name } = body;
+    const { email, phone, password, name } = body;
 
-    if (!email || !password || !name) {
+    if ((!email && !phone) || !password || !name) {
       return Response.json(
-        { error: 'Email, password, and name are required' },
+        { error: 'Email or phone, password, and name are required' },
         { status: 400 }
       );
     }
 
-    const sanitized = sanitizeEmail(email);
-    if (!validateEmail(sanitized)) {
-      return Response.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
+    // Build user data based on identifier type
+    const userData: any = { password, name };
+
+    if (email) {
+      const sanitized = sanitizeEmail(email);
+      if (!validateEmail(sanitized)) {
+        return Response.json({ error: 'Invalid email format' }, { status: 400 });
+      }
+
+      const existingUser = await prisma.user.findUnique({ where: { email: sanitized } });
+      if (existingUser) {
+        return Response.json({ error: 'Email already registered' }, { status: 409 });
+      }
+      userData.email = sanitized;
+    } else {
+      // Phone-based registration
+      const normalizedPhone = normalizePhone(phone);
+      if (!validatePhone(normalizedPhone)) {
+        return Response.json({ error: 'Invalid phone number format' }, { status: 400 });
+      }
+      const existingUser = await prisma.user.findFirst({ where: { phone: normalizedPhone } });
+      if (existingUser) {
+        return Response.json({ error: 'Phone number already registered' }, { status: 409 });
+      }
+      userData.phone = normalizedPhone;
+      // Placeholder email required by unique constraint
+      userData.email = `phone_${normalizedPhone.replace(/\D/g, '')}@geteasycv.placeholder`;
     }
 
     const passwordCheck = validatePassword(password);
@@ -53,24 +83,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email: sanitized },
-    });
-
-    if (existingUser) {
-      return Response.json(
-        { error: 'Email already registered' },
-        { status: 409 }
-      );
-    }
-
     const hashedPassword = await hashPassword(password);
 
     const user = await prisma.user.create({
       data: {
-        email: sanitized,
+        ...userData,
         password: hashedPassword,
-        name,
         subscriptionTier: 'free',
         role: 'user',
         profile: {
@@ -101,10 +119,12 @@ export async function POST(req: Request) {
 
     const token = await generateToken(user.id);
 
-    // Send transactional welcome email
-    sendWelcomeEmail(user.email, user.name).catch((err) => {
-      console.warn('[WELCOME_EMAIL_ERROR]', err);
-    });
+    // Send transactional welcome email (only for email-based registrations)
+    if (email) {
+      sendWelcomeEmail(user.email, user.name).catch((err) => {
+        console.warn('[WELCOME_EMAIL_ERROR]', err);
+      });
+    }
 
     // Dispatch real notification for user registration
     await createSystemNotification({

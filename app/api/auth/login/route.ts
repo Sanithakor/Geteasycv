@@ -6,8 +6,12 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { verifyPassword, generateToken, sanitizeEmail, validateEmail, hashPassword } from '@/lib/utils/auth';
+import { verifyPassword, generateToken, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
+
+function normalizePhone(phone: string): string {
+  return phone.replace(/[\s\-()]/g, '').toLowerCase();
+}
 
 export async function POST(req: Request) {
   // Apply rate limiting (Max 5 attempts per 15 minutes per IP)
@@ -24,30 +28,26 @@ export async function POST(req: Request) {
     );
   }
 
-  let email = '';
-  let password = '';
   try {
     const body = await req.json();
-    email = body.email;
-    password = body.password;
+    const { email, phone, password } = body;
+    const identifier = email || phone;
 
-    if (!email || !password) {
+    if (!identifier || !password) {
       return Response.json(
-        { error: 'Email and password are required' },
+        { error: 'Email (or phone) and password are required' },
         { status: 400 }
       );
     }
 
-    const sanitized = sanitizeEmail(email);
-    if (!validateEmail(sanitized)) {
-      return Response.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    let user: any = null;
 
-    let user = null;
-    try {
+    if (email) {
+      const sanitized = sanitizeEmail(email);
+      if (!validateEmail(sanitized)) {
+        return Response.json({ error: 'Invalid email format' }, { status: 400 });
+      }
+
       user = await prisma.user.findUnique({
         where: { email: sanitized },
         select: {
@@ -62,93 +62,23 @@ export async function POST(req: Request) {
           isBanned: true,
         },
       });
-
-      // Auto-create/seed admin user if database is online but admin is not seeded yet
-      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@resumebuilder.local').replace(/['"]/g, '');
-      const adminPassword = (process.env.ADMIN_PASSWORD || 'AdminPassword123!').replace(/['"]/g, '');
-      if (!user && sanitized === adminEmail && password === adminPassword) {
-        const hashedPassword = await hashPassword(password);
-        user = await prisma.user.create({
-          data: {
-            email: sanitized,
-            password: hashedPassword,
-            name: 'John Admin',
-            role: 'admin',
-            subscriptionTier: 'premium',
-            isActive: true,
-          },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatar: true,
-            password: true,
-            role: true,
-            subscriptionTier: true,
-            isActive: true,
-            isBanned: true,
-          }
-        });
-      }
-    } catch (dbError) {
-      console.warn('[DATABASE_UNAVAILABLE] Using fallback credential verification:', dbError);
-      
-      if ((sanitized === 'admin@example.com' || sanitized === 'admin@resumebuilder.local') && password === 'DemoPassword123') {
-        const token = await generateToken('admin-user-id');
-        const response = NextResponse.json({
-          success: true,
-          user: {
-            id: 'admin-user-id',
-            email: sanitized,
-            name: 'Admin User',
-            avatar: null,
-            role: 'admin',
-            subscriptionTier: 'premium',
-          },
-          token,
-        });
-
-        response.cookies.set('auth-token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-
-        return response;
-      }
-
-      if ((sanitized === 'demo@example.com' || sanitized === 'user@example.com') && password === 'DemoPassword123') {
-        const token = await generateToken('demo-user-id');
-        const response = NextResponse.json({
-          success: true,
-          user: {
-            id: 'demo-user-id',
-            email: sanitized,
-            name: 'Demo User',
-            avatar: null,
-            role: 'user',
-            subscriptionTier: 'free',
-          },
-          token,
-        });
-
-        response.cookies.set('auth-token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        });
-
-        return response;
-      }
-
-      return Response.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      );
+    } else {
+      // Phone-based login
+      const normalizedPhone = normalizePhone(phone);
+      user = await prisma.user.findFirst({
+        where: { phone: normalizedPhone },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          avatar: true,
+          password: true,
+          role: true,
+          subscriptionTier: true,
+          isActive: true,
+          isBanned: true,
+        },
+      });
     }
 
     if (!user) {

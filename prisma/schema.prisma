@@ -24,6 +24,8 @@ model User {
   password              String?
   name                  String
   avatar                String?
+  phone                 String?   @unique
+  phoneVerified         DateTime?
   
   // OAuth
   googleId              String?   @unique
@@ -109,6 +111,21 @@ model VerificationToken {
   
   @@unique([email, type])
   @@index([token])
+}
+
+model OtpToken {
+  id                    String    @id @default(cuid())
+  identifier            String    // email or phone number
+  identifierType        String    // "email" or "phone"
+  otp                   String    // hashed OTP
+  purpose               String    // "login" or "signup"
+  attempts              Int       @default(0)
+  expiresAt             DateTime
+  
+  createdAt             DateTime  @default(now())
+  
+  @@unique([identifier, purpose])
+  @@index([identifier])
 }
 
 model Session {

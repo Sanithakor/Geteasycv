@@ -24,9 +24,9 @@ export async function getAuthFromRequest(req: Request): Promise<AuthPayload | nu
     // 2. Try Cookie header
     if (!token) {
       const cookieHeader = req.headers.get('cookie') || '';
-      const match = cookieHeader.match(/auth-token=([^;]+)/);
-      if (match) {
-        token = match[1];
+      const authTokenMatch = cookieHeader.match(/auth-token=([^;]+)/);
+      if (authTokenMatch) {
+        token = authTokenMatch[1];
       }
     }
 

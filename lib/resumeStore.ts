@@ -109,7 +109,7 @@ if (store.size === 0) {
 export function getStoreResumes(userId?: string): ResumeStoreItem[] {
   const items = Array.from(store.values());
   if (userId) {
-    return items.filter(r => r.userId === userId || r.userId === 'mock-user-1');
+    return items.filter(r => r.userId === userId);
   }
   return items;
 }

@@ -128,7 +128,7 @@ export async function POST(req: Request) {
 
     const requestedTitle = title || `${(cvData?.personal?.firstName || 'New')} Resume`.trim();
     const targetTemplateId = templateId || 'sidebar-left-modern-blue';
-    const resumeId = `resume-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+    const resumeId = `resume-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
 
     let createdResume: any = null;
 
@@ -140,7 +140,7 @@ export async function POST(req: Request) {
           const resume = await prisma.resume.create({
             data: {
               title: requestedTitle,
-              slug: `resume-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+              slug: `resume-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
               userId: auth.userId,
               templateId: validTemplateId,
               status: 'draft',

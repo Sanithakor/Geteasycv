@@ -9,9 +9,7 @@ declare global {
   }
 }
 
-const GOOGLE_CLIENT_ID =
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-  '87959359433-bv0q70jgb0ofd5ajh0usricf80tjgee8.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
 /**
  * Dynamically loads Google Identity Services (GIS) client script
@@ -168,24 +166,9 @@ export async function triggerGoogleSignIn(): Promise<GoogleAuthResponse> {
     });
   }
 
-  // Fallback to direct API login if Google SDK script is blocked or unavailable
-  try {
-    const res = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        googleUser: {
-          email: 'google.user@example.com',
-          name: 'Google User',
-        },
-      }),
-    });
-    const data = await res.json();
-    if (res.ok && data.success) {
-      return { success: true, user: data.user, token: data.token };
-    }
-    return { success: false, error: data.error || 'Google login failed' };
-  } catch (err: any) {
-    return { success: false, error: err.message || 'Google login failed' };
-  }
+  // Google SDK script is blocked or unavailable — cannot authenticate without it
+  return {
+    success: false,
+    error: 'Google Sign-In is unavailable. Please ensure pop-ups are allowed or try again later.',
+  };
 }

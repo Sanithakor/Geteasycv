@@ -25,7 +25,7 @@ export const capitalizeFirst = (text: string): string => {
 };
 
 export const toTitleCase = (text: string): string => {
-  return text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  return text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
 };
 
 // ============================================
@@ -120,8 +120,8 @@ export const isValidPassword = (password: string): {
     errors.push('Password must contain a number');
   }
 
-  if (!/[!@#$%^&*]/.test(password)) {
-    errors.push('Password must contain a special character (!@#$%^&*)');
+  if (!/[@$!%*?&]/.test(password)) {
+    errors.push('Password must contain a special character (@$!%*?&)');
   }
 
   return {

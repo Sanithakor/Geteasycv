@@ -40,7 +40,7 @@ export async function GET(
     prisma.resume.update({
       where: { id: resume.id },
       data: { views: { increment: 1 } },
-    }).catch((err) => console.warn('[VIEW_INCREMENT_ERROR]', err));
+    }).catch((err: unknown) => console.warn('[VIEW_INCREMENT_ERROR]', err));
 
     return NextResponse.json({
       success: true,

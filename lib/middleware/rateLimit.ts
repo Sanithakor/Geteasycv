@@ -8,9 +8,11 @@ interface RateLimitStore {
 // In-memory store for rate limiting
 const store = new Map<string, RateLimitStore>();
 
-// Periodically clean up expired entries every 5 minutes
-if (typeof window === 'undefined') {
-  setInterval(() => {
+// Periodically clean up expired entries every 5 minutes.
+// Guard against repeated registration on hot-reload by storing the interval id globally.
+const globalForRateLimit = globalThis as unknown as { _rateLimitCleanupInterval?: ReturnType<typeof setInterval> };
+if (typeof window === 'undefined' && !globalForRateLimit._rateLimitCleanupInterval) {
+  globalForRateLimit._rateLimitCleanupInterval = setInterval(() => {
     const now = Date.now();
     for (const [key, record] of store.entries()) {
       if (now > record.resetTime) {

@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         select: { id: true, downloads: true },
       });
       const counts: Record<string, number> = { ...getAllTemplateDownloadCounts() };
-      dbTemplates.forEach((t) => {
+      dbTemplates.forEach((t: typeof dbTemplates[number]) => {
         if (t.downloads > 0) {
           counts[t.id] = t.downloads;
         }

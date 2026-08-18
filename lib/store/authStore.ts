@@ -19,7 +19,7 @@ interface AuthState {
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
-  loginWithGoogle: (googlePayload: string | { credential?: string; accessToken?: string; googleUser?: any }) => Promise<any>;
+  loginWithGoogle: (googlePayload: string | { credential?: string; accessToken?: string }) => Promise<any>;
   loginWithGithub: (token: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
@@ -143,7 +143,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // Login with Google OAuth
-      loginWithGoogle: async (googlePayload: string | { credential?: string; accessToken?: string; googleUser?: any }) => {
+      loginWithGoogle: async (googlePayload: string | { credential?: string; accessToken?: string }) => {
         set({ isLoading: true, error: null });
         try {
           const body = typeof googlePayload === 'string' ? { credential: googlePayload } : googlePayload;

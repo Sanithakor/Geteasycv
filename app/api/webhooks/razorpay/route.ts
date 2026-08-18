@@ -9,17 +9,26 @@ export async function POST(req: Request) {
     const signature = req.headers.get('x-razorpay-signature');
     const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-    // Verify HMAC-SHA256 signature if webhook secret is configured
-    if (secret && signature) {
-      const expectedSignature = crypto
-        .createHmac('sha256', secret)
-        .update(rawBody)
-        .digest('hex');
+    // Webhook secret must be configured — reject requests if it is missing
+    if (!secret) {
+      console.error('[RAZORPAY_WEBHOOK_CONFIG_ERROR] RAZORPAY_WEBHOOK_SECRET is not set');
+      return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
+    }
 
-      if (expectedSignature !== signature) {
-        console.error('[RAZORPAY_WEBHOOK_INVALID_SIGNATURE]', { signature, expectedSignature });
-        return NextResponse.json({ error: 'Invalid Razorpay webhook signature' }, { status: 400 });
-      }
+    // Verify HMAC-SHA256 signature
+    if (!signature) {
+      console.error('[RAZORPAY_WEBHOOK_MISSING_SIGNATURE]');
+      return NextResponse.json({ error: 'Missing Razorpay webhook signature' }, { status: 400 });
+    }
+
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(rawBody)
+      .digest('hex');
+
+    if (expectedSignature !== signature) {
+      console.error('[RAZORPAY_WEBHOOK_INVALID_SIGNATURE]', { signature, expectedSignature });
+      return NextResponse.json({ error: 'Invalid Razorpay webhook signature' }, { status: 400 });
     }
 
     const payload = JSON.parse(rawBody);
@@ -41,7 +50,6 @@ export async function POST(req: Request) {
           where: { id: userId },
           data: {
             subscriptionTier: plan,
-            subscriptionStatus: 'active',
             updatedAt: new Date(),
           },
         });

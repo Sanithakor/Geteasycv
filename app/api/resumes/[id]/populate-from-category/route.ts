@@ -1,6 +1,6 @@
-/**
- * POST /api/resumes/[id]/populate-from-category - Populate resume with category sample data
- */
+import type { PrismaClient } from '@prisma/client';
+
+type TransactionClient = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>;
 
 import { NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
@@ -54,14 +54,14 @@ export async function POST(
       }
 
       // Start a transaction to populate all sections
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: TransactionClient) => {
         // 1. Update resume with summary and awards if provided
         await tx.resume.update({
           where: { id: resumeId },
           data: {
             title: `${category.name} Resume`,
             summary: sampleData.summary || null,
-            awards: sampleData.awards ? sampleData.awards.map((a: any) => typeof a === 'string' ? a : a.title || '') : []
+            awards: sampleData.awards ? sampleData.awards.map((a: { title?: string } | string) => typeof a === 'string' ? a : a.title || '') : []
           }
         });
 

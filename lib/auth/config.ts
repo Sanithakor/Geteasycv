@@ -5,8 +5,8 @@
 export const authConfig = {
   // JWT
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-super-secret-key-change-in-production',
-    accessTokenExpiry: '15m',
+    secret: process.env.JWT_SECRET || '',
+    accessTokenExpiry: '30d',
     refreshTokenExpiry: '7d',
   },
 

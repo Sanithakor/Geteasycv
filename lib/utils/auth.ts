@@ -7,7 +7,7 @@ import { jwtVerify, SignJWT } from 'jose';
 const getJWTSecret = () => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error('JWT_SECRET is not set in environment variables');
+    throw new Error('JWT_SECRET environment variable is not set');
   }
   return new TextEncoder().encode(secret);
 };

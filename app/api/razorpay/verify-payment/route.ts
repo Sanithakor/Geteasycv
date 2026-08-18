@@ -45,12 +45,11 @@ export async function POST(req: Request) {
 
     const normalizedPlan = (plan || 'pro').toLowerCase();
 
-    // 1. Transactionally update User subscription status in PostgreSQL
+    // 1. Transactionally update User subscription tier in PostgreSQL
     const updatedUser = await (prisma.user as any).update({
       where: { id: auth.userId },
       data: {
         subscriptionTier: normalizedPlan,
-        subscriptionStatus: 'active',
         updatedAt: new Date(),
       },
     });
