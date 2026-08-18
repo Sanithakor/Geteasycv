@@ -14,7 +14,7 @@ export default function Footer() {
               <img src="/logo.svg" alt="GetEasyCV" className="h-8 w-auto object-contain" />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed">
-              aProfessional resume builder with ATS-friendly templates, custom layouts, and modern themes to help you land your next job faster.
+              A professional resume builder with ATS-friendly templates, custom layouts, and modern themes to help you land your next job faster.
             </p>
           </div>
 
@@ -26,7 +26,6 @@ export default function Footer() {
               <li><Link href="/editor" className="hover:text-white transition-colors">Live Resume Editor</Link></li>
               <li><Link href="/pricing" className="hover:text-white transition-colors">Pricing & Plans</Link></li>
               <li><Link href="/blog" className="hover:text-white transition-colors">Career Blog</Link></li>
-              <li><Link href="/resume-examples" className="hover:text-white transition-colors">Resume Examples</Link></li>
             </ul>
           </div>
 

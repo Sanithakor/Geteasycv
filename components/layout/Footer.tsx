@@ -31,7 +31,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
-              <img src="/logo.png" alt="GetEasyCV" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+              <img src="/logo.svg" alt="GetEasyCV" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
             </Link>
             <p className="text-sm leading-relaxed text-slate-500 max-w-xs">
               Build professional, ATS-optimized resumes with AI-powered assistance and 200+ templates.

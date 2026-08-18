@@ -44,7 +44,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/cookie-policy',
     '/help-center',
     '/reviews',
-    '/resume-examples',
   ];
 
   return routes.map((route) => ({

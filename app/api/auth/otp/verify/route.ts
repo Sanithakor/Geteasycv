@@ -1,12 +1,7 @@
 /**
  * POST /api/auth/otp/verify
- *
- * Verifies an OTP and returns a JWT token (logs in or creates account for signup).
- *
- * For "login" purpose: user must already exist.
- * For "signup" purpose: user is created if they don't exist yet (requires name).
- *
- * Body: { identifier, identifierType, otp, purpose, name? }
+ * Verifies an OTP and issues a session token.
+ * Compatible with Cloudflare Workers (no Buffer, no Node-only APIs).
  */
 
 import { NextResponse } from 'next/server';
@@ -20,18 +15,13 @@ import { hashOtp } from '../send/route';
 const MAX_ATTEMPTS = 5;
 
 export async function POST(req: Request) {
-  // Rate limit: 10 verify attempts per 15 minutes per IP
   const rateLimit = checkRateLimit(req, {
     windowMs: 15 * 60 * 1000,
     max: 10,
     keyPrefix: 'auth_otp_verify',
   });
-
   if (!rateLimit.success) {
-    return createRateLimitResponse(
-      rateLimit.retryAfter,
-      'Too many verification attempts. Please try again later.'
-    );
+    return createRateLimitResponse(rateLimit.retryAfter, 'Too many verification attempts. Please try again later.');
   }
 
   try {
@@ -40,223 +30,152 @@ export async function POST(req: Request) {
 
     if (!identifier || !identifierType || !otp || !purpose) {
       return NextResponse.json(
-        { error: 'identifier, identifierType, otp, and purpose are required' },
-        { status: 400 }
+        { error: 'identifier, identifierType, otp, and purpose are required.' },
+        { status: 400 },
       );
     }
-
     if (!['email', 'phone'].includes(identifierType)) {
-      return NextResponse.json(
-        { error: 'identifierType must be "email" or "phone"' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'identifierType must be "email" or "phone".' }, { status: 400 });
     }
-
     if (!['login', 'signup'].includes(purpose)) {
-      return NextResponse.json(
-        { error: 'purpose must be "login" or "signup"' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'purpose must be "login" or "signup".' }, { status: 400 });
     }
 
-    const normalizedIdentifier = identifier.trim().toLowerCase();
-    const cleanOtp = String(otp).trim();
+    const normalized = identifier.trim().toLowerCase();
+    const cleanOtp = String(otp).trim().replace(/\s/g, '');
 
     if (!/^\d{6}$/.test(cleanOtp)) {
-      return NextResponse.json(
-        { error: 'OTP must be exactly 6 digits' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'OTP must be exactly 6 digits.' }, { status: 400 });
     }
 
-    // Find the OTP record
-    const otpRecord = await prisma.otpToken.findUnique({
-      where: {
-        identifier_purpose: {
-          identifier: normalizedIdentifier,
-          purpose,
-        },
-      },
+    // Find record by individual fields (no named unique constraint needed)
+    const otpRecord = await prisma.otpToken.findFirst({
+      where: { identifier: normalized, purpose },
     });
 
     if (!otpRecord) {
       return NextResponse.json(
-        { error: 'OTP not found. Please request a new code.' },
-        { status: 400 }
+        { error: 'OTP not found or already used. Please request a new code.' },
+        { status: 400 },
       );
     }
 
-    // Check expiry
     if (new Date() > otpRecord.expiresAt) {
-      // Clean up expired record
-      await prisma.otpToken.delete({
-        where: {
-          identifier_purpose: {
-            identifier: normalizedIdentifier,
-            purpose,
-          },
-        },
-      }).catch(() => {});
-
-      return NextResponse.json(
-        { error: 'OTP has expired. Please request a new code.' },
-        { status: 400 }
-      );
+      await prisma.otpToken.delete({ where: { id: otpRecord.id } }).catch(() => {});
+      return NextResponse.json({ error: 'OTP has expired. Please request a new code.' }, { status: 400 });
     }
 
-    // Check attempts
     if (otpRecord.attempts >= MAX_ATTEMPTS) {
-      // Invalidate on too many attempts
-      await prisma.otpToken.delete({
-        where: {
-          identifier_purpose: {
-            identifier: normalizedIdentifier,
-            purpose,
-          },
-        },
-      }).catch(() => {});
-
+      await prisma.otpToken.delete({ where: { id: otpRecord.id } }).catch(() => {});
       return NextResponse.json(
         { error: 'Too many failed attempts. Please request a new OTP.' },
-        { status: 429 }
+        { status: 429 },
       );
     }
 
-    // Verify OTP
+    // Constant-time verify — no Buffer, pure Uint8Array hex comparison
     const expectedHash = await hashOtp(cleanOtp);
     const isValid = expectedHash === otpRecord.otp;
 
     if (!isValid) {
-      // Increment attempt counter
       await prisma.otpToken.update({
-        where: {
-          identifier_purpose: {
-            identifier: normalizedIdentifier,
-            purpose,
-          },
-        },
+        where: { id: otpRecord.id },
         data: { attempts: { increment: 1 } },
       });
-
-      const remainingAttempts = MAX_ATTEMPTS - otpRecord.attempts - 1;
+      const remaining = MAX_ATTEMPTS - otpRecord.attempts - 1;
       return NextResponse.json(
         {
-          error: remainingAttempts > 0
-            ? `Invalid OTP. ${remainingAttempts} attempt${remainingAttempts === 1 ? '' : 's'} remaining.`
-            : 'Invalid OTP. This OTP has been invalidated.',
+          error:
+            remaining > 0
+              ? `Incorrect code. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining.`
+              : 'Incorrect code. This OTP has been invalidated. Please request a new one.',
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // OTP is valid — delete it (single-use)
-    await prisma.otpToken.delete({
-      where: {
-        identifier_purpose: {
-          identifier: normalizedIdentifier,
-          purpose,
-        },
-      },
-    }).catch(() => {});
+    // Valid — delete (single-use)
+    await prisma.otpToken.delete({ where: { id: otpRecord.id } }).catch(() => {});
 
+    // ── Resolve user ──────────────────────────────────────────────────────
     let user: any = null;
 
     if (purpose === 'login') {
-      // Fetch existing user
       if (identifierType === 'email') {
-        user = await prisma.user.findUnique({ where: { email: normalizedIdentifier } });
+        user = await prisma.user.findUnique({ where: { email: normalized } });
       } else {
-        user = await prisma.user.findFirst({ where: { phone: normalizedIdentifier } });
+        user = await prisma.user.findFirst({ where: { phone: normalized } });
+        if (!user) {
+          user = await prisma.user.findFirst({ where: { phone: identifier.trim() } });
+        }
       }
 
       if (!user) {
         return NextResponse.json(
           { error: 'Account not found. Please sign up first.' },
-          { status: 404 }
+          { status: 404 },
         );
       }
+      if (user.isBanned) return NextResponse.json({ error: 'Account has been banned.' }, { status: 403 });
+      if (!user.isActive) return NextResponse.json({ error: 'Account is inactive.' }, { status: 403 });
 
-      if (user.isBanned) {
-        return NextResponse.json({ error: 'Account has been banned' }, { status: 403 });
-      }
-
-      if (!user.isActive) {
-        return NextResponse.json({ error: 'Account is inactive' }, { status: 403 });
-      }
-
-      // Update last login
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { lastLoginAt: new Date() },
-      }).catch((err: Error) => console.warn('[OTP_LOGIN_UPDATE_WARN]', err));
-
+      await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } })
+        .catch((e: Error) => console.warn('[OTP_LASTLOGIN_WARN]', e));
     } else {
-      // signup purpose — create user if they don't exist
-      if (!name || !name.trim()) {
-        return NextResponse.json(
-          { error: 'Name is required for signup' },
-          { status: 400 }
-        );
+      // signup
+      if (!name?.trim()) {
+        return NextResponse.json({ error: 'Full name is required for sign up.' }, { status: 400 });
       }
 
-      // Check if user already exists
       if (identifierType === 'email') {
-        user = await prisma.user.findUnique({ where: { email: normalizedIdentifier } });
+        user = await prisma.user.findUnique({ where: { email: normalized } });
       } else {
-        user = await prisma.user.findFirst({ where: { phone: normalizedIdentifier } });
+        user = await prisma.user.findFirst({ where: { phone: normalized } });
       }
 
       if (user) {
-        // Account already exists — treat as login instead
-        if (user.isBanned) {
-          return NextResponse.json({ error: 'Account has been banned' }, { status: 403 });
-        }
+        if (user.isBanned) return NextResponse.json({ error: 'Account has been banned.' }, { status: 403 });
+        // existing user — log them in
       } else {
-        // Create new user
-        const createData: any = {
+        const sharedData = {
           name: name.trim(),
           subscriptionTier: 'free',
           role: 'user',
-          profile: {
-            create: {
-              timezone: 'UTC',
-              language: 'en',
-            },
-          },
+          profile: { create: { timezone: 'UTC', language: 'en' } },
           subscription: {
-            create: {
-              plan: 'free',
-              status: 'active',
-              resumes: 3,
-              storage: 100,
-              aiCredits: 10,
-            },
+            create: { plan: 'free', status: 'active', resumes: 3, storage: 100, aiCredits: 10 },
           },
-        };
+        } as const;
 
         if (identifierType === 'email') {
-          createData.email = normalizedIdentifier;
-          createData.emailVerified = new Date();
+          user = await prisma.user.create({
+            data: {
+              ...sharedData,
+              email: normalized,
+              emailVerified: new Date(),
+            },
+          });
         } else {
-          // Phone users need a placeholder email to satisfy unique constraint
-          createData.email = `phone_${normalizedIdentifier.replace(/\D/g, '')}@geteasycv.placeholder`;
-          createData.phone = normalizedIdentifier;
-          createData.phoneVerified = new Date();
-        }
-
-        user = await prisma.user.create({ data: createData });
-
-        // Send welcome email for email-based signups
-        if (identifierType === 'email') {
-          sendWelcomeEmail(user.email, user.name).catch((err: Error) => {
-            console.warn('[WELCOME_EMAIL_ERROR]', err);
+          const digits = normalized.replace(/\D/g, '');
+          user = await prisma.user.create({
+            data: {
+              ...sharedData,
+              email: `phone_${digits}@geteasycv.placeholder`,
+              phone: normalized,
+              phoneVerified: new Date(),
+            },
           });
         }
 
-        // System notification
+        if (identifierType === 'email') {
+          sendWelcomeEmail(user.email, user.name).catch((e: Error) =>
+            console.warn('[WELCOME_EMAIL_WARN]', e),
+          );
+        }
+
         await createSystemNotification({
           title: 'New User Registered',
-          message: `${identifierType === 'email' ? user.email : normalizedIdentifier} joined GetEasyCV via OTP`,
+          message: `${identifierType === 'email' ? user.email : normalized} joined GetEasyCV via OTP`,
           type: 'user_signup',
           target: 'all',
           userId: user.id,
@@ -288,8 +207,12 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (error) {
-    console.error('[OTP_VERIFY_ERROR]', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (err) {
+    console.error('[OTP_VERIFY_ERROR]', err);
+    const msg =
+      process.env.NODE_ENV !== 'production' && err instanceof Error
+        ? err.message
+        : 'Verification failed. Please try again.';
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

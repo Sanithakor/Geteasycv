@@ -75,7 +75,7 @@ Geteasycv/
 ├── prisma/                   # Database Schema & Migration Scripts
 │   ├── schema.prisma         # Prisma Data Schema
 │   └── seed.ts               # Database Seeding Script
-├── public/                   # Static Assets (brand logo.png, graphics)
+├── public/                   # Static Assets (brand logo.svg, graphics)
 └── package.json              # App Dependencies & Scripts
 ```
 
