@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "../styles/enhanced.css";
+import AuthModal from "@/components/auth/AuthModal";
 
 export const metadata: Metadata = {
   title: "GetEasyCV - Professional Resume Builder",
@@ -42,7 +43,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-50 font-roboto">{children}</body>
+      <body className="min-h-full flex flex-col bg-slate-50 font-roboto">
+        {children}
+        <AuthModal />
+      </body>
     </html>
   );
 }
