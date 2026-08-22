@@ -24,9 +24,9 @@
   body {
     margin: 0;
     min-height: 100vh;
-    /* slate-50 — matches the bg-slate-50 class used project-wide */
-    background: #f8fafc;
-    color: #111827;
+    /* Off-white Doodle background */
+    background: #F8F8F6;
+    color: #0F0F0F;
     font-family: 'Roboto', var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
   }
 }
@@ -261,27 +261,45 @@ textarea,
 }
 
 /* ============================================================
- * Brand colour token — #FF570F (brand orange)
- * Replace all blue/purple/violet/indigo gradient usage
+ * Doodle Design System — Colour Tokens
  * ============================================================ */
 :root {
-  --brand: #FF570F;
-  --brand-hover: #E04800;
-  --brand-light: #FFF0EB;
-  --brand-muted: #FF570F26;
+  /* Base */
+  --color-background:  #F8F8F6;
+  --color-surface:     #FFFFFF;
+  --color-primary:     #0F0F0F;
+  --color-secondary:   #333333;
+
+  /* Accent palette */
+  --color-yellow:  #F5D17B;
+  --color-blue:    #BAC7FE;
+  --color-purple:  #D0B9EF;
+  --color-peach:   #FEE1CF;
+  --color-green:   #58C09D;
+  --color-coral:   #F3645C;
+
+  /* Semantic aliases */
+  --brand:          #0F0F0F;
+  --brand-accent:   #F3645C;
+  --brand-hover:    #F3645C;
+  --brand-light:    #FEE1CF;
+  --brand-muted:    rgba(243,100,92,0.12);
+
+  /* Border */
+  --border-subtle: rgba(15,15,15,0.12);
 }
 
-/* Premium gradient backgrounds */
+/* Premium gradient — dark to accent */
 .gradient-premium {
-  background: linear-gradient(135deg, #FF570F 0%, #E04800 100%);
+  background: linear-gradient(135deg, #0F0F0F 0%, #333333 100%);
 }
 
 .gradient-sunset {
-  background: linear-gradient(135deg, #FF570F 0%, #ff8c5a 100%);
+  background: linear-gradient(135deg, #F3645C 0%, #F5D17B 100%);
 }
 
 .gradient-ocean {
-  background: linear-gradient(135deg, #FF570F 0%, #ffb347 100%);
+  background: linear-gradient(135deg, #BAC7FE 0%, #D0B9EF 100%);
 }
 
 /* Text gradient utility */
@@ -290,7 +308,7 @@ textarea,
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(135deg, #FF570F 0%, #E04800 100%);
+  background-image: linear-gradient(135deg, #F3645C 0%, #D0B9EF 100%);
 }
 
 /* Focus styles */
@@ -298,14 +316,14 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 87, 15, 0.3);
-  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(186,199,254,0.6);
+  border-color: #BAC7FE;
 }
 
 /* Loading spinner */
 .spinner {
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #FF570F;
+  border-left-color: #F3645C;
   border-radius: 50%;
   width: 24px;
   height: 24px;

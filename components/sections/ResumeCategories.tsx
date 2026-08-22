@@ -2,244 +2,93 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { 
-  Briefcase, 
-  Code2, 
-  HeartPulse, 
-  GraduationCap, 
-  Megaphone, 
-  CircleDollarSign, 
-  ShoppingCart, 
-  Wrench, 
-  Palette, 
-  User, 
-  Star, 
-  ArrowRight,
-  FileText
-} from 'lucide-react';
+import { Briefcase, Code2, HeartPulse, GraduationCap, Megaphone, CircleDollarSign, ShoppingCart, Wrench, Palette, User, Star, ArrowRight, FileText } from 'lucide-react';
 
-interface CategoryItem {
-  id: string;
-  name: string;
-  count: string;
-  description: string;
-  icon: React.ElementType;
-  iconBg: string;
-  iconColor: string;
-  countColor: string;
-  query: string;
-}
+const ACCENT_CYCLE = ['#BAC7FE','#D0B9EF','#FEE1CF','#F5D17B','#58C09D33','#BAC7FE','#D0B9EF','#FEE1CF','#F5D17B','#58C09D33'];
 
-const CATEGORIES: CategoryItem[] = [
-  {
-    id: 'business',
-    name: 'Business',
-    count: '120+ Templates',
-    description: 'For managers, analysts, consultants & executives',
-    icon: Briefcase,
-    iconBg: 'bg-purple-100/80',
-    iconColor: 'text-purple-600',
-    countColor: 'text-purple-600',
-    query: 'business',
-  },
-  {
-    id: 'technology',
-    name: 'Technology',
-    count: '150+ Templates',
-    description: 'For developers, engineers, designers & IT professionals',
-    icon: Code2,
-    iconBg: 'bg-emerald-100/80',
-    iconColor: 'text-emerald-600',
-    countColor: 'text-emerald-600',
-    query: 'technology',
-  },
-  {
-    id: 'healthcare',
-    name: 'Healthcare',
-    count: '90+ Templates',
-    description: 'For doctors, nurses, therapists & healthcare staff',
-    icon: HeartPulse,
-    iconBg: 'bg-sky-100/80',
-    iconColor: 'text-sky-600',
-    countColor: 'text-sky-600',
-    query: 'healthcare',
-  },
-  {
-    id: 'education',
-    name: 'Education',
-    count: '80+ Templates',
-    description: 'For teachers, professors, trainers & academic experts',
-    icon: GraduationCap,
-    iconBg: 'bg-orange-100/80',
-    iconColor: 'text-orange-600',
-    countColor: 'text-orange-600',
-    query: 'education',
-  },
-  {
-    id: 'marketing',
-    name: 'Marketing',
-    count: '100+ Templates',
-    description: 'For marketers, SEO experts, content writers & more',
-    icon: Megaphone,
-    iconBg: 'bg-pink-100/80',
-    iconColor: 'text-pink-600',
-    countColor: 'text-pink-600',
-    query: 'marketing',
-  },
-  {
-    id: 'finance',
-    name: 'Finance',
-    count: '110+ Templates',
-    description: 'For accountants, analysts, bankers & financial experts',
-    icon: CircleDollarSign,
-    iconBg: 'bg-cyan-100/80',
-    iconColor: 'text-cyan-600',
-    countColor: 'text-cyan-600',
-    query: 'finance',
-  },
-  {
-    id: 'sales',
-    name: 'Sales',
-    count: '70+ Templates',
-    description: 'For sales reps, account managers & business dev.',
-    icon: ShoppingCart,
-    iconBg: 'bg-indigo-100/80',
-    iconColor: 'text-indigo-600',
-    countColor: 'text-indigo-600',
-    query: 'sales',
-  },
-  {
-    id: 'engineering',
-    name: 'Engineering',
-    count: '130+ Templates',
-    description: 'For mechanical, civil, electrical & aerospace eng.',
-    icon: Wrench,
-    iconBg: 'bg-amber-100/80',
-    iconColor: 'text-amber-600',
-    countColor: 'text-amber-600',
-    query: 'engineering',
-  },
-  {
-    id: 'creative',
-    name: 'Creative',
-    count: '90+ Templates',
-    description: 'For artists, designers, photographers & writers',
-    icon: Palette,
-    iconBg: 'bg-purple-100/80',
-    iconColor: 'text-purple-600',
-    countColor: 'text-purple-600',
-    query: 'creative',
-  },
-  {
-    id: 'entry-level',
-    name: 'Entry Level',
-    count: '60+ Templates',
-    description: 'Perfect for freshers and career starters',
-    icon: User,
-    iconBg: 'bg-teal-100/80',
-    iconColor: 'text-teal-600',
-    countColor: 'text-teal-600',
-    query: 'entry-level',
-  },
+const CATEGORIES = [
+  { id: 'business',    name: 'Business',    count: '120+ Templates', description: 'For managers, analysts, consultants & executives',          icon: Briefcase,        query: 'business'     },
+  { id: 'technology',  name: 'Technology',  count: '150+ Templates', description: 'For developers, engineers, designers & IT professionals',    icon: Code2,            query: 'technology'   },
+  { id: 'healthcare',  name: 'Healthcare',  count: '90+ Templates',  description: 'For doctors, nurses, therapists & healthcare staff',        icon: HeartPulse,       query: 'healthcare'   },
+  { id: 'education',   name: 'Education',   count: '80+ Templates',  description: 'For teachers, professors, trainers & academic experts',     icon: GraduationCap,    query: 'education'    },
+  { id: 'marketing',   name: 'Marketing',   count: '100+ Templates', description: 'For marketers, SEO experts, content writers & more',       icon: Megaphone,        query: 'marketing'    },
+  { id: 'finance',     name: 'Finance',     count: '110+ Templates', description: 'For accountants, analysts, bankers & financial experts',    icon: CircleDollarSign, query: 'finance'      },
+  { id: 'sales',       name: 'Sales',       count: '70+ Templates',  description: 'For sales reps, account managers & business dev.',        icon: ShoppingCart,     query: 'sales'        },
+  { id: 'engineering', name: 'Engineering', count: '130+ Templates', description: 'For mechanical, civil, electrical & aerospace eng.',       icon: Wrench,           query: 'engineering'  },
+  { id: 'creative',    name: 'Creative',    count: '90+ Templates',  description: 'For artists, designers, photographers & writers',         icon: Palette,          query: 'creative'     },
+  { id: 'entry-level', name: 'Entry Level', count: '60+ Templates',  description: 'Perfect for freshers and career starters',               icon: User,             query: 'entry-level'  },
 ];
 
 export default function ResumeCategories() {
   return (
-    <section className="py-16 sm:py-20 bg-slate-50/50 relative overflow-hidden">
+    <section className="py-16 sm:py-20 relative overflow-hidden" style={{ background: '#F8F8F6' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center justify-center gap-3 mb-3">
-            <span className="w-6 h-[1.5px] bg-violet-400/60 rounded-full"></span>
-            <span className="text-xs sm:text-5 font-bold uppercase tracking-widest text-violet-600">
-              Resume Categories
-            </span>
-            <span className="w-6 h-[1.5px] bg-violet-400/60 rounded-full"></span>
+            <span className="w-6 h-[1.5px] rounded-full" style={{ background: '#BAC7FE' }} />
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#333333' }}>Resume Categories</span>
+            <span className="w-6 h-[1.5px] rounded-full" style={{ background: '#BAC7FE' }} />
           </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-4" style={{ color: '#0F0F0F' }}>
             Find the Perfect Resume for Your Career
           </h2>
-
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Choose from a wide range of professional resume templates<br className="hidden sm:block" />
-            designed for every industry and experience level.
+          <p className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: '#333333' }}>
+            Choose from a wide range of professional resume templates designed for every industry.
           </p>
-
-          <div className="w-12 h-1 bg-violet-600 rounded-full mx-auto mt-5"></div>
+          <div className="w-12 h-1 rounded-full mx-auto mt-5" style={{ background: '#F3645C' }} />
         </div>
 
-        {/* Categories Grid (5 columns on desktop, 2-3 on tablet, 1 on mobile) */}
+        {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5 mb-8">
-          {CATEGORIES.map((cat) => {
-            const IconComponent = cat.icon;
+          {CATEGORIES.map((cat, i) => {
+            const Icon = cat.icon;
+            const accent = ACCENT_CYCLE[i % ACCENT_CYCLE.length];
             return (
-              <Link
-                key={cat.id}
-                href={`/templates?category=${cat.query}`}
-                className="group bg-white rounded-md p-6 border border-slate-200/70 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center cursor-pointer relative overflow-hidden"
-              >
-                {/* Icon Container */}
-                <div className={`w-14 h-14 rounded-full ${cat.iconBg} flex items-center justify-center mb-4 `}>
-                  <IconComponent className={`w-6 h-6 ${cat.iconColor}`} />
+              <Link key={cat.id} href={`/templates?category=${cat.query}`}
+                className="group bg-white rounded-2xl p-6 border hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center cursor-pointer relative overflow-hidden hover:-translate-y-1"
+                style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
+                  style={{ background: accent }}>
+                  <Icon className="w-6 h-6" style={{ color: '#0F0F0F' }} />
                 </div>
-
-                {/* Title */}
-                <h3 className="font-bold text-slate-900 text-base group-hover:text-violet-600 transition-colors">
-                  {cat.name}
-                </h3>
-
-                {/* Template Count */}
-                <span className={`text-xs sm:text-sm font-bold mt-1 mb-2 ${cat.countColor}`}>
-                  {cat.count}
-                </span>
-
-                {/* Description */}
-                <p className="text-slate-500 text-xs leading-relaxed max-w-[190px]">
-                  {cat.description}
-                </p>
+                <h3 className="font-bold text-base mb-1 transition-colors" style={{ color: '#0F0F0F' }}>{cat.name}</h3>
+                <span className="text-xs sm:text-sm font-bold mt-0 mb-2" style={{ color: '#F3645C' }}>{cat.count}</span>
+                <p className="text-xs leading-relaxed max-w-[190px]" style={{ color: '#333333' }}>{cat.description}</p>
               </Link>
             );
           })}
         </div>
 
-        {/* Bottom Banner Card */}
-        <div className="bg-violet-50/70 border border-violet-100/90 rounded-md p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-5xl mx-auto mb-10 shadow-2xs">
+        {/* Banner */}
+        <div className="rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-5xl mx-auto mb-10 shadow-sm"
+          style={{ background: '#BAC7FE', border: '1px solid rgba(15,15,15,0.08)' }}>
           <div className="flex items-center gap-3.5 text-center sm:text-left">
-            <div className="w-10 h-10 rounded-full bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-violet-500/20">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-md"
+              style={{ background: '#0F0F0F' }}>
               <Star className="w-5 h-5 fill-white text-white" />
             </div>
             <div>
-              <h4 className="font-bold text-slate-900 text-sm sm:text-base">
-                Can't find your category?
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-500">
-                We have templates for every profession and custom roles.
-              </p>
+              <h4 className="font-bold text-sm sm:text-base" style={{ color: '#0F0F0F' }}>Can't find your category?</h4>
+              <p className="text-xs sm:text-sm" style={{ color: '#333333' }}>We have templates for every profession and custom roles.</p>
             </div>
           </div>
-
-          <Link
-            href="/templates"
-            className="text-violet-700 hover:text-violet-900 font-bold text-sm flex items-center gap-1.5 group transition-colors cursor-pointer shrink-0"
-          >
-            <span>Browse All Templates</span>
-            <ArrowRight className="w-4 h-4 hover:translate-x-1" />
+          <Link href="/templates"
+            className="font-bold text-sm flex items-center gap-1.5 transition-colors shrink-0"
+            style={{ color: '#0F0F0F' }}>
+            Browse All Templates <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {/* Main CTA Button */}
+        {/* CTA */}
         <div className="flex justify-center">
-          <Link
-            href="/templates"
-            className="bg-violet-600 hover:bg-violet-700 text-white font-bold px-8 py-3.5 rounded-md shadow-lg shadow-violet-600/25 flex items-center gap-2.5 transition-all active:scale-95 text-sm sm:text-base cursor-pointer"
-          >
-            <FileText className="w-4 h-4 text-violet-200" />
-            <span>Explore All Templates</span>
+          <Link href="/templates"
+            className="text-white font-bold px-8 py-3.5 rounded-xl shadow-lg flex items-center gap-2.5 transition-all active:scale-95 text-sm sm:text-base hover:opacity-90"
+            style={{ background: '#0F0F0F' }}>
+            <FileText className="w-4 h-4" style={{ color: '#F5D17B' }} />
+            Explore All Templates
           </Link>
         </div>
-
       </div>
     </section>
   );

@@ -6,96 +6,74 @@ import { Sparkles, FileText, Pencil, Eye, Download, ArrowRight } from "lucide-re
 
 export default function HowItWorks() {
   const steps = [
-    {
-      num: 1,
-      isHighlighted: false,
-      icon: FileText,
-      title: "Choose Template",
-      description: "Pick from 150+ ATS-friendly templates designed by professionals.",
-    },
-    {
-      num: 2,
-      isHighlighted: true,
-      icon: Pencil,
-      title: "Build Your Resume",
-      description: "Add your information with our easy builder and AI-powered suggestions.",
-    },
-    {
-      num: 3,
-      isHighlighted: false,
-      icon: Eye,
-      title: "Preview & Optimize",
-      description: "Preview in real-time and get ATS score to optimize your resume.",
-    },
-    {
-      num: 4,
-      isHighlighted: false,
-      icon: Download,
-      title: "Download & Apply",
-      description: "Download your resume and start applying with confidence.",
-    },
+    { num: 1, icon: FileText,  title: "Choose Template",    description: "Pick from 150+ ATS-friendly templates designed by professionals.", accent: '#BAC7FE' },
+    { num: 2, icon: Pencil,    title: "Build Your Resume",  description: "Add your information with our easy builder and AI-powered suggestions.", accent: '#F5D17B', featured: true },
+    { num: 3, icon: Eye,       title: "Preview & Optimize", description: "Preview in real-time and get ATS score to optimize your resume.", accent: '#D0B9EF' },
+    { num: 4, icon: Download,  title: "Download & Apply",   description: "Download your resume and start applying with confidence.", accent: '#58C09D' },
   ];
 
   return (
-    <section className="bg-gradient-to-b from-slate-50/60 via-white to-purple-50/20 py-16 sm:py-24 border-t border-[#FFD4C2]/60 overflow-hidden font-sans">
+    <section className="py-16 sm:py-24 overflow-hidden font-sans" style={{ background: '#FEE1CF' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Top Badge */}
+        {/* Badge */}
         <div className="flex justify-center mb-5">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FFF8F5] border border-[#FFD4C2] text-[#FF570F] text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF570F]" />
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider shadow-sm"
+            style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.15)', color: '#0F0F0F' }}>
+            <Sparkles className="w-3.5 h-3.5" style={{ color: '#F3645C' }} />
             <span>EASY PROCESS</span>
           </div>
         </div>
 
-        {/* Main Headline */}
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-3xl mx-auto mb-4">
+        {/* Headline */}
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight max-w-3xl mx-auto mb-4" style={{ color: '#0F0F0F' }}>
           We make things{" "}
-          <span className="text-[#FF570F]">easy</span>
+          <span style={{ color: '#F3645C' }}>easy</span>
           <br />
           for your{" "}
-          <span className="text-[#FF570F]">business</span>
+          <span style={{ color: '#F3645C' }}>career</span>
         </h2>
 
-        {/* Subtitle */}
-        <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-xl mx-auto leading-relaxed mb-16 sm:mb-20">
+        <p className="text-sm sm:text-base lg:text-lg max-w-xl mx-auto leading-relaxed mb-16 sm:mb-20" style={{ color: '#333333' }}>
           Create professional resumes in minutes with our simple, step-by-step process.
         </p>
 
-        {/* 4-Step Process Timeline Container */}
+        {/* Steps */}
         <div className="relative max-w-6xl mx-auto mb-16">
-          {/* Horizontal Timeline Connector Line (Desktop) */}
-          <div className="hidden lg:block absolute top-[22px] left-[11%] right-[11%] h-[2px] bg-slate-200/90 z-0" />
+          {/* Connector line */}
+          <div className="hidden lg:block absolute top-[22px] left-[11%] right-[11%] h-[2px] z-0" style={{ background: 'rgba(15,15,15,0.12)' }} />
 
-          {/* 4 Steps Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 relative z-10">
             {steps.map((item) => {
               const IconComponent = item.icon;
               return (
                 <div key={item.num} className="flex flex-col items-center text-center group">
-                  {/* Step Number Badge */}
-                  {item.isHighlighted ? (
-                    <div className="w-11 h-11 rounded-full bg-[#FF570F] text-white font-extrabold text-sm flex items-center justify-center shadow-lg shadow-[#FF570F]/25 mx-auto z-10 relative transform group-hover:scale-110 transition-transform">
-                      {item.num}
-                    </div>
-                  ) : (
-                    <div className="w-11 h-11 rounded-full bg-[#FFF0EB]/80 border-2 border-purple-200/80 text-slate-800 font-extrabold text-sm flex items-center justify-center mx-auto z-10 relative bg-white transform group-hover:scale-110 transition-transform">
-                      {item.num}
-                    </div>
-                  )}
-
-                  {/* Dashed Connecting Line Down to Icon */}
-                  <div className={`w-[2px] h-6 border-l-2 border-dashed ${item.isHighlighted ? 'border-purple-400' : 'border-purple-200'} mx-auto my-1.5`} />
-
-                  {/* Icon Box Container */}
-                  <div className="w-16 h-16 rounded-2xl bg-[#FFF0EB]/60 border border-purple-200/50 text-[#FF570F] flex items-center justify-center mx-auto shadow-2xs group-hover:bg-[#FFF0EB] transition-colors">
-                    <IconComponent className="w-7 h-7 text-[#FF570F]" />
+                  {/* Number badge */}
+                  <div
+                    className="w-11 h-11 rounded-full font-extrabold text-sm flex items-center justify-center shadow-md mx-auto z-10 relative transform group-hover:scale-110 transition-transform"
+                    style={{
+                      background: item.featured ? '#0F0F0F' : '#FFFFFF',
+                      color: item.featured ? '#FFFFFF' : '#0F0F0F',
+                      border: item.featured ? 'none' : '2px solid rgba(15,15,15,0.15)',
+                    }}
+                  >
+                    {item.num}
                   </div>
 
-                  {/* Step Title & Description */}
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-4 mb-2 group-hover:text-[#FF570F] transition-colors">
+                  {/* Dashed connector */}
+                  <div className="w-[2px] h-6 border-l-2 border-dashed mx-auto my-1.5" style={{ borderColor: item.accent }} />
+
+                  {/* Icon box */}
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-sm group-hover:scale-105 transition-transform"
+                    style={{ background: item.accent }}
+                  >
+                    <IconComponent className="w-7 h-7" style={{ color: '#0F0F0F' }} />
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-bold mt-4 mb-2 transition-colors" style={{ color: '#0F0F0F' }}>
                     {item.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal max-w-[250px] mx-auto">
+                  <p className="text-xs sm:text-sm leading-relaxed font-normal max-w-[250px] mx-auto" style={{ color: '#333333' }}>
                     {item.description}
                   </p>
                 </div>
@@ -104,16 +82,15 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        {/* CTA Button */}
-        <div className="inline-flex items-center justify-center">
-          <Link
-            href="/templates"
-            className="px-8 py-4 bg-gradient-to-r from-[#FF570F] to-[#E04800] hover:from-[#E04800] hover:to-[#E04800] text-white font-bold rounded-xl shadow-lg shadow-[#FF570F]/25 inline-flex items-center gap-2.5 transition-all transform hover:scale-105 cursor-pointer text-sm sm:text-base"
-          >
-            <span>Start Building Free</span>
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
+        {/* CTA */}
+        <Link
+          href="/templates"
+          className="px-8 py-4 text-white font-bold rounded-xl shadow-lg inline-flex items-center gap-2.5 transition-all transform hover:scale-105 hover:opacity-90 text-sm sm:text-base"
+          style={{ background: '#0F0F0F' }}
+        >
+          <span>Start Building Free</span>
+          <ArrowRight className="w-5 h-5" />
+        </Link>
       </div>
     </section>
   );

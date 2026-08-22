@@ -5,61 +5,106 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-400 border-t border-slate-900 font-sans">
+    <footer style={{ background: '#0F0F0F', color: '#9ca3af', borderTop: '1px solid rgba(255,255,255,0.08)' }} className="font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-1 space-y-3">
             <Link href="/" className="inline-flex items-center gap-2 group" title="Go to Homepage">
-              <img src="/logo.svg" alt="GetEasyCV" className="h-8 w-auto object-contain" />
+              <img src="/logo.svg" alt="GetEasyCV" className="h-8 w-auto object-contain brightness-0 invert" />
             </Link>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>
               A professional resume builder with ATS-friendly templates, custom layouts, and modern themes to help you land your next job faster.
             </p>
+            {/* Accent bar */}
+            <div className="flex gap-2 pt-1">
+              {['#F5D17B','#BAC7FE','#D0B9EF','#FEE1CF','#58C09D'].map(c => (
+                <div key={c} className="w-5 h-1.5 rounded-full" style={{ background: c }} />
+              ))}
+            </div>
           </div>
 
           {/* Product */}
           <div className="space-y-2.5">
-            <h4 className="text-white font-bold text-xs uppercase tracking-wider">Product</h4>
+            <h4 className="font-bold text-xs uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Product</h4>
             <ul className="space-y-1.5 text-xs">
-              <li><Link href="/templates" className="hover:text-white transition-colors">Resume Templates</Link></li>
-              <li><Link href="/editor" className="hover:text-white transition-colors">Live Resume Editor</Link></li>
-              <li><Link href="/pricing" className="hover:text-white transition-colors">Pricing & Plans</Link></li>
-              <li><Link href="/blog" className="hover:text-white transition-colors">Career Blog</Link></li>
+              {[
+                ['/templates', 'Resume Templates'],
+                ['/editor', 'Live Resume Editor'],
+                ['/pricing', 'Pricing & Plans'],
+                ['/blog', 'Career Blog'],
+              ].map(([href, label]) => (
+                <li key={href}>
+                  <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Resources */}
           <div className="space-y-2.5">
-            <h4 className="text-white font-bold text-xs uppercase tracking-wider">Resources</h4>
+            <h4 className="font-bold text-xs uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Resources</h4>
             <ul className="space-y-1.5 text-xs">
-              <li><Link href="/templates?category=ATS%20Friendly" className="hover:text-white transition-colors">ATS-Friendly Templates</Link></li>
-              <li><Link href="/ats-checker" className="hover:text-white transition-colors">ATS Resume Checker</Link></li>
-              <li><Link href="/cover-letter" className="hover:text-white transition-colors">Cover Letter Builder</Link></li>
-              <li><Link href="/faq" className="hover:text-white transition-colors">Frequently Asked Questions</Link></li>
-              <li><Link href="/help-center" className="hover:text-white transition-colors">Help & Support</Link></li>
+              {[
+                ['/templates?category=ATS%20Friendly', 'ATS-Friendly Templates'],
+                ['/ats-checker', 'ATS Resume Checker'],
+                ['/cover-letter', 'Cover Letter Builder'],
+                ['/faq', 'Frequently Asked Questions'],
+                ['/help-center', 'Help & Support'],
+              ].map(([href, label]) => (
+                <li key={href}>
+                  <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Legal */}
           <div className="space-y-2.5">
-            <h4 className="text-white font-bold text-xs uppercase tracking-wider">Company & Legal</h4>
+            <h4 className="font-bold text-xs uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Company & Legal</h4>
             <ul className="space-y-1.5 text-xs">
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Support</Link></li>
-              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link></li>
+              {[
+                ['/about', 'About Us'],
+                ['/contact', 'Contact Support'],
+                ['/privacy', 'Privacy Policy'],
+                ['/terms', 'Terms of Service'],
+                ['/refund', 'Refund Policy'],
+              ].map(([href, label]) => (
+                <li key={href}>
+                  <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-slate-900 pt-5 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mt-8 pt-5 text-xs flex flex-col sm:flex-row items-center justify-between gap-3"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: '#6b7280' }}>
           <p>© {new Date().getFullYear()} GetEasyCV. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms</Link>
-            <Link href="/cookie-policy" className="hover:text-slate-400 transition-colors">Cookies</Link>
+            {[
+              ['/privacy', 'Privacy'],
+              ['/terms', 'Terms'],
+              ['/cookie-policy', 'Cookies'],
+            ].map(([href, label]) => (
+              <Link key={href} href={href} className="transition-colors" style={{ color: '#6b7280' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#9ca3af')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#6b7280')}>
+                {label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

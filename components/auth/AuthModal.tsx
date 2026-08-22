@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 
 /**
  * AuthModal
  * Design: Clean two-step flow matching the reference design.
- * - Login: "Continue with Google" | "Login with Email" → expands to form
- * - Signup: "Continue with Google" | "Sign up with Email" → expands to form
+ * - Login: "Continue with Google" | "Login with Email" ? expands to form
+ * - Signup: "Continue with Google" | "Sign up with Email" ? expands to form
  * - OTP: inline step after email/phone submit
  * - Full validation with clean, consistent error UI
  */
@@ -19,7 +19,7 @@ import {
 import { useAuthStore } from '@/lib/store/authStore';
 import { useAuthModalStore } from '@/lib/store/authModalStore';
 
-// ─── Shared ──────────────────────────────────────────────────────────────────
+// --- Shared ------------------------------------------------------------------
 
 const GOOGLE_SVG = (
   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
@@ -64,10 +64,10 @@ function MethodButton({
       type="button"
       onClick={onClick}
       disabled={disabled || loading}
-      className="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl border border-[#e2e2e2] bg-white hover:bg-slate-50 text-[#1a1a2e] font-semibold text-[15px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl border border-[rgba(15,15,15,0.12)] bg-white hover:bg-[#F8F8F6] text-[#0F0F0F] font-semibold text-[15px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <span className="w-5 shrink-0 flex items-center justify-center">
-        {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-400" /> : icon}
+        {loading ? <Loader2 className="w-5 h-5 animate-spin text-[#9ca3af]" /> : icon}
       </span>
       <span className="flex-1 text-center">{loading ? 'Connecting...' : label}</span>
     </button>
@@ -85,12 +85,12 @@ function InputField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-[#1a1a2e]">
+      <label htmlFor={id} className="block text-sm font-semibold text-[#0F0F0F]">
         {label}
       </label>
       <div className="relative">
         {icon && (
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af] pointer-events-none">
             {icon}
           </span>
         )}
@@ -102,12 +102,12 @@ function InputField({
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
-          className={`w-full py-3 rounded-xl border text-sm text-[#1a1a2e] font-medium placeholder:text-slate-400 outline-none transition-all bg-white
+          className={`w-full py-3 rounded-xl border text-sm text-[#0F0F0F] font-medium placeholder:text-[#9ca3af] outline-none transition-all bg-white
             ${icon ? 'pl-10' : 'pl-4'}
             ${rightEl ? 'pr-10' : 'pr-4'}
             ${error
               ? 'border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-              : 'border-[#e2e2e2] focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20'}
+              : 'border-[rgba(15,15,15,0.12)] focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/20'}
             disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {rightEl && (
@@ -115,7 +115,7 @@ function InputField({
         )}
       </div>
       {error && <p className="text-xs font-medium text-red-600">{error}</p>}
-      {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
+      {hint && !error && <p className="text-xs text-[#333333]">{hint}</p>}
     </div>
   );
 }
@@ -139,14 +139,14 @@ function PasswordStrength({ password }: { password: string }) {
         ))}
       </div>
       <div className="flex justify-between items-center">
-        <p className="text-xs text-slate-400">8+ chars, uppercase, number & symbol</p>
+        <p className="text-xs text-[#9ca3af]">8+ chars, uppercase, number & symbol</p>
         <p className={`text-xs font-bold ${textColors[score]}`}>{labels[score]}</p>
       </div>
     </div>
   );
 }
 
-// ─── OTP Step ─────────────────────────────────────────────────────────────────
+// --- OTP Step -----------------------------------------------------------------
 
 function OtpStep({
   identifier, identifierType, purpose, name, redirectTo, onBack,
@@ -260,15 +260,15 @@ function OtpStep({
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+        className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
       <div className="text-center space-y-1">
-        <h2 className="text-[22px] font-black text-[#1a1a2e] tracking-tight">Enter verification code</h2>
-        <p className="text-sm text-slate-500">
-          Sent to <span className="font-semibold text-[#1a1a2e]">{identifier}</span>
+        <h2 className="text-[22px] font-black text-[#0F0F0F] tracking-tight">Enter verification code</h2>
+        <p className="text-sm text-[#333333]">
+          Sent to <span className="font-semibold text-[#0F0F0F]">{identifier}</span>
         </p>
       </div>
 
@@ -288,8 +288,8 @@ function OtpStep({
             onChange={(e) => handleDigit(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             className={`w-12 h-14 text-center text-xl font-black rounded-xl border-2 outline-none transition-all
-              ${d ? 'border-[#FF570F] bg-[#FF570F]/5 text-[#FF570F]' : 'border-[#e2e2e2] bg-white text-[#1a1a2e]'}
-              focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20`}
+              ${d ? 'border-[#F3645C] bg-[#F3645C]/5 text-[#F3645C]' : 'border-[rgba(15,15,15,0.12)] bg-white text-[#0F0F0F]'}
+              focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/20`}
           />
         ))}
       </div>
@@ -298,22 +298,22 @@ function OtpStep({
         type="button"
         onClick={handleVerify}
         disabled={isVerifying || otp.length < 6}
-        className="w-full py-3.5 rounded-xl bg-[#1a1a2e] hover:bg-[#2d2d4e] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3.5 rounded-xl bg-[#0F0F0F] hover:bg-[#333333] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isVerifying && <Loader2 className="w-4 h-4 animate-spin" />}
         {isVerifying ? 'Verifying...' : 'Verify Code'}
       </button>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-sm text-[#333333]">
         Didn't receive the code?{' '}
         {countdown > 0 ? (
-          <span className="font-semibold text-slate-400">Resend in {countdown}s</span>
+          <span className="font-semibold text-[#9ca3af]">Resend in {countdown}s</span>
         ) : (
           <button
             type="button"
             onClick={handleResend}
             disabled={isResending}
-            className="font-bold text-[#FF570F] hover:underline disabled:opacity-50"
+            className="font-bold text-[#F3645C] hover:underline disabled:opacity-50"
           >
             {isResending ? 'Sending...' : 'Resend'}
           </button>
@@ -323,7 +323,7 @@ function OtpStep({
   );
 }
 
-// ─── Login View ───────────────────────────────────────────────────────────────
+// --- Login View ---------------------------------------------------------------
 
 type LoginView = 'methods' | 'email-password' | 'email-otp' | 'phone-otp' | 'otp-verify';
 
@@ -444,7 +444,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <div className="space-y-5">
         <div className="text-center">
-          <h2 className="text-[28px] font-black text-[#1a1a2e] tracking-tight">Login</h2>
+          <h2 className="text-[28px] font-black text-[#0F0F0F] tracking-tight">Login</h2>
         </div>
 
         {error && <ErrorBanner message={error} />}
@@ -457,15 +457,15 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
             loading={isGoogleLoading}
           />
           <MethodButton
-            icon={<Mail className="w-5 h-5 text-slate-500" />}
+            icon={<Mail className="w-5 h-5 text-[#333333]" />}
             label="Login with Email"
             onClick={() => { resetForm(); setView('email-password'); }}
           />
         </div>
 
-        <p className="text-center text-[15px] text-slate-500">
+        <p className="text-center text-[15px] text-[#333333]">
           Don't have an account?{' '}
-          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
             Sign up
           </button>
         </p>
@@ -477,12 +477,12 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   if (view === 'email-password') {
     return (
       <div className="space-y-5">
-        <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+        <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         <div className="text-center">
-          <h2 className="text-[24px] font-black text-[#1a1a2e] tracking-tight">Login with Email</h2>
+          <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">Login with Email</h2>
         </div>
 
         {error && <ErrorBanner message={error} />}
@@ -513,13 +513,13 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
               icon={<Lock className="w-4 h-4" />}
               error={fieldErrors.password}
               rightEl={
-                <button type="button" onClick={() => setShowPw(!showPw)} className="text-slate-400 hover:text-slate-700 cursor-pointer transition-colors" aria-label="Toggle password visibility">
+                <button type="button" onClick={() => setShowPw(!showPw)} className="text-[#9ca3af] hover:text-[#333333] cursor-pointer transition-colors" aria-label="Toggle password visibility">
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               }
             />
             <div className="flex justify-end mt-1.5">
-              <Link href="/forgot-password" onClick={close} className="text-xs font-semibold text-[#FF570F] hover:underline">
+              <Link href="/forgot-password" onClick={close} className="text-xs font-semibold text-[#F3645C] hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -528,7 +528,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3.5 rounded-xl bg-[#1a1a2e] hover:bg-[#2d2d4e] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#0F0F0F] hover:bg-[#333333] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
             {isLoading ? 'Logging in...' : 'Login'}
@@ -536,22 +536,22 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
         </form>
 
         <div className="relative text-center">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-          <span className="relative px-3 bg-white text-xs text-slate-400 font-medium">or</span>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[rgba(15,15,15,0.12)]" /></div>
+          <span className="relative px-3 bg-white text-xs text-[#9ca3af] font-medium">or</span>
         </div>
 
         <div className="space-y-2.5">
-          <button type="button" onClick={() => { resetForm(); setView('email-otp'); }} className="w-full py-3 rounded-xl border border-[#e2e2e2] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all text-center">
+          <button type="button" onClick={() => { resetForm(); setView('email-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
             Login with Email OTP instead
           </button>
-          <button type="button" onClick={() => { resetForm(); setView('phone-otp'); }} className="w-full py-3 rounded-xl border border-[#e2e2e2] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all text-center">
+          <button type="button" onClick={() => { resetForm(); setView('phone-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
             Login with Phone OTP instead
           </button>
         </div>
 
-        <p className="text-center text-[15px] text-slate-500">
+        <p className="text-center text-[15px] text-[#333333]">
           Don't have an account?{' '}
-          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
             Sign up
           </button>
         </p>
@@ -563,15 +563,15 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   const isPhone = view === 'phone-otp';
   return (
     <div className="space-y-5">
-      <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+      <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
       <div className="text-center">
-        <h2 className="text-[24px] font-black text-[#1a1a2e] tracking-tight">
+        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">
           {isPhone ? 'Login with Phone' : 'Login with Email OTP'}
         </h2>
-        <p className="text-sm text-slate-500 mt-1">We'll send a one-time code to verify you.</p>
+        <p className="text-sm text-[#333333] mt-1">We'll send a one-time code to verify you.</p>
       </div>
 
       {error && <ErrorBanner message={error} />}
@@ -592,16 +592,16 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
         <button
           type="submit"
           disabled={isSending}
-          className="w-full py-3.5 rounded-xl bg-[#1a1a2e] hover:bg-[#2d2d4e] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3.5 rounded-xl bg-[#0F0F0F] hover:bg-[#333333] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSending && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSending ? 'Sending code...' : 'Send Code'}
         </button>
       </form>
 
-      <p className="text-center text-[15px] text-slate-500">
+      <p className="text-center text-[15px] text-[#333333]">
         Don't have an account?{' '}
-        <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+        <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
           Sign up
         </button>
       </p>
@@ -609,7 +609,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   );
 }
 
-// ─── Signup View ──────────────────────────────────────────────────────────────
+// --- Signup View --------------------------------------------------------------
 
 type SignupView = 'methods' | 'email-password' | 'email-otp' | 'phone-otp' | 'otp-verify';
 
@@ -752,7 +752,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <div className="space-y-5">
         <div className="text-center">
-          <h2 className="text-[28px] font-black text-[#1a1a2e] tracking-tight">Create account</h2>
+          <h2 className="text-[28px] font-black text-[#0F0F0F] tracking-tight">Create account</h2>
         </div>
 
         {error && <ErrorBanner message={error} />}
@@ -765,22 +765,22 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
             loading={isGoogleLoading}
           />
           <MethodButton
-            icon={<Mail className="w-5 h-5 text-slate-500" />}
+            icon={<Mail className="w-5 h-5 text-[#333333]" />}
             label="Sign up with Email"
             onClick={() => { resetForm(); setView('email-password'); }}
           />
         </div>
 
-        <p className="text-sm text-slate-500 leading-relaxed">
+        <p className="text-sm text-[#333333] leading-relaxed">
           By creating an account, you agree to our{' '}
-          <Link href="/terms" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#FF570F]">Terms of Service</Link>
+          <Link href="/terms" onClick={close} className="underline font-medium text-[#0F0F0F] hover:text-[#F3645C]">Terms of Service</Link>
           {' '}and{' '}
-          <Link href="/privacy" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#FF570F]">Privacy Policy</Link>.
+          <Link href="/privacy" onClick={close} className="underline font-medium text-[#0F0F0F] hover:text-[#F3645C]">Privacy Policy</Link>.
         </p>
 
-        <p className="text-center text-[15px] text-slate-500">
+        <p className="text-center text-[15px] text-[#333333]">
           Already have an account?{' '}
-          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
             Login
           </button>
         </p>
@@ -792,12 +792,12 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   if (view === 'email-password') {
     return (
       <div className="space-y-5">
-        <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+        <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         <div className="text-center">
-          <h2 className="text-[24px] font-black text-[#1a1a2e] tracking-tight">Sign up with Email</h2>
+          <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">Sign up with Email</h2>
         </div>
 
         {error && <ErrorBanner message={error} />}
@@ -839,7 +839,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
               icon={<Lock className="w-4 h-4" />}
               error={fieldErrors.password}
               rightEl={
-                <button type="button" onClick={() => setShowPw(!showPw)} className="text-slate-400 hover:text-slate-700 cursor-pointer" aria-label="Toggle password">
+                <button type="button" onClick={() => setShowPw(!showPw)} className="text-[#9ca3af] hover:text-[#333333] cursor-pointer" aria-label="Toggle password">
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               }
@@ -859,7 +859,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
               icon={<Lock className="w-4 h-4" />}
               error={fieldErrors.confirmPw}
               rightEl={
-                <button type="button" onClick={() => setShowConfirmPw(!showConfirmPw)} className="text-slate-400 hover:text-slate-700 cursor-pointer" aria-label="Toggle confirm password">
+                <button type="button" onClick={() => setShowConfirmPw(!showConfirmPw)} className="text-[#9ca3af] hover:text-[#333333] cursor-pointer" aria-label="Toggle confirm password">
                   {showConfirmPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               }
@@ -877,13 +877,13 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => { setAgreed(e.target.checked); setFieldErrors((p) => ({ ...p, agreed: '' })); }}
-                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] cursor-pointer shrink-0"
+                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#F3645C] focus:ring-[#F3645C] cursor-pointer shrink-0"
               />
               <span className="text-sm text-slate-600">
                 I agree to the{' '}
-                <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Terms</Link>
+                <Link href="/terms" onClick={close} className="font-semibold text-[#0F0F0F] hover:text-[#F3645C] underline">Terms</Link>
                 {' '}and{' '}
-                <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Privacy Policy</Link>
+                <Link href="/privacy" onClick={close} className="font-semibold text-[#0F0F0F] hover:text-[#F3645C] underline">Privacy Policy</Link>
               </span>
             </label>
             {fieldErrors.agreed && <p className="text-xs font-medium text-red-600 ml-6">{fieldErrors.agreed}</p>}
@@ -892,7 +892,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3.5 rounded-xl bg-[#1a1a2e] hover:bg-[#2d2d4e] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#0F0F0F] hover:bg-[#333333] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
             {isLoading ? 'Creating account...' : 'Create Account'}
@@ -900,22 +900,22 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
         </form>
 
         <div className="relative text-center">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-          <span className="relative px-3 bg-white text-xs text-slate-400 font-medium">or</span>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[rgba(15,15,15,0.12)]" /></div>
+          <span className="relative px-3 bg-white text-xs text-[#9ca3af] font-medium">or</span>
         </div>
 
         <div className="space-y-2.5">
-          <button type="button" onClick={() => { resetForm(); setView('email-otp'); }} className="w-full py-3 rounded-xl border border-[#e2e2e2] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all text-center">
+          <button type="button" onClick={() => { resetForm(); setView('email-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
             Sign up with Email OTP instead
           </button>
-          <button type="button" onClick={() => { resetForm(); setView('phone-otp'); }} className="w-full py-3 rounded-xl border border-[#e2e2e2] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all text-center">
+          <button type="button" onClick={() => { resetForm(); setView('phone-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
             Sign up with Phone OTP instead
           </button>
         </div>
 
-        <p className="text-center text-[15px] text-slate-500">
+        <p className="text-center text-[15px] text-[#333333]">
           Already have an account?{' '}
-          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
             Login
           </button>
         </p>
@@ -927,15 +927,15 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   const isPhone = view === 'phone-otp';
   return (
     <div className="space-y-5">
-      <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+      <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
       <div className="text-center">
-        <h2 className="text-[24px] font-black text-[#1a1a2e] tracking-tight">
+        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">
           {isPhone ? 'Sign up with Phone' : 'Sign up with Email OTP'}
         </h2>
-        <p className="text-sm text-slate-500 mt-1">We'll send a code to verify your {isPhone ? 'number' : 'email'}.</p>
+        <p className="text-sm text-[#333333] mt-1">We'll send a code to verify your {isPhone ? 'number' : 'email'}.</p>
       </div>
 
       {error && <ErrorBanner message={error} />}
@@ -971,13 +971,13 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
               type="checkbox"
               checked={agreed}
               onChange={(e) => { setAgreed(e.target.checked); setFieldErrors((p) => ({ ...p, agreed: '' })); }}
-              className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] cursor-pointer shrink-0"
+              className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#F3645C] focus:ring-[#F3645C] cursor-pointer shrink-0"
             />
             <span className="text-sm text-slate-600">
               I agree to the{' '}
-              <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Terms</Link>
+              <Link href="/terms" onClick={close} className="font-semibold text-[#0F0F0F] hover:text-[#F3645C] underline">Terms</Link>
               {' '}and{' '}
-              <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Privacy Policy</Link>
+              <Link href="/privacy" onClick={close} className="font-semibold text-[#0F0F0F] hover:text-[#F3645C] underline">Privacy Policy</Link>
             </span>
           </label>
           {fieldErrors.agreed && <p className="text-xs font-medium text-red-600 ml-6">{fieldErrors.agreed}</p>}
@@ -986,16 +986,16 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
         <button
           type="submit"
           disabled={isSending}
-          className="w-full py-3.5 rounded-xl bg-[#1a1a2e] hover:bg-[#2d2d4e] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3.5 rounded-xl bg-[#0F0F0F] hover:bg-[#333333] text-white font-bold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSending && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSending ? 'Sending code...' : 'Send Code'}
         </button>
       </form>
 
-      <p className="text-center text-[15px] text-slate-500">
+      <p className="text-center text-[15px] text-[#333333]">
         Already have an account?{' '}
-        <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
+        <button type="button" onClick={() => setTab('login')} className="font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors">
           Login
         </button>
       </p>
@@ -1003,7 +1003,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   );
 }
 
-// ─── Root Modal ───────────────────────────────────────────────────────────────
+// --- Root Modal ---------------------------------------------------------------
 
 export default function AuthModal() {
   const { isOpen, tab, redirectTo, close } = useAuthModalStore();
@@ -1038,13 +1038,13 @@ export default function AuthModal() {
         role="dialog"
         aria-modal="true"
         aria-label={tab === 'login' ? 'Sign in' : 'Create account'}
-        className="relative w-full max-w-[440px] bg-[#f0f0f5] rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-[440px] bg-[#F8F8F6] rounded-2xl shadow-2xl overflow-hidden"
       >
         {/* Close */}
         <button
           type="button"
           onClick={close}
-          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center text-slate-500 hover:text-slate-800 transition-all shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center text-[#333333] hover:text-slate-800 transition-all shadow-sm cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />

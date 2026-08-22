@@ -1,0 +1,376 @@
+﻿No.,Phase,SEO Task,Priority,Status
+1,Strategy,Define the primary purpose and goals of the website,P0,☐
+2,Strategy,"Define the target audience (demographics, intent, pain points)",P0,☐
+3,Strategy,Define target country/region and language for SEO,P0,☐
+4,Strategy,"Define primary SEO goals (traffic, leads, revenue, visibility)",P0,☐
+5,Strategy,Define conversion goals and micro-conversion goals,P0,☐
+6,Strategy,Identify top 5–10 direct and indirect competitors,P1,☐
+7,Strategy,Identify business differentiators vs. competitors,P1,☐
+8,Strategy,Review competitor top-ranking pages and content strategy,P1,☐
+9,Strategy,Determine SEO budget and resource allocation,P1,☐
+10,Strategy,"Set measurable KPIs (rankings, traffic, CTR, conversions)",P1,☐
+11,Strategy,Decide on site language strategy (single vs. multilingual),P2,☐
+12,Strategy,Document baseline metrics before starting SEO work,P1,☐
+13,Technical Audit,Crawl the entire website using Screaming Frog or Sitebulb,P0,☐
+14,Technical Audit,Identify all pages returning 4xx errors and document them,P0,☐
+15,Technical Audit,Identify all pages returning 5xx server errors,P0,☐
+16,Technical Audit,Find all broken internal links (404 destinations),P0,☐
+17,Technical Audit,Find all broken external links (404 outbound),P2,☐
+18,Technical Audit,Identify redirect chains (A→B→C) and consolidate to single hops,P0,☐
+19,Technical Audit,Identify redirect loops and fix immediately,P0,☐
+20,Technical Audit,Confirm HTTPS is enforced site-wide (no HTTP pages),P0,☐
+21,Technical Audit,Verify HTTP to HTTPS redirect is in place (301),P0,☐
+22,Technical Audit,Check for mixed content warnings (HTTP assets on HTTPS pages),P1,☐
+23,Technical Audit,Verify www vs. non-www canonical version is consistent and redirected,P0,☐
+24,Technical Audit,"Check all pages for correct HTTP status codes (200, 301, 404)",P0,☐
+25,Technical Audit,Identify duplicate title tags across all indexed pages,P0,☐
+26,Technical Audit,Identify duplicate meta descriptions across all indexed pages,P1,☐
+27,Technical Audit,Identify duplicate H1 tags across all indexed pages,P1,☐
+28,Technical Audit,Identify missing title tags on indexable pages,P0,☐
+29,Technical Audit,Identify missing meta descriptions on indexable pages,P1,☐
+30,Technical Audit,Identify missing H1 tags on indexable pages,P1,☐
+31,Technical Audit,Identify title tags that are too short (under 30 chars) or too long (over 60 chars),P1,☐
+32,Technical Audit,Identify meta descriptions that are too long (over 160 chars),P1,☐
+33,Technical Audit,Find pages with multiple H1 tags,P1,☐
+34,Technical Audit,Identify thin content pages (under 200 words with no value),P1,☐
+35,Technical Audit,Identify near-duplicate content pages using similarity tools,P1,☐
+36,Technical Audit,Check canonical tags on all indexable pages for correctness,P0,☐
+37,Technical Audit,Identify self-referencing canonical tags (confirm they are correct),P1,☐
+38,Technical Audit,Identify pages with missing or incorrect canonical tags,P0,☐
+39,Technical Audit,Check robots.txt file exists and is accessible at /robots.txt,P0,☐
+40,Technical Audit,Verify robots.txt is not accidentally blocking important pages or directories,P0,☐
+41,Technical Audit,Check XML sitemap exists and is accessible at /sitemap.xml,P0,☐
+42,Technical Audit,"Validate XML sitemap for errors (malformed URLs, blocked pages)",P0,☐
+43,Technical Audit,"Ensure XML sitemap only includes canonicalized, indexable 200-status URLs",P0,☐
+44,Technical Audit,Verify XML sitemap is submitted to Google Search Console,P0,☐
+45,Technical Audit,Check URL structure for uppercase letters and fix to lowercase,P1,☐
+46,Technical Audit,Check URL structure for underscores and convert to hyphens,P1,☐
+47,Technical Audit,Identify excessively long URLs (over 115 characters),P2,☐
+48,Technical Audit,Check for URL parameters causing duplicate content issues,P1,☐
+49,Technical Audit,Verify hreflang tags are correct if site has multiple languages/regions,P1,☐
+50,Technical Audit,Identify orphan pages (pages with no internal links pointing to them),P1,☐
+51,Technical Audit,Check for pagination issues (rel=next/prev or duplicate paginated content),P2,☐
+52,Technical Audit,Verify 404 error page returns status code 404 (not 200),P0,☐
+53,Technical Audit,Check for soft 404 pages (200 status but effectively empty),P1,☐
+54,Technical Audit,Audit JavaScript-rendered content for crawlability,P1,☐
+55,Technical Audit,Confirm server response time is under 200ms (TTFB),P1,☐
+56,Google Search Console & Analytics,Verify website ownership in Google Search Console,P0,☐
+57,Google Search Console & Analytics,"Add all property variants (www, non-www, HTTP, HTTPS) in GSC",P0,☐
+58,Google Search Console & Analytics,Set preferred domain version in GSC,P0,☐
+59,Google Search Console & Analytics,Submit XML sitemap to Google Search Console,P0,☐
+60,Google Search Console & Analytics,Check GSC for Manual Actions and resolve if any,P0,☐
+61,Google Search Console & Analytics,"Check GSC Coverage report for Excluded, Error, and Valid pages",P0,☐
+62,Google Search Console & Analytics,Identify pages marked as 'Discovered – currently not indexed' and investigate,P1,☐
+63,Google Search Console & Analytics,Identify pages marked as 'Crawled – currently not indexed' and investigate,P1,☐
+64,Google Search Console & Analytics,Check GSC for crawl errors and fix priority issues,P0,☐
+65,Google Search Console & Analytics,Review GSC Core Web Vitals report (Poor/Needs Improvement pages),P1,☐
+66,Google Search Console & Analytics,Review GSC Mobile Usability report and fix all errors,P1,☐
+67,Google Search Console & Analytics,Review GSC Rich Results / Enhancements report,P2,☐
+68,Google Search Console & Analytics,Set up Google Analytics 4 (GA4) property and data stream,P0,☐
+69,Google Search Console & Analytics,Link GA4 property to Google Search Console,P0,☐
+70,Google Search Console & Analytics,Link GA4 to Google Ads if applicable,P2,☐
+71,Google Search Console & Analytics,"Set up GA4 conversion events (form submit, purchase, sign-up)",P0,☐
+72,Google Search Console & Analytics,Configure GA4 internal traffic filter (exclude own IP),P1,☐
+73,Google Search Console & Analytics,"Enable enhanced measurement in GA4 (scroll, outbound clicks, video)",P1,☐
+74,Google Search Console & Analytics,Set up Google Tag Manager container if not already done,P1,☐
+75,Google Search Console & Analytics,Verify GA4 data is flowing correctly (real-time report),P0,☐
+76,Google Search Console & Analytics,Set up Bing Webmaster Tools and submit sitemap,P2,☐
+77,Crawling & Indexing,Review robots.txt and confirm Googlebot is not blocked from key sections,P0,☐
+78,Crawling & Indexing,Check pages with noindex meta tag — confirm they should be noindex,P0,☐
+79,Crawling & Indexing,Identify pages blocked by robots.txt that should be indexed,P0,☐
+80,Crawling & Indexing,Check X-Robots-Tag HTTP headers for unintentional noindex,P1,☐
+81,Crawling & Indexing,Use URL Inspection Tool in GSC to check individual page indexing status,P1,☐
+82,Crawling & Indexing,Request indexing via GSC for newly published or updated priority pages,P1,☐
+83,Crawling & Indexing,Ensure XML sitemap is dynamically updated on new content publication,P1,☐
+84,Crawling & Indexing,"Set correct crawl budget by blocking non-value pages (facets, filters)",P2,☐
+85,Crawling & Indexing,Implement rel=canonical on paginated pages pointing to main page if needed,P1,☐
+86,Crawling & Indexing,Remove or noindex staging/dev pages that may have been indexed,P0,☐
+87,Crawling & Indexing,Confirm login-protected pages are not being indexed,P0,☐
+88,Crawling & Indexing,Check for URL parameter handling in GSC parameter settings,P2,☐
+89,Crawling & Indexing,Ensure Googlebot can render JavaScript-dependent content,P1,☐
+90,Crawling & Indexing,Verify Google can access CSS and JS files (not blocked by robots.txt),P0,☐
+91,Website Architecture,Map out the full site structure and navigation hierarchy,P1,☐
+92,Website Architecture,Ensure all important pages are within 3 clicks from the homepage,P1,☐
+93,Website Architecture,"Verify a clear and logical URL hierarchy (e.g., /category/subcategory/page)",P1,☐
+94,Website Architecture,Ensure breadcrumbs are implemented on all interior pages,P2,☐
+95,Website Architecture,Implement breadcrumb structured data markup,P2,☐
+96,Website Architecture,Verify the main navigation includes priority pages,P1,☐
+97,Website Architecture,Implement a footer with links to key pages,P2,☐
+98,Website Architecture,Create or update an HTML sitemap for users,P2,☐
+99,Website Architecture,Verify XML sitemap is hierarchically organized and complete,P1,☐
+100,Website Architecture,Audit and flatten URL depth — reduce unnecessary subdirectories,P2,☐
+101,Website Architecture,Ensure category pages exist for all major content groupings,P2,☐
+102,Website Architecture,Check that hub pages link to all relevant subtopic pages,P2,☐
+103,Keyword Research,"Build a seed keyword list based on products, services, and topics",P0,☐
+104,Keyword Research,"Expand seed keywords using Google Keyword Planner, Ahrefs, or Semrush",P0,☐
+105,Keyword Research,Identify high-volume head keywords (informational and transactional),P1,☐
+106,Keyword Research,Identify long-tail keyword opportunities with lower competition,P1,☐
+107,Keyword Research,"Analyze search intent for each keyword (informational, navigational, transactional, commercial)",P0,☐
+108,Keyword Research,Identify keywords currently ranking in positions 4–20 for quick wins,P1,☐
+109,Keyword Research,Identify question-based keywords for featured snippet opportunities,P2,☐
+110,Keyword Research,Analyze competitor keyword gaps (keywords they rank for but you don't),P1,☐
+111,Keyword Research,Group related keywords by topic and search intent,P1,☐
+112,Keyword Research,Identify seasonal or trending keywords relevant to the business,P2,☐
+113,Keyword Research,Check keyword difficulty scores and set realistic ranking targets,P1,☐
+114,Keyword Research,Identify local keyword opportunities (if applicable),P1,☐
+115,Keyword Research,"Review Google SERP features for target keywords (snippets, PAA, maps)",P1,☐
+116,Keyword Research,"Document monthly search volume, difficulty, and CPC for each keyword",P1,☐
+117,Keyword Mapping,Assign a primary keyword to every indexable page,P0,☐
+118,Keyword Mapping,Assign 2–5 secondary/supporting keywords to each page,P1,☐
+119,Keyword Mapping,Ensure no two pages target the same primary keyword (prevent cannibalization),P0,☐
+120,Keyword Mapping,"Map keywords to the correct page type (homepage, category, blog, product)",P1,☐
+121,Keyword Mapping,Identify gaps where target keywords have no corresponding page,P1,☐
+122,Keyword Mapping,Create new page briefs for keyword gaps requiring new content,P1,☐
+123,Keyword Mapping,"Document keyword mapping in a master spreadsheet with URL, primary KW, secondary KWs",P1,☐
+124,Keyword Mapping,Validate that mapped keywords match the actual search intent of the page,P0,☐
+125,On-Page SEO,"Write a unique, descriptive title tag for every indexable page",P0,☐
+126,On-Page SEO,"Include primary keyword in title tag, preferably near the beginning",P0,☐
+127,On-Page SEO,Keep title tags between 30–60 characters to avoid truncation in SERPs,P0,☐
+128,On-Page SEO,"Write a unique, compelling meta description for every indexable page",P1,☐
+129,On-Page SEO,Include primary keyword naturally in meta description,P1,☐
+130,On-Page SEO,Keep meta descriptions between 120–160 characters,P1,☐
+131,On-Page SEO,Ensure every page has exactly one H1 tag,P0,☐
+132,On-Page SEO,Include primary keyword in the H1 tag,P0,☐
+133,On-Page SEO,Use H2 and H3 tags hierarchically to structure page content,P1,☐
+134,On-Page SEO,Include secondary keywords naturally in H2/H3 subheadings,P2,☐
+135,On-Page SEO,Include primary keyword in the first 100 words of body content,P1,☐
+136,On-Page SEO,Use keyword variations and LSI terms throughout the page body,P2,☐
+137,On-Page SEO,"Ensure URLs are short, descriptive, and include the primary keyword",P1,☐
+138,On-Page SEO,Remove stop words from URLs where they add no value,P2,☐
+139,On-Page SEO,Use canonical tags correctly on all indexable pages,P0,☐
+140,On-Page SEO,"Add Open Graph (og:title, og:description, og:image) meta tags",P1,☐
+141,On-Page SEO,Add Twitter Card meta tags,P2,☐
+142,On-Page SEO,Verify og:image is the correct size (1200×630px minimum),P2,☐
+143,On-Page SEO,Add rel=author markup where applicable,P3,☐
+144,On-Page SEO,Ensure no important pages have noindex tag by mistake,P0,☐
+145,Content SEO,"Audit all existing content for relevance, accuracy, and quality",P1,☐
+146,Content SEO,"Identify and update outdated content (old dates, obsolete information)",P1,☐
+147,Content SEO,Identify thin content pages (under 300 words) and expand or consolidate,P1,☐
+148,Content SEO,Identify duplicate content (internal and external) and resolve with canonical or noindex,P0,☐
+149,Content SEO,Create a content calendar based on keyword mapping and topic clusters,P1,☐
+150,Content SEO,Write content that fully covers the topic and matches search intent,P1,☐
+151,Content SEO,"Structure content with clear introduction, body, and conclusion",P2,☐
+152,Content SEO,Use numbered and bulleted lists to improve readability and snippet chances,P2,☐
+153,Content SEO,Add FAQ sections targeting 'People Also Ask' questions,P2,☐
+154,Content SEO,Include a clear and compelling CTA on every page,P1,☐
+155,Content SEO,Add internal links to relevant related content within body text,P1,☐
+156,Content SEO,Ensure content is written for the target audience's reading level,P2,☐
+157,Content SEO,Avoid keyword stuffing — use keywords naturally throughout,P0,☐
+158,Content SEO,Ensure each blog/article has a published and last-updated date,P2,☐
+159,Content SEO,Create pillar pages for core topics and link to supporting cluster content,P2,☐
+160,Content SEO,Add relevant external links to authoritative sources (opens in new tab),P2,☐
+161,Content SEO,Review content for grammatical errors using a grammar checker,P2,☐
+162,Content SEO,Implement content refresh schedule for evergreen pages (every 6–12 months),P2,☐
+163,Internal Linking,Audit all internal links for broken destinations (404 errors),P0,☐
+164,Internal Linking,Identify orphan pages and add at least 2–3 internal links to each,P1,☐
+165,Internal Linking,Ensure homepage links to all top-priority pages,P1,☐
+166,Internal Linking,"Use descriptive, keyword-rich anchor text for internal links",P1,☐
+167,Internal Linking,Avoid using generic anchor text like 'click here' or 'read more',P1,☐
+168,Internal Linking,Audit pages with excessive outbound internal links (over 100),P2,☐
+169,Internal Linking,Implement hub-and-spoke internal linking model for topic clusters,P2,☐
+170,Internal Linking,Ensure each new blog post links to at least 3 related internal pages,P2,☐
+171,Internal Linking,Add contextual links from high-authority pages to pages needing ranking boost,P2,☐
+172,Internal Linking,Check that no important page is more than 3 clicks deep from the homepage,P1,☐
+173,Internal Linking,Fix any internal links pointing to redirected URLs (update to final destination),P1,☐
+174,Internal Linking,Implement related posts/content widgets where appropriate,P3,☐
+175,Image SEO,"Add descriptive, keyword-relevant alt text to all images",P0,☐
+176,Image SEO,Leave alt text empty (alt='') for decorative images only,P1,☐
+177,Image SEO,"Rename image files with descriptive, hyphen-separated names before uploading",P1,☐
+178,Image SEO,Convert all images to WebP or AVIF format for better compression,P1,☐
+179,Image SEO,Compress all images — keep file size under 150KB where possible,P1,☐
+180,Image SEO,Implement lazy loading for below-the-fold images,P1,☐
+181,Image SEO,Ensure images have explicit width and height attributes to prevent layout shift (CLS),P1,☐
+182,Image SEO,Implement responsive images using srcset and sizes attributes,P2,☐
+183,Image SEO,Serve images from a CDN for faster delivery globally,P2,☐
+184,Image SEO,Audit for oversized images (over 1MB) and resize immediately,P0,☐
+185,Image SEO,Add image structured data where product/article images are used,P3,☐
+186,Page Speed & Core Web Vitals,Run Lighthouse audit on all key pages and document scores,P0,☐
+187,Page Speed & Core Web Vitals,Run PageSpeed Insights (PSI) for both mobile and desktop,P0,☐
+188,Page Speed & Core Web Vitals,Identify and optimize the LCP (Largest Contentful Paint) element on each page,P0,☐
+189,Page Speed & Core Web Vitals,Ensure LCP loads within 2.5 seconds on mobile and desktop,P0,☐
+190,Page Speed & Core Web Vitals,Preload the LCP image/resource using <link rel=preload>,P0,☐
+191,Page Speed & Core Web Vitals,Eliminate render-blocking resources (CSS and JS in the critical path),P1,☐
+192,Page Speed & Core Web Vitals,Defer non-critical JavaScript,P1,☐
+193,Page Speed & Core Web Vitals,Inline critical CSS for above-the-fold content,P1,☐
+194,Page Speed & Core Web Vitals,"Minify HTML, CSS, and JavaScript files",P1,☐
+195,Page Speed & Core Web Vitals,Enable Gzip or Brotli compression on the server,P1,☐
+196,Page Speed & Core Web Vitals,Set correct browser cache-control headers for static assets,P1,☐
+197,Page Speed & Core Web Vitals,Reduce INP (Interaction to Next Paint) by optimizing event handlers,P1,☐
+198,Page Speed & Core Web Vitals,Achieve INP under 200ms for good user experience,P1,☐
+199,Page Speed & Core Web Vitals,Fix all CLS (Cumulative Layout Shift) issues — target score under 0.1,P0,☐
+200,Page Speed & Core Web Vitals,"Identify and fix layout shift causes (ads, embeds, dynamic content, fonts)",P1,☐
+201,Page Speed & Core Web Vitals,Use font-display: swap to prevent invisible text during font load,P1,☐
+202,Page Speed & Core Web Vitals,Reduce TTFB (Time to First Byte) — target under 800ms on mobile,P1,☐
+203,Page Speed & Core Web Vitals,Implement a CDN to reduce latency for global users,P2,☐
+204,Page Speed & Core Web Vitals,"Remove unused CSS (unused Tailwind classes, large framework styles)",P2,☐
+205,Page Speed & Core Web Vitals,Remove unused JavaScript from the critical path,P2,☐
+206,Page Speed & Core Web Vitals,Ensure all Core Web Vitals pass 'Good' threshold in field data (CrUX),P1,☐
+207,Page Speed & Core Web Vitals,Monitor CWV in GSC 'Core Web Vitals' report monthly,P1,☐
+208,Mobile SEO,Verify site uses responsive design (not a separate mobile URL),P0,☐
+209,Mobile SEO,Test mobile rendering using Google Mobile-Friendly Test tool,P0,☐
+210,Mobile SEO,Check viewport meta tag is correctly set on all pages,P0,☐
+211,Mobile SEO,Fix all mobile usability errors reported in GSC Mobile Usability report,P0,☐
+212,Mobile SEO,"Ensure tap targets (buttons, links) are at least 48×48px on mobile",P1,☐
+213,Mobile SEO,Ensure text is readable without zooming (font size 16px minimum),P1,☐
+214,Mobile SEO,Fix content wider than the screen (horizontal scroll issues),P1,☐
+215,Mobile SEO,Test all forms and CTAs on mobile devices,P1,☐
+216,Mobile SEO,Ensure mobile page speed scores are acceptable (60+ in PSI),P1,☐
+217,Mobile SEO,Confirm intrusive interstitials/pop-ups do not block content on mobile,P0,☐
+218,Mobile SEO,Check that mobile and desktop content are equivalent (same content),P0,☐
+219,Mobile SEO,Test site on multiple screen sizes and real devices,P2,☐
+220,Structured Data / Schema,Implement Organization schema on homepage and About page,P1,☐
+221,Structured Data / Schema,Implement WebSite schema with SearchAction (sitelinks search box),P1,☐
+222,Structured Data / Schema,Implement BreadcrumbList schema on all interior pages,P2,☐
+223,Structured Data / Schema,Implement Article or BlogPosting schema on all blog/article pages,P2,☐
+224,Structured Data / Schema,Implement FAQPage schema on pages with FAQ sections,P2,☐
+225,Structured Data / Schema,Implement Product schema on e-commerce product pages (if applicable),P1,☐
+226,Structured Data / Schema,Implement Review/AggregateRating schema on product/service pages,P2,☐
+227,Structured Data / Schema,Implement LocalBusiness schema if the business has a physical location,P1,☐
+228,Structured Data / Schema,Implement Event schema for upcoming events (if applicable),P3,☐
+229,Structured Data / Schema,Implement HowTo schema for how-to content,P3,☐
+230,Structured Data / Schema,Validate all schema markup using Google Rich Results Test,P1,☐
+231,Structured Data / Schema,Validate all schema using Schema.org Validator,P1,☐
+232,Structured Data / Schema,Check GSC Rich Results report for errors or warnings on schema,P1,☐
+233,Structured Data / Schema,Fix all schema errors flagged by GSC within one week,P1,☐
+234,Structured Data / Schema,Use JSON-LD format for all structured data (not Microdata),P1,☐
+235,Structured Data / Schema,Ensure structured data is consistent with visible page content,P0,☐
+236,E-E-A-T & Trust,Create or update a detailed About Us page with team/company information,P1,☐
+237,E-E-A-T & Trust,Add author bio pages for all content creators/writers,P1,☐
+238,E-E-A-T & Trust,"Include author name, credentials, and links on all article pages",P1,☐
+239,E-E-A-T & Trust,"Create a clear Contact Us page with address, phone, email, and map",P1,☐
+240,E-E-A-T & Trust,"Ensure Privacy Policy page is present, up to date, and linked in footer",P0,☐
+241,E-E-A-T & Trust,Ensure Terms & Conditions page is present and linked in footer,P1,☐
+242,E-E-A-T & Trust,Add a Cookie Policy or Cookie Consent banner if required by GDPR,P1,☐
+243,E-E-A-T & Trust,"Display trust signals: SSL certificate badge, certifications, awards",P2,☐
+244,E-E-A-T & Trust,Add genuine customer reviews and testimonials with names/photos,P2,☐
+245,E-E-A-T & Trust,Include a company registration number or license where applicable,P2,☐
+246,E-E-A-T & Trust,Display clear refund/return policy for e-commerce sites,P1,☐
+247,E-E-A-T & Trust,Ensure YMYL (Your Money or Your Life) pages have expert authorship,P1,☐
+248,E-E-A-T & Trust,Link author bios to verified LinkedIn profiles or other authority sources,P2,☐
+249,E-E-A-T & Trust,Include citations and references for factual/statistical claims,P2,☐
+250,E-E-A-T & Trust,"Ensure NAP (Name, Address, Phone) is consistent across all site pages",P1,☐
+251,E-E-A-T & Trust,Add social media profile links in site footer or contact page,P2,☐
+252,Local SEO,Create or claim Google Business Profile (GBP) listing,P0,☐
+253,Local SEO,"Complete all sections of Google Business Profile (name, address, hours, photos, description)",P0,☐
+254,Local SEO,"Ensure business name, address, and phone (NAP) are 100% consistent across all platforms",P0,☐
+255,Local SEO,Add business to Bing Places for Business,P1,☐
+256,Local SEO,Add business to Apple Maps Connect,P2,☐
+257,Local SEO,Submit NAP to top 20 local data aggregators and directories,P1,☐
+258,Local SEO,Identify and fix NAP inconsistencies across all citations,P1,☐
+259,Local SEO,Implement LocalBusiness schema markup on homepage and contact page,P1,☐
+260,Local SEO,Create individual location pages for each physical business location (if multiple),P1,☐
+261,Local SEO,"Optimize each location page with local keywords, address, and map embed",P1,☐
+262,Local SEO,Actively request reviews on Google Business Profile from customers,P1,☐
+263,Local SEO,Respond to all Google reviews (positive and negative),P1,☐
+264,Local SEO,"Add GBP posts (updates, offers, events) at least twice per month",P2,☐
+265,Local SEO,"Add high-quality photos to GBP (interior, exterior, team, products)",P1,☐
+266,Local SEO,Monitor and maintain a minimum 4.0 star rating on GBP,P2,☐
+267,Local SEO,Target local keywords (city/region + service) in title tags and H1s,P1,☐
+268,Local SEO,Embed Google Map on Contact/Location page,P2,☐
+269,Off-Page SEO,"Audit existing backlink profile using Ahrefs, Semrush, or Moz",P1,☐
+270,Off-Page SEO,Identify and disavow toxic or spammy backlinks using Google Disavow Tool,P1,☐
+271,Off-Page SEO,Analyze competitor backlink profiles to identify link opportunities,P1,☐
+272,Off-Page SEO,Identify unlinked brand mentions and request link attribution,P2,☐
+273,Off-Page SEO,Identify broken links on other websites and pitch your content as replacement,P2,☐
+274,Off-Page SEO,Conduct digital PR campaigns to earn editorial backlinks,P2,☐
+275,Off-Page SEO,"Publish original research, data studies, or industry reports for natural link earning",P2,☐
+276,Off-Page SEO,"Guest post on relevant, high-authority websites in your niche",P2,☐
+277,Off-Page SEO,Submit website to relevant industry directories and associations,P2,☐
+278,Off-Page SEO,Monitor new backlinks weekly using Ahrefs or Semrush alerts,P2,☐
+279,Off-Page SEO,Avoid purchasing links or participating in link schemes (Google penalty risk),P0,☐
+280,Off-Page SEO,Track Domain Rating (DR) and Domain Authority (DA) monthly,P2,☐
+281,Off-Page SEO,Build social profiles on all major platforms and ensure consistent NAP,P2,☐
+282,Off-Page SEO,"Engage in relevant online communities (forums, Reddit, Quora) for brand visibility",P3,☐
+283,Off-Page SEO,Identify and pursue HARO (Help a Reporter Out) or similar PR opportunities,P3,☐
+284,Backlinks & Authority,Check the total number of referring domains linking to the site,P1,☐
+285,Backlinks & Authority,Check the ratio of dofollow vs. nofollow backlinks,P2,☐
+286,Backlinks & Authority,Identify top linked pages and ensure they have strong internal link distribution,P2,☐
+287,Backlinks & Authority,Identify pages on the site with high authority that can pass link equity internally,P2,☐
+288,Backlinks & Authority,Monitor and track Domain Rating (DR) changes over time,P2,☐
+289,Backlinks & Authority,Set a monthly goal for new referring domain acquisition,P2,☐
+290,Backlinks & Authority,Identify anchor text distribution of inbound links (check over-optimization),P2,☐
+291,Backlinks & Authority,Conduct a quarterly full backlink audit and clean toxic links via disavow,P2,☐
+292,Security,Confirm SSL/TLS certificate is valid and not expired,P0,☐
+293,Security,Set SSL certificate auto-renewal to avoid expiry,P0,☐
+294,Security,Check for malware or security issues using Google Safe Browsing or Sucuri,P0,☐
+295,Security,Verify no security warnings appear for the site in Chrome or GSC,P0,☐
+296,Security,Check GSC Security Issues report and resolve any flagged items,P0,☐
+297,Security,Implement HTTP Strict Transport Security (HSTS) headers,P1,☐
+298,Security,Implement Content Security Policy (CSP) headers,P1,☐
+299,Security,Implement X-Frame-Options and X-Content-Type-Options headers,P1,☐
+300,Security,"Ensure admin panel (/admin, /wp-admin) is not indexed or accessible publicly",P0,☐
+301,Security,"Keep all CMS, plugins, and themes updated to prevent vulnerabilities",P1,☐
+302,Security,Enable two-factor authentication (2FA) on all CMS and hosting accounts,P1,☐
+303,Index Management,Audit total number of pages indexed in Google vs. expected number,P1,☐
+304,Index Management,"Investigate over-indexation (too many pages indexed — check facets, filters, tags)",P1,☐
+305,Index Management,Investigate under-indexation (important pages not indexed),P1,☐
+306,Index Management,"Noindex all low-value pages (tag pages, date archives, author archives)",P1,☐
+307,Index Management,"Noindex all utility/admin pages (login, cart, thank-you, order-confirmation)",P0,☐
+308,Index Management,Ensure search results pages on the site are not indexed,P0,☐
+309,Index Management,Implement canonical tags on all filtered/sorted URL variations,P1,☐
+310,Index Management,Remove all test/staging pages from the live index immediately,P0,☐
+311,Index Management,Use GSC URL Removal tool to temporarily remove pages from index when needed,P1,☐
+312,Keyword Cannibalization,Identify pages targeting the same primary keyword using GSC data,P1,☐
+313,Keyword Cannibalization,Use position tracking tools to find keyword cannibalization instances,P1,☐
+314,Keyword Cannibalization,For cannibalized keywords: consolidate content into one stronger page,P1,☐
+315,Keyword Cannibalization,Redirect the weaker of the two cannibalizing pages (if redundant),P1,☐
+316,Keyword Cannibalization,Differentiate pages targeting similar topics by adjusting search intent focus,P1,☐
+317,Keyword Cannibalization,Use canonical tags to indicate the preferred page where consolidation is not feasible,P1,☐
+318,Keyword Cannibalization,Monitor cannibalization resolution by tracking ranking changes weekly,P2,☐
+319,Conversion Optimization,Ensure every page has a clear primary CTA above the fold,P1,☐
+320,Conversion Optimization,"A/B test different CTA copy, colors, and placement",P2,☐
+321,Conversion Optimization,Ensure all forms are functional and submit correctly on mobile and desktop,P1,☐
+322,Conversion Optimization,"Add trust signals near CTAs (reviews, guarantees, SSL badge)",P2,☐
+323,Conversion Optimization,Implement exit-intent popups or scroll-triggered lead capture forms,P3,☐
+324,Conversion Optimization,Reduce form fields to the minimum required to lower friction,P2,☐
+325,Conversion Optimization,Add live chat or chatbot for high-intent landing pages,P3,☐
+326,Conversion Optimization,Optimize landing pages based on organic search click-through rates,P2,☐
+327,Conversion Optimization,Set up GA4 funnel exploration reports to identify drop-off points,P2,☐
+328,Conversion Optimization,Set up GA4 heatmaps or integrate Hotjar/Microsoft Clarity for UX insights,P2,☐
+329,Conversion Optimization,Ensure thank-you pages and confirmation screens fire GA4 conversion events,P1,☐
+330,SEO Monitoring,Set up keyword rank tracking for all primary target keywords,P0,☐
+331,SEO Monitoring,"Set up weekly keyword ranking reports in Semrush, Ahrefs, or similar",P1,☐
+332,SEO Monitoring,Monitor organic traffic weekly in GA4 and compare to previous period,P1,☐
+333,SEO Monitoring,Monitor CTR in GSC for top pages and identify low-CTR opportunities,P1,☐
+334,SEO Monitoring,Monitor impressions for tracked keywords in GSC weekly,P1,☐
+335,SEO Monitoring,Monitor indexing status in GSC Coverage report weekly,P1,☐
+336,SEO Monitoring,Set up automated GSC alerts for crawl errors and manual actions,P1,☐
+337,SEO Monitoring,Monitor backlink profile for new and lost links weekly,P2,☐
+338,SEO Monitoring,Monitor Core Web Vitals in GSC monthly,P1,☐
+339,SEO Monitoring,Monitor competitor keyword rankings monthly to spot opportunities,P2,☐
+340,SEO Monitoring,"Set up GA4 custom reports for organic traffic, landing pages, and conversions",P2,☐
+341,SEO Monitoring,Create a monthly SEO dashboard with KPIs for stakeholder reporting,P2,☐
+342,Monthly SEO Maintenance,Review GSC for new crawl errors and resolve within the month,P1,☐
+343,Monthly SEO Maintenance,Review and update XML sitemap to include new pages,P1,☐
+344,Monthly SEO Maintenance,Update or republish top 3 performing pages with fresh content,P2,☐
+345,Monthly SEO Maintenance,Identify and fix newly broken internal links,P1,☐
+346,Monthly SEO Maintenance,Review and improve title tags and meta descriptions with low CTR,P2,☐
+347,Monthly SEO Maintenance,Check for any new manual actions or security issues in GSC,P0,☐
+348,Monthly SEO Maintenance,Review Core Web Vitals report and fix any pages that regressed,P1,☐
+349,Monthly SEO Maintenance,Update keyword mapping document with new keyword opportunities found,P2,☐
+350,Monthly SEO Maintenance,Review competitor rankings and content for strategic adjustments,P2,☐
+351,Monthly SEO Maintenance,Add 2–4 new pieces of content based on the keyword/content calendar,P2,☐
+352,Monthly SEO Maintenance,Conduct a monthly backlink audit and disavow any new toxic links,P2,☐
+353,Monthly SEO Maintenance,Review and refresh local business listings and GBP content,P2,☐
+354,Monthly SEO Maintenance,Check for and fix any 404 errors on newly published or shared pages,P1,☐
+355,Monthly SEO Maintenance,Review schema markup for any pages with new content types,P2,☐
+356,Final SEO QA,Crawl the full website one final time and verify no new errors were introduced,P0,☐
+357,Final SEO QA,Confirm all critical P0 tasks are completed and verified,P0,☐
+358,Final SEO QA,Confirm all high-priority P1 tasks are completed or have a documented plan,P0,☐
+359,Final SEO QA,Verify Google can crawl and index all priority pages via URL Inspection tool,P0,☐
+360,Final SEO QA,"Confirm XML sitemap is live, valid, and submitted to GSC",P0,☐
+361,Final SEO QA,Confirm robots.txt is correct and no important pages are blocked,P0,☐
+362,Final SEO QA,Confirm all title tags and meta descriptions are unique and optimized,P0,☐
+363,Final SEO QA,Confirm all canonical tags are correct on all indexable pages,P0,☐
+364,Final SEO QA,Confirm all schema markup validates without errors in Rich Results Test,P1,☐
+365,Final SEO QA,Confirm GA4 and GSC are receiving live data correctly,P0,☐
+366,Final SEO QA,Confirm all GA4 conversion events are firing correctly,P0,☐
+367,Final SEO QA,Confirm SSL is valid and HTTPS is enforced site-wide,P0,☐
+368,Final SEO QA,"Confirm Core Web Vitals pass 'Good' thresholds (LCP, INP, CLS)",P0,☐
+369,Final SEO QA,Confirm Mobile Usability report in GSC shows zero errors,P0,☐
+370,Final SEO QA,Confirm no pages with duplicate content remain without canonical or noindex,P0,☐
+371,Final SEO QA,Confirm keyword cannibalization issues have been resolved,P1,☐
+372,Final SEO QA,Confirm all broken internal links are fixed,P0,☐
+373,Final SEO QA,"Confirm E-E-A-T signals are in place (About, Contact, Author bios, Privacy, Terms)",P1,☐
+374,Final SEO QA,Document all completed work in a final SEO audit report for stakeholders,P1,☐
+375,Final SEO QA,Schedule the next quarterly SEO audit date,P2,☐
