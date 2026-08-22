@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { INITIAL_BLOG_POSTS } from '@/lib/blogData';
 
-// GET /api/blog - Fetch all or limit published blog posts
+// GET /api/blog - Fetch all or limit apublished blog posts
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
