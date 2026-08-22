@@ -20,7 +20,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
     <div className="flex items-center gap-2 mb-2">
       <Briefcase className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Experience
@@ -50,21 +50,21 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
                 
                 <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                    <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                       {item.position}
                     </h3>
-                    <p className="text-[12px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                    <p className="text-[14.4px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                       {item.company}
                     </p>
                   </div>
-                  <div className="text-[10px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
+                  <div className="text-[12px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
                     <div>{item.startDate} - {item.current ? 'Present' : item.endDate}</div>
                     {item.location && <div>{item.location}</div>}
                   </div>
                 </div>
                 
                 {item.description && (
-                  <p className="text-[11.5px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  <p className="text-[13.8px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                     {item.description}
                   </p>
                 )}
@@ -72,7 +72,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
                 {item.achievements.length > 0 && (
                   <ul className="space-y-1 mt-1">
                     {item.achievements.map((achievement, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                      <li key={i} className="flex items-start gap-2 text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                         <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                         <span>{achievement}</span>
                       </li>
@@ -104,21 +104,21 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                     {item.position}
                   </h3>
-                  <p className="text-[12px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                  <p className="text-[14.4px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                     {item.company}
                   </p>
                 </div>
-                <div className="text-[10px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
+                <div className="text-[12px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
                   <div className="bg-slate-100/50 px-1.5 py-0.5 rounded-xs">{item.startDate} - {item.current ? 'Present' : item.endDate}</div>
                   {item.location && <div className="mt-0.5">{item.location}</div>}
                 </div>
               </div>
               
               {item.description && (
-                <p className="text-[11.5px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <p className="text-[13.8px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.description}
                 </p>
               )}
@@ -126,7 +126,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
               {item.achievements.length > 0 && (
                 <ul className="space-y-1 mt-1">
                   {item.achievements.map((achievement, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                    <li key={i} className="flex items-start gap-2 text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                       <span>{achievement}</span>
                     </li>
@@ -153,21 +153,21 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                     {item.position}
                   </h3>
-                  <p className="text-[12px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                  <p className="text-[14.4px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                     {item.company}
                   </p>
                 </div>
-                <div className="text-[10px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
+                <div className="text-[12px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
                   <div>{item.startDate} - {item.current ? 'Present' : item.endDate}</div>
                   {item.location && <div>{item.location}</div>}
                 </div>
               </div>
               
               {item.description && (
-                <p className="text-[11.5px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <p className="text-[13.8px] leading-[1.45] mb-1.5 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.description}
                 </p>
               )}
@@ -175,7 +175,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
               {item.achievements.length > 0 && (
                 <ul className="space-y-1 mt-1">
                   {item.achievements.map((achievement, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                    <li key={i} className="flex items-start gap-2 text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                       <span>{achievement}</span>
                     </li>
@@ -197,18 +197,18 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
         {data.map((item) => (
           <div key={item.id} className="relative">
             <div className="flex flex-wrap justify-between items-baseline mb-0.5 gap-2">
-              <h3 className="text-[13px] min-w-0 flex-1 leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+              <h3 className="text-[15.6px] min-w-0 flex-1 leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                 <span className="font-bold">{item.position}</span>
                 <span className="opacity-60 mx-1">at</span>
                 <span className="font-semibold" style={{ color: theme.primary }}>{item.company}</span>
               </h3>
-              <p className="text-[10px] font-medium leading-normal shrink-0" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+              <p className="text-[12px] font-medium leading-normal shrink-0" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                 {item.startDate} - {item.current ? 'Present' : item.endDate}
               </p>
             </div>
             
             {item.description && (
-              <p className="text-[11.5px] leading-[1.45] mb-1 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+              <p className="text-[13.8px] leading-[1.45] mb-1 mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                 {item.description}
               </p>
             )}
@@ -216,7 +216,7 @@ const Experience: React.FC<ExperienceProps> = ({ data, theme, variant = 'timelin
             {item.achievements.length > 0 && (
               <ul className="space-y-1 mt-1">
                 {item.achievements.map((achievement, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  <li key={i} className="flex items-start gap-2 text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                     <span>{achievement}</span>
                   </li>

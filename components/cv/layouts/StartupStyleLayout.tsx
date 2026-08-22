@@ -59,16 +59,16 @@ const StartupStyleLayout: React.FC<StartupStyleLayoutProps> = ({
           </div>
         )}
         <div className="text-center mb-5">
-          <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
+          <h1 className="text-[33.6px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
             {data.personal.firstName} {data.personal.lastName}
           </h1>
-          <p className="text-[14px] font-semibold leading-[1.25] opacity-90">{data.personal.title}</p>
+          <p className="text-[16.8px] font-semibold leading-[1.25] opacity-90">{data.personal.title}</p>
         </div>
 
         <div className="space-y-4">
           <div>
-            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90 mb-2">Contact</h3>
-            <div className="space-y-1 text-[10.5px] font-medium leading-normal opacity-90">
+            <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90 mb-2">Contact</h3>
+            <div className="space-y-1 text-[12.6px] font-medium leading-normal opacity-90">
               <div className="break-words">{data.personal.email}</div>
               <div>{data.personal.phone}</div>
               <div>{data.personal.location}</div>
@@ -77,11 +77,11 @@ const StartupStyleLayout: React.FC<StartupStyleLayoutProps> = ({
 
           {data.skills.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90 mb-2">Top Skills</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90 mb-2">Top Skills</h3>
               <div className="space-y-2">
                 {data.skills.map((skill) => (
                   <div key={skill.id}>
-                    <div className="flex justify-between text-[11px] font-semibold mb-0.5">
+                    <div className="flex justify-between text-[13.2px] font-semibold mb-0.5">
                       <span>{skill.name}</span>
                       <span>{skill.level}%</span>
                     </div>

@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+﻿import Navigation from "@/components/Navigation";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -98,7 +98,7 @@ export default function RefundPolicyPage() {
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="text-xs font-bold text-[#4F39F6] hover:underline block mt-2"
+                    className="text-xs font-bold text-[#FF570F] hover:underline block mt-2"
                   >
                     {l.text} {'→'}
                   </Link>

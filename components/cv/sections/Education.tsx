@@ -20,7 +20,7 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
     <div className="flex items-center gap-2 mb-2">
       <GraduationCap className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Education
@@ -46,16 +46,16 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                     {item.institution}
                   </h3>
-                  <p className="text-[12px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                  <p className="text-[14.4px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                     {item.degree} in {item.field}
                   </p>
                 </div>
-                <div className="text-[10px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
+                <div className="text-[12px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
                   <div className="bg-slate-100/50 px-1.5 py-0.5 rounded-xs">{item.startDate} - {item.endDate}</div>
-                  {item.gpa && <div className="mt-0.5 font-bold text-[10px]" style={{ color: theme.primary }}>GPA: {item.gpa}</div>}
+                  {item.gpa && <div className="mt-0.5 font-bold text-[12px]" style={{ color: theme.primary }}>GPA: {item.gpa}</div>}
                 </div>
               </div>
               
@@ -64,7 +64,7 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
                   {item.honors.map((honor, i) => (
                     <span
                       key={i}
-                      className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
+                      className="text-[12px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
                       style={{
                         backgroundColor: `${theme.primary}10`,
                         color: theme.primary,
@@ -92,16 +92,16 @@ const Education: React.FC<EducationProps> = ({ data, theme, variant = 'cards' })
           <div key={item.id} className="relative">
             <div className="flex flex-wrap justify-between items-baseline gap-2">
               <div className="min-w-0 flex-1">
-                <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.institution}
                 </h3>
-                <p className="text-[12px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                <p className="text-[14.4px] font-semibold leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                   {item.degree} in {item.field}
                 </p>
               </div>
-              <div className="text-[10px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
+              <div className="text-[12px] font-medium leading-normal text-right shrink-0" style={{ color: theme.textSecondary }}>
                 <div>{item.startDate} - {item.endDate}</div>
-                {item.gpa && <div className="font-bold text-[10px]" style={{ color: theme.primary }}>GPA: {item.gpa}</div>}
+                {item.gpa && <div className="font-bold text-[12px]" style={{ color: theme.primary }}>GPA: {item.gpa}</div>}
               </div>
             </div>
           </div>

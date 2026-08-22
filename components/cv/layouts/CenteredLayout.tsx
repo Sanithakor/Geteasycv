@@ -51,11 +51,11 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
             />
           </div>
         )}
-        <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+        <h1 className="text-[33.6px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-[14px] font-semibold leading-[1.25] mb-2" style={{ color: theme.primary }}>{data.personal.title}</p>
-        <div className="flex justify-center gap-3 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+        <p className="text-[16.8px] font-semibold leading-[1.25] mb-2" style={{ color: theme.primary }}>{data.personal.title}</p>
+        <div className="flex justify-center gap-3 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <span>{data.personal.email}</span>
           <span>|</span>
           <span>{data.personal.phone}</span>
@@ -66,7 +66,7 @@ const CenteredLayout: React.FC<CenteredLayoutProps> = ({
 
       {data.summary && (
         <div className="mb-6 text-center max-w-xl mx-auto">
-          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+          <p className="text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data.summary}
           </p>
         </div>

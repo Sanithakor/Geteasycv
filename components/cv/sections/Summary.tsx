@@ -19,7 +19,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
   const renderHeader = () => (
     <div className="flex items-center gap-2 mb-2">
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
       >
         Professional Summary
@@ -32,7 +32,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
     return (
       <div id="cv-section-summary" className="w-full mb-4">
         {renderHeader()}
-        <p className="text-[11.5px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+        <p className="text-[13.8px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
           {data}
         </p>
       </div>
@@ -50,7 +50,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
             borderLeftColor: theme.primary,
           }}
         >
-          <p className="text-[11.5px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+          <p className="text-[13.8px] leading-[1.45] text-justify" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data}
           </p>
         </div>
@@ -63,7 +63,7 @@ const Summary: React.FC<SummaryProps> = ({ data, theme, variant = 'standard' }) 
     <div id="cv-section-summary" className="w-full mb-4">
       {renderHeader()}
       <p
-        className="text-[11.5px] leading-[1.45] italic pl-2.5 border-l-2"
+        className="text-[13.8px] leading-[1.45] italic pl-2.5 border-l-2"
         style={{
           fontFamily: theme.fontFamily,
           color: theme.text,

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
@@ -45,7 +45,7 @@ const CATEGORIES = ['All', 'Getting Started', 'Templates', 'Export', 'AI Feature
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border border-slate-200 rounded-2xl overflow-hidden transition-all bg-white ${open ? 'shadow-sm border-indigo-200' : ''}`}>
+    <div className={`border border-slate-200 rounded-2xl overflow-hidden transition-all bg-white ${open ? 'shadow-sm border-[#FF570F]' : ''}`}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -54,7 +54,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       >
         <span className="text-sm font-bold text-slate-900">{question}</span>
         {open ? (
-          <ChevronUp className="w-4 h-4 text-[#4F39F6] shrink-0" />
+          <ChevronUp className="w-4 h-4 text-[#FF570F] shrink-0" />
         ) : (
           <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
         )}
@@ -94,7 +94,7 @@ export default function FAQPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFF8F5] border border-[#FF570F] rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Help & Answers</span>
             </div>
@@ -115,7 +115,7 @@ export default function FAQPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search questions..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
               />
             </div>
 
@@ -127,7 +127,7 @@ export default function FAQPage() {
                   onClick={() => setActiveCategory(cat)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                     activeCategory === cat
-                      ? 'bg-[#4F39F6] text-white shadow-xs'
+                      ? 'bg-[#FF570F] text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
                   }`}
                 >
@@ -153,14 +153,14 @@ export default function FAQPage() {
           </div>
 
           {/* Contact Support Banner */}
-          <div className="mt-12 text-center bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-100/80 shadow-2xs">
+          <div className="mt-12 text-center bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-[#FF570F]/80 shadow-2xs">
             <h3 className="text-lg font-bold text-slate-900 mb-1">Still have questions?</h3>
             <p className="text-xs sm:text-sm text-slate-600 mb-5 max-w-md mx-auto">
               Our friendly customer support team is ready to help you land your dream role.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] text-white font-bold text-xs shadow-md shadow-[#4F39F6]/25 transition-all"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 transition-all"
             >
               Contact Support
             </Link>

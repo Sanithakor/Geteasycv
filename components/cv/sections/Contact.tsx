@@ -18,7 +18,7 @@ const Contact: React.FC<ContactProps> = ({ data, theme, variant = 'icons' }) => 
   return (
     <div className="w-full mb-4">
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2"
         style={{
           fontFamily: theme.fontFamilyHeading,
           color: theme.primary,
@@ -39,7 +39,7 @@ const Contact: React.FC<ContactProps> = ({ data, theme, variant = 'icons' }) => 
             href={item.type === 'email' ? `mailto:${item.value}` : `https://${item.value}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xs text-[10.5px] font-medium leading-normal transition-all"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xs text-[12.6px] font-medium leading-normal transition-all"
             style={{
               background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
               color: theme.primary,

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const sanitizedEmail = email.trim().toLowerCase();
 
     try {
-      await (prisma as any).waitlist.upsert({
+      await prisma.waitlist.upsert({
         where: { email: sanitizedEmail },
         update: {},
         create: { email: sanitizedEmail },

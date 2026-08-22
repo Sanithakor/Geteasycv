@@ -60,10 +60,10 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
             />
           )}
           <div>
-            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+            <h1 className="text-[33.6px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p className="text-[14px] font-semibold leading-[1.25] mt-0.5" style={{ color: theme.primary }}>{data.personal.title}</p>
+            <p className="text-[16.8px] font-semibold leading-[1.25] mt-0.5" style={{ color: theme.primary }}>{data.personal.title}</p>
           </div>
         </div>
       </div>
@@ -76,8 +76,8 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
           border: `1px solid ${theme.border}`,
         }}
       >
-        <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
-        <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+        <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
+        <div className="space-y-1 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <div>{data.personal.email}</div>
           <div>{data.personal.phone}</div>
           <div>{data.personal.location}</div>
@@ -94,8 +94,8 @@ const BentoGridLayout: React.FC<BentoGridLayoutProps> = ({
             gridColumn: 'span 2',
           }}
         >
-          <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Summary</h3>
-          <p className="text-[11.5px] leading-[1.45]" style={{ color: theme.text }}>{data.summary}</p>
+          <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Summary</h3>
+          <p className="text-[13.8px] leading-[1.45]" style={{ color: theme.text }}>{data.summary}</p>
         </div>
       )}
 

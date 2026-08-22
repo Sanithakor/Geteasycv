@@ -75,7 +75,7 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
         
         <div className="text-center mb-5">
           <h1 
-            className="text-[28px] font-bold leading-[1.15] mb-1" 
+            className="text-[33.6px] font-bold leading-[1.15] mb-1" 
             style={{ 
               fontFamily: theme.fontFamilyHeading,
               wordWrap: 'break-word'
@@ -84,7 +84,7 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
             {data.personal.firstName} {data.personal.lastName}
           </h1>
           <p 
-            className="text-[14px] font-semibold leading-[1.25] opacity-90" 
+            className="text-[16.8px] font-semibold leading-[1.25] opacity-90" 
             style={{ 
               fontFamily: theme.fontFamily,
             }}
@@ -94,26 +94,26 @@ const SidebarLeftLayout: React.FC<SidebarLeftLayoutProps> = memo(({
         </div>
         
         <div className="space-y-3 mb-5">
-          <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
+          <h2 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             Contact
           </h2>
-          {data.personal.email && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.email}</div>}
-          {data.personal.phone && <div className="text-[10.5px] font-medium leading-normal">{data.personal.phone}</div>}
-          {data.personal.location && <div className="text-[10.5px] font-medium leading-normal">{data.personal.location}</div>}
-          {data.personal.website && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.website}</div>}
-          {data.personal.linkedin && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.linkedin}</div>}
+          {data.personal.email && <div className="text-[12.6px] font-medium leading-normal break-words">{data.personal.email}</div>}
+          {data.personal.phone && <div className="text-[12.6px] font-medium leading-normal">{data.personal.phone}</div>}
+          {data.personal.location && <div className="text-[12.6px] font-medium leading-normal">{data.personal.location}</div>}
+          {data.personal.website && <div className="text-[12.6px] font-medium leading-normal break-words">{data.personal.website}</div>}
+          {data.personal.linkedin && <div className="text-[12.6px] font-medium leading-normal break-words">{data.personal.linkedin}</div>}
         </div>
 
         {displaySkills && displaySkills.length > 0 && (
           <div className="space-y-3 mb-5">
-            <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
+            <h2 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
               Skills
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {displaySkills.map((skill) => (
                 <span
                   key={skill.id}
-                  className="text-[11px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white"
+                  className="text-[13.2px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white"
                   style={{ fontFamily: theme.fontFamily }}
                 >
                   {skill.name}

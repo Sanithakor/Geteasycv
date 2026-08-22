@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Login Form Component
  */
 
@@ -87,11 +87,11 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       {/* Brand Header */}
       <div className="mb-6">
         <Link href="/" className="inline-flex items-center gap-2 group cursor-pointer">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#4F39F6] to-[#7C69FF] flex items-center justify-center shadow-md shadow-[#4F39F6]/25 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF570F] to-[#FF8C5A] flex items-center justify-center shadow-md shadow-[#FF570F]/25 group-hover:scale-105 transition-transform">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-extrabold tracking-tight text-slate-900">
-            Get<span className="text-[#4F39F6]">EasyCV</span>
+            Get<span className="text-[#FF570F]">EasyCV</span>
           </span>
         </Link>
       </div>
@@ -100,7 +100,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="space-y-1.5 max-w-[280px]">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Welcome <span className="text-[#4F39F6]">Back!</span>
+            Welcome <span className="text-[#FF570F]">Back!</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
             Login to your account and continue building your professional resume.
@@ -112,8 +112,8 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
           <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/70 to-indigo-100/40 rounded-3xl transform rotate-6 scale-95" />
           <div className="absolute right-1 top-0 w-20 h-20 bg-white rounded-xl shadow-md border border-slate-100 p-2 transform -rotate-3 transition-transform hover:rotate-0">
             <div className="flex items-center gap-1 mb-1.5">
-              <div className="w-4 h-4 rounded-full bg-indigo-100 flex items-center justify-center">
-                <User className="w-2.5 h-2.5 text-[#4F39F6]" />
+              <div className="w-4 h-4 rounded-full bg-[#FFF0EB] flex items-center justify-center">
+                <User className="w-2.5 h-2.5 text-[#FF570F]" />
               </div>
               <div className="space-y-0.5 flex-1">
                 <div className="h-1 bg-slate-300 rounded-full w-full" />
@@ -126,14 +126,14 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               <div className="h-0.5 bg-slate-200 rounded-full w-full" />
             </div>
           </div>
-          <div className="absolute left-0 bottom-1 w-9 h-10 bg-[#4F39F6] rounded-xl shadow-lg flex flex-col items-center justify-center z-10 transform -rotate-6">
+          <div className="absolute left-0 bottom-1 w-9 h-10 bg-[#FF570F] rounded-xl shadow-lg flex flex-col items-center justify-center z-10 transform -rotate-6">
             <div className="w-3.5 h-2.5 border-2 border-white border-b-0 rounded-t-md -mb-0.5" />
-            <div className="w-6 h-5 bg-[#4F39F6] rounded-md flex items-center justify-center">
+            <div className="w-6 h-5 bg-[#FF570F] rounded-md flex items-center justify-center">
               <div className="w-1.5 h-2 bg-white rounded-full" />
             </div>
           </div>
           <div className="absolute right-0 bottom-0 z-10 flex flex-col items-center">
-            <div className="w-5 h-5 text-[#4F39F6] -mb-1">
+            <div className="w-5 h-5 text-[#FF570F] -mb-1">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 3c-2 3-5 5-8 5 0 5 4 9 8 13 4-4 8-8 8-13-3 0-6-2-8-5z" />
               </svg>
@@ -144,14 +144,14 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       </div>
 
       {/* Demo Credentials Callout */}
-      <div className="mb-5 p-3 rounded-xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between text-xs text-indigo-900">
+      <div className="mb-5 p-3 rounded-xl bg-[#FFF8F5]/70 border border-[#FF570F] flex items-center justify-between text-xs text-indigo-900">
         <div>
           <span className="font-bold">Demo:</span> demo@example.com / DemoPassword123!
         </div>
         <button
           type="button"
           onClick={fillDemoCredentials}
-          className="text-[11px] font-bold text-[#4F39F6] hover:underline bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shadow-2xs cursor-pointer shrink-0 ml-2"
+          className="text-[11px] font-bold text-[#FF570F] hover:underline bg-white px-2.5 py-1 rounded-lg border border-[#FF570F] shadow-2xs cursor-pointer shrink-0 ml-2"
         >
           Auto Fill
         </button>
@@ -182,7 +182,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email address"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
               disabled={isLoading}
             />
           </div>
@@ -203,7 +203,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+              className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
               disabled={isLoading}
             />
             <button
@@ -224,11 +224,11 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 text-[#4F39F6] focus:ring-[#4F39F6] cursor-pointer"
+              className="w-4 h-4 rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] cursor-pointer"
             />
             <span>Remember me</span>
           </label>
-          <Link href="/forgot-password" className="text-xs font-bold text-[#4F39F6] hover:underline">
+          <Link href="/forgot-password" className="text-xs font-bold text-[#FF570F] hover:underline">
             Forgot Password?
           </Link>
         </div>
@@ -237,7 +237,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 px-4 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] text-white font-bold text-sm shadow-md shadow-[#4F39F6]/25 focus:outline-none focus:ring-2 focus:ring-[#4F39F6]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer mt-1"
+          className="w-full py-3.5 px-4 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-sm shadow-md shadow-[#FF570F]/25 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer mt-1"
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
@@ -270,7 +270,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       {/* Sign Up Link */}
       <div className="mt-6 text-center text-xs text-slate-500 font-medium">
         Don't have an account?{' '}
-        <Link href="/signup" className="text-[#4F39F6] font-bold hover:underline">
+        <Link href="/signup" className="text-[#FF570F] font-bold hover:underline">
           Sign Up
         </Link>
       </div>

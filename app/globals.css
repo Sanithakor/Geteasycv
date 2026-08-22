@@ -32,19 +32,20 @@
 }
 
 :root {
-  --cv-name-size: 28px;
+  /* CV typography — all sizes increased 20% from original */
+  --cv-name-size: 33.6px;   /* was 28px × 1.2 */
   --cv-name-lh: 1.15;
-  --cv-title-size: 14px;
+  --cv-title-size: 16.8px;  /* was 14px × 1.2 */
   --cv-title-lh: 1.25;
-  --cv-section-size: 14px;
+  --cv-section-size: 16.8px; /* was 14px × 1.2 */
   --cv-section-lh: 1.25;
-  --cv-job-title-size: 13px;
+  --cv-job-title-size: 15.6px; /* was 13px × 1.2 */
   --cv-job-title-lh: 1.25;
-  --cv-company-size: 12px;
+  --cv-company-size: 14.4px; /* was 12px × 1.2 */
   --cv-company-lh: 1.45;
-  --cv-body-size: 11.5px;
+  --cv-body-size: 13.8px;   /* was 11.5px × 1.2 */
   --cv-body-lh: 1.45;
-  --cv-small-size: 10px;
+  --cv-small-size: 12px;    /* was 10px × 1.2 */
   --cv-small-lh: 1.4;
 }
 
@@ -85,7 +86,7 @@
   }
 
   .cv-text-contact {
-    font-size: 10.5px !important;
+    font-size: 12.6px !important; /* was 10.5px × 1.2 */
     line-height: 1.4 !important;
   }
 
@@ -259,17 +260,28 @@ textarea,
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* ============================================================
+ * Brand colour token — #FF570F (brand orange)
+ * Replace all blue/purple/violet/indigo gradient usage
+ * ============================================================ */
+:root {
+  --brand: #FF570F;
+  --brand-hover: #E04800;
+  --brand-light: #FFF0EB;
+  --brand-muted: #FF570F26;
+}
+
 /* Premium gradient backgrounds */
 .gradient-premium {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF570F 0%, #E04800 100%);
 }
 
 .gradient-sunset {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #FF570F 0%, #ff8c5a 100%);
 }
 
 .gradient-ocean {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #FF570F 0%, #ffb347 100%);
 }
 
 /* Text gradient utility */
@@ -278,15 +290,7 @@ textarea,
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s ease;
-}
-.card-hover:hover {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(135deg, #FF570F 0%, #E04800 100%);
 }
 
 /* Focus styles */
@@ -294,14 +298,14 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 0 2px rgba(255, 87, 15, 0.3);
   border-color: transparent;
 }
 
 /* Loading spinner */
 .spinner {
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #4f46e5;
+  border-left-color: #FF570F;
   border-radius: 50%;
   width: 24px;
   height: 24px;

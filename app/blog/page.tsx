@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
@@ -36,7 +36,7 @@ export default function BlogPage() {
         {/* Header Hero */}
         <section className="bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-950 text-white py-16 sm:py-20 px-4 relative overflow-hidden">
           <div className="max-w-5xl mx-auto text-center relative z-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-xs font-bold uppercase tracking-wider mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF570F]/20 border border-[#FF570F]/30 text-violet-300 text-xs font-bold uppercase tracking-wider mb-4">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Career & Resume Insights</span>
             </div>
@@ -49,7 +49,7 @@ export default function BlogPage() {
             </p>
           </div>
 
-          <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF570F]/10 rounded-full blur-3xl"></div>
         </section>
 
         {/* Content Section */}
@@ -65,7 +65,7 @@ export default function BlogPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-2 rounded-md text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
                     selectedCategory === cat
-                      ? 'bg-violet-600 text-white shadow-md'
+                      ? 'bg-[#FF570F] text-white shadow-md'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-600'
                   }`}
                 >
@@ -82,7 +82,7 @@ export default function BlogPage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search articles..."
-                className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 bg-slate-50/50"
+                className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF570F] bg-slate-50/50"
               />
             </div>
           </div>
@@ -100,20 +100,20 @@ export default function BlogPage() {
                     alt={featured.title}
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-4 left-4 bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                  <span className="absolute top-4 left-4 bg-[#FF570F] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
                     Featured Article
                   </span>
                 </div>
 
                 <div className="lg:col-span-5 p-8 lg:p-10 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-4 text-xs font-bold text-violet-600 mb-3">
+                    <div className="flex items-center gap-4 text-xs font-bold text-[#FF570F] mb-3">
                       <span>{featured.category}</span>
                       <span>•</span>
                       <span className="text-slate-400">{featured.readTime}</span>
                     </div>
 
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4 group-hover:text-violet-600 transition-colors">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4 group-hover:text-[#FF570F] transition-colors">
                       {featured.title}
                     </h2>
 
@@ -124,13 +124,13 @@ export default function BlogPage() {
 
                   <div className="flex items-center justify-between pt-6 border-t border-slate-100">
                     <div className="flex items-center gap-2.5 text-xs font-bold text-slate-700">
-                      <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-xs">
+                      <div className="w-8 h-8 rounded-full bg-[#FFF0EB] text-violet-700 flex items-center justify-center font-bold text-xs">
                         {featured.author ? featured.author.charAt(0) : 'A'}
                       </div>
                       <span>{featured.author}</span>
                     </div>
 
-                    <span className="text-sm font-bold text-violet-600 flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                    <span className="text-sm font-bold text-[#FF570F] flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
                       Read Article
                       <ArrowRight className="w-4 h-4" />
                     </span>
@@ -161,7 +161,7 @@ export default function BlogPage() {
                       alt={post.title}
                       className="w-full h-full object-cover"
                     />
-                    <span className="absolute top-3 left-3 bg-violet-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                    <span className="absolute top-3 left-3 bg-[#FF570F] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
                       {post.category}
                     </span>
                   </div>
@@ -169,16 +169,16 @@ export default function BlogPage() {
                   <div className="p-6 flex-1 flex flex-col">
                     <div className="flex items-center gap-4 text-xs font-semibold text-slate-400 mb-3">
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-violet-500" />
+                        <Calendar className="w-3.5 h-3.5 text-[#FF570F]" />
                         <span>{post.date}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-violet-500" />
+                        <Clock className="w-3.5 h-3.5 text-[#FF570F]" />
                         <span>{post.readTime}</span>
                       </div>
                     </div>
 
-                    <h3 className="font-bold text-slate-900 text-lg leading-snug group-hover:text-violet-600 transition-colors mb-3 line-clamp-2">
+                    <h3 className="font-bold text-slate-900 text-lg leading-snug group-hover:text-[#FF570F] transition-colors mb-3 line-clamp-2">
                       {post.title}
                     </h3>
 
@@ -188,13 +188,13 @@ export default function BlogPage() {
 
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                        <div className="w-6 h-6 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-[10px]">
+                        <div className="w-6 h-6 rounded-full bg-[#FFF0EB] text-violet-700 flex items-center justify-center font-bold text-[10px]">
                           {post.author ? post.author.charAt(0) : 'A'}
                         </div>
                         <span>{post.author}</span>
                       </div>
 
-                      <span className="text-xs font-bold text-violet-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span className="text-xs font-bold text-[#FF570F] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                         Read Article
                         <ArrowRight className="w-3.5 h-3.5" />
                       </span>

@@ -20,7 +20,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
     <div className="flex items-center gap-2 mb-2">
       <FolderGit2 className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Projects
@@ -45,7 +45,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
               }}
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
-                <h3 className="text-[13px] font-bold leading-[1.25] min-w-0 flex-1" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <h3 className="text-[15.6px] font-bold leading-[1.25] min-w-0 flex-1" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
                 {item.link && (
@@ -53,7 +53,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-xs shrink-0"
+                    className="text-[12px] font-bold px-2 py-0.5 rounded-xs shrink-0"
                     style={{
                       background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
                       color: '#fff',
@@ -65,7 +65,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
               </div>
               
               {item.description && (
-                <p className="text-[11.5px] leading-[1.45] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <p className="text-[13.8px] leading-[1.45] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.description}
                 </p>
               )}
@@ -74,7 +74,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                 {item.technologies.map((tech, i) => (
                   <span
                     key={i}
-                    className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
+                    className="text-[12px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
                     style={{
                       backgroundColor: `${theme.primary}10`,
                       color: theme.primary,
@@ -89,7 +89,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
               {item.achievements && item.achievements.length > 0 && (
                 <ul className="space-y-0.5 mt-1.5 pt-1.5 border-t" style={{ borderColor: `${theme.primary}10` }}>
                   {item.achievements.map((achievement, i) => (
-                    <li key={i} className="flex items-start gap-1.5 text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                    <li key={i} className="flex items-start gap-1.5 text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 opacity-60" style={{ backgroundColor: theme.primary }} />
                       <span>{achievement}</span>
                     </li>
@@ -119,13 +119,13 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
               }}
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
-                <h3 className="text-[13px] font-bold leading-[1.25] min-w-0 flex-1" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <h3 className="text-[15.6px] font-bold leading-[1.25] min-w-0 flex-1" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
               </div>
               
               {item.description && (
-                <p className="text-[11.5px] leading-[1.45] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                <p className="text-[13.8px] leading-[1.45] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                   {item.description}
                 </p>
               )}
@@ -134,7 +134,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                 {item.technologies.slice(0, 3).map((tech, i) => (
                   <span
                     key={i}
-                    className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
+                    className="text-[12px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
                     style={{
                       backgroundColor: `${theme.primary}10`,
                       color: theme.primary,
@@ -172,14 +172,14 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
           >
             <div className="flex flex-wrap justify-between items-start mb-1 gap-2">
               <div className="min-w-0 flex-1">
-                <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {item.technologies.map((tech, i) => (
                     <span
                       key={i}
-                      className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
+                      className="text-[12px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-xs"
                       style={{
                         background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
                         color: theme.primary,
@@ -196,7 +196,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-bold px-2.5 py-1 rounded-xs shrink-0"
+                  className="text-[12px] font-bold px-2.5 py-1 rounded-xs shrink-0"
                   style={{
                     background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}, ${theme.gradient.end})`,
                     color: '#fff',
@@ -207,7 +207,7 @@ const Projects: React.FC<ProjectsProps> = ({ data, theme, variant = 'cards' }) =
               )}
             </div>
             {item.description && (
-              <p className="text-[11.5px] leading-[1.45] mt-1.5 pt-1.5 border-t" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary, borderColor: `${theme.primary}10` }}>
+              <p className="text-[13.8px] leading-[1.45] mt-1.5 pt-1.5 border-t" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary, borderColor: `${theme.primary}10` }}>
                 {item.description}
               </p>
             )}

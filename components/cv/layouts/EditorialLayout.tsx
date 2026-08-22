@@ -43,17 +43,17 @@ const EditorialLayout: React.FC<EditorialLayoutProps> = ({
       {/* Main Content */}
       <div className="p-5" style={{ backgroundColor: theme.background }}>
         <div className="border-b-2 pb-4 mb-5" style={{ borderColor: theme.primary }}>
-          <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+          <h1 className="text-[33.6px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
             {data.personal.firstName} {data.personal.lastName}
           </h1>
-          <p className="text-[14px] font-semibold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+          <p className="text-[16.8px] font-semibold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
             {data.personal.title}
           </p>
         </div>
 
         {data.summary && (
           <div className="mb-5">
-            <p className="text-[11.5px] leading-[1.45] italic" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+            <p className="text-[13.8px] leading-[1.45] italic" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
               {data.summary}
             </p>
           </div>
@@ -80,8 +80,8 @@ const EditorialLayout: React.FC<EditorialLayoutProps> = ({
 
         <div className="space-y-5">
           <div>
-            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
-            <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+            <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
+            <div className="space-y-1 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
               <div className="break-words">{data.personal.email}</div>
               <div>{data.personal.phone}</div>
               <div>{data.personal.location}</div>
@@ -90,12 +90,12 @@ const EditorialLayout: React.FC<EditorialLayoutProps> = ({
 
           {data.skills.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Skills</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Skills</h3>
               <div className="flex flex-wrap gap-1.5">
                 {data.skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="text-[11px] font-semibold px-2 py-0.5 rounded border"
+                    className="text-[13.2px] font-semibold px-2 py-0.5 rounded border"
                     style={{
                       borderColor: `${theme.primary}30`,
                       color: theme.text,

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
@@ -202,7 +202,7 @@ function PricingContent() {
           email: authData.user?.email || '',
         },
         theme: {
-          color: '#9333ea',
+          color: '#FF570F',
         },
         modal: {
           ondismiss: function () {
@@ -247,8 +247,8 @@ function PricingContent() {
 
           {/* Header Badge */}
           <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-bold tracking-wider text-purple-600 uppercase shadow-2xs">
-              <CreditCard className="w-4 h-4 text-purple-600" />
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFF8F5] border border-[#FFD4C2] text-xs font-bold tracking-wider text-[#FF570F] uppercase shadow-2xs">
+              <CreditCard className="w-4 h-4 text-[#FF570F]" />
               SIMPLE &amp; TRANSPARENT PRICING
             </span>
           </div>
@@ -271,7 +271,7 @@ function PricingContent() {
                   key={plan.id}
                   className={`bg-white rounded-xl border transition-all duration-300 hover:shadow-xl text-left flex flex-col justify-between relative overflow-hidden ${
                     plan.highlight
-                      ? 'border-purple-600 shadow-xl shadow-purple-500/10 ring-2 ring-purple-600/20'
+                      ? 'border-[#FF570F] shadow-xl shadow-[#FF570F]/25 ring-2 ring-[#FF570F]/20'
                       : 'border-slate-200 shadow-xs'
                   }`}
                 >
@@ -279,7 +279,7 @@ function PricingContent() {
                   {plan.badge && (
                     <div
                       className={`text-white text-[11px] font-bold text-center uppercase tracking-wider py-1.5 px-4 flex items-center justify-center gap-1.5 ${
-                        plan.id === 'pro' ? 'bg-purple-600' : 'bg-slate-900'
+                        plan.id === 'pro' ? 'bg-[#FF570F]' : 'bg-slate-900'
                       }`}
                     >
                       <Sparkles className="w-3.5 h-3.5 text-amber-300" />
@@ -318,7 +318,7 @@ function PricingContent() {
                       </p>
                       {plan.features.map((feature, fIdx) => (
                         <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-[#FF570F] shrink-0 mt-0.5" />
                           <span className="text-slate-700 font-medium">{feature}</span>
                         </div>
                       ))}
@@ -333,7 +333,7 @@ function PricingContent() {
                       onClick={() => handleSelectPlan(plan.id)}
                       className={`w-full py-3.5 px-4 rounded-md font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-60 ${
                         plan.highlight
-                          ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-500/20'
+                          ? 'bg-[#FF570F] hover:bg-[#E04800] text-white shadow-[#FF570F]/25'
                           : 'bg-slate-900 hover:bg-slate-800 text-white'
                       }`}
                     >
@@ -358,7 +358,7 @@ function PricingContent() {
           {/* Guarantees Strip */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 max-w-5xl mx-auto">
             <div className="p-6 bg-white border border-slate-200/80 rounded-xl flex items-center gap-4 text-left shadow-2xs">
-              <div className="w-12 h-12 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-lg bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>

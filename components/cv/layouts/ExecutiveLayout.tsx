@@ -56,8 +56,8 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
         <div className="space-y-5">
           <div>
-            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
-            <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+            <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Contact</h3>
+            <div className="space-y-1 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
               <div className="break-words">{data.personal.email}</div>
               <div>{data.personal.phone}</div>
               <div>{data.personal.location}</div>
@@ -68,12 +68,12 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.skills.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Core Competencies</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Core Competencies</h3>
               <div className="flex flex-wrap gap-1.5">
                 {data.skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="text-[11px] font-semibold px-2 py-0.5 rounded-xs"
+                    className="text-[13.2px] font-semibold px-2 py-0.5 rounded-xs"
                     style={{
                       backgroundColor: `${theme.primary}15`,
                       color: theme.primary,
@@ -88,14 +88,14 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.education.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Education</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Education</h3>
               {data.education.map((edu) => (
                 <div key={edu.id} className="mb-2.5">
-                  <div className="text-[13px] font-bold leading-[1.25]">{edu.institution}</div>
-                  <div className="text-[12px] font-semibold leading-[1.45]" style={{ color: theme.textSecondary }}>
+                  <div className="text-[15.6px] font-bold leading-[1.25]">{edu.institution}</div>
+                  <div className="text-[14.4px] font-semibold leading-[1.45]" style={{ color: theme.textSecondary }}>
                     {edu.degree} in {edu.field}
                   </div>
-                  <div className="text-[10px] font-medium leading-normal" style={{ color: theme.textMuted }}>
+                  <div className="text-[12px] font-medium leading-normal" style={{ color: theme.textMuted }}>
                     {edu.startDate} - {edu.endDate}
                   </div>
                 </div>
@@ -105,11 +105,11 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.certifications && data.certifications.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Certifications</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Certifications</h3>
               {data.certifications.map((cert) => (
                 <div key={cert.id} className="mb-2">
-                  <div className="text-[13px] font-bold leading-[1.25]">{cert.name}</div>
-                  <div className="text-[11.5px] font-medium leading-[1.45]" style={{ color: theme.textSecondary }}>{cert.issuer}</div>
+                  <div className="text-[15.6px] font-bold leading-[1.25]">{cert.name}</div>
+                  <div className="text-[13.8px] font-medium leading-[1.45]" style={{ color: theme.textSecondary }}>{cert.issuer}</div>
                 </div>
               ))}
             </div>
@@ -117,9 +117,9 @@ const ExecutiveLayout: React.FC<ExecutiveLayoutProps> = ({
 
           {data.languages && data.languages.length > 0 && (
             <div>
-              <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Languages</h3>
+              <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ color: theme.primary }}>Languages</h3>
               {data.languages.map((lang) => (
-                <div key={lang.id} className="text-[11.5px] font-medium leading-snug mb-1" style={{ color: theme.textSecondary }}>
+                <div key={lang.id} className="text-[13.8px] font-medium leading-snug mb-1" style={{ color: theme.textSecondary }}>
                   {lang.name} - {lang.proficiency}
                 </div>
               ))}

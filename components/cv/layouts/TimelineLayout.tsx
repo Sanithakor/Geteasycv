@@ -48,13 +48,13 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = ({
             style={{ borderColor: theme.primary }}
           />
         )}
-        <h1 className="text-[28px] font-bold text-center leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+        <h1 className="text-[33.6px] font-bold text-center leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-[14px] font-semibold text-center leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+        <p className="text-[16.8px] font-semibold text-center leading-[1.25] mb-1.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
           {data.personal.title}
         </p>
-        <p className="text-[10.5px] font-medium text-center leading-normal" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+        <p className="text-[12.6px] font-medium text-center leading-normal" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
           {data.personal.location} | {data.personal.email}
         </p>
       </div>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Dynamic Admin Dashboard connected to real-time Supabase Database Analytics
  */
 
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-md bg-violet-600 mb-4 animate-pulse">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-md bg-[#FF570F] mb-4 animate-pulse">
             <span className="text-white font-bold text-sm">⚙️</span>
           </div>
           <p className="text-slate-600 font-semibold text-sm">Loading admin dashboard...</p>
@@ -143,8 +143,8 @@ export default function AdminDashboard() {
       value: totalUsersCount.toLocaleString(), 
       trend: '+12.5%', 
       icon: Users, 
-      iconBg: 'bg-violet-50 text-violet-600', 
-      sparklineColor: '#8b5cf6', 
+      iconBg: 'bg-[#FFF8F5] text-[#FF570F]', 
+      sparklineColor: '#FF570F', 
       points: [25, 29, 27, 34, 31, 38, 36, 42] 
     },
     { 
@@ -197,8 +197,8 @@ export default function AdminDashboard() {
       value: '45,832', 
       trend: '+21.8%', 
       icon: Sparkles, 
-      iconBg: 'bg-indigo-50 text-indigo-600', 
-      sparklineColor: '#6366f1', 
+      iconBg: 'bg-[#FFF8F5] text-[#FF570F]', 
+      sparklineColor: '#FF570F', 
       points: [15, 20, 18, 28, 24, 34, 30, 42] 
     },
     { 
@@ -223,8 +223,8 @@ export default function AdminDashboard() {
   ];
 
   const resumesByCategoryData = [
-    { name: 'ATS Friendly', value: 45, color: '#6366f1' },
-    { name: 'Creative', value: 25, color: '#a855f7' },
+    { name: 'ATS Friendly', value: 45, color: '#FF570F' },
+    { name: 'Creative', value: 25, color: '#FF570F' },
     { name: 'Modern', value: 15, color: '#10b981' },
     { name: 'Executive', value: 10, color: '#0ea5e9' },
     { name: 'Minimalist', value: 5, color: '#f59e0b' },
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
         </div>
 
         <div className="flex items-center gap-2 border border-slate-200/80 bg-white rounded-md px-3 py-1.5 shadow-2xs text-xs font-bold text-slate-700">
-          <Calendar className="w-3.5 h-3.5 text-violet-600" />
+          <Calendar className="w-3.5 h-3.5 text-[#FF570F]" />
           <span>Real-time Live Supabase DB</span>
         </div>
       </div>
@@ -287,7 +287,7 @@ export default function AdminDashboard() {
               <h2 className="text-base font-bold text-slate-900">Resumes Created Overview</h2>
               <p className="text-xs text-slate-500 mt-0.5">Real-time daily creation trends</p>
             </div>
-            <span className="text-xs font-bold text-violet-600 bg-violet-50 px-3 py-1 rounded-full border border-violet-100">
+            <span className="text-xs font-bold text-[#FF570F] bg-[#FFF8F5] px-3 py-1 rounded-full border border-[#FF570F]">
               Live Feed
             </span>
           </div>
@@ -297,15 +297,15 @@ export default function AdminDashboard() {
               <AreaChart data={resumesCreatedOverviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#FF570F" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#FF570F" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                 <Tooltip contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                <Area type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorCount)" />
+                <Area type="monotone" dataKey="count" stroke="#FF570F" strokeWidth={3} fillOpacity={1} fill="url(#colorCount)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -362,7 +362,7 @@ export default function AdminDashboard() {
               <h3 className="text-base font-bold text-slate-900">Recent Users</h3>
               <p className="text-xs text-slate-500 mt-0.5">Live records from Supabase Database</p>
             </div>
-            <Link href="/admin/users" className="text-xs font-bold text-violet-600 hover:text-violet-700 flex items-center gap-1">
+            <Link href="/admin/users" className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] flex items-center gap-1">
               <span>View All</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -375,7 +375,7 @@ export default function AdminDashboard() {
               recentUsersList.slice(0, 5).map((usr) => (
                 <div key={usr.id} className="flex items-center justify-between p-3 rounded-md bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-violet-600 text-white font-bold text-xs flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-full bg-[#FF570F] text-white font-bold text-xs flex items-center justify-center">
                       {usr.name?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div>
@@ -399,7 +399,7 @@ export default function AdminDashboard() {
               <h3 className="text-base font-bold text-slate-900">Recent Resumes</h3>
               <p className="text-xs text-slate-500 mt-0.5">Latest CV instances created</p>
             </div>
-            <Link href="/admin/resumes" className="text-xs font-bold text-violet-600 hover:text-violet-700 flex items-center gap-1">
+            <Link href="/admin/resumes" className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] flex items-center gap-1">
               <span>View All</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>

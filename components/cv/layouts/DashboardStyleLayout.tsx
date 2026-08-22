@@ -56,13 +56,13 @@ const DashboardStyleLayout: React.FC<DashboardStyleLayoutProps> = ({
             />
           )}
           <div>
-            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading }}>
+            <h1 className="text-[33.6px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p className="text-[14px] font-semibold leading-[1.25] opacity-90">{data.personal.title}</p>
+            <p className="text-[16.8px] font-semibold leading-[1.25] opacity-90">{data.personal.title}</p>
           </div>
         </div>
-        <div className="flex gap-3 text-[10.5px] font-medium leading-normal">
+        <div className="flex gap-3 text-[12.6px] font-medium leading-normal">
           <span>{data.personal.email}</span>
           <span>•</span>
           <span>{data.personal.location}</span>
@@ -75,19 +75,19 @@ const DashboardStyleLayout: React.FC<DashboardStyleLayoutProps> = ({
         <div className="grid grid-cols-4 gap-3 mb-5">
           <div className="p-3 rounded-md" style={{ backgroundColor: theme.background }}>
             <div className="text-xl font-bold" style={{ color: theme.primary }}>{data.experience.length}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Experience</div>
+            <div className="text-[13.2px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Experience</div>
           </div>
           <div className="p-3 rounded-md" style={{ backgroundColor: theme.background }}>
             <div className="text-xl font-bold" style={{ color: theme.primary }}>{data.skills.length}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Skills</div>
+            <div className="text-[13.2px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Skills</div>
           </div>
           <div className="p-3 rounded-md" style={{ backgroundColor: theme.background }}>
             <div className="text-xl font-bold" style={{ color: theme.primary }}>{data.projects?.length || 0}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Projects</div>
+            <div className="text-[13.2px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Projects</div>
           </div>
           <div className="p-3 rounded-md" style={{ backgroundColor: theme.background }}>
             <div className="text-xl font-bold" style={{ color: theme.primary }}>{data.education.length}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Education</div>
+            <div className="text-[13.2px] font-semibold uppercase tracking-wider" style={{ color: theme.textSecondary }}>Education</div>
           </div>
         </div>
 

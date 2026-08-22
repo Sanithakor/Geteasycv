@@ -20,7 +20,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
     <div className="flex items-center gap-2 mb-2">
       <Award className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Certifications
@@ -45,11 +45,11 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
               }}
             >
               <div className="min-w-0 flex-1">
-                <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {item.name}
                 </h3>
-                <p className="text-[11.5px] font-medium leading-[1.45] mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
-                  {item.issuer} <span className="opacity-50 mx-1">|</span> <span className="text-[10px]">{item.date}</span>
+                <p className="text-[13.8px] font-medium leading-[1.45] mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  {item.issuer} <span className="opacity-50 mx-1">|</span> <span className="text-[12px]">{item.date}</span>
                 </p>
               </div>
               {item.link && (
@@ -57,7 +57,7 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-bold px-2 py-0.5 rounded-xs shrink-0 hover:opacity-80 transition-opacity"
+                  className="text-[12px] font-bold px-2 py-0.5 rounded-xs shrink-0 hover:opacity-80 transition-opacity"
                   style={{
                     backgroundColor: `${theme.primary}15`,
                     color: theme.primary,
@@ -87,10 +87,10 @@ const Certifications: React.FC<CertificationsProps> = ({ data, theme, variant = 
               border: `1px solid ${theme.primary}20`,
             }}
           >
-            <h3 className="text-[12px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+            <h3 className="text-[14.4px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
               {item.name}
             </h3>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+            <p className="text-[12px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
               {item.issuer}
             </p>
           </div>

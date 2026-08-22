@@ -74,29 +74,29 @@ const SidebarRightLayout: React.FC<SidebarRightLayoutProps> = ({
           </div>
         )}
         <div className="text-center mb-5">
-          <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
+          <h1 className="text-[33.6px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading }}>
             {data.personal.firstName} {data.personal.lastName}
           </h1>
-          <p className="text-[14px] font-semibold leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
+          <p className="text-[16.8px] font-semibold leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             {data.personal.title}
           </p>
         </div>
         <div className="space-y-3 mb-5">
-          <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
+          <h2 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
             Contact
           </h2>
-          {data.personal.email && <div className="text-[10.5px] font-medium leading-normal break-words">{data.personal.email}</div>}
-          {data.personal.phone && <div className="text-[10.5px] font-medium leading-normal">{data.personal.phone}</div>}
-          {data.personal.location && <div className="text-[10.5px] font-medium leading-normal">{data.personal.location}</div>}
+          {data.personal.email && <div className="text-[12.6px] font-medium leading-normal break-words">{data.personal.email}</div>}
+          {data.personal.phone && <div className="text-[12.6px] font-medium leading-normal">{data.personal.phone}</div>}
+          {data.personal.location && <div className="text-[12.6px] font-medium leading-normal">{data.personal.location}</div>}
         </div>
         {data.skills.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
+            <h2 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] opacity-90" style={{ fontFamily: theme.fontFamily }}>
               Skills
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {data.skills.map((skill) => (
-                <span key={skill.id} className="text-[11px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white">
+                <span key={skill.id} className="text-[13.2px] font-semibold px-2 py-0.5 rounded bg-white/15 text-white">
                   {skill.name}
                 </span>
               ))}

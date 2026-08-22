@@ -57,17 +57,17 @@ const GradientAccentLayout: React.FC<GradientAccentLayoutProps> = ({
             />
           )}
           <div>
-            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+            <h1 className="text-[33.6px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p className="text-[14px] font-semibold leading-[1.25] mt-1" style={{ color: theme.primary }}>{data.personal.title}</p>
+            <p className="text-[16.8px] font-semibold leading-[1.25] mt-1" style={{ color: theme.primary }}>{data.personal.title}</p>
           </div>
         </div>
       </div>
 
       {data.summary && (
         <div className="mb-5 p-3.5 rounded-md" style={{ background: `linear-gradient(90deg, ${theme.primary}20 0%, transparent 100%)` }}>
-          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
+          <p className="text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
         </div>
       )}
 

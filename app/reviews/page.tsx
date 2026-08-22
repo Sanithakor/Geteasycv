@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import Navigation from "@/components/Navigation";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
@@ -29,7 +29,7 @@ export default function ReviewsPage() {
       comment:
         "I landed 3 interviews in my first week using GetEasyCV. The ATS-friendly templates and bullet point optimizer made all the difference.",
       avatar: "SK",
-      color: "from-indigo-500 to-purple-500",
+      color: "from-[#FF570F] to-[#FF570F]",
     },
     {
       name: "James R.",
@@ -39,7 +39,7 @@ export default function ReviewsPage() {
       comment:
         "The live editor is incredibly smooth. I had a polished resume ready in under 20 minutes and downloaded the PDF without any hassle.",
       avatar: "JR",
-      color: "from-violet-500 to-green-500",
+      color: "from-[#FF570F] to-green-500",
     },
     {
       name: "Priya M.",
@@ -90,7 +90,7 @@ export default function ReviewsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wider mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFF8F5] border border-[#FFD4C2] text-[#E04800] text-xs font-bold uppercase tracking-wider mb-4">
               <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
               <span>TRUSTSCORE 4.9 / 5.0 (5,000+ REVIEWS)</span>
             </div>
@@ -133,7 +133,7 @@ export default function ReviewsPage() {
                     </h4>
                     <p className="text-[11px] text-slate-500 font-medium">
                       {rev.role} •{" "}
-                      <span className="text-purple-600 font-semibold">
+                      <span className="text-[#FF570F] font-semibold">
                         {rev.company}
                       </span>
                     </p>

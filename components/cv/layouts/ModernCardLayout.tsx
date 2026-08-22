@@ -59,11 +59,11 @@ const ModernCardLayout: React.FC<ModernCardLayoutProps> = ({
             />
           )}
           <div className="flex-1">
-            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+            <h1 className="text-[33.6px] font-bold leading-[1.15]" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
-            <p className="text-[14px] font-semibold leading-[1.25] mt-0.5" style={{ color: theme.primary }}>{data.personal.title}</p>
-            <div className="flex gap-3 mt-1.5 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+            <p className="text-[16.8px] font-semibold leading-[1.25] mt-0.5" style={{ color: theme.primary }}>{data.personal.title}</p>
+            <div className="flex gap-3 mt-1.5 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
               <span>{data.personal.email}</span>
               <span>{data.personal.phone}</span>
               <span>{data.personal.location}</span>
@@ -82,7 +82,7 @@ const ModernCardLayout: React.FC<ModernCardLayoutProps> = ({
             borderLeft: `3px solid ${theme.primary}`,
           }}
         >
-          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
+          <p className="text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>{data.summary}</p>
         </div>
       )}
 

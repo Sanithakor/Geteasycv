@@ -23,7 +23,7 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     const updated = await safeDbQuery(async () => {
-      const result = await (prisma as any).systemConfig.upsert({
+      const result = await prisma.systemConfig.upsert({
         where: { id: 'system' },
         update: {
           ...(body.appName && { appName: body.appName }),

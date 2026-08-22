@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -90,17 +90,17 @@ export default function PricingSimplified() {
               key={idx}
               className={`relative rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                 plan.highlight
-                  ? "border-purple-500 shadow-xl shadow-purple-500/20 transform scale-105"
+                  ? "border-[#FF570F] shadow-xl shadow-[#FF570F]/25 transform scale-105"
                   : "border-slate-200 bg-white hover:-translate-y-1"
               }`}
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600"></div>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF570F] via-pink-600 to-[#E04800]"></div>
               )}
 
               {plan.popular && (
-                <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-2 text-sm font-bold uppercase tracking-wider">
+                <div className="bg-gradient-to-r from-[#FF570F] to-[#E04800] text-white text-center py-2 text-sm font-bold uppercase tracking-wider">
                   ⭐ Recommended
                 </div>
               )}
@@ -109,7 +109,7 @@ export default function PricingSimplified() {
               <div
                 className={`p-8 ${
                   plan.highlight
-                    ? "bg-gradient-to-br from-purple-50 via-white to-indigo-50"
+                    ? "bg-gradient-to-br from-[#FFF8F5] via-white to-indigo-50"
                     : "bg-white"
                 }`}
               >
@@ -144,8 +144,8 @@ export default function PricingSimplified() {
                   href={plan.href}
                   className={`block w-full text-center py-4 rounded-xl font-bold transition-all mb-8 ${
                     plan.highlight
-                      ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl"
-                      : "border-2 border-slate-200 hover:border-purple-400 text-slate-900 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-[#FF570F] to-[#E04800] hover:from-[#E04800] hover:to-[#E04800] text-white shadow-lg hover:shadow-xl"
+                      : "border-2 border-slate-200 hover:border-purple-400 text-slate-900 hover:bg-[#FFF8F5]"
                   }`}
                 >
                   {plan.cta}
@@ -158,14 +158,14 @@ export default function PricingSimplified() {
                       <div
                         className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
                           plan.highlight
-                            ? "bg-purple-100"
+                            ? "bg-[#FFF0EB]"
                             : "bg-green-100"
                         }`}
                       >
                         <Check
                           className={`w-3.5 h-3.5 ${
                             plan.highlight
-                              ? "text-purple-600"
+                              ? "text-[#FF570F]"
                               : "text-green-600"
                           }`}
                         />

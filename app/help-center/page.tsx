@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Navigation from "@/components/Navigation";
@@ -74,8 +74,8 @@ export default function HelpCenterPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <HelpCircle className="w-4 h-4 text-purple-600" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFF8F5] border border-[#FFD4C2] text-[#E04800] text-xs font-bold uppercase tracking-wider mb-4">
+              <HelpCircle className="w-4 h-4 text-[#FF570F]" />
               <span>GETEASYCV HELP CENTER</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight mb-3">
@@ -93,7 +93,7 @@ export default function HelpCenterPage() {
                 placeholder="Search articles, guides, or troubleshooting..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200/90 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/25 shadow-xs text-slate-900"
+                className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200/90 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#FF570F]/25 shadow-xs text-slate-900"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function HelpCenterPage() {
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-4">
-                      <div className="w-10 h-10 rounded-md bg-purple-100/70 text-purple-600 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-md bg-[#FFF0EB]/70 text-[#FF570F] flex items-center justify-center shrink-0">
                         <CatIcon className="w-5 h-5" />
                       </div>
                       <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
@@ -125,7 +125,7 @@ export default function HelpCenterPage() {
                     </p>
                   </div>
 
-                  <span className="text-xs font-semibold text-purple-600 flex items-center gap-1 hover:underline cursor-pointer">
+                  <span className="text-xs font-semibold text-[#FF570F] flex items-center gap-1 hover:underline cursor-pointer">
                     <span>Browse category articles</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
@@ -169,7 +169,7 @@ export default function HelpCenterPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-md shadow-md transition-all text-xs sm:text-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF570F] hover:bg-[#E04800] text-white font-bold rounded-md shadow-md transition-all text-xs sm:text-sm cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Contact Support Team</span>

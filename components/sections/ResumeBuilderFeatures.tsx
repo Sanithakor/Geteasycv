@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export default function ResumeBuilderFeatures() {
   const featureCards = [
     {
       icon: FileText,
-      iconBg: "bg-purple-100/80 text-purple-600",
+      iconBg: "bg-[#FFF0EB]/80 text-[#FF570F]",
       title: "ATS Friendly Templates",
       description:
         "Professionally designed templates that pass ATS scans and get you noticed by recruiters.",
@@ -94,14 +94,14 @@ export default function ResumeBuilderFeatures() {
     },
     {
       icon: Smartphone,
-      iconBg: "bg-purple-100/80 text-purple-600",
+      iconBg: "bg-[#FFF0EB]/80 text-[#FF570F]",
       title: "Mobile Responsive",
       description:
         "Build and edit your resume seamlessly on any device, anywhere, anytime.",
     },
     {
       icon: Shield,
-      iconBg: "bg-indigo-100/80 text-indigo-600",
+      iconBg: "bg-[#FFF0EB]/80 text-[#FF570F]",
       title: "Data Privacy & Security",
       description:
         "Your data is encrypted and secure. We never share your information with third parties.",
@@ -120,7 +120,7 @@ export default function ResumeBuilderFeatures() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Badge */}
         <div className="flex justify-center mb-6 sm:mb-8">
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-purple-100 shadow-xs text-xs font-bold tracking-wider text-[#7C3AED] uppercase">
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-[#FFD4C2] shadow-xs text-xs font-bold tracking-wider text-[#FF570F] uppercase">
             POWERFUL &amp; EASY TO USE
           </span>
         </div>
@@ -131,7 +131,7 @@ export default function ResumeBuilderFeatures() {
           <div className="lg:col-span-5 text-left">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
               Resume Builder <br />
-              <span className="text-[#7C3AED]">Features</span>
+              <span className="text-[#FF570F]">Features</span>
             </h2>
             <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed max-w-lg">
               Everything you need to create a professional resume that gets you
@@ -141,7 +141,7 @@ export default function ResumeBuilderFeatures() {
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href="/editor"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold rounded-md shadow-md shadow-purple-500/20 transition-all text-xs sm:text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FF570F] hover:bg-[#E04800] text-white font-semibold rounded-md shadow-md shadow-[#FF570F]/25 transition-all text-xs sm:text-sm"
               >
                 Create My Resume
                 <ArrowRight className="w-4 h-4" />
@@ -173,14 +173,14 @@ export default function ResumeBuilderFeatures() {
                           key={idx}
                           className={`flex items-center justify-between px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
                             sec.selected
-                              ? "bg-purple-50 text-[#7C3AED] font-semibold border border-purple-100"
+                              ? "bg-[#FFF8F5] text-[#FF570F] font-semibold border border-[#FFD4C2]"
                               : "bg-white text-gray-700 hover:bg-gray-100/80 border border-gray-100/60"
                           }`}
                         >
                           <div className="flex items-center gap-1.5 truncate">
                             <IconComp
                               className={`w-3.5 h-3.5 shrink-0 ${
-                                sec.selected ? "text-[#7C3AED]" : "text-gray-400"
+                                sec.selected ? "text-[#FF570F]" : "text-gray-400"
                               }`}
                             />
                             <span className="truncate">{sec.label}</span>
@@ -191,7 +191,7 @@ export default function ResumeBuilderFeatures() {
                     })}
                   </div>
 
-                  <button className="w-full mt-3 py-1.5 px-2 bg-purple-50 hover:bg-purple-100 text-[#7C3AED] text-[11px] font-semibold rounded-md border border-purple-100/80 flex items-center justify-center gap-1 transition-colors cursor-pointer">
+                  <button className="w-full mt-3 py-1.5 px-2 bg-[#FFF8F5] hover:bg-[#FFF0EB] text-[#FF570F] text-[11px] font-semibold rounded-md border border-[#FFD4C2]/80 flex items-center justify-center gap-1 transition-colors cursor-pointer">
                     <Plus className="w-3 h-3" />
                     <span>Add Section</span>
                   </button>
@@ -201,9 +201,9 @@ export default function ResumeBuilderFeatures() {
                 <div className="md:col-span-6 bg-white border border-gray-200/70 rounded-md p-4 shadow-xs text-left font-sans space-y-3">
                   {/* Profile Header */}
                   <div className="flex items-center gap-3 pb-2 border-b border-gray-100">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-xs overflow-hidden">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-[#FF570F] flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-xs overflow-hidden">
                       <svg className="w-full h-full text-white" viewBox="0 0 100 100" fill="currentColor">
-                        <rect width="100" height="100" fill="#6366F1" />
+                        <rect width="100" height="100" fill="#FF570F" />
                         <circle cx="50" cy="38" r="22" fill="#E0E7FF" />
                         <path d="M15 90 C 15 65, 85 65, 85 90 Z" fill="#E0E7FF" />
                       </svg>
@@ -318,7 +318,7 @@ export default function ResumeBuilderFeatures() {
                       <span className="w-4 h-4 rounded-full bg-orange-500 transition-transform cursor-pointer"></span>
                       <span className="w-4 h-4 rounded-full bg-red-500 transition-transform cursor-pointer"></span>
                       <span className="w-4 h-4 rounded-full bg-slate-800 transition-transform cursor-pointer"></span>
-                      <span className="w-4 h-4 rounded-full bg-purple-600 transition-transform cursor-pointer"></span>
+                      <span className="w-4 h-4 rounded-full bg-[#FF570F] transition-transform cursor-pointer"></span>
                     </div>
                   </div>
 
@@ -351,7 +351,7 @@ export default function ResumeBuilderFeatures() {
                       <span>Preview</span>
                     </button>
 
-                    <button className="w-full py-1.5 px-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer">
+                    <button className="w-full py-1.5 px-3 bg-[#FF570F] hover:bg-[#E04800] text-white text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer">
                       <Download className="w-3.5 h-3.5 text-white" />
                       <span>Download PDF</span>
                     </button>

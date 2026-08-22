@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -26,9 +26,9 @@ export default function ExportSection() {
       icon: Share2,
       title: "Share Link",
       description: "Generate shareable link for online portfolios",
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-50",
-      iconColor: "text-purple-600",
+      color: "from-[#FF570F] to-pink-500",
+      bgColor: "bg-[#FFF8F5]",
+      iconColor: "text-[#FF570F]",
     },
   ];
 
@@ -53,7 +53,7 @@ export default function ExportSection() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-6">
             Export in{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#FF570F] to-pink-600 bg-clip-text text-transparent">
               Any Format
             </span>
           </h2>

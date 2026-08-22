@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Analytics Dashboard Page
  */
 
@@ -43,7 +43,7 @@ const trafficData = [
   { source: 'Other', value: 1000, percentage: 10 },
 ];
 
-const COLORS = ['#7c3aed', '#8b5cf6', '#ec4899', '#06b6d4', '#10b981'];
+const COLORS = ['#FF570F', '#FF570F', '#ec4899', '#06b6d4', '#10b981'];
 
 export default function AnalyticsPage() {
   return (
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                   color: '#f1f5f9',
                 }}
               />
-              <Bar dataKey="value" fill="#7c3aed" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="value" fill="#FF570F" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -155,7 +155,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-violet-500 to-violet-600"
+                  className="h-full bg-gradient-to-r from-[#FF570F] to-[#FF570F]"
                   style={{ width: `${source.percentage}%` }}
                 />
               </div>

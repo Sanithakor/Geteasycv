@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function FinalCTA() {
   return (
-    <section className="py-20 sm:py-24 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 relative overflow-hidden">
+    <section className="py-20 sm:py-24 bg-gradient-to-r from-[#FF570F] via-[#FF570F] to-blue-600 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
@@ -28,7 +28,7 @@ export default function FinalCTA() {
         </h2>
 
         {/* Supporting Text */}
-        <p className="text-lg sm:text-xl text-purple-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl text-[#FFF0EB] mb-10 max-w-2xl mx-auto leading-relaxed">
           Join thousands of job seekers building professional resumes in minutes
         </p>
 
@@ -36,7 +36,7 @@ export default function FinalCTA() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/templates"
-            className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-purple-600 rounded-xl font-bold hover:bg-purple-50 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105"
+            className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#FF570F] rounded-xl font-bold hover:bg-[#FFF8F5] transition-all shadow-xl hover:shadow-2xl transform hover:scale-105"
           >
             Browse Templates
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />

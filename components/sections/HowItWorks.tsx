@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -37,12 +37,12 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-slate-50/60 via-white to-purple-50/20 py-16 sm:py-24 border-t border-purple-100/60 overflow-hidden font-sans">
+    <section className="bg-gradient-to-b from-slate-50/60 via-white to-purple-50/20 py-16 sm:py-24 border-t border-[#FFD4C2]/60 overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Top Badge */}
         <div className="flex justify-center mb-5">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-600 text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FFF8F5] border border-[#FFD4C2] text-[#FF570F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF570F]" />
             <span>EASY PROCESS</span>
           </div>
         </div>
@@ -50,10 +50,10 @@ export default function HowItWorks() {
         {/* Main Headline */}
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-3xl mx-auto mb-4">
           We make things{" "}
-          <span className="text-purple-600">easy</span>
+          <span className="text-[#FF570F]">easy</span>
           <br />
           for your{" "}
-          <span className="text-purple-600">business</span>
+          <span className="text-[#FF570F]">business</span>
         </h2>
 
         {/* Subtitle */}
@@ -74,11 +74,11 @@ export default function HowItWorks() {
                 <div key={item.num} className="flex flex-col items-center text-center group">
                   {/* Step Number Badge */}
                   {item.isHighlighted ? (
-                    <div className="w-11 h-11 rounded-full bg-purple-600 text-white font-extrabold text-sm flex items-center justify-center shadow-lg shadow-purple-500/30 mx-auto z-10 relative transform group-hover:scale-110 transition-transform">
+                    <div className="w-11 h-11 rounded-full bg-[#FF570F] text-white font-extrabold text-sm flex items-center justify-center shadow-lg shadow-[#FF570F]/25 mx-auto z-10 relative transform group-hover:scale-110 transition-transform">
                       {item.num}
                     </div>
                   ) : (
-                    <div className="w-11 h-11 rounded-full bg-purple-100/80 border-2 border-purple-200/80 text-slate-800 font-extrabold text-sm flex items-center justify-center mx-auto z-10 relative bg-white transform group-hover:scale-110 transition-transform">
+                    <div className="w-11 h-11 rounded-full bg-[#FFF0EB]/80 border-2 border-purple-200/80 text-slate-800 font-extrabold text-sm flex items-center justify-center mx-auto z-10 relative bg-white transform group-hover:scale-110 transition-transform">
                       {item.num}
                     </div>
                   )}
@@ -87,12 +87,12 @@ export default function HowItWorks() {
                   <div className={`w-[2px] h-6 border-l-2 border-dashed ${item.isHighlighted ? 'border-purple-400' : 'border-purple-200'} mx-auto my-1.5`} />
 
                   {/* Icon Box Container */}
-                  <div className="w-16 h-16 rounded-2xl bg-purple-100/60 border border-purple-200/50 text-purple-600 flex items-center justify-center mx-auto shadow-2xs group-hover:bg-purple-100 transition-colors">
-                    <IconComponent className="w-7 h-7 text-purple-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-[#FFF0EB]/60 border border-purple-200/50 text-[#FF570F] flex items-center justify-center mx-auto shadow-2xs group-hover:bg-[#FFF0EB] transition-colors">
+                    <IconComponent className="w-7 h-7 text-[#FF570F]" />
                   </div>
 
                   {/* Step Title & Description */}
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-4 mb-2 group-hover:text-purple-600 transition-colors">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-4 mb-2 group-hover:text-[#FF570F] transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal max-w-[250px] mx-auto">
@@ -108,7 +108,7 @@ export default function HowItWorks() {
         <div className="inline-flex items-center justify-center">
           <Link
             href="/templates"
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-purple-500/25 inline-flex items-center gap-2.5 transition-all transform hover:scale-105 cursor-pointer text-sm sm:text-base"
+            className="px-8 py-4 bg-gradient-to-r from-[#FF570F] to-[#E04800] hover:from-[#E04800] hover:to-[#E04800] text-white font-bold rounded-xl shadow-lg shadow-[#FF570F]/25 inline-flex items-center gap-2.5 transition-all transform hover:scale-105 cursor-pointer text-sm sm:text-base"
           >
             <span>Start Building Free</span>
             <ArrowRight className="w-5 h-5" />

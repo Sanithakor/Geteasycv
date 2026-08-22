@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * AuthModal
@@ -107,7 +107,7 @@ function InputField({
             ${rightEl ? 'pr-10' : 'pr-4'}
             ${error
               ? 'border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-              : 'border-[#e2e2e2] focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20'}
+              : 'border-[#e2e2e2] focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20'}
             disabled:opacity-60 disabled:cursor-not-allowed`}
         />
         {rightEl && (
@@ -288,8 +288,8 @@ function OtpStep({
             onChange={(e) => handleDigit(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             className={`w-12 h-14 text-center text-xl font-black rounded-xl border-2 outline-none transition-all
-              ${d ? 'border-[#4F39F6] bg-[#4F39F6]/5 text-[#4F39F6]' : 'border-[#e2e2e2] bg-white text-[#1a1a2e]'}
-              focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20`}
+              ${d ? 'border-[#FF570F] bg-[#FF570F]/5 text-[#FF570F]' : 'border-[#e2e2e2] bg-white text-[#1a1a2e]'}
+              focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20`}
           />
         ))}
       </div>
@@ -313,7 +313,7 @@ function OtpStep({
             type="button"
             onClick={handleResend}
             disabled={isResending}
-            className="font-bold text-[#4F39F6] hover:underline disabled:opacity-50"
+            className="font-bold text-[#FF570F] hover:underline disabled:opacity-50"
           >
             {isResending ? 'Sending...' : 'Resend'}
           </button>
@@ -465,7 +465,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
 
         <p className="text-center text-[15px] text-slate-500">
           Don't have an account?{' '}
-          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
             Sign up
           </button>
         </p>
@@ -519,7 +519,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
               }
             />
             <div className="flex justify-end mt-1.5">
-              <Link href="/forgot-password" onClick={close} className="text-xs font-semibold text-[#4F39F6] hover:underline">
+              <Link href="/forgot-password" onClick={close} className="text-xs font-semibold text-[#FF570F] hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -551,7 +551,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
 
         <p className="text-center text-[15px] text-slate-500">
           Don't have an account?{' '}
-          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+          <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
             Sign up
           </button>
         </p>
@@ -601,7 +601,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
 
       <p className="text-center text-[15px] text-slate-500">
         Don't have an account?{' '}
-        <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+        <button type="button" onClick={() => setTab('signup')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
           Sign up
         </button>
       </p>
@@ -773,14 +773,14 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
 
         <p className="text-sm text-slate-500 leading-relaxed">
           By creating an account, you agree to our{' '}
-          <Link href="/terms" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#4F39F6]">Terms of Service</Link>
+          <Link href="/terms" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#FF570F]">Terms of Service</Link>
           {' '}and{' '}
-          <Link href="/privacy" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#4F39F6]">Privacy Policy</Link>.
+          <Link href="/privacy" onClick={close} className="underline font-medium text-[#1a1a2e] hover:text-[#FF570F]">Privacy Policy</Link>.
         </p>
 
         <p className="text-center text-[15px] text-slate-500">
           Already have an account?{' '}
-          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
             Login
           </button>
         </p>
@@ -877,13 +877,13 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => { setAgreed(e.target.checked); setFieldErrors((p) => ({ ...p, agreed: '' })); }}
-                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#4F39F6] focus:ring-[#4F39F6] cursor-pointer shrink-0"
+                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] cursor-pointer shrink-0"
               />
               <span className="text-sm text-slate-600">
                 I agree to the{' '}
-                <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#4F39F6] underline">Terms</Link>
+                <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Terms</Link>
                 {' '}and{' '}
-                <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#4F39F6] underline">Privacy Policy</Link>
+                <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Privacy Policy</Link>
               </span>
             </label>
             {fieldErrors.agreed && <p className="text-xs font-medium text-red-600 ml-6">{fieldErrors.agreed}</p>}
@@ -915,7 +915,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
 
         <p className="text-center text-[15px] text-slate-500">
           Already have an account?{' '}
-          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+          <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
             Login
           </button>
         </p>
@@ -971,13 +971,13 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
               type="checkbox"
               checked={agreed}
               onChange={(e) => { setAgreed(e.target.checked); setFieldErrors((p) => ({ ...p, agreed: '' })); }}
-              className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#4F39F6] focus:ring-[#4F39F6] cursor-pointer shrink-0"
+              className="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] cursor-pointer shrink-0"
             />
             <span className="text-sm text-slate-600">
               I agree to the{' '}
-              <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#4F39F6] underline">Terms</Link>
+              <Link href="/terms" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Terms</Link>
               {' '}and{' '}
-              <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#4F39F6] underline">Privacy Policy</Link>
+              <Link href="/privacy" onClick={close} className="font-semibold text-[#1a1a2e] hover:text-[#FF570F] underline">Privacy Policy</Link>
             </span>
           </label>
           {fieldErrors.agreed && <p className="text-xs font-medium text-red-600 ml-6">{fieldErrors.agreed}</p>}
@@ -995,7 +995,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
 
       <p className="text-center text-[15px] text-slate-500">
         Already have an account?{' '}
-        <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#4F39F6] transition-colors">
+        <button type="button" onClick={() => setTab('login')} className="font-bold text-[#1a1a2e] hover:text-[#FF570F] transition-colors">
           Login
         </button>
       </p>

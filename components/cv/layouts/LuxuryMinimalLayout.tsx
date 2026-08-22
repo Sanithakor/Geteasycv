@@ -40,13 +40,13 @@ const LuxuryMinimalLayout: React.FC<LuxuryMinimalLayoutProps> = ({
       }}
     >
       <div className="text-center mb-6">
-        <h1 className="text-[28px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
+        <h1 className="text-[33.6px] font-bold leading-[1.15] mb-1" style={{ fontFamily: theme.fontFamilyHeading, color: theme.text }}>
           {data.personal.firstName} {data.personal.lastName}
         </h1>
-        <p className="text-[14px] font-semibold leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+        <p className="text-[16.8px] font-semibold leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
           {data.personal.title}
         </p>
-        <div className="flex justify-center gap-4 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+        <div className="flex justify-center gap-4 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
           <span>{data.personal.email}</span>
           <span>{data.personal.phone}</span>
           <span>{data.personal.location}</span>
@@ -55,7 +55,7 @@ const LuxuryMinimalLayout: React.FC<LuxuryMinimalLayoutProps> = ({
 
       {data.summary && (
         <div className="mb-6 max-w-xl mx-auto text-center">
-          <p className="text-[11.5px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+          <p className="text-[13.8px] leading-[1.45]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
             {data.summary}
           </p>
         </div>

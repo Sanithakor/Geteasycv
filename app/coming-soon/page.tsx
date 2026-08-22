@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -44,7 +44,7 @@ export default function ComingSoonPage() {
     <>
       <div className="min-h-screen bg-slate-900 text-white font-sans flex flex-col justify-between relative overflow-hidden">
         {/* Background Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-purple-600/15 blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#FF570F]/15 blur-[140px] pointer-events-none rounded-full" />
         
         {/* Navigation Header */}
         <header className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
@@ -65,7 +65,7 @@ export default function ComingSoonPage() {
         {/* Hero Body Section */}
         <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-8 my-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-[#FF570F]/30 text-purple-300 text-xs font-bold uppercase tracking-wider shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-purple-400" />
             <span>LAUNCHING SOON</span>
           </div>
@@ -73,7 +73,7 @@ export default function ComingSoonPage() {
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
             We're Getting Ready for <br />
-            <span className="bg-gradient-to-r from-purple-400 via-indigo-300 to-white bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-purple-400 via-[#FF570F] to-white bg-clip-text text-transparent">
               GetEasyCV Launch
             </span>
           </h1>
@@ -106,7 +106,7 @@ export default function ComingSoonPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs sm:text-sm rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-60"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#FF570F] hover:bg-[#FF570F] text-white font-bold text-xs sm:text-sm rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-60"
                 >
                   <span>{isSubmitting ? 'Joining...' : 'Notify Me'}</span>
                   <ArrowRight className="w-4 h-4" />

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Users Management Page
  * View and manage all users
  */
@@ -203,7 +203,7 @@ export default function UsersPage() {
         </div>
         <Link
           href="/admin/users/new"
-          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#FF570F] hover:bg-[#E04800] text-white rounded-md font-medium transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add User
@@ -219,7 +219,7 @@ export default function UsersPage() {
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full pl-10 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF570F]"
           />
         </div>
       </div>
@@ -235,7 +235,7 @@ export default function UsersPage() {
       <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-3">
-            <div className="w-8 h-8 rounded-full border-2 border-violet-600 border-t-transparent animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-[#FF570F] border-t-transparent animate-spin" />
             <p className="text-sm text-slate-500">Loading user registry...</p>
           </div>
         ) : filteredUsers.length === 0 ? (
@@ -307,7 +307,7 @@ export default function UsersPage() {
                     </td>
                     <td className="px-4.5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center text-white font-semibold capitalize">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-[#FF570F] flex items-center justify-center text-white font-semibold capitalize">
                           {user.name?.[0] || 'U'}
                         </div>
                         <span className="font-medium text-slate-900 dark:text-white">
@@ -323,7 +323,7 @@ export default function UsersPage() {
                         onClick={() => handleUpdateTier(user.id, user.subscriptionTier)}
                         className={`px-3 py-1 rounded-full text-xs font-semibold select-none cursor-pointer hover:opacity-85 ${
                           user.subscriptionTier === 'pro'
-                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400'
+                            ? 'bg-[#FFF0EB] text-[#E04800] dark:bg-purple-900/20 dark:text-purple-400'
                             : 'bg-gray-100 text-gray-700 dark:bg-gray-900/20 dark:text-gray-400'
                         }`}
                         title="Click to toggle subscription plan"
@@ -393,7 +393,7 @@ export default function UsersPage() {
             <button className="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
               Previous
             </button>
-            <button className="px-3 py-1 rounded-md bg-violet-600 text-white text-sm font-medium">
+            <button className="px-3 py-1 rounded-md bg-[#FF570F] text-white text-sm font-medium">
               1
             </button>
             <button className="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">

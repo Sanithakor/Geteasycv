@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+﻿import Navigation from "@/components/Navigation";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import BlogSection from "@/components/sections/BlogSection";
 import Footer from "@/components/Footer";
@@ -102,8 +102,8 @@ export default function AboutPage() {
         <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 sm:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 rounded-full shadow-md mb-6 backdrop-blur border border-purple-100/50">
-                <Building className="w-4 h-4 text-purple-600" />
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 rounded-full shadow-md mb-6 backdrop-blur border border-[#FFD4C2]/50">
+                <Building className="w-4 h-4 text-[#FF570F]" />
                 <span className="text-sm font-medium text-gray-700">
                   Trusted by 50,000+ professionals worldwide
                 </span>
@@ -111,7 +111,7 @@ export default function AboutPage() {
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-slate-900">
                 We're Building the Future of{" "}
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#FF570F] via-[#FF570F] to-pink-600 bg-clip-text text-transparent">
                   Career Success
                 </span>
               </h1>
@@ -123,7 +123,7 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/templates"
-                  className="px-6 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-200 text-center text-sm"
+                  className="px-6 py-3.5 bg-gradient-to-r from-[#FF570F] to-[#FF570F] text-white rounded-md font-semibold hover:from-indigo-700 hover:to-[#E04800] transition-all shadow-lg shadow-indigo-200 text-center text-sm"
                 >
                   Explore Templates
                 </Link>
@@ -146,7 +146,7 @@ export default function AboutPage() {
                 const Icon = stat.icon;
                 return (
                   <div key={i} className="p-6 rounded-md bg-slate-50 border border-slate-100 text-center">
-                    <div className="w-10 h-10 mx-auto mb-3 bg-indigo-100 rounded-md flex items-center justify-center text-indigo-600">
+                    <div className="w-10 h-10 mx-auto mb-3 bg-[#FFF0EB] rounded-md flex items-center justify-center text-[#FF570F]">
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">{stat.value}</div>
@@ -174,7 +174,7 @@ export default function AboutPage() {
                 const Icon = v.icon;
                 return (
                   <div key={i} className="p-6 rounded-md bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-10 h-10 mb-4 bg-purple-100 text-purple-600 rounded-md flex items-center justify-center">
+                    <div className="w-10 h-10 mb-4 bg-[#FFF0EB] text-[#FF570F] rounded-md flex items-center justify-center">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="text-base font-bold text-slate-900 mb-2">{v.title}</h3>
@@ -197,7 +197,7 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-4 gap-6">
               {milestones.map((m, i) => (
                 <div key={i} className="p-5 rounded-md bg-slate-50 border border-slate-200">
-                  <div className="text-xl font-extrabold text-indigo-600 mb-1">{m.year}</div>
+                  <div className="text-xl font-extrabold text-[#FF570F] mb-1">{m.year}</div>
                   <h3 className="text-sm font-bold text-slate-900 mb-2">{m.title}</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">{m.description}</p>
                 </div>

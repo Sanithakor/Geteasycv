@@ -25,7 +25,7 @@ export const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
   appName: 'GetEasyCV',
   logo: '/logo.svg',
   favicon: '/favicon.ico',
-  primaryColor: '#7c3aed',
+  primaryColor: '#FF570F',
   maintenanceMode: false,
   comingSoonMode: true,
   registrationOpen: true,
@@ -47,7 +47,7 @@ export const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
  */
 export async function getSystemSettings(): Promise<SystemSettings> {
   return safeDbQuery(async () => {
-    const config = await (prisma as any).systemConfig.findUnique({
+    const config = await prisma.systemConfig.findUnique({
       where: { id: 'system' },
     });
 
@@ -56,6 +56,9 @@ export async function getSystemSettings(): Promise<SystemSettings> {
     return {
       ...DEFAULT_SYSTEM_SETTINGS,
       ...config,
-    };
+      // Prisma schema fields are nullable — fall back to defaults
+      logo: config.logo ?? DEFAULT_SYSTEM_SETTINGS.logo,
+      favicon: config.favicon ?? DEFAULT_SYSTEM_SETTINGS.favicon,
+    } as SystemSettings;
   }, DEFAULT_SYSTEM_SETTINGS);
 }

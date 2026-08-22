@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
@@ -38,7 +38,7 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFF8F5] border border-[#FF570F] rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
               <Sparkles className="w-3.5 h-3.5" />
               <span>We're Here To Help</span>
             </div>
@@ -54,20 +54,20 @@ export default function ContactPage() {
             {/* Contact Info Cards */}
             <div className="md:col-span-4 space-y-4">
               <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-[#4F39F6] flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-xl bg-[#FFF8F5] text-[#FF570F] flex items-center justify-center font-bold">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900">Email Support</h3>
                   <p className="text-xs text-slate-500 mt-0.5">Reach our team anytime</p>
-                  <a href="mailto:support@geteasycv.com" className="text-xs font-bold text-[#4F39F6] hover:underline mt-2 inline-block">
+                  <a href="mailto:support@geteasycv.com" className="text-xs font-bold text-[#FF570F] hover:underline mt-2 inline-block">
                     support@geteasycv.com
                   </a>
                 </div>
               </div>
 
               <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-xl bg-[#FFF8F5] text-[#FF570F] flex items-center justify-center font-bold">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
@@ -93,7 +93,7 @@ export default function ContactPage() {
                   <button
                     type="button"
                     onClick={() => { setSent(false); setForm({ name: '', email: '', topic: 'General Question', message: '' }); }}
-                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#4F39F6] text-white font-bold text-xs shadow-md shadow-[#4F39F6]/25 hover:bg-[#4330D9] transition-all cursor-pointer"
+                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#FF570F] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 hover:bg-[#E04800] transition-all cursor-pointer"
                   >
                     Send Another Message
                   </button>
@@ -118,7 +118,7 @@ export default function ContactPage() {
                         value={form.name}
                         onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
                       />
                     </div>
 
@@ -133,7 +133,7 @@ export default function ContactPage() {
                         value={form.email}
                         onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -146,7 +146,7 @@ export default function ContactPage() {
                       id="topic"
                       value={form.topic}
                       onChange={(e) => setForm((p) => ({ ...p, topic: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
                     >
                       {TOPICS.map((t) => (
                         <option key={t} value={t}>{t}</option>
@@ -165,14 +165,14 @@ export default function ContactPage() {
                       value={form.message}
                       onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
                       placeholder="How can we help you?"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 px-4 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] text-white font-bold text-xs shadow-md shadow-[#4F39F6]/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {submitting ? (
                       <>

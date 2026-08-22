@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+﻿import Navigation from "@/components/Navigation";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -105,13 +105,13 @@ export default function PrivacyPolicyPage() {
                 <ul className="space-y-2">
                   {section.content.map((item, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#4F39F6] mt-2 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF570F] mt-2 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
                 {section.links?.map((l) => (
-                  <Link key={l.href} href={l.href} className="text-xs font-bold text-[#4F39F6] hover:underline block mt-2">
+                  <Link key={l.href} href={l.href} className="text-xs font-bold text-[#FF570F] hover:underline block mt-2">
                     {l.text} {'→'}
                   </Link>
                 ))}

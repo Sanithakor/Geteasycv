@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
@@ -88,7 +88,7 @@ function ResetPasswordContent() {
           </p>
           <Link
             href="/forgot-password"
-            className="inline-block py-3 px-6 rounded-xl bg-[#4F39F6] text-white font-bold text-sm hover:bg-[#4330D9] transition-colors"
+            className="inline-block py-3 px-6 rounded-xl bg-[#FF570F] text-white font-bold text-sm hover:bg-[#E04800] transition-colors"
           >
             Request New Link
           </Link>
@@ -104,11 +104,11 @@ function ResetPasswordContent() {
         {/* Brand Header */}
         <div className="mb-6">
           <Link href="/" className="inline-flex items-center gap-2 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#4F39F6] to-[#7C69FF] flex items-center justify-center shadow-md shadow-[#4F39F6]/25 group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF570F] to-[#FF8C5A] flex items-center justify-center shadow-md shadow-[#FF570F]/25 group-hover:scale-105 transition-transform">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900">
-              Get<span className="text-[#4F39F6]">EasyCV</span>
+              Get<span className="text-[#FF570F]">EasyCV</span>
             </span>
           </Link>
         </div>
@@ -125,7 +125,7 @@ function ResetPasswordContent() {
             </p>
             <Link
               href="/?openAuth=login"
-              className="inline-block py-3 px-6 rounded-xl bg-[#4F39F6] text-white font-bold text-sm hover:bg-[#4330D9] transition-colors"
+              className="inline-block py-3 px-6 rounded-xl bg-[#FF570F] text-white font-bold text-sm hover:bg-[#E04800] transition-colors"
             >
               Go to Login
             </Link>
@@ -135,7 +135,7 @@ function ResetPasswordContent() {
           <>
             <div className="mb-6">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5">
-                Reset <span className="text-[#4F39F6]">Password</span>
+                Reset <span className="text-[#FF570F]">Password</span>
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
                 Choose a strong new password for your account.
@@ -166,7 +166,7 @@ function ResetPasswordContent() {
                     value={formData.newPassword}
                     onChange={(e) => { setFormData(p => ({ ...p, newPassword: e.target.value })); setError(''); }}
                     placeholder="Enter new password"
-                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
                     disabled={isLoading}
                   />
                   <button
@@ -221,7 +221,7 @@ function ResetPasswordContent() {
                     value={formData.confirmPassword}
                     onChange={(e) => { setFormData(p => ({ ...p, confirmPassword: e.target.value })); setError(''); }}
                     placeholder="Confirm new password"
-                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#4F39F6] focus:ring-2 focus:ring-[#4F39F6]/20 outline-none transition-all"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
                     disabled={isLoading}
                   />
                   <button
@@ -243,7 +243,7 @@ function ResetPasswordContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#4F39F6] hover:bg-[#4330D9] text-white font-bold text-sm shadow-md shadow-[#4F39F6]/25 focus:outline-none focus:ring-2 focus:ring-[#4F39F6]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer mt-2"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-sm shadow-md shadow-[#FF570F]/25 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer mt-2"
               >
                 {isLoading ? 'Resetting Password...' : 'Reset Password'}
               </button>
@@ -251,7 +251,7 @@ function ResetPasswordContent() {
 
             <div className="mt-6 text-center text-xs text-slate-500 font-medium">
               Remember your password?{' '}
-              <Link href="/?openAuth=login" className="text-[#4F39F6] font-bold hover:underline">
+              <Link href="/?openAuth=login" className="text-[#FF570F] font-bold hover:underline">
                 Back to Login
               </Link>
             </div>

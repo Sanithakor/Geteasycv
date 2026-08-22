@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+﻿import Navigation from "@/components/Navigation";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -87,10 +87,10 @@ export default function TermsPage() {
               </div>
             ))}
 
-            <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-6 text-center">
+            <div className="bg-[#FFF8F5]/70 border border-[#FF570F] rounded-2xl p-6 text-center">
               <p className="text-xs sm:text-sm text-indigo-900 font-medium">
                 Have questions about these Terms?{' '}
-                <Link href="/contact" className="text-[#4F39F6] font-bold hover:underline">Contact our support team &rarr;</Link>
+                <Link href="/contact" className="text-[#FF570F] font-bold hover:underline">Contact our support team &rarr;</Link>
               </p>
             </div>
           </div>

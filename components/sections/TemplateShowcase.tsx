@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -45,7 +45,7 @@ function DynamicTemplatePreview({ template }: { template: GeneratedTemplate }) {
         </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-slate-50">
-          <div className="w-6 h-6 rounded-full border-2 border-indigo-300 border-t-indigo-600 animate-spin" />
+          <div className="w-6 h-6 rounded-full border-2 border-[#FF570F] border-t-indigo-600 animate-spin" />
         </div>
       )}
     </div>
@@ -93,9 +93,9 @@ export default function TemplateShowcase() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-6 border-b border-slate-200/80">
           {/* Left Side Content */}
           <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 border border-indigo-100/80 rounded-full">
-              <Sparkles className="w-4 h-4 text-indigo-600" />
-              <span className="text-xs font-extrabold text-indigo-600 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFF8F5] border border-[#FF570F]/80 rounded-full">
+              <Sparkles className="w-4 h-4 text-[#FF570F]" />
+              <span className="text-xs font-extrabold text-[#FF570F] uppercase tracking-wider">
                 Featured CV Templates
               </span>
             </div>
@@ -111,7 +111,7 @@ export default function TemplateShowcase() {
           <div className="shrink-0">
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all shadow-md hover:shadow-indigo-500/25 group"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-sm rounded-xl transition-all shadow-md hover:shadow-[#FF570F]/25 group"
             >
               View All Templates
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -137,7 +137,7 @@ export default function TemplateShowcase() {
                     ATS Ready
                   </span>
                   {index % 2 === 1 && (
-                    <span className="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold rounded-md shadow-xs">
+                    <span className="px-2.5 py-1 bg-gradient-to-r from-[#FF570F] to-[#E04800] text-white text-xs font-bold rounded-md shadow-xs">
                       PRO
                     </span>
                   )}
@@ -157,7 +157,7 @@ export default function TemplateShowcase() {
               {/* Template Info Card Body */}
               <div className="pt-2">
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <h3 className="font-bold text-slate-900 text-base group-hover:text-indigo-600 transition-colors">
+                  <h3 className="font-bold text-slate-900 text-base group-hover:text-[#FF570F] transition-colors">
                     {template.layout.name}
                   </h3>
                   <span className="px-2.5 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full shrink-0">
@@ -176,7 +176,7 @@ export default function TemplateShowcase() {
                     <span>4.9 / 5.0</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-500">
-                    <Download className="w-3.5 h-3.5 text-indigo-500" />
+                    <Download className="w-3.5 h-3.5 text-[#FF570F]" />
                     <span className="font-semibold text-slate-700">
                       {formatDownloadCount(downloadCounts[template.id] || 0)} Downloads
                     </span>
@@ -195,7 +195,7 @@ export default function TemplateShowcase() {
           </div>
           <Link
             href="/templates"
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors group"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#FF570F] hover:text-[#E04800] transition-colors group"
           >
             Explore all 150+ Templates
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

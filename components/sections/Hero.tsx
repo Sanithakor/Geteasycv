@@ -1,4 +1,4 @@
-export default function Hero() {
+﻿export default function Hero() {
   return (
     <section className="bg-gradient-to-r from-primary to-secondary text-white py-20">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 px-4 items-center">

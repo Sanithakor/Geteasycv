@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { 
@@ -39,7 +39,7 @@ export default function DownloadLimitModal({
 
       <div className="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl border border-slate-200/80 z-10 animate-in zoom-in-95 duration-200">
         {/* Header with Gradient & Decorative Elements */}
-        <div className="relative bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 p-6 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-r from-[#FF570F] via-[#FF570F] to-[#FF570F] p-6 text-white overflow-hidden">
           {/* Background Glow */}
           <div className="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none" />
           
@@ -71,8 +71,8 @@ export default function DownloadLimitModal({
         {/* Content Body */}
         <div className="p-6 space-y-6">
           {/* Message Display */}
-          <div className="rounded-xl bg-violet-50/80 border border-violet-100 p-4 flex gap-3">
-            <Lock className="w-5 h-5 text-violet-600 shrink-0 mt-0.5" />
+          <div className="rounded-xl bg-[#FFF8F5]/80 border border-[#FF570F] p-4 flex gap-3">
+            <Lock className="w-5 h-5 text-[#FF570F] shrink-0 mt-0.5" />
             <p className="text-sm text-slate-700 leading-relaxed font-medium">
               {message ||
                 "You have used your free account download allowance (1/1 CV downloads used). Upgrade to GetEasyCV Pro to unlock unlimited downloads, all 22+ ATS templates, and AI resume enhancement."}
@@ -93,14 +93,14 @@ export default function DownloadLimitModal({
               </div>
 
               <div className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                <div className="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center shrink-0">
                   <Zap className="w-3.5 h-3.5" />
                 </div>
                 <span>Access all 22+ ATS-Optimized Premium Templates</span>
               </div>
 
               <div className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                <div className="w-6 h-6 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center shrink-0">
                   <Sparkles className="w-3.5 h-3.5" />
                 </div>
                 <span>Unlimited OpenAI Assistant & ATS Scoring</span>
@@ -128,7 +128,7 @@ export default function DownloadLimitModal({
             <button
               type="button"
               onClick={handleGoToPayment}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-extrabold text-xs shadow-md hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer group"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#FF570F] via-[#FF570F] to-[#FF570F] hover:from-violet-700 hover:to-[#E04800] text-white font-extrabold text-xs shadow-md hover:shadow-[#FF570F]/25 transition-all flex items-center justify-center gap-2 cursor-pointer group"
             >
               <span>Go to Payment / Upgrade Now</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

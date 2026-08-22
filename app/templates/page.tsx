@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
@@ -65,7 +65,7 @@ const sortOptions = [
 const platformFeatures = [
   {
     icon: FileText,
-    iconBg: 'bg-purple-100 text-purple-600',
+    iconBg: 'bg-[#FFF0EB] text-[#FF570F]',
     title: 'ATS Friendly Templates',
     description: 'Professionally designed templates that pass ATS scans and get you noticed by recruiters.',
   },
@@ -107,7 +107,7 @@ const platformFeatures = [
   },
   {
     icon: Smartphone,
-    iconBg: 'bg-purple-100 text-purple-600',
+    iconBg: 'bg-[#FFF0EB] text-[#FF570F]',
     title: 'Mobile Responsive',
     description: 'Build and edit your resume seamlessly on any device, anywhere, anytime.',
   },
@@ -144,7 +144,7 @@ function getTemplateBadges(template: GeneratedTemplate): { type: string; label: 
   if (template.layout.category === 'Creative') {
     badges.push({ type: 'style', label: 'Creative', color: 'bg-orange-50 text-orange-700 border-orange-200' });
   } else if (template.layout.category === 'Luxury') {
-    badges.push({ type: 'style', label: 'Premium', color: 'bg-purple-50 text-purple-700 border-purple-200' });
+    badges.push({ type: 'style', label: 'Premium', color: 'bg-[#FFF8F5] text-[#E04800] border-purple-200' });
   } else if (template.layout.category === 'Modern') {
     badges.push({ type: 'style', label: 'Modern', color: 'bg-blue-50 text-blue-700 border-blue-200' });
   } else if (template.layout.category === 'Professional') {
@@ -475,12 +475,12 @@ function TemplatesContent() {
           {/* ========================================================================= */}
           {/* HERO BANNER SECTION (Matches reference mockup) */}
           {/* ========================================================================= */}
-          <section className="relative rounded-md bg-gradient-to-r from-[#EFF6FF] via-[#EEF2FF] to-[#F5F3FF] p-6 sm:p-10 border border-indigo-100/60 overflow-hidden shadow-2xs">
+          <section className="relative rounded-md bg-gradient-to-r from-[#EFF6FF] via-[#EEF2FF] to-[#F5F3FF] p-6 sm:p-10 border border-[#FF570F]/60 overflow-hidden shadow-2xs">
             {/* Background Decorative Dot Grid Matrix */}
             <div className="absolute right-6 top-6 hidden lg:block opacity-20 pointer-events-none">
               <div className="grid grid-cols-6 gap-2">
                 {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-indigo-600"></div>
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF570F]"></div>
                 ))}
               </div>
             </div>
@@ -499,7 +499,7 @@ function TemplatesContent() {
 
                 {/* Main Hero Search Bar */}
                 <div className="relative max-w-xl">
-                  <div className="flex items-center rounded-md bg-white p-1.5 shadow-md border border-indigo-100">
+                  <div className="flex items-center rounded-md bg-white p-1.5 shadow-md border border-[#FF570F]">
                     <input
                       type="text"
                       placeholder="Search templates by name, skill or keyword..."
@@ -517,7 +517,7 @@ function TemplatesContent() {
                     )}
                     <button
                       onClick={() => handleSearchChange(search)}
-                      className="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 text-sm font-semibold transition-colors shadow-xs flex items-center justify-center shrink-0"
+                      className="rounded-md bg-[#FF570F] hover:bg-[#E04800] text-white px-5 py-2.5 text-sm font-semibold transition-colors shadow-xs flex items-center justify-center shrink-0"
                     >
                       <Search className="w-4 h-4" />
                     </button>
@@ -526,23 +526,23 @@ function TemplatesContent() {
 
                 {/* Key Stat Pills */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-indigo-100/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">💼</span>
+                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">💼</span>
                     <span><strong className="text-slate-900">150+</strong> Templates</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-indigo-100/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">🏷️</span>
+                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🏷️</span>
                     <span><strong className="text-slate-900">25+</strong> Categories</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-indigo-100/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">🛡️</span>
+                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🛡️</span>
                     <span><strong className="text-slate-900">ATS</strong> Friendly</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-indigo-100/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">🎨</span>
+                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🎨</span>
                     <span><strong className="text-slate-900">Professional</strong> Designs</span>
                   </div>
                 </div>
@@ -556,7 +556,7 @@ function TemplatesContent() {
                   <div className="relative w-full flex items-center justify-center scale-90">
                     <div className="absolute left-4 top-2 transform -rotate-12 translate-y-4 w-44 rounded-md border border-slate-200 bg-white p-2.5 shadow-lg opacity-90 transition hover:rotate-0">
                       <div className="h-44 rounded-md bg-slate-100 p-2 space-y-2">
-                        <div className="h-4 w-1/2 bg-indigo-600 rounded"></div>
+                        <div className="h-4 w-1/2 bg-[#FF570F] rounded"></div>
                         <div className="h-2 w-3/4 bg-slate-300 rounded"></div>
                         <div className="h-20 bg-slate-200 rounded mt-3"></div>
                       </div>
@@ -607,7 +607,7 @@ function TemplatesContent() {
                 }}
                 className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                   selectedStyle === 'all'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#FF570F] text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
                 }`}
               >
@@ -618,7 +618,7 @@ function TemplatesContent() {
                 onClick={() => handleSortChange('popular')}
                 className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                   sortBy === 'popular' && selectedStyle === 'all'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#FF570F] text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
                 }`}
               >
@@ -630,11 +630,11 @@ function TemplatesContent() {
                 onClick={() => handleSortChange('newest')}
                 className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                   sortBy === 'newest'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#FF570F] text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                <Sparkles className="w-3.5 h-3.5 text-[#FF570F]" />
                 <span>New Arrivals</span>
               </button>
 
@@ -642,7 +642,7 @@ function TemplatesContent() {
                 onClick={() => handleFilterChange('style', 'ats-friendly')}
                 className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                   selectedStyle === 'ats-friendly'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#FF570F] text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
                 }`}
               >
@@ -654,7 +654,7 @@ function TemplatesContent() {
                 onClick={() => handleFilterChange('style', 'minimal')}
                 className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                   selectedStyle === 'minimal'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#FF570F] text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
                 }`}
               >
@@ -678,7 +678,7 @@ function TemplatesContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="rounded-md border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer shadow-2xs"
+                  className="rounded-md border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 focus:border-[#FF570F] focus:outline-none transition-all cursor-pointer shadow-2xs"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -710,7 +710,7 @@ function TemplatesContent() {
                 </h3>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer"
+                  className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -726,9 +726,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedCategory === 'all'}
                         onChange={() => handleFilterChange('category', 'all')}
-                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedCategory === 'all' ? 'font-bold text-indigo-600' : ''}>
+                      <span className={selectedCategory === 'all' ? 'font-bold text-[#FF570F]' : ''}>
                         All Categories
                       </span>
                     </div>
@@ -746,9 +746,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('category', cat.id)}
-                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-indigo-600' : ''}`}>
+                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-[#FF570F]' : ''}`}>
                             {cat.name}
                           </span>
                         </div>
@@ -761,7 +761,7 @@ function TemplatesContent() {
                 {activeCategories.length > 7 && (
                   <button
                     onClick={() => setShowMoreCategories(!showMoreCategories)}
-                    className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors pt-1 cursor-pointer"
+                    className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors pt-1 cursor-pointer"
                   >
                     {showMoreCategories ? 'Show Less' : 'Show More'}
                   </button>
@@ -778,9 +778,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedExperienceLevel === 'all'}
                         onChange={() => handleFilterChange('experience', 'all')}
-                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedExperienceLevel === 'all' ? 'font-bold text-indigo-600' : ''}>All Levels</span>
+                      <span className={selectedExperienceLevel === 'all' ? 'font-bold text-[#FF570F]' : ''}>All Levels</span>
                     </div>
                   </label>
 
@@ -793,9 +793,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('experience', lvl.id)}
-                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={isChecked ? 'font-bold text-indigo-600' : ''}>{lvl.name.split('/')[0].trim()}</span>
+                          <span className={isChecked ? 'font-bold text-[#FF570F]' : ''}>{lvl.name.split('/')[0].trim()}</span>
                         </div>
                       </label>
                     );
@@ -813,9 +813,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedStyle === 'all'}
                         onChange={() => handleFilterChange('style', 'all')}
-                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedStyle === 'all' ? 'font-bold text-indigo-600' : ''}>All Styles</span>
+                      <span className={selectedStyle === 'all' ? 'font-bold text-[#FF570F]' : ''}>All Styles</span>
                     </div>
                   </label>
 
@@ -828,9 +828,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('style', st.id)}
-                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={isChecked ? 'font-bold text-indigo-600' : ''}>{st.name}</span>
+                          <span className={isChecked ? 'font-bold text-[#FF570F]' : ''}>{st.name}</span>
                         </div>
                       </label>
                     );
@@ -845,12 +845,12 @@ function TemplatesContent() {
                   <button
                     onClick={() => handleFilterChange('style', 'all')}
                     title="All Colors"
-                    className="w-6 h-6 rounded-full transition-transform cursor-pointer relative flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 border border-slate-300"
+                    className="w-6 h-6 rounded-full transition-transform cursor-pointer relative flex items-center justify-center bg-gradient-to-r from-blue-500 via-[#FF570F] to-pink-500 border border-slate-300"
                   />
                   <div className="w-6 h-6 rounded-full bg-blue-900 transition-transform cursor-pointer" title="Navy Blue" />
                   <div className="w-6 h-6 rounded-full bg-teal-600 transition-transform cursor-pointer" title="Teal" />
                   <div className="w-6 h-6 rounded-full bg-sky-500 transition-transform cursor-pointer" title="Light Blue" />
-                  <div className="w-6 h-6 rounded-full bg-purple-600 transition-transform cursor-pointer" title="Purple" />
+                  <div className="w-6 h-6 rounded-full bg-[#FF570F] transition-transform cursor-pointer" title="Purple" />
                   <div className="w-6 h-6 rounded-full bg-pink-600 transition-transform cursor-pointer" title="Pink" />
                   <div className="w-6 h-6 rounded-full bg-orange-600 transition-transform cursor-pointer" title="Orange" />
                   <div className="w-6 h-6 rounded-full bg-slate-800 transition-transform cursor-pointer" title="Dark Gray" />
@@ -874,7 +874,7 @@ function TemplatesContent() {
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-indigo-700 transition-colors shadow-xs"
+                    className="inline-flex items-center gap-2 rounded-md bg-[#FF570F] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#E04800] transition-colors shadow-xs"
                   >
                     <X className="w-4 h-4" />
                     Reset All Filters
@@ -930,8 +930,8 @@ function TemplatesContent() {
                                 Popular
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-purple-100/90 text-purple-800 px-2 py-0.5 text-[9px] font-bold border border-purple-200/70 backdrop-blur-xs shadow-2xs">
-                                <Sparkles className="w-2.5 h-2.5 text-purple-600" />
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF0EB]/90 text-purple-800 px-2 py-0.5 text-[9px] font-bold border border-purple-200/70 backdrop-blur-xs shadow-2xs">
+                                <Sparkles className="w-2.5 h-2.5 text-[#FF570F]" />
                                 New
                               </span>
                             )}
@@ -942,7 +942,7 @@ function TemplatesContent() {
                         <div className="mt-3 space-y-2 flex-1 flex flex-col justify-between">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0 flex-1">
-                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#FF570F] transition-colors">
                                 {template.layout.name}
                               </h3>
                               <p className="line-clamp-1 text-xs text-slate-500 font-medium mt-0.5">
@@ -952,10 +952,10 @@ function TemplatesContent() {
 
                             {/* Dynamic Real Download Count Pill (Matching Screenshot Style) */}
                             <div 
-                              className="flex items-center gap-1.5 text-xs font-bold text-[#6366F1] bg-[#EEF2FF] px-2.5 py-1 rounded-xl border border-[#E0E7FF] flex-shrink-0 cursor-default shadow-2xs"
+                              className="flex items-center gap-1.5 text-xs font-bold text-[#FF570F] bg-[#EEF2FF] px-2.5 py-1 rounded-xl border border-[#E0E7FF] flex-shrink-0 cursor-default shadow-2xs"
                               title="Live Dynamic Template Downloads"
                             >
-                              <Download className="w-3.5 h-3.5 text-[#6366F1]" />
+                              <Download className="w-3.5 h-3.5 text-[#FF570F]" />
                               <span>{formatDownloadCount(downloadCounts[template.id] ?? getTemplateDownloadCount(template.id))}</span>
                             </div>
                           </div>
@@ -973,7 +973,7 @@ function TemplatesContent() {
                               type="button"
                               onClick={() => handleUseTemplate(template)}
                               disabled={addingId === template.id}
-                              className="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-3 flex-1 transition-colors shadow-2xs flex items-center justify-center gap-1 cursor-pointer"
+                              className="rounded-md bg-[#FF570F] hover:bg-[#E04800] text-white text-xs font-bold py-2 px-3 flex-1 transition-colors shadow-2xs flex items-center justify-center gap-1 cursor-pointer"
                             >
                               <span>{addingId === template.id ? 'Adding...' : 'Use Template'}</span>
                             </button>
@@ -1061,8 +1061,8 @@ function TemplatesContent() {
                     <h3 className="text-xl font-bold text-slate-900">{selectedTemplate.layout.name}</h3>
                     <p className="text-xs text-slate-500 mt-1">{selectedTemplate.description}</p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200/80 flex-shrink-0">
-                    <Download className="w-3.5 h-3.5 text-indigo-600" />
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-[#FFF8F5] px-3 py-1 rounded-full border border-[#FF570F]/80 flex-shrink-0">
+                    <Download className="w-3.5 h-3.5 text-[#FF570F]" />
                     <span>{formatDownloadCount(downloadCounts[selectedTemplate.id] ?? getTemplateDownloadCount(selectedTemplate.id))} downloads</span>
                   </div>
                 </div>
@@ -1083,7 +1083,7 @@ function TemplatesContent() {
                 <button
                   type="button"
                   onClick={() => handleUseTemplate(selectedTemplate)}
-                  className="flex-1 rounded-md bg-indigo-600 hover:bg-indigo-700 py-3 text-center text-xs font-bold text-white shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 rounded-md bg-[#FF570F] hover:bg-[#E04800] py-3 text-center text-xs font-bold text-white shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Use This Template</span>

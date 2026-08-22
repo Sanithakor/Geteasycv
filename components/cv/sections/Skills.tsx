@@ -20,7 +20,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
     <div className="flex items-center gap-2 mb-2">
       <Code2 className="w-4 h-4 shrink-0" style={{ color: theme.primary }} />
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         Skills
@@ -37,7 +37,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
           {data.map((skill) => (
             <span
               key={skill.id}
-              className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-xs"
+              className="text-[13.2px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-xs"
               style={{
                 backgroundColor: `${theme.primary}10`,
                 color: theme.primary,
@@ -60,10 +60,10 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
           {data.map((skill) => (
             <div key={skill.id}>
               <div className="flex justify-between items-baseline mb-0.5">
-                <span className="text-[11.5px] font-semibold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                <span className="text-[13.8px] font-semibold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                   {skill.name}
                 </span>
-                <span className="text-[10.5px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
+                <span className="text-[12.6px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.primary }}>
                   {skill.level}%
                 </span>
               </div>
@@ -91,7 +91,7 @@ const Skills: React.FC<SkillsProps> = ({ data, theme, variant = 'tags' }) => {
         {data.map((skill) => (
           <span
             key={skill.id}
-            className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
+            className="text-[13.2px] font-semibold px-2 py-0.5 rounded-full"
             style={{
               backgroundColor: `${theme.primary}15`,
               color: theme.primary,

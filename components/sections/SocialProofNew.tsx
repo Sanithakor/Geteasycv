@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Star, TrendingUp, Users, Clock } from "lucide-react";
@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     company: "Google",
     quote: "Got 3 interview calls within a week. The ATS-friendly templates work!",
     avatar: "SK",
-    color: "from-indigo-500 to-purple-500",
+    color: "from-[#FF570F] to-[#FF570F]",
   },
   {
     name: "James R.",
@@ -18,7 +18,7 @@ const TESTIMONIALS = [
     company: "Microsoft",
     quote: "Built my resume in 15 minutes. The live editor is incredibly smooth.",
     avatar: "JR",
-    color: "from-violet-500 to-pink-500",
+    color: "from-[#FF570F] to-pink-500",
   },
   {
     name: "Priya M.",
@@ -59,8 +59,8 @@ const STATS = [
     icon: Users,
     value: "50,000+",
     label: "Resumes Created",
-    color: "text-purple-600",
-    bgColor: "bg-purple-100",
+    color: "text-[#FF570F]",
+    bgColor: "bg-[#FFF0EB]",
   },
   {
     icon: Star,
@@ -87,7 +87,7 @@ const STATS = [
 
 export default function SocialProofNew() {
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-br from-slate-50 via-purple-50/30 to-blue-50/40">
+    <section className="py-16 sm:py-20 bg-gradient-to-br from-slate-50 via-[#FF570F]/30 to-[#FFF0EB]/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Stats Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
@@ -160,7 +160,7 @@ export default function SocialProofNew() {
 
               {/* Company Badge */}
               <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                <span className="text-xs font-semibold text-[#FF570F] bg-[#FFF8F5] px-3 py-1 rounded-full">
                   {testimonial.company}
                 </span>
                 <div className="flex gap-0.5">
@@ -192,8 +192,8 @@ export default function SocialProofNew() {
             <div className="hidden sm:block w-px h-12 bg-slate-200"></div>
 
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <Star className="w-6 h-6 text-purple-600 fill-purple-600" />
+              <div className="w-12 h-12 bg-[#FFF0EB] rounded-full flex items-center justify-center flex-shrink-0">
+                <Star className="w-6 h-6 text-[#FF570F] fill-purple-600" />
               </div>
               <div>
                 <div className="text-2xl font-bold text-slate-900">4.9/5</div>

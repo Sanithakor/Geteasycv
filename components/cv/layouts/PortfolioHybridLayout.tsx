@@ -65,8 +65,8 @@ const PortfolioHybridLayout: React.FC<PortfolioHybridLayoutProps> = ({
         )}
         
         <div className="mb-5">
-          <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
-          <div className="space-y-1 text-[10.5px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
+          <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Contact</h3>
+          <div className="space-y-1 text-[12.6px] font-medium leading-normal" style={{ color: theme.textSecondary }}>
             <div>{data.personal.email}</div>
             <div>{data.personal.phone}</div>
             <div>{data.personal.location}</div>
@@ -76,12 +76,12 @@ const PortfolioHybridLayout: React.FC<PortfolioHybridLayoutProps> = ({
 
         {data.skills.length > 0 && (
           <div className="mb-5">
-            <h3 className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Skills</h3>
+            <h3 className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] mb-2" style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}>Skills</h3>
             <div className="flex flex-wrap gap-1.5">
               {data.skills.map((skill) => (
                 <span
                   key={skill.id}
-                  className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                  className="text-[13.2px] font-semibold px-2 py-0.5 rounded-full"
                   style={{
                     background: `linear-gradient(${theme.gradient.direction}, ${theme.gradient.start}15, ${theme.gradient.end}15)`,
                     color: theme.primary,

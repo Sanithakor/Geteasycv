@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered', hide
 
   const renderContactBar = (justifyClass = 'justify-center') => (
     <div
-      className={`flex flex-wrap ${justifyClass} items-center gap-x-2.5 gap-y-1 mt-1.5 text-[10.5px] font-medium leading-normal`}
+      className={`flex flex-wrap ${justifyClass} items-center gap-x-2.5 gap-y-1 mt-1.5 text-[12.6px] font-medium leading-normal`}
       style={{ color: theme.textSecondary, fontFamily: 'Roboto, sans-serif' }}
     >
       {data.email && (
@@ -79,13 +79,13 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered', hide
           </div>
         )}
         <h1
-          className="text-[28px] font-bold leading-[1.15] tracking-tight"
+          className="text-[33.6px] font-bold leading-[1.15] tracking-tight"
           style={{ fontFamily: 'Roboto, sans-serif', color: theme.text }}
         >
           {data.firstName} <span style={{ color: theme.primary }}>{data.lastName}</span>
         </h1>
         <p
-          className="text-[14px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
+          className="text-[16.8px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
           style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
         >
           {data.title}
@@ -100,13 +100,13 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered', hide
       <div id="cv-section-personal" className="w-full flex items-center justify-between pb-4 border-b border-slate-200" style={{ borderColor: `${theme.primary}20` }}>
         <div className="flex-1 min-w-0">
           <h1
-            className="text-[28px] font-bold leading-[1.15] tracking-tight"
+            className="text-[33.6px] font-bold leading-[1.15] tracking-tight"
             style={{ fontFamily: 'Roboto, sans-serif', color: theme.text }}
           >
             {data.firstName} <span style={{ color: theme.primary }}>{data.lastName}</span>
           </h1>
           <p
-            className="text-[14px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
+            className="text-[16.8px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
             style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
           >
             {data.title}
@@ -147,13 +147,13 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered', hide
             />
           )}
           <div className="flex-1 min-w-0">
-            <h1 className="text-[28px] font-bold leading-[1.15]" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <h1 className="text-[33.6px] font-bold leading-[1.15]" style={{ fontFamily: 'Roboto, sans-serif' }}>
               {data.firstName} {data.lastName}
             </h1>
-            <p className="text-[14px] font-semibold tracking-wider uppercase leading-[1.25] mt-1 text-white/90" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[16.8px] font-semibold tracking-wider uppercase leading-[1.25] mt-1 text-white/90" style={{ fontFamily: 'Roboto, sans-serif' }}>
               {data.title}
             </p>
-            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[10.5px] text-white/90 font-medium leading-normal">
+            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[12.6px] text-white/90 font-medium leading-normal">
               {data.email && <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" />{data.email}</span>}
               {data.phone && <span className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" />{data.phone}</span>}
               {data.location && <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{data.location}</span>}
@@ -170,13 +170,13 @@ const Header: React.FC<HeaderProps> = ({ data, theme, variant = 'centered', hide
   return (
     <div id="cv-section-personal" className="w-full pb-3.5">
       <h1
-        className="text-[28px] font-bold leading-[1.15] tracking-tight"
+        className="text-[33.6px] font-bold leading-[1.15] tracking-tight"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.text }}
       >
         {data.firstName} {data.lastName}
       </h1>
       <p
-        className="text-[14px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
+        className="text-[16.8px] font-semibold tracking-wider uppercase leading-[1.25] mt-1"
         style={{ fontFamily: 'Roboto, sans-serif', color: theme.primary }}
       >
         {data.title}

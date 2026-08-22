@@ -18,7 +18,7 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
   const renderHeader = () => (
     <div className="flex items-center gap-2 mb-2">
       <h2
-        className="text-[14px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
+        className="text-[16.8px] font-bold uppercase tracking-wider leading-[1.25] whitespace-nowrap"
         style={{ fontFamily: theme.fontFamilyHeading, color: theme.primary }}
       >
         Awards & Achievements
@@ -47,19 +47,19 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
             >
               <div className="flex flex-wrap justify-between items-baseline mb-1 gap-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-[13px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
+                  <h3 className="text-[15.6px] font-bold leading-[1.25]" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
                     {item.title}
                   </h3>
-                  <p className="text-[11.5px] font-semibold leading-[1.45] mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+                  <p className="text-[13.8px] font-semibold leading-[1.45] mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
                     {item.issuer}
                   </p>
                 </div>
-                <div className="text-[10px] font-bold px-2 py-0.5 rounded-xs shrink-0" style={{ backgroundColor: `${theme.primary}15`, color: theme.primary }}>
+                <div className="text-[12px] font-bold px-2 py-0.5 rounded-xs shrink-0" style={{ backgroundColor: `${theme.primary}15`, color: theme.primary }}>
                   {item.date}
                 </div>
               </div>
               {item.description && (
-                <p className="text-[11.5px] leading-[1.45] mt-1 pt-1 border-t" style={{ fontFamily: theme.fontFamily, color: theme.text, borderColor: `${theme.primary}10` }}>
+                <p className="text-[13.8px] leading-[1.45] mt-1 pt-1 border-t" style={{ fontFamily: theme.fontFamily, color: theme.text, borderColor: `${theme.primary}10` }}>
                   {item.description}
                 </p>
               )}
@@ -87,7 +87,7 @@ const Awards: React.FC<AwardsProps> = ({ data, theme, variant = 'cards' }) => {
             <h3 className="text-[12.5px] font-bold leading-snug" style={{ fontFamily: theme.fontFamily, color: theme.text }}>
               {item.title}
             </h3>
-            <p className="text-[10.5px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
+            <p className="text-[12.6px] font-semibold uppercase tracking-wider mt-0.5" style={{ fontFamily: theme.fontFamily, color: theme.textSecondary }}>
               {item.issuer} <span className="mx-1">|</span> {item.date}
             </p>
           </div>
