@@ -89,23 +89,14 @@ export default function Navigation() {
           {_hydrated && isAuthenticated ? (
             <UserProfileDropdown />
           ) : (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => openLogin()}
-                className="rounded-full px-4 py-2 text-sm font-semibold text-[#333333] hover:text-[#0F0F0F] transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                onClick={() => openSignup()}
-                className="rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90 cursor-pointer shadow-sm"
-                style={{ background: '#0F0F0F' }}
-              >
-                Sign Up
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => openLogin()}
+              className="rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90 cursor-pointer shadow-sm"
+              style={{ background: '#0F0F0F' }}
+            >
+              Sign In
+            </button>
           )}
         </div>
 
@@ -162,24 +153,14 @@ export default function Navigation() {
                 </button>
               </>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => { setOpen(false); openLogin(); }}
-                  className="rounded-xl border px-4 py-3 text-center text-sm font-semibold text-[#0F0F0F]"
-                  style={{ borderColor: 'rgba(15,15,15,0.15)', background: '#FFFFFF' }}
-                >
-                  Sign In
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setOpen(false); openSignup(); }}
-                  className="rounded-xl px-4 py-3 text-center text-sm font-bold text-white"
-                  style={{ background: '#0F0F0F' }}
-                >
-                  Sign Up
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => { setOpen(false); openLogin(); }}
+                className="w-full rounded-xl px-4 py-3 text-center text-sm font-bold text-white"
+                style={{ background: '#0F0F0F' }}
+              >
+                Sign In
+              </button>
             )}
           </div>
         </div>

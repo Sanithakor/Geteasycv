@@ -30,7 +30,6 @@ export default function CoverLetterPage() {
     },
     {
       icon: Download,
-      iconBg: "bg-purple-100 text-purple-600",
       title: "One-Click PDF Export",
       description:
         "Download print-ready PDF cover letters with perfect formatting and typography.",
@@ -46,47 +45,59 @@ export default function CoverLetterPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50 font-sans py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <FileCode className="w-4 h-4 text-purple-600" />
+      <main className="min-h-screen bg-[#F8FAFC] font-sans py-10 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          {/* Modern Hero Banner Card */}
+          <section className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#EEF2FF] via-[#F0F4FF] to-[#F5F3FF] p-8 sm:p-12 border border-[#FF5722]/40 overflow-hidden shadow-xs text-center max-w-5xl mx-auto">
+            {/* Background Dot Matrix */}
+            <div className="absolute right-8 top-8 hidden lg:block opacity-25 pointer-events-none">
+              <div className="grid grid-cols-6 gap-2.5">
+                {Array.from({ length: 36 }).map((_, i) => (
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF5722]"></div>
+                ))}
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-[#FF5722]/30 text-[#FF5722] text-xs font-bold uppercase tracking-wider mb-6 shadow-2xs backdrop-blur-xs">
+              <FileCode className="w-4 h-4 text-[#FF5722]" />
               <span>COVER LETTER BUILDER</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 max-w-3xl mx-auto">
               Write a Cover Letter That Gets You Hired
             </h1>
-            <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed font-medium mb-8">
               Pair your resume with a matching, professional cover letter. Powered by AI content suggestions and expert formatting.
             </p>
-            <div className="mt-8 flex justify-center gap-4">
+
+            <div className="flex justify-center gap-4">
               <Link
                 href="/editor"
-                className="px-8 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-md shadow-lg shadow-purple-500/20 inline-flex items-center gap-2 transition-all text-sm cursor-pointer"
+                className="px-8 py-4 bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold rounded-xl shadow-md shadow-[#FF5722]/20 inline-flex items-center gap-2 transition-all text-sm cursor-pointer"
               >
                 <span>Create Cover Letter Now</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-          </div>
+          </section>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {features.map((feat, idx) => {
               const IconComp = feat.icon;
               return (
                 <div
                   key={idx}
-                  className="bg-white rounded-md border border-slate-200/80 p-6 shadow-xs hover:shadow-lg transition-all text-left flex flex-col items-start"
+                  className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs hover:shadow-xl transition-all duration-300 text-left flex flex-col items-start hover:-translate-y-1"
                 >
-                  <div className="w-12 h-12 rounded-md bg-purple-100/70 text-purple-600 flex items-center justify-center mb-5 shrink-0">
-                    <IconComp className="w-6 h-6" />
+                  <div className="w-12 h-12 rounded-xl bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center mb-5 shrink-0 border border-[#FF5722]/20">
+                    <IconComp className="w-6 h-6 text-[#FF5722]" />
                   </div>
                   <h3 className="font-bold text-slate-900 text-base mb-2">
                     {feat.title}
                   </h3>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium">
                     {feat.description}
                   </p>
                 </div>
@@ -94,28 +105,15 @@ export default function CoverLetterPage() {
             })}
           </div>
 
-          {/* Preview Showcase */}
-          <div className="bg-white rounded-md border border-slate-200/80 p-8 sm:p-12 shadow-xs mb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Preview Showcase Card */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-8 sm:p-12 shadow-2xs max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-6 text-left space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-600">
-                AI SMART ASSISTANT
+              <span className="text-xs font-bold uppercase tracking-wider text-[#FF5722] bg-[#FFF0EB] px-3 py-1 rounded-full border border-[#FF5722]/30">
+                Seamless Integration
               </span>
-              <h2 className="text-2xl font-bold text-slate-900">
-                Personalized Opening &amp; Closing Statements
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Perfect Visual Match with Your Resume
               </h2>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Stuck on how to start? Input the target job title and company name, and our AI assistant writes custom, professional cover letter drafts tailored specifically to your background.
-              </p>
-              <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Custom tone of voice (Professional, Enthusiastic, Creative)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Instant key skill highlighting matched to job posting</span>
-                </li>
-                <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Matching header design with your resume template</span>
                 </li>

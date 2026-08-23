@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
@@ -470,36 +470,36 @@ function TemplatesContent() {
     <>
       <Navigation />
       <main className="min-h-screen bg-[#F8FAFC]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
           
           {/* ========================================================================= */}
-          {/* HERO BANNER SECTION (Matches reference mockup) */}
+          {/* HERO BANNER SECTION (Matches reference mockup & homepage color theme) */}
           {/* ========================================================================= */}
-          <section className="relative rounded-md bg-gradient-to-r from-[#EFF6FF] via-[#EEF2FF] to-[#F5F3FF] p-6 sm:p-10 border border-[#FF570F]/60 overflow-hidden shadow-2xs">
+          <section className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#EEF2FF] via-[#F0F4FF] to-[#F5F3FF] p-6 sm:p-10 lg:p-12 border border-[#FF5722]/40 overflow-hidden shadow-xs">
             {/* Background Decorative Dot Grid Matrix */}
-            <div className="absolute right-6 top-6 hidden lg:block opacity-20 pointer-events-none">
-              <div className="grid grid-cols-6 gap-2">
+            <div className="absolute right-8 top-8 hidden lg:block opacity-25 pointer-events-none">
+              <div className="grid grid-cols-6 gap-2.5">
                 {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF570F]"></div>
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF5722]"></div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Content Column */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="space-y-3">
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
                     Professional Resume Templates
                   </h1>
-                  <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl">
                     Choose from 100+ ATS-friendly resume templates designed by professionals to help you land your dream job.
                   </p>
                 </div>
 
                 {/* Main Hero Search Bar */}
                 <div className="relative max-w-xl">
-                  <div className="flex items-center rounded-md bg-white p-1.5 shadow-md border border-[#FF570F]">
+                  <div className="flex items-center rounded-2xl bg-white p-1.5 shadow-md border-2 border-[#FF5722] focus-within:ring-4 focus-within:ring-[#FF5722]/20 transition-all">
                     <input
                       type="text"
                       placeholder="Search templates by name, skill or keyword..."
@@ -517,7 +517,8 @@ function TemplatesContent() {
                     )}
                     <button
                       onClick={() => handleSearchChange(search)}
-                      className="rounded-md bg-[#FF570F] hover:bg-[#E04800] text-white px-5 py-2.5 text-sm font-semibold transition-colors shadow-xs flex items-center justify-center shrink-0"
+                      className="rounded-xl bg-[#FF5722] hover:bg-[#E64A19] text-white p-3 text-sm font-semibold transition-all shadow-sm flex items-center justify-center shrink-0 cursor-pointer"
+                      title="Search Templates"
                     >
                       <Search className="w-4 h-4" />
                     </button>
@@ -526,23 +527,23 @@ function TemplatesContent() {
 
                 {/* Key Stat Pills */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">💼</span>
+                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">💼</span>
                     <span><strong className="text-slate-900">150+</strong> Templates</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🏷️</span>
+                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🏷️</span>
                     <span><strong className="text-slate-900">25+</strong> Categories</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🛡️</span>
+                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🛡️</span>
                     <span><strong className="text-slate-900">ATS</strong> Friendly</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-md bg-white/80 px-3.5 py-2 text-xs font-bold text-slate-700 border border-[#FF570F]/70 shadow-2xs backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-md bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center text-xs">🎨</span>
+                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
+                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🎨</span>
                     <span><strong className="text-slate-900">Professional</strong> Designs</span>
                   </div>
                 </div>
@@ -550,28 +551,31 @@ function TemplatesContent() {
 
               {/* Right Graphics Fan Array */}
               <div className="lg:col-span-5 hidden lg:block relative">
-                <div className="relative w-full h-[260px] flex items-center justify-center">
+                <div className="relative w-full h-[270px] flex items-center justify-center">
                   <div className="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-indigo-200/50 to-purple-200/40 blur-xl"></div>
                   
-                  <div className="relative w-full flex items-center justify-center scale-90">
-                    <div className="absolute left-4 top-2 transform -rotate-12 translate-y-4 w-44 rounded-md border border-slate-200 bg-white p-2.5 shadow-lg opacity-90 transition hover:rotate-0">
-                      <div className="h-44 rounded-md bg-slate-100 p-2 space-y-2">
-                        <div className="h-4 w-1/2 bg-[#FF570F] rounded"></div>
+                  <div className="relative w-full flex items-center justify-center scale-95">
+                    {/* Left Card */}
+                    <div className="absolute left-2 top-2 transform -rotate-12 translate-y-4 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl opacity-90 transition hover:rotate-0">
+                      <div className="h-44 rounded-lg bg-slate-100 p-2 space-y-2">
+                        <div className="h-4 w-1/2 bg-[#FF5722] rounded-md"></div>
                         <div className="h-2 w-3/4 bg-slate-300 rounded"></div>
-                        <div className="h-20 bg-slate-200 rounded mt-3"></div>
+                        <div className="h-20 bg-slate-200 rounded-md mt-3"></div>
                       </div>
                     </div>
 
-                    <div className="absolute right-4 top-2 transform rotate-12 translate-y-4 w-44 rounded-md border border-slate-200 bg-white p-2.5 shadow-lg opacity-90 transition hover:rotate-0">
-                      <div className="h-44 rounded-md bg-slate-100 p-2 space-y-2">
-                        <div className="h-4 w-1/2 bg-blue-600 rounded"></div>
+                    {/* Right Card */}
+                    <div className="absolute right-2 top-2 transform rotate-12 translate-y-4 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl opacity-90 transition hover:rotate-0">
+                      <div className="h-44 rounded-lg bg-slate-100 p-2 space-y-2">
+                        <div className="h-4 w-1/2 bg-blue-600 rounded-md"></div>
                         <div className="h-2 w-3/4 bg-slate-300 rounded"></div>
-                        <div className="h-20 bg-slate-200 rounded mt-3"></div>
+                        <div className="h-20 bg-slate-200 rounded-md mt-3"></div>
                       </div>
                     </div>
 
-                    <div className="relative z-10 w-48 rounded-md border border-slate-200 bg-white p-3 shadow-2xl transform -translate-y-2">
-                      <div className="h-48 rounded-md bg-slate-50 p-2.5 space-y-2 border border-slate-100">
+                    {/* Center Elevated Card */}
+                    <div className="relative z-10 w-48 rounded-xl border border-slate-200 bg-white p-3 shadow-2xl transform -translate-y-2">
+                      <div className="h-48 rounded-lg bg-slate-50 p-2.5 space-y-2 border border-slate-100">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 rounded-full bg-slate-800"></div>
                           <div className="space-y-1">
@@ -599,16 +603,16 @@ function TemplatesContent() {
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             
             {/* Quick Pill Filter Buttons */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
               <button
                 onClick={() => {
                   setSelectedStyle('all');
                   handleFilterChange('style', 'all');
                 }}
-                className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                   selectedStyle === 'all'
-                    ? 'bg-[#FF570F] text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
                 }`}
               >
                 All Templates
@@ -616,49 +620,49 @@ function TemplatesContent() {
 
               <button
                 onClick={() => handleSortChange('popular')}
-                className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   sortBy === 'popular' && selectedStyle === 'all'
-                    ? 'bg-[#FF570F] text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
                 }`}
               >
-                <Flame className="w-3.5 h-3.5 text-amber-500" />
+                <Flame className="w-4 h-4 text-amber-500" />
                 <span>Popular</span>
               </button>
 
               <button
                 onClick={() => handleSortChange('newest')}
-                className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   sortBy === 'newest'
-                    ? 'bg-[#FF570F] text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#FF570F]" />
+                <Sparkles className="w-4 h-4 text-[#FF5722]" />
                 <span>New Arrivals</span>
               </button>
 
               <button
                 onClick={() => handleFilterChange('style', 'ats-friendly')}
-                className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   selectedStyle === 'ats-friendly'
-                    ? 'bg-[#FF570F] text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
                 }`}
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 <span>ATS Friendly</span>
               </button>
 
               <button
                 onClick={() => handleFilterChange('style', 'minimal')}
-                className={`rounded-md px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   selectedStyle === 'minimal'
-                    ? 'bg-[#FF570F] text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
                 }`}
               >
-                <Gift className="w-3.5 h-3.5 text-pink-500" />
+                <Gift className="w-4 h-4 text-pink-500" />
                 <span>Free Templates</span>
               </button>
             </div>
@@ -667,18 +671,18 @@ function TemplatesContent() {
             <div className="flex items-center justify-between md:justify-end gap-3">
               <button
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-                className="lg:hidden flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-bold text-slate-700 border border-slate-200 shadow-2xs"
+                className="lg:hidden flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-slate-700 border border-slate-200 shadow-2xs"
               >
                 <Filter className="w-4 h-4 text-slate-500" />
                 <span>Filters</span>
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-slate-500 hidden sm:inline">Sort by:</span>
+                <span className="text-xs font-semibold text-slate-500 hidden sm:inline">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="rounded-md border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 focus:border-[#FF570F] focus:outline-none transition-all cursor-pointer shadow-2xs"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 focus:border-[#FF5722] focus:ring-2 focus:ring-[#FF5722]/20 focus:outline-none transition-all cursor-pointer shadow-2xs"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -710,7 +714,7 @@ function TemplatesContent() {
                 </h3>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors cursor-pointer"
+                  className="text-xs font-bold text-[#FF5722] hover:text-[#E64A19] transition-colors cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -726,9 +730,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedCategory === 'all'}
                         onChange={() => handleFilterChange('category', 'all')}
-                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#FF5722] focus:ring-[#FF5722] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedCategory === 'all' ? 'font-bold text-[#FF570F]' : ''}>
+                      <span className={selectedCategory === 'all' ? 'font-bold text-[#FF5722]' : ''}>
                         All Categories
                       </span>
                     </div>
@@ -746,9 +750,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('category', cat.id)}
-                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#FF5722] focus:ring-[#FF5722] h-4 w-4 cursor-pointer"
                           />
-                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-[#FF570F]' : ''}`}>
+                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-[#FF5722]' : ''}`}>
                             {cat.name}
                           </span>
                         </div>
@@ -761,7 +765,7 @@ function TemplatesContent() {
                 {activeCategories.length > 7 && (
                   <button
                     onClick={() => setShowMoreCategories(!showMoreCategories)}
-                    className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors pt-1 cursor-pointer"
+                    className="text-xs font-bold text-[#FF5722] hover:text-[#E64A19] transition-colors pt-1 cursor-pointer"
                   >
                     {showMoreCategories ? 'Show Less' : 'Show More'}
                   </button>
@@ -931,7 +935,7 @@ function TemplatesContent() {
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF0EB]/90 text-purple-800 px-2 py-0.5 text-[9px] font-bold border border-purple-200/70 backdrop-blur-xs shadow-2xs">
-                                <Sparkles className="w-2.5 h-2.5 text-[#FF570F]" />
+                                <Sparkles className="w-2.5 h-2.5 text-[#FF5722]" />
                                 New
                               </span>
                             )}
@@ -942,7 +946,7 @@ function TemplatesContent() {
                         <div className="mt-3 space-y-2 flex-1 flex flex-col justify-between">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0 flex-1">
-                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#FF570F] transition-colors">
+                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#FF5722] transition-colors">
                                 {template.layout.name}
                               </h3>
                               <p className="line-clamp-1 text-xs text-slate-500 font-medium mt-0.5">
