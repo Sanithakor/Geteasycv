@@ -1,4 +1,4 @@
-// Enhanced export utilities for GetEasyCV
+// Enhanced export  utilities for GetEasyCV
 import safeHtml2Canvas from './safeHtml2Canvas';
 import { jsPDF } from 'jspdf';
 
