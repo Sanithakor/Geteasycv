@@ -185,6 +185,11 @@ async function getAdminAnalytics(period: string) {
     where: { status: 'completed', createdAt: { gte: startDate } },
   });
 
+  // Get AI usage stats
+  const aiActivityCount = await prisma.activityLog.count({
+    where: { action: { startsWith: 'ai_' } },
+  });
+
   return {
     users: {
       total: users,
@@ -203,7 +208,10 @@ async function getAdminAnalytics(period: string) {
       topTemplates,
     },
     revenue: {
-      total: payments._sum.amount || 0, // Amounts stored directly in INR Rupees
+      total: payments._sum.amount || 0,
+    },
+    aiCredits: {
+      total: aiActivityCount,
     },
   };
 }
@@ -223,4 +231,3 @@ function getPeriodDays(period: string): number {
       return 30;
   }
 }
-

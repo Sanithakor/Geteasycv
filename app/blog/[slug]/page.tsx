@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   FileText
 } from 'lucide-react';
-import { BlogPostItem, getStoredBlogPosts } from '@/lib/blogData';
+import { BlogPostItem, getStoredBlogPosts, incrementBlogPostView } from '@/lib/blogData';
 
 export default function BlogPostDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -31,6 +31,7 @@ export default function BlogPostDetailPage({ params }: { params: Promise<{ slug:
     const found = all.find(p => p.slug === slug) || all.find(p => p.id === slug) || all[0];
     if (found) {
       setPost(found);
+      incrementBlogPostView(found.id);
       // Related posts
       const other = all.filter(p => p.id !== found.id && p.status === 'published').slice(0, 3);
       setRelated(other);

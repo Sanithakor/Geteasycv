@@ -44,13 +44,21 @@ export default function UserProfileDropdown() {
       {/* Pill trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2.5 rounded-full border px-3 py-1.5 transition-all focus:outline-none cursor-pointer"
+        className="flex items-center gap-2.5 rounded-full border px-3 py-1.5 transition-all focus:outline-none cursor-pointer hover:bg-slate-50"
         style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.12)', color: '#0F0F0F' }}
       >
-        <div className="w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center flex-shrink-0"
-          style={{ background: '#0F0F0F', color: '#F5D17B' }}>
-          {initial}
-        </div>
+        {user?.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name || 'User'}
+            className="w-7 h-7 rounded-full object-cover flex-shrink-0 border border-[#FF5722]/40"
+          />
+        ) : (
+          <div className="w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center flex-shrink-0"
+            style={{ background: '#0F0F0F', color: '#F5D17B' }}>
+            {initial}
+          </div>
+        )}
         <span className="text-xs font-bold truncate" style={{ color: '#0F0F0F' }}>{firstName}</span>
         <ChevronDown className="w-3.5 h-3.5" style={{ color: '#9ca3af' }} />
       </button>

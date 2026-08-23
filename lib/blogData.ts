@@ -60,7 +60,7 @@ Creating an ATS-friendly resume doesn't mean sacrificing design. With GetEasyCV'
     status: 'published',
     views: 4230,
     author: 'Sarah Jenkins',
-    date: '2024-07-20',
+    date: '2026-08-19',
     readTime: '5 min read',
     coverImage: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&auto=format&fit=crop&q=80',
     isFeatured: true,
@@ -100,53 +100,56 @@ Review your resume against these 10 pitfalls before submitting your next applica
     status: 'published',
     views: 3100,
     author: 'Alex Rivera',
-    date: '2024-07-15',
+    date: '2026-08-18',
     readTime: '4 min read',
     coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=80',
     isFeatured: false,
   },
   {
     id: 'post-3',
-    slug: 'mastering-modern-resume-design-typography',
-    title: 'Mastering the Modern Resume: Layouts, Typography & Spacing',
-    excerpt: 'Discover how visual hierarchy, proper font choices like Poppins, and balanced white space can transform your CV into an executive-ready document.',
+    slug: 'mastering-modern-resume-layouts',
+    title: 'Mastering the Modern Resume: Layouts, Typography & Color Palette',
+    excerpt: 'Visual presentation matters. Discover how subtle color accents, balanced whitespace, and hierarchy turn a basic CV into an executive personal brand statement.',
     content: `
-# Mastering the Modern Resume: Layouts, Typography & Spacing
+# Mastering the Modern Resume: Layouts, Typography & Color Palette
 
-A visually compelling resume grabs a recruiter's attention in less than **6 seconds**. Design isn't just aesthetic—it controls readability and reader flow.
-
----
-
-## 1. Font Choice Matters
-Modern professional resumes favor clean sans-serif typefaces. Fonts like **Poppins**, **Inter**, and **Roboto** offer high readability on both screen and paper.
-
-## 2. Harnessing White Space
-Adequate margins and line spacing (1.2–1.4x) prevent the document from feeling cluttered. A multi-page resume with clean breathing room is always better than a cramped single page.
-
-## 3. Sidebar vs. Single-Column Layouts
-- **Single-Column**: Ideal for traditional industries like Law, Finance, and Government.
-- **Two-Column / Sidebar Layouts**: Excellent for Tech, Design, Marketing, and Executive roles requiring quick contact details and technical skill blocks.
+Your resume is your personal marketing document. Visual design choices directly impact how recruiters perceive your seniority and attention to detail.
 
 ---
 
-## Final Recommendation
-Choose a template that reflects your industry standards while keeping typography crisp and legible.
+## 1. Grid Alignment and Margins
+Maintain standard **0.5-inch to 0.75-inch margins** to maximize content area without crowding the text.
+
+## 2. Typography Rules
+Limit font choices to 1 or 2 high-legibility font families. Set body text to **10pt–11pt** and section headings to **12pt–14pt bold**.
+
+## 3. Professional Color Palettes
+Use subtle accent colors for section headers or sidebar dividers:
+- **Executive Navy**: Professional and authoritative.
+- **Teal / Emerald**: Modern, energetic, and clean.
+- **Slate Gray**: Minimalist and sleek.
+
+---
+
+## Summary
+
+Clean layout hierarchy ensures human recruiters can scan your top qualifications in 6 seconds or less.
     `,
     category: 'Design & Layout',
-    tags: ['Design', 'Typography', 'Templates'],
+    tags: ['Design', 'Typography', 'CV Layout'],
     status: 'published',
     views: 5890,
     author: 'Elena Rostova',
-    date: '2024-07-10',
+    date: '2026-08-15',
     readTime: '6 min read',
     coverImage: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80',
     isFeatured: false,
   },
   {
     id: 'post-4',
-    slug: 'how-to-write-executive-resume',
+    slug: 'write-powerful-executive-resume',
     title: 'How to Write a Powerful Executive Resume for Senior Roles',
-    excerpt: 'Senior leadership resumes require strategic positioning, P&L responsibility metrics, and concise executive summaries.',
+    excerpt: 'As an executive, your resume needs to demonstrate strategic vision, operational leadership, and revenue growth metrics.',
     content: `
 # How to Write a Powerful Executive Resume for Senior Roles
 
@@ -168,7 +171,7 @@ Use executive templates tailored to senior leadership to make an immediate impac
     status: 'published',
     views: 2410,
     author: 'Marcus Vance',
-    date: '2024-07-02',
+    date: '2026-08-10',
     readTime: '7 min read',
     coverImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop&q=80',
     isFeatured: false,
@@ -199,4 +202,16 @@ export function saveStoredBlogPosts(posts: BlogPostItem[]) {
   } catch (err) {
     console.error('Error saving blog posts to localStorage:', err);
   }
+}
+
+export function incrementBlogPostView(idOrSlug: string) {
+  if (typeof window === 'undefined') return;
+  const posts = getStoredBlogPosts();
+  const updated = posts.map(p => {
+    if (p.id === idOrSlug || p.slug === idOrSlug) {
+      return { ...p, views: (p.views || 0) + 1 };
+    }
+    return p;
+  });
+  saveStoredBlogPosts(updated);
 }

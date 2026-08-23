@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dynamic Admin Dashboard connected to real-time Supabase Database Analytics
  */
 
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
     },
     { 
       title: 'Revenue (This Month)', 
-      value: `$${totalRevenue.toLocaleString()}`, 
+      value: `₹${totalRevenue.toLocaleString()}`, 
       trend: '+16.4%', 
       icon: Coins, 
       iconBg: 'bg-rose-50 text-rose-600', 
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
     },
     { 
       title: 'AI Credits Used', 
-      value: '45,832', 
+      value: (analyticsData?.aiCredits?.total ?? 0).toLocaleString(), 
       trend: '+21.8%', 
       icon: Sparkles, 
       iconBg: 'bg-[#FFF8F5] text-[#FF570F]', 

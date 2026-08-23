@@ -80,7 +80,7 @@ export default function UserDashboard() {
                 <span>AI-Powered Resume Builder</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
-                Welcome back, {user?.name || 'Sanikumar'}! 👋
+                Welcome back, {user?.name || user?.email?.split('@')[0] || 'User'}! 👋
               </h1>
               <p className="text-slate-300 text-xs sm:text-sm font-medium leading-relaxed">
                 Ready to build your next ATS-optimized resume? Choose from polished designs and export ready-to-apply PDFs.

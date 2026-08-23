@@ -251,20 +251,8 @@ export async function triggerGoogleSignIn(): Promise<GoogleAuthResponse> {
     }
   }
 
-  // Fallback: Direct API request if GIS script is blocked
-  try {
-    const res = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ demoMode: true }),
-    });
-    const data = await res.json();
-    if (res.ok && data.success) {
-      return { success: true, user: data.user, token: data.token };
-    }
-  } catch (err) {
-    console.error('[GOOGLE_FALLBACK_ERR]', err);
-  }
-
-  return { success: false, error: 'Google Identity Service failed to load. Please check browser extensions or allow popups.' };
+  return {
+    success: false,
+    error: 'Google Sign-In popup could not be initialized. Please allow popups or try signing in with email.',
+  };
 }

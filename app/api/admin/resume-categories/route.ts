@@ -6,15 +6,16 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/middleware/auth';
+import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
 import { resumeCategories } from '@/data/resumeCategories';
 
 export async function GET(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth || auth.role !== 'admin') {
+    const isAdmin = await requireAdmin(auth);
+    if (!auth || !isAdmin) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: 'Forbidden: Admin access required' },
         { status: 403 }
       );
     }
@@ -60,9 +61,10 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth || auth.role !== 'admin') {
+    const isAdmin = await requireAdmin(auth);
+    if (!auth || !isAdmin) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: 'Forbidden: Admin access required' },
         { status: 403 }
       );
     }
@@ -130,9 +132,10 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth || auth.role !== 'admin') {
+    const isAdmin = await requireAdmin(auth);
+    if (!auth || !isAdmin) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: 'Forbidden: Admin access required' },
         { status: 403 }
       );
     }

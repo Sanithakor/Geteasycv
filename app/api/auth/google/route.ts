@@ -169,6 +169,10 @@ export async function POST(req: Request) {
     }
 
     const { email, name, picture, sub } = profile;
+    const realEmail = email.trim().toLowerCase();
+    const realName = name?.trim() || realEmail.split('@')[0];
+    const realAvatar = picture || '';
+
     let user: any = null;
 
     try {
@@ -178,47 +182,76 @@ export async function POST(req: Request) {
           where: {
             OR: [
               { googleId: sub },
-              { email: email },
+              { email: realEmail },
             ],
+          },
+          include: {
+            profile: true,
           },
         });
       } else {
         user = await prisma.user.findUnique({
-          where: { email },
+          where: { email: realEmail },
+          include: {
+            profile: true,
+          },
         });
       }
 
       if (!user) {
-        // Create new user account via Google
+        // Create new user account with real Google details
         user = await prisma.user.create({
           data: {
-            email,
-            name,
+            email: realEmail,
+            name: realName,
             googleId: sub || null,
-            avatar: picture || null,
+            avatar: realAvatar || null,
             password: `google_oauth_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
             role: 'user',
             emailVerified: new Date(),
+            subscriptionTier: 'free',
+            profile: {
+              create: {
+                timezone: 'UTC',
+                language: 'en',
+              },
+            },
+            subscription: {
+              create: {
+                plan: 'free',
+                status: 'active',
+                resumes: 3,
+                storage: 100,
+                aiCredits: 10,
+              },
+            },
           },
         });
       } else {
-        // Update existing user with googleId & avatar if missing
+        // Preserve existing user modifications; sync googleId & avatar if missing
+        const updateData: any = {
+          googleId: user.googleId || sub || null,
+          emailVerified: user.emailVerified || new Date(),
+          lastLoginAt: new Date(),
+        };
+
+        // Update avatar if currently empty
+        if (!user.avatar && realAvatar) {
+          updateData.avatar = realAvatar;
+        }
+
         user = await prisma.user.update({
           where: { id: user.id },
-          data: {
-            googleId: user.googleId || sub || null,
-            avatar: user.avatar || picture || null,
-            lastLoginAt: new Date(),
-          },
+          data: updateData,
         });
       }
     } catch (dbError) {
-      console.warn('[PRISMA_WARN] Google Auth DB query failed, using safe fallback user profile:', dbError);
+      console.warn('[PRISMA_WARN] Google Auth DB query failed, using real verified Google token details:', dbError);
       user = {
         id: `usr_google_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-        name: name || email.split('@')[0],
-        email: email,
-        avatar: picture || '',
+        name: realName,
+        email: realEmail,
+        avatar: realAvatar,
         role: 'user',
         subscriptionTier: 'free',
       };
@@ -240,11 +273,11 @@ export async function POST(req: Request) {
       success: true,
       user: {
         id: user.id,
-        name: user.name,
-        email: user.email,
+        name: user.name || realName,
+        email: user.email || realEmail,
         role: user.role || 'user',
         tier: user.subscriptionTier || user.tier || 'free',
-        avatar: user.avatar || picture || '',
+        avatar: user.avatar || realAvatar || '',
       },
       token: authToken,
     });

@@ -4,7 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { protectRoute } from '@/lib/middleware/auth';
+import { protectRoute, requireAdmin } from '@/lib/middleware/auth';
 
 export async function GET(req: Request) {
   try {
@@ -58,6 +58,10 @@ export async function GET(req: Request) {
     const auth = await protectRoute(req);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     let coupons: any[] = [];
@@ -116,6 +120,10 @@ export async function POST(req: Request) {
     const auth = await protectRoute(req);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     const body = await req.json();

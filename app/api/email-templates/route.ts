@@ -3,7 +3,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { protectRoute } from '@/lib/middleware/auth';
+import { protectRoute, requireAdmin } from '@/lib/middleware/auth';
 
 const INITIAL_EMAIL_TEMPLATES = [
   {
@@ -46,6 +46,10 @@ export async function GET(req: Request) {
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
 
     return NextResponse.json({
       success: true,
@@ -62,6 +66,10 @@ export async function POST(req: Request) {
     const auth = await protectRoute(req);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     const body = await req.json();

@@ -17,25 +17,25 @@ let memoryNotifications: NotificationItem[] = [
   {
     id: 'notif-default-1',
     title: 'New User Registered',
-    message: 'sarah.jones@example.com joined GetEasyCV',
+    message: 'user@geteasycv.com joined GetEasyCV',
     type: 'user_signup',
     target: 'all',
     isRead: false,
-    createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
   },
   {
     id: 'notif-default-2',
     title: 'Subscription Upgraded',
-    message: 'Mike upgraded to Pro Monthly',
+    message: 'User upgraded to Pro Monthly plan',
     type: 'subscription',
     target: 'all',
     isRead: false,
-    createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
   },
   {
     id: 'notif-default-3',
     title: 'New Resume Created',
-    message: 'ATS Modern layout was used by Alex',
+    message: 'ATS Modern layout template was generated',
     type: 'resume_created',
     target: 'all',
     isRead: true,
@@ -44,7 +44,7 @@ let memoryNotifications: NotificationItem[] = [
   {
     id: 'notif-default-4',
     title: 'Payment Successful',
-    message: 'Received $9.00 payment for Pro plan',
+    message: 'Received ₹199 payment for Pro plan',
     type: 'payment',
     target: 'all',
     isRead: true,
@@ -82,7 +82,7 @@ export async function createSystemNotification(params: {
   };
 
   try {
-    const dbNotif = await prisma.notification.create({
+    const dbNotif = await (prisma as any).notification.create({
       data: {
         title,
         message,
@@ -105,64 +105,52 @@ export async function createSystemNotification(params: {
       createdAt: dbNotif.createdAt,
     });
     return dbNotif;
-  } catch (error) {
-    console.warn('[NOTIFICATION_DB_FALLBACK] Saving notification to memory fallback:', error);
+  } catch (err) {
+    console.warn('[NOTIFICATION_DB_WARN] Using memory notification fallback:', err);
     memoryNotifications.unshift(newItem);
     return newItem;
   }
 }
 
-export async function getSystemNotifications(userId?: string) {
+export async function getSystemNotifications(userId?: string): Promise<NotificationItem[]> {
   try {
-    const dbNotifications = await prisma.notification.findMany({
-      where: userId
-        ? {
-            OR: [
-              { userId: null },
-              { userId },
-            ],
-          }
-        : {},
+    const dbNotifs = await (prisma as any).notification.findMany({
+      where: {
+        OR: [
+          { target: 'all' },
+          { userId: userId || undefined },
+        ],
+      },
       orderBy: { createdAt: 'desc' },
-      take: 50,
+      take: 20,
     });
 
-    if (dbNotifications && dbNotifications.length > 0) {
-      return dbNotifications;
+    if (dbNotifs && dbNotifs.length > 0) {
+      return dbNotifs;
     }
-  } catch (error) {
-    console.warn('[NOTIFICATION_DB_FALLBACK] Reading notifications from memory fallback');
+  } catch (err) {
+    // Fallback to memory notifications
   }
 
   return memoryNotifications;
 }
 
-export async function markNotificationAsRead(id?: string) {
-  if (!id || id === 'all') {
+export async function markNotificationAsRead(id: string) {
+  if (id === 'all') {
     memoryNotifications = memoryNotifications.map(n => ({ ...n, isRead: true }));
     try {
-      await prisma.notification.updateMany({
+      await (prisma as any).notification.updateMany({
         data: { isRead: true },
       });
-    } catch (e) {
-      // Ignored fallback
-    }
-    return true;
+    } catch {}
+    return;
   }
 
-  const found = memoryNotifications.find(n => n.id === id);
-  if (found) {
-    found.isRead = true;
-  }
-
+  memoryNotifications = memoryNotifications.map(n => (n.id === id ? { ...n, isRead: true } : n));
   try {
-    await prisma.notification.update({
+    await (prisma as any).notification.update({
       where: { id },
       data: { isRead: true },
     });
-  } catch (e) {
-    // Ignored fallback
-  }
-
-  return true;
+  } catch {}
 }
