@@ -20,7 +20,7 @@ export async function sendEmail({ to, subject, html }: SendEmailPayload) {
   }
 
   try {
-    // If using Resend API
+    // If using Resend API s
     if (process.env.RESEND_API_KEY) {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
