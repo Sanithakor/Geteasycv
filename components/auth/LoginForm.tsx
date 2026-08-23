@@ -1,14 +1,15 @@
-﻿/**
+/**
  * Login Form Component
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, Sparkles, User } from 'lucide-react';
 import { useAuthStore } from '../../lib/store/authStore';
+import { triggerGoogleSignIn, preloadGoogleAuth } from '../../lib/auth/googleAuth';
 
 interface LoginFormProps {
   redirectTo?: string;
@@ -50,11 +51,14 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
     }
   };
 
+  useEffect(() => {
+    preloadGoogleAuth();
+  }, []);
+
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     setError('');
     try {
-      const { triggerGoogleSignIn } = await import('@/lib/auth/googleAuth');
       const result = await triggerGoogleSignIn();
 
       if (result.success && result.user) {

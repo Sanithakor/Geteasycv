@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useAuthModalStore } from '@/lib/store/authModalStore';
+import { triggerGoogleSignIn, preloadGoogleAuth } from '@/lib/auth/googleAuth';
 
 // --- Shared ------------------------------------------------------------------
 
@@ -351,11 +352,14 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     clearError();
   }, [clearError]);
 
+  useEffect(() => {
+    preloadGoogleAuth();
+  }, []);
+
   const handleGoogle = async () => {
     setIsGoogleLoading(true);
     setError('');
     try {
-      const { triggerGoogleSignIn } = await import('@/lib/auth/googleAuth');
       const result = await triggerGoogleSignIn();
       if (result.success && result.user) {
         const user = { ...result.user, tier: result.user.subscriptionTier ?? result.user.tier ?? 'free' };
@@ -643,11 +647,14 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     clearError();
   }, [clearError]);
 
+  useEffect(() => {
+    preloadGoogleAuth();
+  }, []);
+
   const handleGoogle = async () => {
     setIsGoogleLoading(true);
     setError('');
     try {
-      const { triggerGoogleSignIn } = await import('@/lib/auth/googleAuth');
       const result = await triggerGoogleSignIn();
       if (result.success && result.user) {
         const user = { ...result.user, tier: result.user.subscriptionTier ?? result.user.tier ?? 'free' };
