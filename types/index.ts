@@ -17,11 +17,20 @@ export interface User {
   avatar?: string;
   role: UserRole;
   tier: SubscriptionTier;
-  // JSON.parse / fetch responses always deserialize dates as ISO strings.
-  // Using `Date` here was a TypeScript lie — calling Date methods on these
-  // would throw at runtime. Parse to Date at the call site if needed.
-  createdAt: string;
-  updatedAt: string;
+  company?: string;
+  location?: string;
+  website?: string;
+  bio?: string;
+  profile?: {
+    bio?: string;
+    company?: string;
+    website?: string;
+    location?: string;
+    timezone?: string;
+    language?: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AuthResponse {

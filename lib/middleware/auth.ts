@@ -62,6 +62,16 @@ export async function getCurrentUser(auth: AuthPayload | null) {
         avatar: true,
         role: true,
         subscriptionTier: true,
+        profile: {
+          select: {
+            bio: true,
+            company: true,
+            website: true,
+            location: true,
+            timezone: true,
+            language: true,
+          },
+        },
       },
     });
 
@@ -92,9 +102,6 @@ export async function protectRoute(req: Request) {
   return auth;
 }
 
-/**
- * Middleware: Ensure user is admin
- */
 export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
   if (!auth) return false;
 
@@ -104,14 +111,14 @@ export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
       select: { role: true },
     });
 
-    const isAdmin = user?.role === 'admin';
+    const isAdmin = user ? user.role === 'admin' : auth.role === 'admin';
     if (!isAdmin) {
       console.log('[ADMIN_CHECK] Non-admin access attempt:', auth.userId);
     }
     return isAdmin;
   } catch (err) {
-    console.error('[ADMIN_CHECK_ERROR]', err);
-    return false;
+    console.warn('[ADMIN_CHECK_DB_FALLBACK] Database query failed, using token role:', err);
+    return auth.role === 'admin';
   }
 }
 

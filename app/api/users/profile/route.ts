@@ -5,7 +5,7 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getAuthFromRequest, getCurrentUser } from '@/lib/middleware/auth';
+import { getAuthFromRequest } from '@/lib/middleware/auth';
 
 export async function GET(req: Request) {
   try {
@@ -52,35 +52,50 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { name, avatar, bio, company, website, location, timezone, language } = body;
 
-    // Update user
-    const user = await prisma.user.update({
+    // Update user table
+    const updatedUser = await prisma.user.update({
       where: { id: auth.userId },
       data: {
-        ...(name && { name }),
-        ...(avatar && { avatar }),
+        ...(name !== undefined && { name }),
+        ...(avatar !== undefined && { avatar }),
       },
+    });
+
+    // Upsert userProfile table
+    const profile = await prisma.userProfile.upsert({
+      where: { userId: auth.userId },
+      create: {
+        userId: auth.userId,
+        bio: bio ?? null,
+        company: company ?? null,
+        website: website ?? null,
+        location: location ?? null,
+        timezone: timezone ?? 'UTC',
+        language: language ?? 'en',
+      },
+      update: {
+        ...(bio !== undefined && { bio }),
+        ...(company !== undefined && { company }),
+        ...(website !== undefined && { website }),
+        ...(location !== undefined && { location }),
+        ...(timezone !== undefined && { timezone }),
+        ...(language !== undefined && { language }),
+      },
+    });
+
+    const fullUser = await prisma.user.findUnique({
+      where: { id: auth.userId },
       include: {
         profile: true,
         subscription: true,
       },
     });
 
-    // Update profile
-    if (bio || company || website || location || timezone || language) {
-      await prisma.userProfile.update({
-        where: { userId: auth.userId },
-        data: {
-          ...(bio && { bio }),
-          ...(company && { company }),
-          ...(website && { website }),
-          ...(location && { location }),
-          ...(timezone && { timezone }),
-          ...(language && { language }),
-        },
-      });
+    if (!fullUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { password, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = fullUser;
 
     return NextResponse.json({
       success: true,
