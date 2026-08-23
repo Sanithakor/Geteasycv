@@ -114,9 +114,21 @@ export default function CoverLetterPage() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                 Perfect Visual Match with Your Resume
               </h2>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Matching header design with your resume template</span>
-                </li>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
+                Choose any template design from our resume library and get a matching cover letter automatically configured with identical colors, margins, headers, and typography.
+              </p>
+              <ul className="space-y-2.5 pt-2">
+                {[
+                  "Identical header & color scheme matching",
+                  "AI-assisted opening statement generator",
+                  "Pre-formatted single-page layout",
+                  "High-res PDF export without watermarks",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-slate-800">
+                    <CheckCircle2 className="w-4 h-4 text-[#FF5722] shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
