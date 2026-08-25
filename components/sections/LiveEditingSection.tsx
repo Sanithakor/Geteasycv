@@ -13,6 +13,12 @@ const JOB_TITLES = [
   "Project Manager",
 ];
 
+const DESCRIPTIONS = [
+  "Designing accessible product experiences for growing teams.",
+  "Building reliable web applications used by thousands of customers.",
+  "Turning user research into clear, useful product decisions.",
+];
+
 const TYPE_SPEED = 60;
 const DELETE_SPEED = 35;
 const PAUSE_AFTER_TYPE = 1800;
@@ -51,6 +57,7 @@ function useTypingAnimation(words: string[]) {
 
 export default function LiveEditingSection() {
   const displayed = useTypingAnimation(JOB_TITLES);
+  const displayedDescription = useTypingAnimation(DESCRIPTIONS);
 
   return (
     <section className="py-16 sm:py-20" style={{ background: '#FFFFFF' }}>
@@ -61,7 +68,7 @@ export default function LiveEditingSection() {
             <div className="relative">
               {/* Editor Panel */}
               <div className="relative bg-white rounded-2xl shadow-xl border p-6 z-10" style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="mb-4 flex items-center gap-2 pb-3">
                   <div className="flex gap-1.5">
                     <div className="w-3 h-3 rounded-full bg-red-400" />
                     <div className="w-3 h-3 rounded-full bg-yellow-400" />
@@ -86,10 +93,11 @@ export default function LiveEditingSection() {
 
                   <div>
                     <label className="text-xs font-medium mb-1 block" style={{ color: '#9ca3af' }}>Description</label>
-                    <div className="h-20 rounded-lg border p-3 space-y-1" style={{ background: '#F8F8F6', borderColor: 'rgba(15,15,15,0.08)' }}>
-                      <div className="h-2 rounded w-full" style={{ background: 'rgba(15,15,15,0.12)' }} />
-                      <div className="h-2 rounded w-5/6" style={{ background: 'rgba(15,15,15,0.10)' }} />
-                      <div className="h-2 rounded w-4/6" style={{ background: 'rgba(15,15,15,0.08)' }} />
+                    <div className="min-h-20 rounded-lg p-3" style={{ background: '#F8F8F6' }}>
+                      <p className="text-xs leading-relaxed" style={{ color: '#333333' }} aria-live="polite">
+                        {displayedDescription}
+                        <span className="ml-0.5 inline-block h-3 w-[2px] rounded-sm align-middle" style={{ background: '#F3645C', animation: 'cursorBlink 1s step-start infinite' }} />
+                      </p>
                     </div>
                   </div>
 
@@ -105,24 +113,25 @@ export default function LiveEditingSection() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t flex items-center gap-2" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="mt-4 flex items-center gap-2 pt-3">
                   <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#58C09D' }} />
                   <span className="text-xs font-medium" style={{ color: '#58C09D' }}>Live Preview Active</span>
                 </div>
               </div>
 
               {/* Floating preview card */}
-              <div className="absolute z-10 top-8 -right-8 lg:-right-12 w-48 bg-white rounded-lg shadow-2xl border p-4 transform rotate-3 hover:rotate-0 transition-transform"
-                style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
-                <div className="space-y-2">
-                  <div className="h-3 rounded w-2/3" style={{ background: '#0F0F0F' }} />
-                  <div className="h-2 rounded w-full" style={{ background: 'rgba(15,15,15,0.12)' }} />
-                  <div className="h-2 rounded w-5/6" style={{ background: 'rgba(15,15,15,0.10)' }} />
-                  <div className="h-2 rounded w-4/6" style={{ background: 'rgba(15,15,15,0.08)' }} />
-                  <div className="pt-2 space-y-1">
-                    <div className="h-2 rounded w-1/2" style={{ background: '#BAC7FE' }} />
-                    <div className="h-1.5 rounded w-full" style={{ background: '#F8F8F6' }} />
-                    <div className="h-1.5 rounded w-full" style={{ background: '#F8F8F6' }} />
+              <div className="absolute z-10 top-8 -right-8 w-48 rounded-lg bg-white p-4 shadow-2xl transform rotate-3 transition-transform hover:rotate-0 lg:-right-12">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#0F0F0F' }}>Live score</span>
+                    <span className="text-sm font-extrabold" style={{ color: '#58C09D' }}>92%</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full" style={{ background: '#F8F8F6' }}>
+                    <div className="h-full w-[92%] rounded-full" style={{ background: '#58C09D', animation: 'progressGrow 900ms ease-out both' }} />
+                  </div>
+                  <div className="space-y-1.5 text-[10px]" style={{ color: '#333333' }}>
+                    <p className="flex items-center justify-between"><span>Keywords matched</span><strong>18 / 20</strong></p>
+                    <p className="flex items-center justify-between"><span>Readable layout</span><strong>Excellent</strong></p>
                   </div>
                 </div>
                 <div className="absolute -top-2 -right-2 text-white text-xs font-bold px-2 py-1 rounded shadow-lg"
@@ -186,6 +195,10 @@ export default function LiveEditingSection() {
         @keyframes cursorBlink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
+        }
+        @keyframes progressGrow {
+          from { width: 0; }
+          to { width: 92%; }
         }
       `}</style>
     </section>

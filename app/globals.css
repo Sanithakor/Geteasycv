@@ -32,6 +32,15 @@
 }
 
 :root {
+  --brand-ink: #0F0F0F;
+  --brand-copy: #333333;
+  --brand-paper: #F8F8F6;
+  --brand-peach: #FFE0CF;
+  --brand-coral: #F3645C;
+  --brand-yellow: #F5D17B;
+  --brand-mint: #58C09D;
+  --brand-lavender: #D0B9EF;
+  --brand-blue: #BAC7FE;
   /* CV typography — all sizes increased 20% from original */
   --cv-name-size: 33.6px;   /* was 28px × 1.2 */
   --cv-name-lh: 1.15;
@@ -47,6 +56,77 @@
   --cv-body-lh: 1.45;
   --cv-small-size: 12px;    /* was 10px × 1.2 */
   --cv-small-lh: 1.4;
+}
+
+@layer components {
+  .marketing-hero {
+    width: 100%;
+    background: var(--brand-peach);
+    color: var(--brand-ink);
+  }
+
+  .marketing-hero.full-bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+
+  .marketing-hero-inner {
+    width: min(100%, 1280px);
+    margin-inline: auto;
+    padding: 4rem 1rem;
+  }
+
+  .marketing-container {
+    width: min(100%, 1280px);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .marketing-main {
+    min-height: 100vh;
+    background: var(--brand-paper);
+  }
+
+  .marketing-card {
+    border: 1px solid rgba(15, 15, 15, 0.1);
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  .marketing-button-primary {
+    background: var(--brand-ink);
+    color: #fff;
+  }
+
+  .marketing-button-primary:hover {
+    background: var(--brand-copy);
+  }
+
+  .marketing-button-secondary {
+    border: 1px solid rgba(15, 15, 15, 0.14);
+    background: #fff;
+    color: var(--brand-ink);
+  }
+
+  @media (min-width: 640px) {
+    .marketing-hero-inner {
+      padding: 5rem 1.5rem;
+    }
+
+    .marketing-container {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .marketing-hero-inner {
+      padding-inline: 2.5rem;
+    }
+
+    .marketing-container {
+      padding-inline: 2.5rem;
+    }
+  }
 }
 
 @layer utilities {

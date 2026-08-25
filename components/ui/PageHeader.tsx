@@ -18,16 +18,16 @@ export default function PageHeader({ title, subtitle, action, breadcrumb, classN
               <React.Fragment key={crumb.label}>
                 {i > 0 && <span>/</span>}
                 {crumb.href ? (
-                  <a href={crumb.href} className="hover:text-violet-600 transition-colors font-medium">{crumb.label}</a>
+                  <a href={crumb.href} className="font-medium text-[#F3645C] transition-colors hover:text-[#D95350]">{crumb.label}</a>
                 ) : (
-                  <span className="text-slate-600 font-medium">{crumb.label}</span>
+                  <span className="font-medium text-[#333333]">{crumb.label}</span>
                 )}
               </React.Fragment>
             ))}
           </nav>
         )}
-        <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
-        {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+        <h1 className="text-xl font-extrabold tracking-tight text-[#0F0F0F]">{title}</h1>
+        {subtitle && <p className="mt-0.5 text-xs text-[#666666]">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>

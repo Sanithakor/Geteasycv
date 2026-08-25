@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Sparkles,
   Wand2,
-  FileText,
   TrendingUp,
   Brain,
   ArrowRight,
@@ -48,22 +47,22 @@ export default function AIFeaturesPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-[#F8FAFC] font-sans py-10 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <main className="marketing-main font-sans">
+        <div className="marketing-container space-y-12 pb-12 sm:pb-16">
           
           {/* Modern Hero Banner Card */}
-          <section className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#EEF2FF] via-[#F0F4FF] to-[#F5F3FF] p-8 sm:p-12 border border-[#FF5722]/40 overflow-hidden shadow-xs text-center max-w-5xl mx-auto">
+          <section className="marketing-hero relative overflow-hidden p-8 text-center shadow-xs sm:p-12">
             {/* Background Dot Matrix */}
             <div className="absolute right-8 top-8 hidden lg:block opacity-25 pointer-events-none">
               <div className="grid grid-cols-6 gap-2.5">
                 {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF5722]"></div>
+                  <div key={i} className="h-1.5 w-1.5 rounded-full bg-[#F3645C]"></div>
                 ))}
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-[#FF5722]/30 text-[#FF5722] text-xs font-bold uppercase tracking-wider mb-6 shadow-2xs backdrop-blur-xs">
-              <Sparkles className="w-4 h-4 text-[#FF5722]" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#F3645C] shadow-2xs backdrop-blur-xs">
+              <Sparkles className="h-4 w-4 text-[#F3645C]" />
               <span>AI-POWERED RESUME BUILDER</span>
             </div>
 
@@ -77,7 +76,7 @@ export default function AIFeaturesPage() {
             <div className="flex justify-center gap-4">
               <Link
                 href="/editor"
-                className="px-8 py-4 bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold rounded-xl shadow-md shadow-[#FF5722]/20 inline-flex items-center gap-2 transition-all text-sm cursor-pointer"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0F0F0F] px-8 py-4 text-sm font-bold text-white shadow-md transition-all hover:bg-[#333333]"
               >
                 <span>Try AI Builder Free</span>
                 <ArrowRight className="w-4 h-4" />

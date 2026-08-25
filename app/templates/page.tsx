@@ -1,17 +1,15 @@
 'use client';
 
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
 import Footer from '@/components/Footer';
 import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
-import { GeneratedTemplate, generateTemplates, getTemplateStats } from '@/lib/generateTemplates';
+import { GeneratedTemplate, generateTemplates } from '@/lib/generateTemplates';
 import { useAuthStore } from '@/lib/store/authStore';
 import { 
-  templateCategories, 
   experienceLevels, 
   styleCategories,
   getActiveCategoriesForTemplates,
@@ -34,22 +32,13 @@ import {
   Search,
   Filter,
   X,
-  ChevronDown,
   Star,
   Zap,
-  Users,
-  Briefcase,
   Award,
-  Palette,
-  Code,
   Heart,
   Flame,
   Gift,
-  Check,
-  Grid,
-  LayoutGrid,
   SlidersHorizontal,
-  ChevronRight
 } from 'lucide-react';
 
 const pageSize = 12;
@@ -131,29 +120,6 @@ function getTemplateCategories(template: GeneratedTemplate): string[] {
   return categories.map(cat => cat.name);
 }
 
-function getTemplateBadges(template: GeneratedTemplate): { type: string; label: string; color: string }[] {
-  const badges = [];
-  
-  // ATS Friendly badge
-  const text = `${template.name} ${template.category} ${template.layout.name}`.toLowerCase();
-  if (text.includes('ats') || text.includes('compact') || text.includes('single column')) {
-    badges.push({ type: 'ats', label: 'ATS Ready', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' });
-  }
-  
-  // Style badges based on layout category
-  if (template.layout.category === 'Creative') {
-    badges.push({ type: 'style', label: 'Creative', color: 'bg-orange-50 text-orange-700 border-orange-200' });
-  } else if (template.layout.category === 'Luxury') {
-    badges.push({ type: 'style', label: 'Premium', color: 'bg-[#FFF8F5] text-[#E04800] border-purple-200' });
-  } else if (template.layout.category === 'Modern') {
-    badges.push({ type: 'style', label: 'Modern', color: 'bg-blue-50 text-blue-700 border-blue-200' });
-  } else if (template.layout.category === 'Professional') {
-    badges.push({ type: 'style', label: 'Professional', color: 'bg-gray-50 text-gray-700 border-gray-200' });
-  }
-  
-  return badges;
-}
-
 function TemplatePreview({ template }: { template: GeneratedTemplate }) {
   const [mounted, setMounted] = useState(false);
   const [scale, setScale] = useState(0.35);
@@ -222,7 +188,6 @@ function TemplatesContent() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<GeneratedTemplate | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
   const [downloadCounts, setDownloadCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -237,7 +202,6 @@ function TemplatesContent() {
   }, []);
 
   const templates = useMemo(() => generateTemplates(), []);
-  const stats = useMemo(() => getTemplateStats(), []);
   const activeCategories = useMemo(() => getActiveCategoriesForTemplates(), []);
   
   // Initialize from URL parameters
@@ -469,37 +433,37 @@ function TemplatesContent() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-[#F8FAFC]">
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F]">
+        <div className="marketing-container space-y-10 pb-10 sm:pb-16">
           
           {/* ========================================================================= */}
           {/* HERO BANNER SECTION (Matches reference mockup & homepage color theme) */}
           {/* ========================================================================= */}
-          <section className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#EEF2FF] via-[#F0F4FF] to-[#F5F3FF] p-6 sm:p-10 lg:p-12 border border-[#FF5722]/40 overflow-hidden shadow-xs">
+          <section className="marketing-hero full-bleed relative overflow-hidden p-6 shadow-sm sm:p-10 lg:p-14">
             {/* Background Decorative Dot Grid Matrix */}
-            <div className="absolute right-8 top-8 hidden lg:block opacity-25 pointer-events-none">
+            <div className="absolute right-10 top-10 hidden lg:block opacity-30 pointer-events-none">
               <div className="grid grid-cols-6 gap-2.5">
                 {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#FF5722]"></div>
+                  <div key={i} className="h-1.5 w-1.5 rounded-full bg-[#F3645C]"></div>
                 ))}
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Content Column */}
-              <div className="lg:col-span-7 space-y-6">
+              <div className="lg:col-span-7 space-y-7">
                 <div className="space-y-3">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                  <h1 className="max-w-2xl text-3xl font-extrabold leading-[1.08] tracking-tight text-[#0F0F0F] sm:text-4xl lg:text-5xl">
                     Professional Resume Templates
                   </h1>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl">
+                  <p className="max-w-xl text-sm font-medium leading-relaxed text-[#333333] sm:text-base">
                     Choose from 100+ ATS-friendly resume templates designed by professionals to help you land your dream job.
                   </p>
                 </div>
 
                 {/* Main Hero Search Bar */}
                 <div className="relative max-w-xl">
-                  <div className="flex items-center rounded-2xl bg-white p-1.5 shadow-md border-2 border-[#FF5722] focus-within:ring-4 focus-within:ring-[#FF5722]/20 transition-all">
+                  <div className="flex items-center rounded-xl border border-[#0F0F0F]/15 bg-white p-1.5 shadow-md focus-within:ring-4 focus-within:ring-[#F3645C]/20 transition-all">
                     <input
                       type="text"
                       placeholder="Search templates by name, skill or keyword..."
@@ -517,7 +481,7 @@ function TemplatesContent() {
                     )}
                     <button
                       onClick={() => handleSearchChange(search)}
-                      className="rounded-xl bg-[#FF5722] hover:bg-[#E64A19] text-white p-3 text-sm font-semibold transition-all shadow-sm flex items-center justify-center shrink-0 cursor-pointer"
+                      className="flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#F3645C] p-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#D95350]"
                       title="Search Templates"
                     >
                       <Search className="w-4 h-4" />
@@ -527,32 +491,32 @@ function TemplatesContent() {
 
                 {/* Key Stat Pills */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">💼</span>
+                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#F5D17B] text-xs">150+</span>
                     <span><strong className="text-slate-900">150+</strong> Templates</span>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🏷️</span>
+                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#BAC7FE] text-xs">25+</span>
                     <span><strong className="text-slate-900">25+</strong> Categories</span>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🛡️</span>
+                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#58C09D] text-xs">ATS</span>
                     <span><strong className="text-slate-900">ATS</strong> Friendly</span>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 border border-[#FF5722]/40 shadow-2xs hover:border-[#FF5722] transition-all backdrop-blur-xs">
-                    <span className="w-6 h-6 rounded-lg bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center text-xs">🎨</span>
+                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#CBB5F6] text-xs">CV</span>
                     <span><strong className="text-slate-900">Professional</strong> Designs</span>
                   </div>
                 </div>
               </div>
 
               {/* Right Graphics Fan Array */}
-              <div className="lg:col-span-5 hidden lg:block relative">
+              <div className="relative hidden lg:col-span-5 lg:block">
                 <div className="relative w-full h-[270px] flex items-center justify-center">
-                  <div className="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-indigo-200/50 to-purple-200/40 blur-xl"></div>
+                  <div className="absolute h-64 w-64 rounded-full bg-[#F5D17B]/50 blur-xl"></div>
                   
                   <div className="relative w-full flex items-center justify-center scale-95">
                     {/* Left Card */}
@@ -600,7 +564,7 @@ function TemplatesContent() {
           {/* ========================================================================= */}
           {/* MIDDLE FILTER CONTROL BAR */}
           {/* ========================================================================= */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <div className="flex flex-col items-stretch justify-between gap-4 md:flex-row md:items-center">
             
             {/* Quick Pill Filter Buttons */}
             <div className="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
@@ -611,8 +575,8 @@ function TemplatesContent() {
                 }}
                 className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                   selectedStyle === 'all'
-                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
+                    ? 'bg-[#0F0F0F] text-white shadow-md'
+                    : 'border border-[#0F0F0F]/10 bg-white text-[#333333] shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]'
                 }`}
               >
                 All Templates
@@ -622,8 +586,8 @@ function TemplatesContent() {
                 onClick={() => handleSortChange('popular')}
                 className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   sortBy === 'popular' && selectedStyle === 'all'
-                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
+                    ? 'bg-[#0F0F0F] text-white shadow-md'
+                    : 'border border-[#0F0F0F]/10 bg-white text-[#333333] shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]'
                 }`}
               >
                 <Flame className="w-4 h-4 text-amber-500" />
@@ -702,7 +666,7 @@ function TemplatesContent() {
             {/* ----------------------------------------------------------------------- */}
             {/* LEFT SIDEBAR (FILTERS) */}
             {/* ----------------------------------------------------------------------- */}
-            <aside className={`lg:col-span-3 bg-white rounded-md border border-slate-200/90 p-5 space-y-6 shadow-2xs ${
+            <aside className={`lg:col-span-3 space-y-6 rounded-2xl border border-[#0F0F0F]/10 bg-white p-5 shadow-2xs ${
               mobileFilterOpen ? 'block' : 'hidden lg:block'
             }`}>
               
@@ -894,7 +858,7 @@ function TemplatesContent() {
                     return (
                       <article
                         key={template.id}
-                        className="group rounded-md border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between relative"
+                        className="group relative flex flex-col justify-between rounded-2xl border border-[#0F0F0F]/10 bg-white p-3.5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                       >
                         {/* Preview Container with Overlay Badges */}
                         <div className="relative">
@@ -977,7 +941,7 @@ function TemplatesContent() {
                               type="button"
                               onClick={() => handleUseTemplate(template)}
                               disabled={addingId === template.id}
-                              className="rounded-md bg-[#FF570F] hover:bg-[#E04800] text-white text-xs font-bold py-2 px-3 flex-1 transition-colors shadow-2xs flex items-center justify-center gap-1 cursor-pointer"
+                              className="flex flex-1 cursor-pointer items-center justify-center gap-1 rounded-lg bg-[#0F0F0F] px-3 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-[#333333]"
                             >
                               <span>{addingId === template.id ? 'Adding...' : 'Use Template'}</span>
                             </button>
@@ -986,7 +950,7 @@ function TemplatesContent() {
                               type="button"
                               onClick={() => setSelectedTemplate(template)}
                               title="Quick Preview"
-                              className="rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 border border-slate-200/80 transition-colors cursor-pointer"
+                              className="cursor-pointer rounded-lg border border-[#0F0F0F]/10 bg-[#F5D17B] p-2 text-[#0F0F0F] transition-colors hover:bg-[#EBC35D]"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
@@ -1034,7 +998,7 @@ function TemplatesContent() {
                 return (
                   <div
                     key={idx}
-                    className="bg-white rounded-md border border-slate-200/80 p-4 shadow-2xs hover:shadow-md transition-all duration-200 space-y-2"
+                    className="space-y-2 rounded-2xl border border-[#0F0F0F]/10 bg-white p-4 shadow-2xs transition-all duration-200 hover:shadow-md"
                   >
                     <div className={`w-9 h-9 rounded-md ${feat.iconBg} flex items-center justify-center shrink-0`}>
                       <Icon className="w-4 h-4" />

@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Calendar, Clock, ArrowRight, BookOpen, Search, User, Sparkles } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, BookOpen, Search, Sparkles } from 'lucide-react';
 import { BlogPostItem, getStoredBlogPosts } from '@/lib/blogData';
 
 export default function BlogPage() {
@@ -34,9 +34,9 @@ export default function BlogPage() {
       <main className="min-h-screen bg-slate-50/50 pb-20">
         
         {/* Header Hero */}
-        <section className="bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-950 text-white py-16 sm:py-20 px-4 relative overflow-hidden">
+        <section className="relative overflow-hidden bg-[#0F0F0F] px-4 py-16 text-white sm:py-20">
           <div className="max-w-5xl mx-auto text-center relative z-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF570F]/20 border border-[#FF570F]/30 text-violet-300 text-xs font-bold uppercase tracking-wider mb-4">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#F5D17B]/30 bg-[#F5D17B]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#F5D17B]">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Career & Resume Insights</span>
             </div>
@@ -44,7 +44,7 @@ export default function BlogPage() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
               GetEasyCV Blog
             </h1>
-            <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
               Expert guides, ATS optimization tips, and design strategies to help you land your dream job faster.
             </p>
           </div>

@@ -7,26 +7,12 @@ import {
   CheckCircle,
   Users,
   Globe,
-  Clock,
   Shield,
   Zap,
   Heart,
   Target,
-  Award,
-  Sparkles,
   FileText,
   ArrowRight,
-  Star,
-  TrendingUp,
-  Download,
-  Eye,
-  Briefcase,
-  Database,
-  Lock,
-  UserCheck,
-  Rocket,
-  Trophy,
-  Headphones,
   Building
 } from "lucide-react";
 
@@ -99,7 +85,7 @@ export default function AboutPage() {
 
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 sm:py-16">
+        <section className="marketing-hero relative overflow-hidden py-12 sm:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-4xl mx-auto">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 rounded-full shadow-md mb-6 backdrop-blur border border-[#FFD4C2]/50">
@@ -109,9 +95,9 @@ export default function AboutPage() {
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-slate-900">
+              <h1 className="mb-4 text-3xl font-bold leading-tight text-[#0F0F0F] sm:text-4xl lg:text-5xl">
                 We're Building the Future of{" "}
-                <span className="bg-gradient-to-r from-[#FF570F] via-[#FF570F] to-pink-600 bg-clip-text text-transparent">
+                <span className="text-[#F3645C]">
                   Career Success
                 </span>
               </h1>
@@ -123,13 +109,13 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/templates"
-                  className="px-6 py-3.5 bg-gradient-to-r from-[#FF570F] to-[#FF570F] text-white rounded-md font-semibold hover:from-indigo-700 hover:to-[#E04800] transition-all shadow-lg shadow-indigo-200 text-center text-sm"
+                  className="marketing-button-primary rounded-xl px-6 py-3.5 text-center text-sm font-semibold shadow-lg transition-all"
                 >
                   Explore Templates
                 </Link>
                 <Link
                   href="/contact"
-                  className="px-6 py-3.5 bg-white text-slate-700 rounded-md font-semibold hover:bg-slate-50 transition-all shadow-md border border-slate-200 text-center text-sm"
+                  className="marketing-button-secondary rounded-xl px-6 py-3.5 text-center text-sm font-semibold shadow-md transition-all"
                 >
                   Contact Our Team
                 </Link>

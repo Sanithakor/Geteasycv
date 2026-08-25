@@ -1,6 +1,6 @@
 import React from 'react';
 import Navigation from '@/components/Navigation';
-import Footer from '@/components/layout/Footer';
+import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { LayoutTemplate, Edit3, Sparkles, Download, ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -85,20 +85,20 @@ export default function HowItWorksPage() {
       <Navigation />
       <main>
         {/* Hero */}
-        <section className="bg-white border-b border-slate-100 py-16 px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-violet-50 text-violet-700 border border-violet-200">
+        <section className="marketing-hero">
+          <div className="marketing-hero-inner mx-auto text-center space-y-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0F0F0F]/10 bg-white px-3 py-1 text-xs font-bold text-[#0F0F0F]">
               <Sparkles className="w-3.5 h-3.5" /> Simple process
             </span>
-            <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight text-balance">
+            <h1 className="text-balance text-4xl font-black tracking-tight text-[#0F0F0F] sm:text-5xl">
               From blank page to hired in 4 steps
             </h1>
-            <p className="text-base text-slate-500 max-w-xl mx-auto">
+            <p className="mx-auto max-w-xl text-base text-[#333333]">
               GetEasyCV makes building a professional, ATS-ready resume fast and straightforward — no design skills needed.
             </p>
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm transition-all shadow-sm"
+              className="marketing-button-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold shadow-sm transition-all"
             >
               Start for free <ArrowRight className="w-4 h-4" />
             </Link>
@@ -106,7 +106,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* Steps */}
-        <section className="max-w-4xl mx-auto px-4 py-16 space-y-10">
+        <section className="marketing-container space-y-10 py-16">
           {STEPS.map((step, i) => {
             const Icon = step.icon;
             const isEven = i % 2 === 1;
