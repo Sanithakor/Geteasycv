@@ -54,6 +54,15 @@ export async function middleware(request: NextRequest) {
   const authPayload = await verifyAuthToken(request);
   const isAdmin     = authPayload?.role === 'admin';
 
+  const referer = request.headers.get('referer');
+  if (pathname === '/editor' && referer) {
+    try {
+      if (new URL(referer).pathname.startsWith('/cover-letter')) {
+        return NextResponse.redirect(new URL('/cover-letter/editor', request.url));
+      }
+    } catch {}
+  }
+
   const isComingSoonActive = process.env.COMING_SOON_MODE === 'true';
 
   // 1. Coming Soon enforcement

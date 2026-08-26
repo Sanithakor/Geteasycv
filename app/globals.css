@@ -59,6 +59,74 @@
 }
 
 @layer components {
+  .home-design {
+    --page-accent: var(--brand-coral);
+    --page-accent-soft: var(--brand-peach);
+    --page-surface: var(--brand-paper);
+    background-color: var(--page-surface) !important;
+    color: var(--brand-ink);
+  }
+
+  .home-design .max-w-6xl {
+    max-width: 80rem;
+  }
+
+  .home-design .max-w-5xl {
+    max-width: 72rem;
+  }
+
+  .home-design [class~="text-[#7755ed]"],
+  .home-design [class~="text-[#6844df]"],
+  .home-design [class~="text-[#8764ee]"] {
+    color: var(--page-accent) !important;
+  }
+
+  .home-design [class~="bg-[#7755ed]"],
+  .home-design [class~="bg-[#8764ee]"] {
+    background-color: var(--page-accent) !important;
+  }
+
+  .home-design [class~="bg-[#f1edff]"],
+  .home-design [class~="bg-[#f2edff]"],
+  .home-design [class~="bg-[#f7f4ff]"],
+  .home-design [class~="bg-[#f8f6ff]"] {
+    background-color: var(--page-accent-soft) !important;
+  }
+
+  .home-design [class~="bg-[#c2b4ff]"] {
+    background-color: var(--brand-lavender) !important;
+  }
+
+  .home-design [class~="border-[#7755ed]"] {
+    border-color: var(--page-accent) !important;
+  }
+
+  .home-design [class~="focus:border-[#7755ed]"]:focus,
+  .home-design [class~="focus:ring-2"]:focus {
+    border-color: var(--page-accent);
+  }
+
+  .home-design [class~="rounded-md"] {
+    border-radius: 0.75rem;
+  }
+
+  .home-design .shadow-xl,
+  .home-design .shadow-lg,
+  .home-design .shadow-sm {
+    --tw-shadow-color: rgba(15, 15, 15, 0.1);
+  }
+
+  @media (max-width: 639px) {
+    .home-design .max-w-6xl,
+    .home-design .max-w-5xl {
+      width: 100%;
+    }
+
+    .home-design > section {
+      padding-inline: 1rem;
+    }
+  }
+
   .marketing-hero {
     width: 100%;
     background: var(--brand-peach);
