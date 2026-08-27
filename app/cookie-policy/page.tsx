@@ -1,5 +1,6 @@
 import React from "react";
 import Navigation from "@/components/Navigation";
+import InnerBanner from "@/components/InnerBanner";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -14,27 +15,36 @@ export default function CookiePolicyPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50 font-sans py-16 sm:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header Badge & Title */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <Cookie className="w-4 h-4 text-purple-600" />
-              <span>PRIVACY & TRANSPARENCY</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight mb-3">
-              Cookie Policy
-            </h1>
-            <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto">
-              Last updated: July 28, 2026. This policy explains how GetEasyCV uses cookies and similar technologies when you visit our website.
-            </p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="Privacy & Transparency"
+          badgeIcon={Cookie}
+          breadcrumbs={[{ label: "Cookie Policy", href: "/cookie-policy" }]}
+          title="GetEasyCV"
+          highlightText="Cookie Policy"
+          description="Learn how GetEasyCV uses cookies and similar technologies to remember your preferences and ensure smooth resume building."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Contact Privacy Team",
+            href: "/contact",
+          }}
+          features={[
+            "Essential Session Cookies",
+            "Customizable Preferences",
+            "Zero Third-Party Ad Trackers",
+          ]}
+        />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
           {/* Content Card */}
-          <div className="bg-white rounded-md border border-slate-200/80 shadow-xs p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-xs sm:text-sm font-normal">
             <section className="space-y-3">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Info className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                <Info className="w-5 h-5 text-[#F3645C]" />
                 1. What Are Cookies?
               </h2>
               <p>
@@ -43,8 +53,8 @@ export default function CookiePolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-[#F3645C]" />
                 2. How We Use Cookies
               </h2>
               <p>
@@ -52,9 +62,9 @@ export default function CookiePolicyPage() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-md bg-slate-50 border border-slate-100">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                   <h3 className="font-bold text-slate-900 text-sm mb-1 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle2 className="w-4 h-4 text-[#58C09D]" />
                     Essential Cookies
                   </h3>
                   <p className="text-xs text-slate-600">
@@ -62,9 +72,9 @@ export default function CookiePolicyPage() {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-md bg-slate-50 border border-slate-100">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                   <h3 className="font-bold text-slate-900 text-sm mb-1 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-600" />
+                    <CheckCircle2 className="w-4 h-4 text-[#F3645C]" />
                     Preference Cookies
                   </h3>
                   <p className="text-xs text-slate-600">
@@ -72,9 +82,9 @@ export default function CookiePolicyPage() {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-md bg-slate-50 border border-slate-100">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                   <h3 className="font-bold text-slate-900 text-sm mb-1 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                    <CheckCircle2 className="w-4 h-4 text-[#0F0F0F]" />
                     Analytics Cookies
                   </h3>
                   <p className="text-xs text-slate-600">
@@ -82,9 +92,9 @@ export default function CookiePolicyPage() {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-md bg-slate-50 border border-slate-100">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                   <h3 className="font-bold text-slate-900 text-sm mb-1 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-amber-600" />
+                    <CheckCircle2 className="w-4 h-4 text-[#F5D17B]" />
                     Security Cookies
                   </h3>
                   <p className="text-xs text-slate-600">
@@ -95,8 +105,8 @@ export default function CookiePolicyPage() {
             </section>
 
             <section className="space-y-3">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#F3645C]" />
                 3. Managing Your Cookie Preferences
               </h2>
               <p>
@@ -108,7 +118,7 @@ export default function CookiePolicyPage() {
               <h2 className="text-lg font-bold text-slate-900">Contact Privacy Team</h2>
               <p className="text-xs sm:text-sm text-slate-600">
                 If you have any questions regarding our Cookie Policy or data processing, please contact us at{" "}
-                <a href="mailto:privacy@geteasycv.com" className="text-purple-600 font-semibold hover:underline">
+                <a href="mailto:privacy@geteasycv.com" className="text-[#F3645C] font-semibold hover:underline">
                   privacy@geteasycv.com
                 </a>.
               </p>
@@ -118,7 +128,7 @@ export default function CookiePolicyPage() {
           <div className="mt-8 text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-800"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0F0F0F] hover:underline"
             >
               ← Back to Homepage
             </Link>

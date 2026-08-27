@@ -18,7 +18,7 @@ export default function Footer() {
             </p>
             {/* Accent bar */}
             <div className="flex gap-2 pt-1">
-              {['#F5D17B','#BAC7FE','#D0B9EF','#FEE1CF','#58C09D'].map(c => (
+              {['#F3645C','#BAC7FE','#F5D17B','#D0B9EF','#58C09D'].map(c => (
                 <div key={c} className="w-5 h-1.5 rounded-full" style={{ background: c }} />
               ))}
             </div>
@@ -36,7 +36,7 @@ export default function Footer() {
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F3645C')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
                     {label}
                   </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F3645C')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
                     {label}
                   </Link>
@@ -80,7 +80,7 @@ export default function Footer() {
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="transition-colors" style={{ color: '#9ca3af' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#F8F8F6')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#F3645C')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>
                     {label}
                   </Link>
@@ -100,7 +100,7 @@ export default function Footer() {
               ['/cookie-policy', 'Cookies'],
             ].map(([href, label]) => (
               <Link key={href} href={href} className="transition-colors" style={{ color: '#6b7280' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#9ca3af')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#F3645C')}
                 onMouseLeave={e => (e.currentTarget.style.color = '#6b7280')}>
                 {label}
               </Link>

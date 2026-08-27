@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
+import InnerBanner from '@/components/InnerBanner';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
 import Footer from '@/components/Footer';
 import { TemplateRenderer } from '@/components/cv';
@@ -54,61 +55,61 @@ const sortOptions = [
 const platformFeatures = [
   {
     icon: FileText,
-    iconBg: 'bg-[#FFF0EB] text-[#FF570F]',
+    accent: '#BAC7FE',
     title: 'ATS Friendly Templates',
     description: 'Professionally designed templates that pass ATS scans and get you noticed by recruiters.',
   },
   {
     icon: Edit,
-    iconBg: 'bg-blue-100 text-blue-600',
+    accent: '#F5D17B',
     title: 'Easy Customization',
     description: 'Drag, drop, and customize sections to create a resume that perfectly matches your style.',
   },
   {
     icon: Sparkles,
-    iconBg: 'bg-emerald-100 text-emerald-600',
+    accent: '#58C09D',
     title: 'AI-Powered Suggestions',
     description: 'Get intelligent suggestions for your content, skills, and achievements powered by AI.',
   },
   {
     icon: Eye,
-    iconBg: 'bg-amber-100 text-amber-600',
+    accent: '#D0B9EF',
     title: 'Real-time Preview',
     description: 'See changes instantly with our real-time preview as you build your resume.',
   },
   {
     icon: Download,
-    iconBg: 'bg-rose-100 text-rose-600',
+    accent: '#FEE1CF',
     title: 'Multiple Export Options',
     description: 'Download your resume in PDF, Word, or plain text format with perfect formatting.',
   },
   {
     icon: BarChart2,
-    iconBg: 'bg-teal-100 text-teal-600',
+    accent: '#BAC7FE',
     title: 'Resume Score Analysis',
     description: 'Get a detailed score and tips to improve your resume and increase your interview chances.',
   },
   {
     icon: Globe,
-    iconBg: 'bg-amber-100 text-amber-600',
+    accent: '#F5D17B',
     title: 'Multi-language Support',
     description: 'Create resumes in multiple languages and reach global opportunities.',
   },
   {
     icon: Smartphone,
-    iconBg: 'bg-[#FFF0EB] text-[#FF570F]',
+    accent: '#58C09D',
     title: 'Mobile Responsive',
     description: 'Build and edit your resume seamlessly on any device, anywhere, anytime.',
   },
   {
     icon: ShieldCheck,
-    iconBg: 'bg-blue-100 text-blue-600',
+    accent: '#D0B9EF',
     title: 'Data Privacy & Security',
     description: 'Your data is encrypted and secure. We never share your information with third parties.',
   },
   {
     icon: Headphones,
-    iconBg: 'bg-teal-100 text-teal-600',
+    accent: '#FEE1CF',
     title: 'Expert Support',
     description: 'Get help when you need it with our dedicated support team available 24/7.',
   },
@@ -434,132 +435,50 @@ function TemplatesContent() {
     <>
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F]">
-        <div className="marketing-container space-y-10 pb-10 sm:pb-16">
-          
-          {/* ========================================================================= */}
-          {/* HERO BANNER SECTION (Matches reference mockup & homepage color theme) */}
-          {/* ========================================================================= */}
-          <section className="marketing-hero full-bleed relative overflow-hidden p-6 shadow-sm sm:p-10 lg:p-14">
-            {/* Background Decorative Dot Grid Matrix */}
-            <div className="absolute right-10 top-10 hidden lg:block opacity-30 pointer-events-none">
-              <div className="grid grid-cols-6 gap-2.5">
-                {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="h-1.5 w-1.5 rounded-full bg-[#F3645C]"></div>
-                ))}
-              </div>
+        <InnerBanner
+          badge="150+ Professional Templates"
+          badgeIcon={Sparkles}
+          breadcrumbs={[{ label: "Templates", href: "/templates" }]}
+          title="Professional ATS-Friendly"
+          highlightText="Resume Templates"
+          titleSuffix="for Every Career"
+          description="Choose from 150+ ATS-friendly resume templates designed by career experts and recruiters to help you land your dream job."
+          features={[
+            "150+ Modern Templates",
+            "100% ATS Optimized",
+            "Instant PDF Download",
+          ]}
+        >
+          {/* Main Hero Search Bar */}
+          <div className="relative max-w-xl">
+            <div className="flex items-center rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm focus-within:ring-2 focus-within:ring-[#F3645C]/30 transition-all">
+              <input
+                type="text"
+                placeholder="Search templates by name, skill or keyword..."
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full bg-transparent px-4 py-2 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
+              />
+              {search && (
+                <button
+                  onClick={() => handleSearchChange("")}
+                  className="p-1 text-slate-400 hover:text-slate-600 mr-2 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                onClick={() => handleSearchChange(search)}
+                className="flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#0F0F0F] hover:bg-black p-2.5 text-sm font-semibold text-white shadow-xs transition-all"
+                title="Search Templates"
+              >
+                <Search className="w-4 h-4" />
+              </button>
             </div>
+          </div>
+        </InnerBanner>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Left Content Column */}
-              <div className="lg:col-span-7 space-y-7">
-                <div className="space-y-3">
-                  <h1 className="max-w-2xl text-3xl font-extrabold leading-[1.08] tracking-tight text-[#0F0F0F] sm:text-4xl lg:text-5xl">
-                    Professional Resume Templates
-                  </h1>
-                  <p className="max-w-xl text-sm font-medium leading-relaxed text-[#333333] sm:text-base">
-                    Choose from 100+ ATS-friendly resume templates designed by professionals to help you land your dream job.
-                  </p>
-                </div>
-
-                {/* Main Hero Search Bar */}
-                <div className="relative max-w-xl">
-                  <div className="flex items-center rounded-xl border border-[#0F0F0F]/15 bg-white p-1.5 shadow-md focus-within:ring-4 focus-within:ring-[#F3645C]/20 transition-all">
-                    <input
-                      type="text"
-                      placeholder="Search templates by name, skill or keyword..."
-                      value={search}
-                      onChange={(e) => handleSearchChange(e.target.value)}
-                      className="w-full bg-transparent px-4 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
-                    />
-                    {search && (
-                      <button
-                        onClick={() => handleSearchChange('')}
-                        className="p-1 text-slate-400 hover:text-slate-600 mr-2"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleSearchChange(search)}
-                      className="flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#F3645C] p-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#D95350]"
-                      title="Search Templates"
-                    >
-                      <Search className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Key Stat Pills */}
-                <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#F5D17B] text-xs">150+</span>
-                    <span><strong className="text-slate-900">150+</strong> Templates</span>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#BAC7FE] text-xs">25+</span>
-                    <span><strong className="text-slate-900">25+</strong> Categories</span>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#58C09D] text-xs">ATS</span>
-                    <span><strong className="text-slate-900">ATS</strong> Friendly</span>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-full border border-[#0F0F0F]/10 bg-white/90 px-4 py-2.5 text-xs font-bold text-[#333333] shadow-2xs transition-all hover:border-[#F3645C] sm:text-sm">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#CBB5F6] text-xs">CV</span>
-                    <span><strong className="text-slate-900">Professional</strong> Designs</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Graphics Fan Array */}
-              <div className="relative hidden lg:col-span-5 lg:block">
-                <div className="relative w-full h-[270px] flex items-center justify-center">
-                  <div className="absolute h-64 w-64 rounded-full bg-[#F5D17B]/50 blur-xl"></div>
-                  
-                  <div className="relative w-full flex items-center justify-center scale-95">
-                    {/* Left Card */}
-                    <div className="absolute left-2 top-2 transform -rotate-12 translate-y-4 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl opacity-90 transition hover:rotate-0">
-                      <div className="h-44 rounded-lg bg-slate-100 p-2 space-y-2">
-                        <div className="h-4 w-1/2 bg-[#FF5722] rounded-md"></div>
-                        <div className="h-2 w-3/4 bg-slate-300 rounded"></div>
-                        <div className="h-20 bg-slate-200 rounded-md mt-3"></div>
-                      </div>
-                    </div>
-
-                    {/* Right Card */}
-                    <div className="absolute right-2 top-2 transform rotate-12 translate-y-4 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl opacity-90 transition hover:rotate-0">
-                      <div className="h-44 rounded-lg bg-slate-100 p-2 space-y-2">
-                        <div className="h-4 w-1/2 bg-blue-600 rounded-md"></div>
-                        <div className="h-2 w-3/4 bg-slate-300 rounded"></div>
-                        <div className="h-20 bg-slate-200 rounded-md mt-3"></div>
-                      </div>
-                    </div>
-
-                    {/* Center Elevated Card */}
-                    <div className="relative z-10 w-48 rounded-xl border border-slate-200 bg-white p-3 shadow-2xl transform -translate-y-2">
-                      <div className="h-48 rounded-lg bg-slate-50 p-2.5 space-y-2 border border-slate-100">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-slate-800"></div>
-                          <div className="space-y-1">
-                            <div className="h-2.5 w-16 bg-slate-800 rounded"></div>
-                            <div className="h-1.5 w-10 bg-slate-400 rounded"></div>
-                          </div>
-                        </div>
-                        <div className="h-1 bg-teal-500 w-full rounded my-2"></div>
-                        <div className="space-y-1.5">
-                          <div className="h-2 bg-slate-200 rounded w-full"></div>
-                          <div className="h-2 bg-slate-200 rounded w-5/6"></div>
-                          <div className="h-2 bg-slate-200 rounded w-4/6"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+        <div className="marketing-container space-y-10 py-10 sm:py-12">
 
           {/* ========================================================================= */}
           {/* MIDDLE FILTER CONTROL BAR */}
@@ -598,11 +517,11 @@ function TemplatesContent() {
                 onClick={() => handleSortChange('newest')}
                 className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   sortBy === 'newest'
-                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
+                    ? 'bg-[#0F0F0F] text-white shadow-md'
+                    : 'border border-[#0F0F0F]/10 bg-white text-[#333333] shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]'
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-[#FF5722]" />
+                <Sparkles className="w-4 h-4 text-[#F3645C]" />
                 <span>New Arrivals</span>
               </button>
 
@@ -610,8 +529,8 @@ function TemplatesContent() {
                 onClick={() => handleFilterChange('style', 'ats-friendly')}
                 className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   selectedStyle === 'ats-friendly'
-                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
+                    ? 'bg-[#0F0F0F] text-white shadow-md'
+                    : 'border border-[#0F0F0F]/10 bg-white text-[#333333] shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -622,8 +541,8 @@ function TemplatesContent() {
                 onClick={() => handleFilterChange('style', 'minimal')}
                 className={`rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                   selectedStyle === 'minimal'
-                    ? 'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 hover:border-[#FF5722]/40 border border-slate-200/80 shadow-2xs'
+                    ? 'bg-[#0F0F0F] text-white shadow-md'
+                    : 'border border-[#0F0F0F]/10 bg-white text-[#333333] shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]'
                 }`}
               >
                 <Gift className="w-4 h-4 text-pink-500" />
@@ -646,7 +565,7 @@ function TemplatesContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 focus:border-[#FF5722] focus:ring-2 focus:ring-[#FF5722]/20 focus:outline-none transition-all cursor-pointer shadow-2xs"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-800 focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/20 focus:outline-none transition-all cursor-pointer shadow-2xs"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -998,16 +917,19 @@ function TemplatesContent() {
                 return (
                   <div
                     key={idx}
-                    className="space-y-2 rounded-2xl border border-[#0F0F0F]/10 bg-white p-4 shadow-2xs transition-all duration-200 hover:shadow-md"
+                    className="space-y-2.5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition-all duration-200 hover:shadow-md"
                   >
-                    <div className={`w-9 h-9 rounded-md ${feat.iconBg} flex items-center justify-center shrink-0`}>
-                      <Icon className="w-4 h-4" />
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-2xs"
+                      style={{ backgroundColor: feat.accent }}
+                    >
+                      <Icon className="w-5 h-5 text-[#0F0F0F]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 text-xs">
+                      <h3 className="font-bold text-[#0F0F0F] text-xs sm:text-sm">
                         {feat.title}
                       </h3>
-                      <p className="text-slate-500 text-[11px] leading-relaxed mt-0.5">
+                      <p className="text-slate-500 text-xs leading-relaxed mt-0.5 font-normal">
                         {feat.description}
                       </p>
                     </div>
@@ -1022,28 +944,28 @@ function TemplatesContent() {
         {/* Template Detail Preview Modal */}
         {selectedTemplate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
-            <div className="bg-white rounded-md max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-slate-100 space-y-6">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900">{selectedTemplate.layout.name}</h3>
-                    <p className="text-xs text-slate-500 mt-1">{selectedTemplate.description}</p>
+                    <h3 className="text-xl font-extrabold text-[#0F0F0F]">{selectedTemplate.layout.name}</h3>
+                    <p className="text-xs text-slate-500 mt-1 font-normal">{selectedTemplate.description}</p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-[#FFF8F5] px-3 py-1 rounded-full border border-[#FF570F]/80 flex-shrink-0">
-                    <Download className="w-3.5 h-3.5 text-[#FF570F]" />
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#0F0F0F] bg-[#F5D17B] px-3 py-1 rounded-full border border-slate-200/80 flex-shrink-0 shadow-2xs">
+                    <Download className="w-3.5 h-3.5 text-[#0F0F0F]" />
                     <span>{formatDownloadCount(downloadCounts[selectedTemplate.id] ?? getTemplateDownloadCount(selectedTemplate.id))} downloads</span>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedTemplate(null)}
-                  className="p-2 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="rounded-md border border-slate-200 overflow-hidden bg-slate-50 p-4">
+              <div className="rounded-xl border border-slate-200 overflow-hidden bg-slate-50 p-4">
                 <TemplatePreview template={selectedTemplate} />
               </div>
 
@@ -1051,7 +973,7 @@ function TemplatesContent() {
                 <button
                   type="button"
                   onClick={() => handleUseTemplate(selectedTemplate)}
-                  className="flex-1 rounded-md bg-[#FF570F] hover:bg-[#E04800] py-3 text-center text-xs font-bold text-white shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] py-3 text-center text-xs font-bold text-white shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Use This Template</span>
@@ -1059,7 +981,7 @@ function TemplatesContent() {
                 <button
                   type="button"
                   onClick={() => setSelectedTemplate(null)}
-                  className="px-5 py-3 rounded-md border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="px-5 py-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Close
                 </button>

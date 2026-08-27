@@ -1,7 +1,9 @@
-﻿import Navigation from "@/components/Navigation";
+import Navigation from "@/components/Navigation";
+import InnerBanner from "@/components/InnerBanner";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
 
 export const metadata = {
   title: 'Refund Policy — GetEasyCV',
@@ -56,39 +58,43 @@ export default function RefundPolicyPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Refund Policy</h1>
-            <p className="text-sm text-slate-500 font-medium">Last updated: {new Date().toLocaleDateString()}</p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="Satisfaction Guaranteed"
+          badgeIcon={ShieldCheck}
+          breadcrumbs={[{ label: "Refund Policy", href: "/refund" }]}
+          title="7-Day Money-Back"
+          highlightText="Guarantee"
+          description="We stand behind our product. If you're not completely satisfied with your premium plan within the first 7 days, get a full refund — no hassle."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Contact Support",
+            href: "/contact",
+          }}
+          features={[
+            "100% Full Refund Within 7 Days",
+            "Processed in 2 Business Days",
+            "Zero Questions Asked",
+          ]}
+        />
 
-          {/* Guarantee badge */}
-          <div className="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-6 mb-8 flex items-start gap-4 shadow-2xs">
-            <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xl font-extrabold">
-              7
-            </div>
-            <div>
-              <p className="text-base font-bold text-emerald-900">7-Day Money-Back Guarantee</p>
-              <p className="text-xs sm:text-sm text-emerald-700 mt-1 leading-relaxed">
-                Every premium plan comes with a full refund within 7 days of purchase. No hassle, no hoops.
-              </p>
-            </div>
-          </div>
-
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Sections */}
           <div className="space-y-5">
             {SECTIONS.map((section) => (
               <div key={section.title} className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-3 shadow-2xs">
                 <h2 className="text-base font-bold text-slate-900">{section.title}</h2>
                 {section.content && (
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{section.content}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{section.content}</p>
                 )}
                 {section.items && (
                   <ul className="space-y-2">
                     {section.items.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#58C09D] mt-2 shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -98,7 +104,7 @@ export default function RefundPolicyPage() {
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="text-xs font-bold text-[#FF570F] hover:underline block mt-2"
+                    className="text-xs font-bold text-[#F3645C] hover:underline inline-block mt-2"
                   >
                     {l.text} {'→'}
                   </Link>

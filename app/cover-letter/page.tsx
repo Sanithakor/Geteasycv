@@ -1,440 +1,713 @@
-import React from "react";
+"use client";
+
+import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import Link from "next/link";
-import { ArrowRight, Check, Download, FileText, Sparkles } from "lucide-react";
+import InnerBanner from "@/components/InnerBanner";
+import ReadyToBuild from "@/components/sections/ReadyToBuild";
+import FAQ from "@/components/FAQ";
+import { COVER_LETTER_FAQS } from "@/data/faqs";
+import CoverLetterRenderer from "@/components/cover-letter/CoverLetterRenderer";
+import CoverLetterPreviewModal from "@/components/cover-letter/CoverLetterPreviewModal";
+import {
+  coverLetterTemplates,
+  coverLetterCategories,
+  CoverLetterTemplate,
+} from "@/data/coverLetterTemplates";
+import {
+  Sparkles,
+  ArrowRight,
+  Eye,
+  Check,
+  Search,
+  SlidersHorizontal,
+  ShieldCheck,
+  FileText,
+  Zap,
+  Edit3,
+  Bot,
+  Award,
+  Layers,
+  Flame,
+  CheckCircle2,
+  Download,
+} from "lucide-react";
 
-const templates = [
-  { name: "Modern Minimal", type: "Clean & Professional", accent: "#b9d4df" },
+const AI_FEATURES = [
   {
-    name: "Classic Professional",
-    type: "Traditional Layout",
-    accent: "#dae5e8",
+    icon: Bot,
+    bg: "#FEE1CF",
+    color: "#F3645C",
+    title: "AI Writing Assistant",
+    description: "Generate tailored, high-impact paragraphs in seconds based on your experience and target role.",
   },
   {
-    name: "Creative Edge",
-    type: "Bold & Modern",
-    accent: "#7a63f5",
-    active: true,
+    icon: FileText,
+    bg: "#BAC7FE",
+    color: "#2563EB",
+    title: "Role-Specific Content",
+    description: "Personalized cover letter copy mapped to specific industry requirements and company goals.",
   },
-  { name: "Executive Premium", type: "Elegant & Polished", accent: "#d9c4ad" },
-  { name: "Minimal Chic", type: "Simple & Elegant", accent: "#b8d9d0" },
-  { name: "Modern Corporate", type: "Corporate & Clean", accent: "#d9c5eb" },
+  {
+    icon: Zap,
+    bg: "#F5D17B",
+    color: "#D97706",
+    title: "Smart Suggestions",
+    description: "Get real-time AI recommendations to strengthen opening hooks, quantifiable wins, and sign-offs.",
+  },
+  {
+    icon: Edit3,
+    bg: "#D0B9EF",
+    color: "#7C3AED",
+    title: "Tone Customization",
+    description: "Effortlessly adjust tone between Professional, Confident, Friendly, and Creative voices.",
+  },
+  {
+    icon: ShieldCheck,
+    bg: "#58C09D33",
+    color: "#059669",
+    title: "ATS-Friendly Formatting",
+    description: "Structured headings and clean formatting designed to pass applicant tracking system filters.",
+  },
+  {
+    icon: Award,
+    bg: "#FEE1CF",
+    color: "#F3645C",
+    title: "Instant Export Options",
+    description: "Download in high-resolution PDF, editable text, or copy directly to your clipboard.",
+  },
 ];
 
-const features = [
-  [
-    "AI Writing Assistant",
-    "Generate personalized cover letters in seconds.",
-    "#eadbff",
-  ],
-  [
-    "Job-Specific Content",
-    "Tailor content to the job role and company.",
-    "#d9f2e5",
-  ],
-  [
-    "Smart Suggestions",
-    "Get AI suggestions to improve clarity and impact.",
-    "#ffe6cb",
-  ],
-  [
-    "Tone Customization",
-    "Choose the tone that fits your personality and role.",
-    "#ffd9e9",
-  ],
-  ["ATS-Friendly", "Formatted to pass ATS and impress recruiters.", "#dce7ff"],
-  ["Grammar Check", "Ensure error-free and polished cover letters.", "#e6dbff"],
+const HOW_IT_WORKS_STEPS = [
+  {
+    num: 1,
+    icon: FileText,
+    title: "Choose Template",
+    description: "Select from our curated collection of professional, ATS-friendly cover letter layouts.",
+    accent: "#BAC7FE",
+  },
+  {
+    num: 2,
+    icon: Edit3,
+    title: "Add Job Details",
+    description: "Enter your target job title, company name, and key qualifications or paste your resume details.",
+    accent: "#F5D17B",
+    featured: true,
+  },
+  {
+    num: 3,
+    icon: Sparkles,
+    title: "AI Crafts Your Story",
+    description: "Our AI generates a persuasive, role-tailored letter showcasing your achievements.",
+    accent: "#D0B9EF",
+  },
+  {
+    num: 4,
+    icon: Download,
+    title: "Review & Export",
+    description: "Fine-tune any sentence, change color themes, and export your polished cover letter instantly.",
+    accent: "#58C09D",
+  },
 ];
 
-const steps = [
-  "Add Your Details",
-  "AI Generates Content",
-  "Review & Edit",
-  "Download & Apply",
-];
+function TemplateListingCard({
+  template,
+  onPreview,
+}: {
+  template: CoverLetterTemplate;
+  onPreview: (template: CoverLetterTemplate) => void;
+}) {
+  const [activeColor, setActiveColor] = useState(template.accentColor);
 
-function DocumentPreview() {
   return (
-    <div className="relative mx-auto w-full max-w-[450px] rounded-xl border border-slate-200 bg-white p-5 text-[8px] text-slate-500 shadow-[0_18px_45px_rgba(42,27,92,0.12)] sm:p-7 sm:text-[9px]">
-      <div className="absolute -right-4 -top-5 grid h-14 w-14 place-items-center rounded-full bg-[#7755ed] text-xl font-bold text-white shadow-lg sm:-right-7 sm:h-16 sm:w-16 sm:text-2xl">
-        AI
-      </div>
-      <div className="mb-5 flex gap-1.5">
-        <i className="h-2 w-2 rounded-full bg-[#ff6b6b]" />
-        <i className="h-2 w-2 rounded-full bg-[#ffc85c]" />
-        <i className="h-2 w-2 rounded-full bg-[#58c09d]" />
-      </div>
-      <div className="grid grid-cols-[105px_1fr] gap-4 sm:grid-cols-[125px_1fr] sm:gap-6">
-        <div className="space-y-3 border-r border-slate-100 pr-3">
-          <div>
-            <b className="block text-[10px] text-slate-800 sm:text-[11px]">
-              Elizabeth Taylor
-            </b>
-            <span>Marketing Manager</span>
+    <article className="group relative flex h-full flex-col justify-between rounded-2xl border border-[#0F0F0F]/10 bg-white p-3 sm:p-3.5 shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+      <div>
+        {/* Document Thumbnail Preview Container */}
+        <div className="relative aspect-[1/1.22] w-full overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-2xs group-hover:border-[#0F0F0F]/20 transition-all">
+          {/* Scaled Render of the Real Template */}
+          <div className="pointer-events-none select-none w-[450px] origin-top-left scale-[0.47] sm:scale-[0.49] xl:scale-[0.45] p-1">
+            <CoverLetterRenderer
+              template={template}
+              accentColor={activeColor}
+              isCompact={true}
+            />
           </div>
-          <b className="block rounded bg-slate-50 px-2 py-2 text-[8px] text-slate-700">
-            ◉ Your Details
-          </b>
-          {["Job Title", "Company", "Job Description", "Tone of Letter"].map(
-            (item) => (
-              <span className="block px-2" key={item}>
-                ◌ {item}
+
+          {/* Hover Overlay with Action Buttons */}
+          <div className="absolute inset-0 bg-[#0F0F0F]/55 backdrop-blur-2xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2 p-2.5">
+            <button
+              onClick={() => onPreview(template)}
+              className="w-full max-w-[150px] flex items-center justify-center gap-1.5 rounded-xl bg-white hover:bg-slate-100 px-2.5 py-1.5 text-[11px] font-bold text-slate-900 shadow-md transition-all cursor-pointer"
+            >
+              <Eye className="w-3.5 h-3.5 text-slate-700" />
+              <span>Preview</span>
+            </button>
+            <Link
+              href={`/cover-letter/editor?template=${template.id}&color=${encodeURIComponent(activeColor)}`}
+              className="w-full max-w-[150px] flex items-center justify-center gap-1.5 rounded-xl bg-[#F3645C] hover:bg-[#D95350] px-2.5 py-1.5 text-[11px] font-bold text-white shadow-md transition-all cursor-pointer text-center"
+            >
+              <span>Use Template</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Template Meta Information */}
+        <div className="mt-3 space-y-1">
+          <div className="flex items-center justify-between gap-1">
+            <span className="rounded-full bg-[#FFF0EB] border border-[#FFD4C2]/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#F3645C]">
+              {template.categoryLabel}
+            </span>
+            {template.isAtsFriendly && (
+              <span className="inline-flex items-center gap-1 text-[9.5px] font-semibold text-emerald-600">
+                <ShieldCheck className="w-3 h-3" />
+                ATS
               </span>
-            ),
-          )}
-          <button className="mt-4 w-full rounded bg-[#7755ed] px-1 py-2 text-[7px] font-bold text-white">
-            Generate Cover Letter
-          </button>
-        </div>
-        <div className="space-y-3 pt-1 font-serif leading-relaxed">
-          <p>Dear Hiring Manager,</p>
-          <p>
-            I am writing to express my interest in the Marketing Manager
-            position at your company. With over 5 years of experience in digital
-            marketing, brand strategy, and team leadership, I am confident I can
-            make a meaningful impact.
-          </p>
-          <p>In my current role, I have successfully...</p>
-          {[1, 2, 3, 4].map((item) => (
-            <div className="h-1 rounded bg-slate-100" key={item} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+            )}
+          </div>
 
-function TemplateCard({ template }: { template: (typeof templates)[number] }) {
-  return (
-    <div
-      className={`min-w-[132px] flex-1 ${template.active ? "" : "opacity-90"}`}
-    >
-      <div
-        className={`h-36 rounded-md border bg-white p-2 shadow-sm ${template.active ? "border-[#7755ed] ring-2 ring-[#7755ed]/20" : "border-slate-200"}`}
-      >
-        <div
-          className="h-4 w-1/2 border-b-2"
-          style={{ borderColor: template.accent }}
-        />
-        <div className="mt-2 grid grid-cols-[28px_1fr] gap-2">
-          <div
-            className="h-24"
-            style={{ background: `${template.accent}55` }}
-          />
-          <div className="space-y-1.5 pt-1">
-            {[1, 2, 3, 4, 5, 6].map((line) => (
-              <div className="h-1 rounded bg-slate-200" key={line} />
-            ))}
+          <div>
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#F3645C] transition-colors truncate">
+              {template.name}
+            </h3>
+            <p className="text-[10px] sm:text-[10.5px] text-slate-500 font-medium truncate">
+              {template.subtitle}
+            </p>
           </div>
         </div>
       </div>
-      <p className="mt-2 text-[9px] font-bold text-slate-800">
-        {template.name}
-      </p>
-      <p className="text-[8px] text-slate-500">{template.type}</p>
-      <div className="mt-1 flex gap-1">
-        <i className="h-2 w-2 rounded-full bg-[#7755ed]" />
-        <i className="h-2 w-2 rounded-full bg-[#c8d5e1]" />
-        <i className="h-2 w-2 rounded-full bg-[#b9d9cb]" />
+
+      {/* Footer: Color Swatches & Action Button */}
+      <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
+        {/* Color Option Swatches */}
+        <div className="flex items-center gap-1">
+          {template.colorOptions.map((color) => {
+            const isSelected = activeColor === color.hex;
+            return (
+              <button
+                key={color.hex}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveColor(color.hex);
+                }}
+                title={color.name}
+                className={`h-3 w-3 rounded-full border transition-all cursor-pointer ${
+                  isSelected
+                    ? "scale-125 border-slate-900 ring-1 ring-slate-900/30"
+                    : "border-slate-300 hover:scale-110"
+                }`}
+                style={{ backgroundColor: color.hex }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Use Template Link */}
+        <Link
+          href={`/cover-letter/editor?template=${template.id}&color=${encodeURIComponent(activeColor)}`}
+          className="inline-flex items-center gap-1 text-[10.5px] font-bold text-slate-900 hover:text-[#F3645C] transition-colors"
+        >
+          <span>Use</span>
+          <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
-    </div>
+    </article>
   );
 }
 
 export default function CoverLetterPage() {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("popular");
+  const [previewModalTemplate, setPreviewModalTemplate] = useState<CoverLetterTemplate | null>(null);
+  const [activeShowcaseIndex, setActiveShowcaseIndex] = useState(0);
+
+  // Filter templates
+  const filteredTemplates = useMemo(() => {
+    return coverLetterTemplates.filter((template) => {
+      // Category match
+      if (selectedCategory !== "all" && template.category !== selectedCategory) {
+        return false;
+      }
+
+      // Search match
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const searchable = [
+          template.name,
+          template.subtitle,
+          template.description,
+          template.categoryLabel,
+          template.sampleData.fullName,
+          template.sampleData.jobTitle,
+          template.sampleData.companyName,
+        ].join(" ").toLowerCase();
+
+        if (!searchable.includes(query)) return false;
+      }
+
+      return true;
+    });
+  }, [selectedCategory, searchQuery]);
+
+  // Sort templates
+  const sortedTemplates = useMemo(() => {
+    const list = [...filteredTemplates];
+    if (sortBy === "name") {
+      return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return list; // default popular
+  }, [filteredTemplates, sortBy]);
+
+  const activeShowcaseTemplate = coverLetterTemplates[activeShowcaseIndex] || coverLetterTemplates[0];
+
   return (
     <>
       <Navigation />
-      <main className="home-design overflow-hidden bg-white font-sans text-[#111]">
-        <section className="bg-[linear-gradient(110deg,#fff_40%,#f7f4ff_100%)]">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-16 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:pb-20 lg:pt-24">
-            <div>
-              <span className="inline-flex rounded-full bg-[#f2edff] px-3 py-1 text-[9px] font-bold uppercase text-[#7755ed]">
-                AI Cover Letter Builder
-              </span>
-              <h1 className="mt-5 max-w-xl text-4xl font-bold leading-[1.08] tracking-[-1px] sm:text-5xl">
-                Create a Professional{" "}
-                <span className="text-[#7755ed]">Cover Letter</span> in Minutes
-              </h1>
-              <p className="mt-5 max-w-lg text-sm leading-6 text-slate-600">
-                GetEasyCV AI helps you write personalized, job-winning cover
-                letters that highlight your strengths and get you noticed.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/cover-letter/editor"
-                  className="inline-flex items-center gap-2 rounded-md bg-[#111] px-5 py-3 text-[10px] font-bold text-white"
-                >
-                  Create Cover Letter Now <ArrowRight className="h-3 w-3" />
-                </Link>
-                <Link
-                  href="/templates"
-                  className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-5 py-3 text-[10px] font-bold text-slate-800"
-                >
-                  Explore Templates
-                </Link>
+      <main className="min-h-screen bg-[#FFFFFF] text-[#0F0F0F] font-sans">
+        
+        {/* ========================================================================= */}
+        {/* 1. HERO BANNER SECTION (InnerBanner)                                      */}
+        {/* ========================================================================= */}
+        <InnerBanner
+          badge="AI COVER LETTER BUILDER"
+          badgeIcon={Sparkles}
+          pageType="cover-letter"
+          breadcrumbs={[{ label: "Cover Letter", href: "/cover-letter" }]}
+          title="Create a Professional"
+          highlightText="Cover Letter"
+          titleSuffix="in Minutes"
+          description="Stand out with tailored, ATS-friendly cover letter templates written and styled to help you land interviews faster."
+          primaryAction={{
+            label: "Create Cover Letter Now",
+            href: "/cover-letter/editor",
+          }}
+          secondaryAction={{
+            label: "Browse All Templates",
+            onClick: () => {
+              const el = document.getElementById("templates-showcase");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            },
+          }}
+          features={[
+            "AI-Powered Content Generation",
+            "Professionally Formatted Templates",
+            "ATS Optimized & Tested",
+          ]}
+        />
+
+        {/* ========================================================================= */}
+        {/* 2. TEMPLATE LISTING & FILTER SECTION (IN STANDARD CONTAINER)              */}
+        {/* ========================================================================= */}
+        <section id="templates-showcase" className="py-16 sm:py-24 bg-[#FFFFFF]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Header */}
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#FFD4C2]/60 bg-[#FFF0EB] text-[#F3645C] text-xs font-bold uppercase tracking-wider shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Professionally Designed</span>
               </div>
-              <div className="mt-7 flex flex-wrap gap-4 text-[9px] text-slate-500">
-                <span>
-                  <Check className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  AI-Powered Writing
-                </span>
-                <span>
-                  <Check className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  Professionally Designed
-                </span>
-                <span>
-                  <Check className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  ATS Friendly
-                </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F]">
+                Choose from Beautiful Cover Letter Templates
+              </h2>
+              <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-normal">
+                Pick a template tailored with realistic content and designed to match your industry style.
+              </p>
+            </div>
+
+            {/* Filter & Search Bar */}
+            <div className="mb-10 space-y-5 border-b border-slate-200/80 pb-7">
+              {/* Top Row: Search & Sort Controls */}
+              <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search cover letter templates by role or style..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all shadow-2xs"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-700 cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-800 focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all cursor-pointer shadow-2xs"
+                  >
+                    <option value="popular">Most Popular</option>
+                    <option value="name">Name (A-Z)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Bottom Row: Category Filter Tabs (Wrapped, No Horizontal Scrollbar) */}
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+                {coverLetterCategories.map((category) => {
+                  const isSelected = selectedCategory === category.id;
+                  return (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`rounded-xl px-4 py-2 text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                        isSelected
+                          ? "bg-[#0F0F0F] text-white shadow-sm ring-1 ring-black/10"
+                          : "border border-slate-200/90 bg-white text-slate-700 shadow-2xs hover:border-[#F3645C] hover:bg-[#FFF8F5]"
+                      }`}
+                    >
+                      {category.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-            <div className="px-5 sm:px-10">
-              <DocumentPreview />
+
+            {/* Template Cards Grid (5 Columns on Desktop: xl:grid-cols-5 within max-w-7xl) */}
+            {sortedTemplates.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-4.5">
+                {sortedTemplates.map((template) => (
+                  <TemplateListingCard
+                    key={template.id}
+                    template={template}
+                    onPreview={(t) => setPreviewModalTemplate(t)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 bg-[#F8F8F6] rounded-2xl border border-slate-200/80 p-8 space-y-4">
+                <FileText className="mx-auto h-12 w-12 text-slate-300" />
+                <h3 className="text-lg font-bold text-slate-800">No templates found</h3>
+                <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
+                  No cover letter templates match your current filter or search criteria.
+                </p>
+                <button
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setSearchQuery("");
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0F0F0F] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-black transition-all cursor-pointer"
+                >
+                  <span>Reset Filters</span>
+                </button>
+              </div>
+            )}
+
+            {/* Bottom Section Link */}
+            <div className="mt-12 text-center">
+              <Link
+                href="/cover-letter/editor"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#0F0F0F] hover:bg-black px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md transition-all cursor-pointer"
+              >
+                <span>Start Writing Your Cover Letter</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </section>
-        <section className="px-5 py-12 sm:px-8 sm:py-16">
-          <div className="mx-auto max-w-6xl text-center">
-            <span className="rounded-full bg-[#f2edff] px-3 py-1 text-[8px] font-bold uppercase text-[#7755ed]">
-              Professionally Designed
-            </span>
-            <h2 className="mt-3 text-2xl font-bold">
-              Choose from Beautiful Cover Letter Templates
-            </h2>
-            <p className="mt-1 text-[10px] text-slate-500">
-              Pick a template that fits your style and makes a lasting
-              impression.
-            </p>
-            <div className="mt-7 flex gap-5 overflow-hidden">
-              {templates.map((template) => (
-                <TemplateCard key={template.name} template={template} />
-              ))}
+
+        {/* ========================================================================= */}
+        {/* 3. INTERACTIVE LIVE PREVIEW SHOWCASE SECTION                              */}
+        {/* ========================================================================= */}
+        <section className="py-16 sm:py-24 bg-[#F8F8F6] border-y border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              
+              {/* Left Column: Feature Highlights & Template Selector */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#0F0F0F]/10 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
+                  <span>Interactive Live Showcase</span>
+                </div>
+
+                <div className="space-y-3">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F0F0F] leading-tight">
+                    Beautiful Design.
+                    <br />
+                    <span className="text-[#F3645C]">Powerful Career Impact.</span>
+                  </h2>
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                    Every cover letter template is crafted with realistic paragraph structures, quantified achievement hooks, and clean typography that stands out in hiring pipelines.
+                  </p>
+                </div>
+
+                {/* Role Switcher Tabs */}
+                <div className="space-y-2 pt-2">
+                  <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
+                    Switch Sample Template:
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {coverLetterTemplates.slice(0, 4).map((tpl, idx) => {
+                      const isActive = activeShowcaseIndex === idx;
+                      return (
+                        <button
+                          key={tpl.id}
+                          onClick={() => setActiveShowcaseIndex(idx)}
+                          className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                            isActive
+                              ? "border-[#0F0F0F] bg-white shadow-sm ring-2 ring-[#0F0F0F]/10"
+                              : "border-slate-200 bg-white/70 hover:bg-white text-slate-600"
+                          }`}
+                        >
+                          <span className="text-xs font-bold text-slate-900 block truncate">
+                            {tpl.name}
+                          </span>
+                          <span className="text-[11px] text-slate-500 block truncate">
+                            {tpl.sampleData.jobTitle}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Feature Checklist */}
+                <ul className="space-y-2.5 pt-2 text-xs sm:text-sm font-semibold text-slate-700">
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#F3645C] shrink-0" />
+                    <span>Real-world paragraphs with quantified accomplishments</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#F3645C] shrink-0" />
+                    <span>Tested for optimal readability and recruiter scan rates</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#F3645C] shrink-0" />
+                    <span>Full synchronization with our live AI Cover Letter editor</span>
+                  </li>
+                </ul>
+
+                <div className="pt-2">
+                  <Link
+                    href={`/cover-letter/editor?template=${activeShowcaseTemplate.id}`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#F3645C] hover:bg-[#D95350] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md transition-all cursor-pointer"
+                  >
+                    <span>Customize This Template</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right Column: High-Fidelity Live Rendered Document */}
+              <div className="lg:col-span-7 flex justify-center">
+                <div className="w-full max-w-[560px] rounded-2xl bg-white border border-slate-200/90 shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden transition-all duration-300">
+                  <CoverLetterRenderer
+                    template={activeShowcaseTemplate}
+                    isCompact={false}
+                  />
+                </div>
+              </div>
             </div>
-            <Link
-              href="/templates"
-              className="mt-7 inline-flex items-center gap-2 rounded-md border border-slate-200 px-5 py-2.5 text-[9px] font-bold"
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 4. AI-POWERED COVER LETTER FEATURES SECTION                               */}
+        {/* ========================================================================= */}
+        <section className="py-16 sm:py-24 bg-[#FFFFFF]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Header */}
+            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#0F0F0F]/10 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+                <Bot className="w-3.5 h-3.5 text-[#F3645C]" />
+                <span>Powered by AI</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F]">
+                AI-Powered Cover Letters That Get You Noticed
+              </h2>
+              <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-normal">
+                Our AI analyzes your experience and target job description to generate compelling, personalized letters that highlight your strengths.
+              </p>
+            </div>
+
+            {/* Feature Cards Grid (6 items) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {AI_FEATURES.map((feature) => {
+                const Icon = feature.icon;
+                return (
+                  <div
+                    key={feature.title}
+                    className="rounded-2xl border border-[#0F0F0F]/10 bg-[#FFFFFF] p-6 sm:p-7 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between"
+                  >
+                    <div className="space-y-4">
+                      <div
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shadow-2xs"
+                        style={{ backgroundColor: feature.bg }}
+                      >
+                        <Icon className="w-6 h-6" style={{ color: feature.color }} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <h3 className="text-base sm:text-lg font-bold text-slate-900">
+                          {feature.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 5. HOW IT WORKS (4 SIMPLE STEPS)                                          */}
+        {/* ========================================================================= */}
+        <section
+          className="py-16 sm:py-24 overflow-hidden font-sans"
+          style={{ background: "#FEE1CF" }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Badge */}
+            <div className="flex justify-center mb-5">
+              <div
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider shadow-sm"
+                style={{
+                  background: "#FFFFFF",
+                  borderColor: "rgba(15,15,15,0.15)",
+                  color: "#0F0F0F",
+                }}
+              >
+                <Sparkles className="w-3.5 h-3.5" style={{ color: "#F3645C" }} />
+                <span>EASY PROCESS</span>
+              </div>
+            </div>
+
+            {/* Headline */}
+            <h2
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight max-w-3xl mx-auto mb-4"
+              style={{ color: "#0F0F0F" }}
             >
-              View All Templates <ArrowRight className="h-3 w-3" />
+              Create Your Cover Letter in{" "}
+              <span style={{ color: "#F3645C" }}>4 Simple Steps</span>
+            </h2>
+
+            <p
+              className="text-sm sm:text-base lg:text-lg max-w-xl mx-auto leading-relaxed mb-16 sm:mb-20"
+              style={{ color: "#333333" }}
+            >
+              Fast, easy, and effective — let AI assist you in creating a high-impact cover letter.
+            </p>
+
+            {/* Steps */}
+            <div className="relative max-w-6xl mx-auto mb-16">
+              {/* Connector line */}
+              <div
+                className="hidden lg:block absolute top-[22px] left-[11%] right-[11%] h-[2px] z-0"
+                style={{ background: "rgba(15,15,15,0.12)" }}
+              />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 relative z-10">
+                {HOW_IT_WORKS_STEPS.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <div
+                      key={item.num}
+                      className="flex flex-col items-center text-center group"
+                    >
+                      {/* Number badge */}
+                      <div
+                        className="w-11 h-11 rounded-full font-extrabold text-sm flex items-center justify-center shadow-md mx-auto z-10 relative transform group-hover:scale-110 transition-transform"
+                        style={{
+                          background: item.featured ? "#0F0F0F" : "#FFFFFF",
+                          color: item.featured ? "#FFFFFF" : "#0F0F0F",
+                          border: item.featured
+                            ? "none"
+                            : "2px solid rgba(15,15,15,0.15)",
+                        }}
+                      >
+                        {item.num}
+                      </div>
+
+                      {/* Dashed connector */}
+                      <div
+                        className="w-[2px] h-6 border-l-2 border-dashed mx-auto my-1.5"
+                        style={{ borderColor: item.accent }}
+                      />
+
+                      {/* Icon box */}
+                      <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-sm group-hover:scale-105 transition-transform"
+                        style={{ background: item.accent }}
+                      >
+                        <IconComponent
+                          className="w-7 h-7"
+                          style={{ color: "#0F0F0F" }}
+                        />
+                      </div>
+
+                      <h3
+                        className="text-base sm:text-lg font-bold mt-4 mb-2 transition-colors"
+                        style={{ color: "#0F0F0F" }}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        className="text-xs sm:text-sm leading-relaxed font-normal max-w-[250px] mx-auto"
+                        style={{ color: "#333333" }}
+                      >
+                        {item.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <Link
+              href="/cover-letter/editor"
+              className="px-8 py-4 text-white font-bold rounded-xl shadow-lg inline-flex items-center gap-2.5 transition-all transform hover:scale-105 hover:opacity-90 text-sm sm:text-base"
+              style={{ background: "#0F0F0F" }}
+            >
+              <span>Start Building Free</span>
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </section>
-        <section className="bg-[#fff0e9] px-5 py-12 sm:px-8 sm:py-14">
-          <div className="mx-auto max-w-6xl text-center">
-            <span className="rounded-full bg-white px-3 py-1 text-[8px] font-bold uppercase text-[#7755ed]">
-              Powered by AI
-            </span>
-            <h2 className="mt-3 text-2xl font-bold">
-              AI-Powered Cover Letters That Gets You Noticed
-            </h2>
-            <p className="mx-auto mt-2 max-w-md text-[10px] leading-4 text-slate-600">
-              Our AI understands your profile and the job description to create
-              a personalized cover letter that makes an impact.
-            </p>
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {features.map(([title, description, color]) => (
-                <div className="rounded-lg bg-white px-3 py-4" key={title}>
-                  <div
-                    className="mx-auto grid h-8 w-8 place-items-center rounded-md"
-                    style={{ background: color }}
-                  >
-                    <Sparkles className="h-4 w-4 text-[#7755ed]" />
-                  </div>
-                  <h3 className="mt-3 text-[9px] font-bold">{title}</h3>
-                  <p className="mt-1 text-[8px] leading-3 text-slate-500">
-                    {description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="px-5 py-12 sm:px-8 sm:py-14">
-          <div className="mx-auto max-w-6xl text-center">
-            <span className="rounded-full bg-[#f2edff] px-3 py-1 text-[8px] font-bold uppercase text-[#7755ed]">
-              How It Works
-            </span>
-            <h2 className="mt-3 text-2xl font-bold">
-              Create Your Cover Letter in 4 Simple Steps
-            </h2>
-            <p className="mt-1 text-[10px] text-slate-500">
-              Fast, easy, and effective - let AI do the heavy lifting.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-4">
-              {steps.map((step, index) => (
-                <div
-                  className="relative rounded-lg border border-slate-200 px-4 pb-4 pt-8"
-                  key={step}
-                >
-                  <div
-                    className="absolute -top-4 left-1/2 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full text-xs font-bold text-white"
-                    style={{
-                      background: ["#7755ed", "#58b98f", "#f5a623", "#e84d91"][
-                        index
-                      ],
-                    }}
-                  >
-                    {index + 1}
-                  </div>
-                  <h3 className="text-[10px] font-bold">{step}</h3>
-                  <p className="mt-1 text-[8px] text-slate-500">
-                    {
-                      [
-                        "Enter your information and the job you're applying for.",
-                        "Our AI writes a personalized cover letter for you.",
-                        "Review and make any edits you want.",
-                        "Download in multiple formats and apply with confidence.",
-                      ][index]
-                    }
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="px-5 pb-16 sm:px-8">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1fr_1.4fr_1fr]">
-            <div>
-              <span className="rounded-full bg-[#f2edff] px-3 py-1 text-[8px] font-bold uppercase text-[#7755ed]">
-                Live Preview
-              </span>
-              <h2 className="mt-4 text-2xl font-bold">
-                Beautiful Design.
-                <br />
-                <span className="text-[#7755ed]">Powerful Impact.</span>
-              </h2>
-              <p className="mt-4 text-[10px] leading-4 text-slate-500">
-                Our cover letter templates are designed to make you stand out
-                while keeping it professional.
-              </p>
-              <ul className="mt-5 space-y-3 text-[9px] font-medium">
-                {[
-                  "Professional layouts",
-                  "Fully customizable",
-                  "Print and digital ready",
-                  "Export in PDF, DOCX & more",
-                ].map((item) => (
-                  <li key={item}>
-                    <Check className="mr-2 inline h-3 w-3 rounded-full bg-[#58b98f] p-0.5 text-white" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/editor"
-                className="mt-6 inline-flex rounded-md bg-[#111] px-4 py-2.5 text-[9px] font-bold text-white"
-              >
-                Create Cover Letter Now <ArrowRight className="ml-2 h-3 w-3" />
-              </Link>
-            </div>
-            <div className="relative mx-auto w-full max-w-[360px] rounded-lg border border-slate-200 bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.08)]">
-              <div className="border-b border-slate-200 pb-3">
-                <b className="text-sm">James Anderson</b>
-                <p className="text-[8px] text-slate-500">Product Manager</p>
-              </div>
-              <div className="mt-4 space-y-2 text-[8px] leading-3 text-slate-500">
-                <p>May 20, 2024</p>
-                <p>
-                  Hiring Manager
-                  <br />
-                  Tech Solutions Inc.
-                  <br />
-                  123 Business Street
-                  <br />
-                  New York, NY 10001
-                </p>
-                <p>Dear Hiring Manager,</p>
-                <p>
-                  I am excited to apply for the Product Manager position at Tech
-                  Solutions Inc. With over 6 years of experience in product
-                  development, strategy, and cross-functional leadership...
-                </p>
-                <p>
-                  I would love the opportunity to bring my skills and experience
-                  to your team.
-                </p>
-                <p>Thank you for your time and consideration.</p>
-                <p className="font-serif italic text-slate-800">
-                  James Anderson
-                </p>
-              </div>
-              <div className="absolute -right-9 top-20 hidden w-16 space-y-3 rounded-lg bg-white p-3 text-center text-[7px] shadow-lg sm:block">
-                <FileText className="mx-auto h-4 w-4 text-[#7755ed]" />
-                <span className="block">Edit Content</span>
-                <Download className="mx-auto h-4 w-4 text-slate-500" />
-                <span className="block">Download</span>
-              </div>
-            </div>
-            <div>
-              <span className="rounded-full bg-[#f2edff] px-3 py-1 text-[8px] font-bold uppercase text-[#7755ed]">
-                Why It Matters
-              </span>
-              <h2 className="mt-4 text-2xl font-bold">
-                A Great Cover Letter
-                <br />
-                <span className="text-[#7755ed]">Opens Doors</span>
-              </h2>
-              <p className="mt-4 text-[10px] leading-4 text-slate-500">
-                A strong cover letter can increase your chances of getting an
-                interview.
-              </p>
-              <ul className="mt-5 space-y-4 text-[9px]">
-                <li>
-                  <b className="block">Make a Strong First Impression</b>
-                  <span className="text-slate-500">
-                    Showcase your professionalism and passion.
-                  </span>
-                </li>
-                <li>
-                  <b className="block">Highlight Your Value</b>
-                  <span className="text-slate-500">
-                    Explain why you're the perfect fit.
-                  </span>
-                </li>
-                <li>
-                  <b className="block">Stand Out from Others</b>
-                  <span className="text-slate-500">
-                    Personalized content that grabs attention.
-                  </span>
-                </li>
-                <li>
-                  <b className="block">Boost Interview Chances</b>
-                  <span className="text-slate-500">
-                    Increase your odds of landing the job.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-        <section className="mx-5 mb-8 rounded-lg bg-[#c2b4ff] px-5 py-7 sm:mx-auto sm:max-w-5xl sm:px-12">
-          <div className="flex flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
-            <div>
-              <h2 className="text-xl font-bold">
-                Ready to Create Your Winning Cover Letter?
-              </h2>
-              <p className="mt-1 text-[10px]">
-                Join thousands of job seekers who are getting hired faster with
-                GetEasyCV AI.
-              </p>
-            </div>
-            <div className="flex shrink-0 gap-3">
-              <Link
-                href="/editor"
-                className="inline-flex items-center rounded-md bg-[#111] px-4 py-2.5 text-[9px] font-bold text-white"
-              >
-                Create Cover Letter Now <ArrowRight className="ml-2 h-3 w-3" />
-              </Link>
-              <Link
-                href="/templates"
-                className="inline-flex items-center rounded-md bg-white px-4 py-2.5 text-[9px] font-bold"
-              >
-                Explore Templates <ArrowRight className="ml-2 h-3 w-3" />
-              </Link>
-            </div>
-          </div>
-        </section>
+
+        {/* ========================================================================= */}
+        {/* 6. COVER LETTER FAQ SECTION                                              */}
+        {/* ========================================================================= */}
+        <FAQ
+          items={COVER_LETTER_FAQS}
+          badge="Cover Letter FAQs"
+          title="Frequently Asked"
+          highlightText="Questions"
+          subtitle="Everything you need to know about our AI cover letter builder, templates, and export options."
+          showContactCta={true}
+          bgStyle="#FFFFFF"
+        />
+
+        {/* ========================================================================= */}
+        {/* 7. CALL TO ACTION (ReadyToBuild)                                          */}
+        {/* ========================================================================= */}
+        <ReadyToBuild
+          title="Ready to Create Your Winning Cover Letter?"
+          subtitle="Join thousands of job seekers who landed interviews faster with GetEasyCV AI."
+          buttonText="Create Cover Letter Now"
+          buttonHref="/cover-letter/editor"
+        />
+
+        {/* Quick Preview Modal */}
+        <CoverLetterPreviewModal
+          template={previewModalTemplate}
+          onClose={() => setPreviewModalTemplate(null)}
+        />
       </main>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -54,9 +54,9 @@ export default function TemplateShowcase() {
       .catch(() => {});
 
     const all = generateTemplates();
-    const cats = ['single-column-ats', 'sidebar-left', 'two-column-split'];
+    const cats = ['single-column-ats', 'sidebar-left', 'two-column-split', 'sidebar-right'];
     const selected = cats.map(id => all.find(t => t.layoutId === id)).filter(Boolean) as GeneratedTemplate[];
-    setDisplayedTemplates(selected.length >= 3 ? selected.slice(0, 3) : all.slice(0, 3));
+    setDisplayedTemplates(selected.length >= 4 ? selected.slice(0, 4) : all.slice(0, 4));
   }, []);
 
   return (
@@ -92,8 +92,8 @@ export default function TemplateShowcase() {
           </div>
         </div>
 
-        {/* Template cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Template cards (4 items grid) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-12">
           {displayedTemplates.map((template, index) => (
             <article key={template.id}
               className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative hover:-translate-y-1"

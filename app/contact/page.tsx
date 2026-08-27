@@ -1,11 +1,13 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
+import InnerBanner from '@/components/InnerBanner';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
+import FAQ from '@/components/FAQ';
+import { HOW_IT_WORKS_FAQS } from '@/data/faqs';
 import Footer from '@/components/Footer';
-import Link from 'next/link';
-import { Mail, MessageSquare, Clock, MapPin, CheckCircle2, Loader2, Sparkles, Send } from 'lucide-react';
+import { Mail, Clock, CheckCircle2, Loader2, Sparkles, Send, Headphones } from 'lucide-react';
 
 const TOPICS = ['General Question', 'Technical Issue', 'Billing & Payments', 'Feature Request', 'Account Help', 'Other'];
 
@@ -34,40 +36,49 @@ export default function ContactPage() {
     <>
       <Navigation />
 
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFF8F5] border border-[#FF570F] rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>We're Here To Help</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
-              Get in Touch with Us
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Have a question, feedback, or need technical assistance? Fill out the form below or email us directly.
-            </p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="We're Here To Help"
+          badgeIcon={Headphones}
+          pageType="contact"
+          breadcrumbs={[{ label: "Contact", href: "/contact" }]}
+          title="Get in Touch with"
+          highlightText="Our Team"
+          description="Have a question, feedback, or need technical assistance? Fill out the form below or email our support engineers directly."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Browse FAQs",
+            href: "/faq",
+          }}
+          features={[
+            "24/7 Fast Support Response",
+            "Dedicated Support Engineers",
+            "Direct Email Assistance",
+          ]}
+        />
 
-          <div className="grid md:grid-cols-12 gap-8 items-start">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="grid md:grid-cols-12 gap-8 items-start max-w-5xl mx-auto">
             {/* Contact Info Cards */}
             <div className="md:col-span-4 space-y-4">
-              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-[#FFF8F5] text-[#FF570F] flex items-center justify-center font-bold">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-[#BAC7FE] text-[#0F0F0F] flex items-center justify-center font-bold shadow-2xs">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900">Email Support</h3>
                   <p className="text-xs text-slate-500 mt-0.5">Reach our team anytime</p>
-                  <a href="mailto:support@geteasycv.com" className="text-xs font-bold text-[#FF570F] hover:underline mt-2 inline-block">
+                  <a href="mailto:support@geteasycv.com" className="text-xs font-bold text-[#F3645C] hover:underline mt-2 inline-block">
                     support@geteasycv.com
                   </a>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-[#FFF8F5] text-[#FF570F] flex items-center justify-center font-bold">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-[#F5D17B] text-[#0F0F0F] flex items-center justify-center font-bold shadow-2xs">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
@@ -87,13 +98,13 @@ export default function ContactPage() {
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900">Message Sent Successfully!</h3>
-                  <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-normal">
                     Thank you for reaching out. A support team member will review your inquiry and get back to you shortly.
                   </p>
                   <button
                     type="button"
                     onClick={() => { setSent(false); setForm({ name: '', email: '', topic: 'General Question', message: '' }); }}
-                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#FF570F] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 hover:bg-[#E04800] transition-all cursor-pointer"
+                    className="mt-4 px-6 py-2.5 rounded-xl bg-[#0F0F0F] text-white font-bold text-xs shadow-md hover:bg-[#262626] transition-all cursor-pointer"
                   >
                     Send Another Message
                   </button>
@@ -118,7 +129,7 @@ export default function ContactPage() {
                         value={form.name}
                         onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all"
                       />
                     </div>
 
@@ -133,7 +144,7 @@ export default function ContactPage() {
                         value={form.email}
                         onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -146,7 +157,7 @@ export default function ContactPage() {
                       id="topic"
                       value={form.topic}
                       onChange={(e) => setForm((p) => ({ ...p, topic: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 focus:bg-white focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all cursor-pointer"
                     >
                       {TOPICS.map((t) => (
                         <option key={t} value={t}>{t}</option>
@@ -165,14 +176,14 @@ export default function ContactPage() {
                       value={form.message}
                       onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
                       placeholder="How can we help you?"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 px-4 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {submitting ? (
                       <>
@@ -191,6 +202,17 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        {/* Quick FAQ Section */}
+        <FAQ
+          items={HOW_IT_WORKS_FAQS}
+          badge="Instant Answers"
+          title="Quick Answers Before"
+          highlightText="Reaching Out"
+          subtitle="Find immediate solutions to the most common questions about accounts, downloads, and billing."
+          showContactCta={false}
+          bgStyle="#FFFFFF"
+        />
       </main>
 
       <ReadyToBuild />

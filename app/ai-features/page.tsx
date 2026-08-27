@@ -6,6 +6,7 @@ import {
   ArrowRight,
   Bot,
   Check,
+  CheckCircle2,
   FileText,
   Gauge,
   Lightbulb,
@@ -13,167 +14,157 @@ import {
   Target,
   Wand2,
   Zap,
+  ShieldCheck,
+  RefreshCw,
+  Download,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import InnerBanner from "@/components/InnerBanner";
+import ReadyToBuild from "@/components/sections/ReadyToBuild";
 
 const features = [
-  [
-    "AI Resume Writer",
-    "Create professional resume content in seconds with AI-powered writing assistance.",
-    Wand2,
-    "#e9ddff",
-  ],
-  [
-    "Smart Content Generation",
-    "Generate summaries, work experience, and achievements tailored to your job role.",
-    Sparkles,
-    "#dbf2e4",
-  ],
-  [
-    "Resume Improvement",
-    "Get AI suggestions to enhance clarity, impact, and overall resume quality.",
-    Lightbulb,
-    "#ffe8cc",
-  ],
-  [
-    "ATS Score & Analysis",
-    "Analyze your resume for ATS compatibility and get a match score instantly.",
-    Gauge,
-    "#ffdce9",
-  ],
-  [
-    "Keyword Optimization",
-    "Find and add the right keywords to pass ATS scans and get noticed by recruiters.",
-    Target,
-    "#dce8ff",
-  ],
-  [
-    "Grammar & Writing Check",
-    "AI checks grammar, tone, clarity, and issues for a polished resume.",
-    FileText,
-    "#e8ddff",
-  ],
-  [
-    "Role-Based Suggestions",
-    "Receive personalized content suggestions based on your industry and job role.",
-    Bot,
-    "#d8f3f1",
-  ],
-  [
-    "Multiple Format Export",
-    "Download your resume in PDF, DOCX, or shareable link with one click.",
-    Zap,
-    "#ffe4d7",
-  ],
-] as const;
-const benefits = [
-  ["Save Time", "Build your resume in minutes, not hours.", Zap],
-  [
-    "Professional Quality",
-    "AI ensures high-quality and impactful content.",
-    Sparkles,
-  ],
-  [
-    "Higher Shortlist Rate",
-    "ATS-friendly resumes get you more interviews.",
-    Target,
-  ],
-  [
-    "Personalized for You",
-    "Tailored content that matches your career goals.",
-    Bot,
-  ],
-  ["100% Secure", "Your data is private and always protected.", Check],
-] as const;
-const steps = [
-  [
-    "Add Your Details",
-    "Enter your information and choose your preferred role.",
-  ],
-  [
-    "AI Generates Content",
-    "AI writes or suggests the best content for your resume.",
-  ],
-  [
-    "Optimize & Analyze",
-    "Improve your resume with AI suggestions and ATS analysis.",
-  ],
-  [
-    "Download & Apply",
-    "Download your ATS-friendly resume and apply with confidence.",
-  ],
+  {
+    title: "AI Resume Writer",
+    description: "Create professional resume content in seconds with AI-powered writing assistance.",
+    icon: Wand2,
+    accent: "#BAC7FE",
+  },
+  {
+    title: "Smart Content Generation",
+    description: "Generate summaries, work experience, and achievements tailored to your job role.",
+    icon: Sparkles,
+    accent: "#58C09D",
+  },
+  {
+    title: "Resume Improvement",
+    description: "Get AI suggestions to enhance clarity, impact, and overall resume quality.",
+    icon: Lightbulb,
+    accent: "#F5D17B",
+  },
+  {
+    title: "ATS Score & Analysis",
+    description: "Analyze your resume for ATS compatibility and get a match score instantly.",
+    icon: Gauge,
+    accent: "#D0B9EF",
+  },
+  {
+    title: "Keyword Optimization",
+    description: "Find and add the right keywords to pass ATS scans and get noticed by recruiters.",
+    icon: Target,
+    accent: "#BAC7FE",
+  },
+  {
+    title: "Grammar & Writing Check",
+    description: "AI checks grammar, tone, clarity, and issues for a polished resume.",
+    icon: FileText,
+    accent: "#FEE1CF",
+  },
+  {
+    title: "Role-Based Suggestions",
+    description: "Receive personalized content suggestions based on your industry and job role.",
+    icon: Bot,
+    accent: "#58C09D",
+  },
+  {
+    title: "Multiple Format Export",
+    description: "Download your resume in PDF, DOCX, or shareable link with one click.",
+    icon: Zap,
+    accent: "#F5D17B",
+  },
 ];
 
-function Tag({ children }: { children: string }) {
-  return (
-    <span className="rounded-full bg-[#f1edff] px-3 py-1 text-[8px] font-bold uppercase tracking-wide text-[#7755ed]">
-      {children}
-    </span>
-  );
-}
+const benefits = [
+  { title: "Save Time", description: "Build your resume in minutes, not hours.", icon: Zap, bg: "#FEE1CF" },
+  { title: "Professional Quality", description: "AI ensures high-impact and polished bullet points.", icon: Sparkles, bg: "#BAC7FE" },
+  { title: "Higher Shortlist Rate", description: "ATS-friendly resumes get you 3x more recruiter calls.", icon: Target, bg: "#F5D17B" },
+  { title: "Tailored for You", description: "Personalized suggestions that match your career goals.", icon: Bot, bg: "#D0B9EF" },
+  { title: "100% Private & Secure", description: "Your personal data is encrypted and protected.", icon: ShieldCheck, bg: "#58C09D" },
+];
+
+const steps = [
+  {
+    num: 1,
+    icon: FileText,
+    title: "Add Your Details",
+    description: "Enter your background, skills, and target job title.",
+    accent: "#BAC7FE",
+  },
+  {
+    num: 2,
+    icon: Wand2,
+    title: "AI Generates Content",
+    description: "AI crafts high-impact summaries and quantified bullet points.",
+    accent: "#F5D17B",
+    featured: true,
+  },
+  {
+    num: 3,
+    icon: Gauge,
+    title: "Optimize & Analyze",
+    description: "Review ATS score breakdown and fine-tune suggestions.",
+    accent: "#D0B9EF",
+  },
+  {
+    num: 4,
+    icon: Download,
+    title: "Download & Apply",
+    description: "Export clean PDF/DOCX files and apply with confidence.",
+    accent: "#58C09D",
+  },
+];
+
 function ResumeArtwork() {
   return (
-    <div className="relative mx-auto h-[275px] w-full max-w-[480px] sm:h-[330px]">
-      <div className="absolute left-4 top-8 w-[170px] rounded-lg border border-slate-200 bg-white p-4 shadow-xl sm:left-10 sm:w-[205px]">
-        <div className="mb-4 flex justify-between text-[8px] font-bold">
-          AI Resume Score <span className="text-slate-400">•••</span>
+    <div className="relative mx-auto h-[290px] w-full max-w-[480px] sm:h-[340px]">
+      {/* ATS Score Card */}
+      <div className="absolute left-1 sm:left-2 top-8 w-[150px] sm:w-[210px] rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 shadow-xl">
+        <div className="mb-2 sm:mb-3 flex justify-between text-[11px] sm:text-xs font-bold text-slate-800">
+          AI Score <span className="text-slate-400">•••</span>
         </div>
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border-4 border-emerald-400 text-lg font-bold text-emerald-600">
-          92
+        <div className="mx-auto grid h-12 w-12 sm:h-16 sm:w-16 place-items-center rounded-full border-4 border-emerald-400 text-base sm:text-xl font-extrabold text-emerald-600">
+          96%
         </div>
-        <p className="mt-2 text-center text-[8px] font-bold text-emerald-600">
-          Excellent Match!
+        <p className="mt-1.5 sm:mt-2 text-center text-[10px] sm:text-xs font-bold text-emerald-600">
+          Excellent ATS Match!
         </p>
-        <div className="mt-4 space-y-2 text-[7px] text-slate-500">
-          {["Clear Structure", "Relevant Skills", "Strong Keywords"].map(
-            (item) => (
-              <p key={item}>
-                <Check className="mr-1 inline h-2.5 w-2.5 rounded-full bg-emerald-400 p-0.5 text-white" />
-                {item}
-              </p>
-            ),
-          )}
+        <div className="mt-2 sm:mt-3 space-y-1 sm:space-y-1.5 text-[9.5px] sm:text-[11px] text-slate-600 font-medium">
+          {["Clear Structure", "Relevant Skills", "Strong Verbs"].map((item) => (
+            <div key={item} className="flex items-center gap-1.5">
+              <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-500 shrink-0" />
+              <span>{item}</span>
+            </div>
+          ))}
         </div>
       </div>
-      <div className="absolute right-4 top-0 w-[175px] rounded-lg border border-slate-200 bg-white p-4 shadow-xl sm:right-12 sm:w-[205px]">
+
+      {/* Mini Resume Card */}
+      <div className="absolute right-1 sm:right-2 top-0 w-[150px] sm:w-[220px] rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 shadow-xl">
         <div className="flex items-center gap-2">
-          <div className="grid h-7 w-7 place-items-center rounded-full bg-[#d9ccff] text-[9px] font-bold">
+          <div className="grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full bg-[#BAC7FE] text-[10px] sm:text-xs font-bold text-slate-900">
             JW
           </div>
           <div>
-            <b className="block text-[8px]">Jessica Williams</b>
-            <span className="text-[7px] text-slate-400">Marketing Manager</span>
+            <b className="block text-[10px] sm:text-xs text-slate-900 leading-tight">Jessica Williams</b>
+            <span className="text-[8.5px] sm:text-[10px] text-slate-500 font-medium">Marketing Lead</span>
           </div>
         </div>
-        <p className="mt-5 text-[8px] font-bold">Summary</p>
-        <div className="mt-2 space-y-1.5">
-          {[1, 2, 3].map((line) => (
-            <div className="h-1 rounded bg-slate-200" key={line} />
-          ))}
+        <p className="mt-3 sm:mt-4 text-[9.5px] sm:text-[11px] font-bold text-slate-900">Summary</p>
+        <div className="mt-1 space-y-1 sm:space-y-1.5">
+          <div className="h-1.5 sm:h-2 rounded bg-slate-200 w-full" />
+          <div className="h-1.5 sm:h-2 rounded bg-slate-200 w-5/6" />
+          <div className="h-1.5 sm:h-2 rounded bg-slate-200 w-4/6" />
         </div>
-        <p className="mt-4 text-[8px] font-bold">Experience</p>
-        <div className="mt-2 space-y-2">
-          {[1, 2, 3, 4].map((line) => (
-            <div className="h-1 rounded bg-[#bba5ff]" key={line} />
-          ))}
+        <p className="mt-2.5 sm:mt-3.5 text-[9.5px] sm:text-[11px] font-bold text-slate-900">Experience</p>
+        <div className="mt-1 space-y-1 sm:space-y-1.5">
+          <div className="h-1.5 sm:h-2 rounded bg-[#BAC7FE] w-full" />
+          <div className="h-1.5 sm:h-2 rounded bg-[#BAC7FE] w-3/4" />
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 w-[155px] rounded-lg border border-slate-200 bg-white p-3 shadow-lg sm:w-[180px]">
-        <b className="text-[8px]">AI Suggestions</b>
-        {[
-          "Add measurable impact",
-          "Include more keywords",
-          "Improve summary",
-        ].map((item) => (
-          <p className="mt-2 text-[7px] text-slate-500" key={item}>
-            <Check className="mr-1 inline h-2.5 w-2.5 rounded-full bg-[#d9ccff] p-0.5 text-[#7755ed]" />
-            {item}
-          </p>
-        ))}
-      </div>
-      <div className="absolute right-0 top-20 grid h-16 w-16 place-items-center rounded-full bg-[#8764ee] text-white shadow-lg sm:right-3 sm:h-20 sm:w-20">
-        <Bot className="h-8 w-8" />
+
+      {/* Floating AI Robot Badge */}
+      <div className="absolute right-0 top-24 grid h-12 w-12 sm:h-16 sm:w-16 place-items-center rounded-2xl bg-[#0F0F0F] text-white shadow-xl sm:right-2">
+        <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-[#F5D17B]" />
       </div>
     </div>
   );
@@ -181,10 +172,11 @@ function ResumeArtwork() {
 
 export default function AIFeaturesPage() {
   const [text, setText] = useState(
-    "Write a professional summary for a Marketing Manager with 5+ years of experience.",
+    "Managed a marketing team and increased customer engagement across social channels."
   );
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+
   const improve = async () => {
     if (!text.trim()) return;
     setLoading(true);
@@ -192,301 +184,470 @@ export default function AIFeaturesPage() {
       const response = await fetch("/api/ai/resume-improve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: text, action: "improve_summary" }),
+        body: JSON.stringify({ content: text, action: "improve_bullet" }),
       });
       const data = await response.json();
       setResult(
         data.data?.suggestion ||
-          "Experienced marketing leader driving measurable growth through customer-focused strategy, high-performing teams, and data-informed decisions.",
+          "Spearheaded a 7-person digital marketing team, orchestrating multi-channel campaigns that generated a 42% increase in customer engagement and \$1.2M in pipeline revenue."
       );
     } catch {
       setResult(
-        "Experienced marketing leader driving measurable growth through customer-focused strategy, high-performing teams, and data-informed decisions.",
+        "Spearheaded a 7-person digital marketing team, orchestrating multi-channel campaigns that generated a 42% increase in customer engagement and \$1.2M in pipeline revenue."
       );
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <>
       <Navigation />
-      <main className="home-design overflow-hidden bg-white font-sans text-[#111]">
-        <section className="bg-[linear-gradient(120deg,#fff_30%,#f7f2ff_100%)]">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-14 sm:px-8 sm:pb-20 sm:pt-20 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <Tag>AI Powered Features</Tag>
-              <h1 className="mt-5 max-w-xl text-4xl font-bold leading-[1.08] tracking-[-1px] sm:text-5xl">
-                Build Smarter Resumes with the{" "}
-                <span className="text-[#7755ed]">Power of AI</span>
-              </h1>
-              <p className="mt-5 max-w-lg text-sm leading-6 text-slate-600">
-                GetEasyCV AI helps you create, improve, and optimize your resume
-                with intelligent suggestions, real-time content generation, and
-                ATS-friendly analysis.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/editor"
-                  className="inline-flex items-center gap-2 rounded-md bg-[#111] px-5 py-3 text-[10px] font-bold text-white"
-                >
-                  Start Building Now <ArrowRight className="h-3 w-3" />
-                </Link>
-                <Link
-                  href="/templates"
-                  className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-5 py-3 text-[10px] font-bold"
-                >
-                  Explore Templates
-                </Link>
-              </div>
-              <div className="mt-7 flex flex-wrap gap-4 text-[9px] text-slate-500">
-                <span>
-                  <Check className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  Trusted by 50,000+ users
-                </span>
-                <span>
-                  <Sparkles className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  AI-Powered Content
-                </span>
-                <span>
-                  <Check className="mr-1 inline h-3 w-3 text-[#7755ed]" />
-                  ATS Friendly
-                </span>
-              </div>
+      <main className="min-h-screen bg-white text-[#0F0F0F] font-sans">
+        {/* Banner */}
+        <InnerBanner
+          badge="AI POWERED FEATURES"
+          badgeIcon={Sparkles}
+          breadcrumbs={[{ label: "AI Features", href: "/ai-features" }]}
+          title="Build Smarter Resumes with the"
+          highlightText="Power of AI"
+          description="GetEasyCV AI helps you create, improve, and optimize your resume with intelligent suggestions, real-time content generation, and ATS-friendly analysis."
+          primaryAction={{
+            label: "Start Building Free",
+            href: "/editor",
+          }}
+          secondaryAction={{
+            label: "Explore Templates",
+            href: "/templates",
+          }}
+          features={[
+            "Trusted by 50,000+ users",
+            "AI-Powered Content",
+            "100% ATS Friendly",
+          ]}
+          pageType="ai-features"
+        />
+
+        {/* Features Grid */}
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
+              <span>Comprehensive Toolkit</span>
             </div>
-            <ResumeArtwork />
-          </div>
-        </section>
-        <section className="px-5 py-12 sm:px-8 sm:py-16">
-          <div className="mx-auto max-w-6xl text-center">
-            <h2 className="text-2xl font-bold sm:text-3xl">
-              AI-Powered Resume Features
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] mb-4">
+              AI-Powered Resume <span style={{ color: "#F3645C" }}>Features</span>
             </h2>
-            <p className="mt-2 text-[10px] text-slate-500">
-              Everything you need to create a job-winning resume with AI
-              assistance.
+            <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto mb-14 leading-relaxed font-normal">
+              Everything you need to create a job-winning resume with intelligent, recruiter-backed AI assistance.
             </p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {features.map(([title, description, Icon, color]) => (
-                <article
-                  className="rounded-lg border border-slate-200/70 bg-white p-4 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-                  key={title}
-                >
-                  <div
-                    className="grid h-8 w-8 place-items-center rounded-md"
-                    style={{ background: color }}
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left">
+              {features.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <article
+                    className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+                    key={item.title}
                   >
-                    <Icon className="h-4 w-4 text-[#7755ed]" />
-                  </div>
-                  <h3 className="mt-3 text-[10px] font-bold">{title}</h3>
-                  <p className="mt-2 text-[8px] leading-4 text-slate-500">
-                    {description}
-                  </p>
-                </article>
-              ))}
+                    <div>
+                      <div
+                        className="grid h-12 w-12 place-items-center rounded-xl mb-4 shadow-2xs group-hover:scale-105 transition-transform"
+                        style={{ background: item.accent }}
+                      >
+                        <IconComponent className="h-6 w-6 text-[#0F0F0F]" />
+                      </div>
+                      <h3 className="text-base font-bold text-slate-900 mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        {item.description}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
-        <section className="px-5 py-10 sm:px-8">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-            <div>
-              <Tag>AI Writing Assistant</Tag>
-              <h2 className="mt-4 text-2xl font-bold sm:text-3xl">
-                AI That Writes.
-                <br />
-                <span className="text-[#7755ed]">You Get Hired.</span>
-              </h2>
-              <p className="mt-4 max-w-md text-[10px] leading-4 text-slate-500">
-                Our AI understands your background and job role to generate
-                powerful, personalized resume content that makes you stand out.
-              </p>
-              <ul className="mt-5 space-y-3 text-[9px]">
-                {[
-                  "Write professional summaries",
-                  "Create impactful bullet points",
-                  "Highlight your achievements",
-                  "Customize for any job role",
-                ].map((item) => (
-                  <li key={item}>
-                    <Check className="mr-2 inline h-3 w-3 rounded-full bg-emerald-400 p-0.5 text-white" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={improve}
-                className="mt-6 inline-flex items-center gap-2 rounded-md bg-[#111] px-4 py-2.5 text-[9px] font-bold text-white"
-              >
-                <Wand2 className="h-3 w-3" />
-                Try AI Writer Now
-              </button>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-xl">
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <Sparkles className="h-4 w-4 text-[#7755ed]" />
-                <b className="text-[10px]">AI Content Writer</b>
-              </div>
-              <p className="mt-4 text-[9px] font-semibold">
-                Write a professional summary for a Marketing Manager
-              </p>
-              <textarea
-                value={text}
-                onChange={(event) => setText(event.target.value)}
-                className="mt-3 min-h-20 w-full resize-none rounded border border-slate-200 bg-slate-50 p-3 text-[9px] outline-none focus:border-[#7755ed]"
-              />
-              {result && (
-                <p className="mt-3 rounded bg-[#f7f4ff] p-3 text-[9px] leading-4 text-slate-700">
-                  {result}
+
+        {/* Live Interactive AI Assistant Demo */}
+        <section
+          className="py-16 sm:py-24 font-sans"
+          style={{
+            background: "#F8F8F6",
+            borderTop: "1px solid rgba(15,15,15,0.06)",
+            borderBottom: "1px solid rgba(15,15,15,0.06)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <div className="space-y-6 text-left">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
+                  <span>Interactive Live Demo</span>
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] leading-tight">
+                  AI That Writes.
+                  <br />
+                  <span style={{ color: "#F3645C" }}>You Get Hired.</span>
+                </h2>
+
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                  Our AI understands your background and target job role to generate powerful, quantified bullet points that immediately grab recruiters&apos; attention.
                 </p>
-              )}
-              <div className="mt-4 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={improve}
-                  disabled={loading}
-                  className="rounded border border-slate-200 px-3 py-2 text-[9px] font-semibold"
-                >
-                  {loading ? "Generating..." : "Regenerate"}
-                </button>
-                <Link
-                  href="/editor"
-                  className="rounded bg-[#7755ed] px-3 py-2 text-[9px] font-bold text-white"
-                >
-                  Use This Content
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="px-5 py-10 sm:px-8">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-            <div className="order-2 mx-auto w-full max-w-[330px] rounded-lg border border-slate-200 bg-white p-6 shadow-lg lg:order-1">
-              <div className="flex justify-between text-xs font-bold">
-                ATS Score <Gauge className="h-3 w-3 text-[#7755ed]" />
-              </div>
-              <div className="mt-5 flex items-center gap-5">
-                <div className="grid h-20 w-20 place-items-center rounded-full border-8 border-emerald-400 text-xl font-bold text-emerald-600">
-                  92%
-                </div>
-                <div>
-                  <b className="text-[10px] text-emerald-600">Good Match</b>
-                  {["Skills", "Keywords", "Format", "Sections"].map((item) => (
-                    <p className="mt-2 text-[8px] text-slate-500" key={item}>
-                      {item}
-                      <Check className="ml-3 inline h-3 w-3 rounded-full bg-emerald-400 p-0.5 text-white" />
-                    </p>
+
+                <ul className="space-y-3 pt-2 text-xs sm:text-sm font-semibold text-slate-800">
+                  {[
+                    "Transform ordinary descriptions into quantified wins",
+                    "Keyword-matched for Applicant Tracking Systems",
+                    "Customized for entry, mid, and executive levels",
+                    "Instant 1-click apply to your active resume",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(88,192,157,0.15)" }}>
+                        <Check className="h-3.5 w-3.5 text-[#58C09D]" />
+                      </div>
+                      <span>{item}</span>
+                    </li>
                   ))}
+                </ul>
+
+                <div className="pt-2">
+                  <Link
+                    href="/editor"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md transition-all"
+                  >
+                    <Wand2 className="h-4 w-4 text-[#F5D17B]" />
+                    <span>Try Full AI Builder Now</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Interactive Tool Card */}
+              <div className="rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xl text-left">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-[#D0B9EF] flex items-center justify-center text-[#0F0F0F] shadow-2xs">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <span className="font-bold text-sm text-slate-900 block">AI Bullet Point Enhancer</span>
+                      <span className="text-[11px] text-slate-500 font-medium">Real-time resume optimizer</span>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#58C09D] bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full">
+                    Live Demo
+                  </span>
+                </div>
+
+                <div className="mt-5 space-y-2">
+                  <label className="block text-xs font-bold text-slate-700">
+                    Enter a basic bullet point to improve:
+                  </label>
+                  <textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 text-xs sm:text-sm font-medium text-slate-900 outline-none focus:border-[#F3645C] focus:bg-white transition-all resize-none shadow-2xs"
+                  />
+                </div>
+
+                {result && (
+                  <div className="mt-4 rounded-xl border border-emerald-200/80 bg-emerald-50/60 p-4 animate-fadeIn">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 mb-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>AI Enhanced Version:</span>
+                    </div>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed">
+                      {result}
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-5 flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={improve}
+                    disabled={loading}
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-bold text-slate-800 shadow-2xs transition-all cursor-pointer"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+                    <span>{loading ? "Optimizing..." : "Improve with AI"}</span>
+                  </button>
+
+                  <Link
+                    href="/editor"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all"
+                  >
+                    <span>Use in Resume</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </div>
             </div>
-            <div className="order-1 lg:order-2">
-              <Tag>ATS Friendly</Tag>
-              <h2 className="mt-4 text-2xl font-bold sm:text-3xl">
-                ATS Analysis.{" "}
-                <span className="text-[#7755ed]">Better Chances.</span>
-              </h2>
-              <p className="mt-4 max-w-md text-[10px] leading-4 text-slate-500">
-                GetEasyCV AI scans your resume against ATS systems and provides
-                actionable insights to improve your score.
-              </p>
-              <ul className="mt-5 space-y-3 text-[9px]">
-                {[
-                  "Real-time ATS score",
-                  "Keyword matching insights",
-                  "Section-by-section feedback",
-                  "Improve and re-scan instantly",
-                ].map((item) => (
-                  <li key={item}>
-                    <Check className="mr-2 inline h-3 w-3 rounded-full bg-emerald-400 p-0.5 text-white" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/ats-checker"
-                className="mt-6 inline-flex items-center gap-2 rounded-md bg-[#111] px-4 py-2.5 text-[9px] font-bold text-white"
-              >
-                Check My ATS Score <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
           </div>
         </section>
-        <section className="px-5 py-12 sm:px-8">
-          <div className="mx-auto max-w-6xl text-center">
-            <Tag>AI Workflow</Tag>
-            <h2 className="mt-3 text-2xl font-bold">
-              Create Your Perfect Resume in 4 Simple Steps
-            </h2>
-            <p className="mt-1 text-[10px] text-slate-500">
-              Our AI makes the resume building process fast, easy, and
-              effective.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-4">
-              {steps.map(([title, description], index) => (
-                <article
-                  className="relative rounded-lg border border-slate-200 px-4 pb-4 pt-8"
-                  key={title}
-                >
-                  <span className="absolute -top-4 left-1/2 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full bg-[#7755ed] text-xs font-bold text-white">
-                    {index + 1}
+
+        {/* ATS Analysis Section */}
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              {/* Left Column: ATS Score Gauge Mockup */}
+              <div className="mx-auto w-full max-w-[420px] rounded-2xl border border-slate-200/90 bg-white p-7 shadow-xl text-left">
+                <div className="flex justify-between items-center text-xs font-bold text-slate-900 border-b border-slate-100 pb-3">
+                  <span className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-[#58C09D]" />
+                    <span>ATS Match Analysis</span>
                   </span>
-                  <h3 className="text-[10px] font-bold">{title}</h3>
-                  <p className="mt-2 text-[8px] leading-4 text-slate-500">
-                    {description}
-                  </p>
-                </article>
-              ))}
+                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
+                    96% MATCH
+                  </span>
+                </div>
+
+                <div className="mt-6 flex items-center gap-6">
+                  <div className="grid h-24 w-24 place-items-center rounded-full border-8 border-emerald-400 text-2xl font-extrabold text-emerald-600 shrink-0 shadow-inner">
+                    96%
+                  </div>
+                  <div className="space-y-1.5">
+                    <b className="text-sm text-emerald-700 font-bold block">Excellent ATS Score</b>
+                    <p className="text-xs text-slate-500 font-medium">Ready for enterprise recruiter scan</p>
+                    <div className="pt-2 space-y-1.5 text-xs text-slate-700 font-medium">
+                      {["Skills & Keyword Density", "Parseable Single Column", "Standard Section Headings"].map((item) => (
+                        <div key={item} className="flex items-center gap-1.5">
+                          <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(88,192,157,0.2)" }}>
+                            <Check className="h-2.5 w-2.5 text-emerald-600 stroke-[3]" />
+                          </div>
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 space-y-2">
+                  <div className="flex justify-between text-[11px] font-semibold text-slate-600">
+                    <span>Parsing Accuracy</span>
+                    <span className="text-slate-900 font-bold">100%</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-full rounded-full bg-[#58C09D] w-full" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: ATS Text */}
+              <div className="space-y-6 text-left">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#58C09D]" />
+                  <span>ATS Optimization</span>
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] leading-tight">
+                  ATS Analysis.{" "}
+                  <span style={{ color: "#F3645C" }}>Higher Callback Rate.</span>
+                </h2>
+
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                  Over 75% of resumes are rejected by automated ATS filters before a human recruiter sees them. GetEasyCV ensures your resume gets passed straight to the hiring manager.
+                </p>
+
+                <ul className="space-y-3 pt-2 text-xs sm:text-sm font-semibold text-slate-800">
+                  {[
+                    "Real-time ATS score calculation",
+                    "Missing keyword detection based on target job description",
+                    "Section-by-section formatting verification",
+                    "Instant 1-click keyword insertion",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(88,192,157,0.15)" }}>
+                        <Check className="h-3.5 w-3.5 text-[#58C09D]" />
+                      </div>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="pt-2">
+                  <Link
+                    href="/ats-checker"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md transition-all"
+                  >
+                    <span>Check Your ATS Score Free</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-        <section className="mx-5 mb-8 rounded-lg bg-[#f8f6ff] px-5 py-8 sm:mx-auto sm:max-w-6xl sm:px-10">
-          <div className="text-center">
-            <Tag>Why GetEasyCV AI?</Tag>
-            <h2 className="mt-3 text-2xl font-bold">
+
+        {/* 4 Simple Steps Section */}
+        <section
+          className="py-16 sm:py-24 overflow-hidden font-sans"
+          style={{ background: "#FEE1CF" }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="flex justify-center mb-5">
+              <div
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider shadow-sm"
+                style={{
+                  background: "#FFFFFF",
+                  borderColor: "rgba(15,15,15,0.15)",
+                  color: "#0F0F0F",
+                }}
+              >
+                <Sparkles className="w-3.5 h-3.5" style={{ color: "#F3645C" }} />
+                <span>EASY PROCESS</span>
+              </div>
+            </div>
+
+            <h2
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight max-w-3xl mx-auto mb-4"
+              style={{ color: "#0F0F0F" }}
+            >
+              Create Your Perfect Resume in{" "}
+              <span style={{ color: "#F3645C" }}>4 Simple Steps</span>
+            </h2>
+
+            <p
+              className="text-sm sm:text-base lg:text-lg max-w-xl mx-auto leading-relaxed mb-16 sm:mb-20"
+              style={{ color: "#333333" }}
+            >
+              Our intelligent builder guides you from blank page to job-ready resume in minutes.
+            </p>
+
+            {/* Steps with Connectors */}
+            <div className="relative max-w-6xl mx-auto mb-16">
+              {/* Connector line */}
+              <div
+                className="hidden lg:block absolute top-[22px] left-[11%] right-[11%] h-[2px] z-0"
+                style={{ background: "rgba(15,15,15,0.12)" }}
+              />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 relative z-10">
+                {steps.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <div
+                      key={item.num}
+                      className="flex flex-col items-center text-center group"
+                    >
+                      {/* Number badge */}
+                      <div
+                        className="w-11 h-11 rounded-full font-extrabold text-sm flex items-center justify-center shadow-md mx-auto z-10 relative transform group-hover:scale-110 transition-transform"
+                        style={{
+                          background: item.featured ? "#0F0F0F" : "#FFFFFF",
+                          color: item.featured ? "#FFFFFF" : "#0F0F0F",
+                          border: item.featured
+                            ? "none"
+                            : "2px solid rgba(15,15,15,0.15)",
+                        }}
+                      >
+                        {item.num}
+                      </div>
+
+                      {/* Dashed connector */}
+                      <div
+                        className="w-[2px] h-6 border-l-2 border-dashed mx-auto my-1.5"
+                        style={{ borderColor: item.accent }}
+                      />
+
+                      {/* Icon box */}
+                      <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-sm group-hover:scale-105 transition-transform"
+                        style={{ background: item.accent }}
+                      >
+                        <IconComponent
+                          className="w-7 h-7"
+                          style={{ color: "#0F0F0F" }}
+                        />
+                      </div>
+
+                      <h3
+                        className="text-base sm:text-lg font-bold mt-4 mb-2 transition-colors"
+                        style={{ color: "#0F0F0F" }}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        className="text-xs sm:text-sm leading-relaxed font-normal max-w-[250px] mx-auto"
+                        style={{ color: "#333333" }}
+                      >
+                        {item.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <Link
+              href="/editor"
+              className="px-8 py-4 text-white font-bold rounded-xl shadow-lg inline-flex items-center gap-2.5 transition-all transform hover:scale-105 hover:opacity-90 text-sm sm:text-base"
+              style={{ background: "#0F0F0F" }}
+            >
+              <span>Start Building Free</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </section>
+
+        {/* Benefits Grid */}
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
+              <span>Why GetEasyCV AI</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] mb-4">
               Benefits That Help You Get Ahead
             </h2>
-          </div>
-          <div className="mt-7 grid gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {benefits.map(([title, description, Icon]) => (
-              <div className="text-center" key={title}>
-                <Icon className="mx-auto h-5 w-5 text-[#7755ed]" />
-                <h3 className="mt-2 text-[9px] font-bold">{title}</h3>
-                <p className="mt-1 text-[8px] leading-3 text-slate-500">
-                  {description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className="mx-5 mb-10 rounded-lg bg-[#c2b4ff] px-5 py-8 sm:mx-auto sm:max-w-5xl sm:px-12">
-          <div className="flex flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
-            <div>
-              <h2 className="text-xl font-bold">
-                Ready to Build Your AI-Powered Resume?
-              </h2>
-              <p className="mt-1 text-[10px]">
-                Join thousands of job seekers who built their dream careers with
-                GetEasyCV AI.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Link
-                href="/editor"
-                className="inline-flex items-center gap-2 rounded-md bg-[#111] px-4 py-2.5 text-[9px] font-bold text-white"
-              >
-                Create My Resume Now <ArrowRight className="h-3 w-3" />
-              </Link>
-              <Link
-                href="/templates"
-                className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-[9px] font-bold"
-              >
-                Explore Templates <ArrowRight className="h-3 w-3" />
-              </Link>
+            <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-xl mx-auto mb-14 font-normal">
+              Designed with feedback from leading hiring managers and talent recruiters.
+            </p>
+
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 text-center">
+              {benefits.map((b) => {
+                const Icon = b.icon;
+                return (
+                  <div
+                    key={b.title}
+                    className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center group"
+                  >
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-2xs group-hover:scale-105 transition-transform"
+                      style={{ background: b.bg }}
+                    >
+                      <Icon className="h-6 w-6 text-[#0F0F0F]" />
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5">
+                      {b.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                      {b.description}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
+
+        {/* Canonical ReadyToBuild CTA */}
+        <ReadyToBuild
+          title="Ready to Build Your AI-Powered Resume?"
+          subtitle="Join thousands of job seekers who built their dream careers with GetEasyCV AI."
+          buttonText="Start Building Free"
+          buttonHref="/editor"
+        />
       </main>
       <Footer />
     </>
   );
 }
+

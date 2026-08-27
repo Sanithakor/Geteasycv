@@ -1,12 +1,16 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
+import InnerBanner from '@/components/InnerBanner';
 import ReadyToBuild from '@/components/sections/ReadyToBuild';
+import FAQ from '@/components/FAQ';
+import { PRICING_FAQS } from '@/data/faqs';
 import Footer from '@/components/Footer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   CheckCircle2,
+  Check,
   Sparkles,
   ArrowRight,
   ShieldCheck,
@@ -76,25 +80,6 @@ const PRICING_PLANS = [
     cta: 'Get Lifetime',
     highlight: false,
     badge: 'BEST VALUE',
-  },
-];
-
-const FAQS = [
-  {
-    question: 'How does the ₹49 Starter plan work?',
-    answer: 'The Starter plan is a one-time ₹49 payment that allows you to create and download 1 complete premium resume with zero recurring subscriptions.',
-  },
-  {
-    question: 'Can I cancel my Pro subscription at any time?',
-    answer: 'Yes! You can cancel your ₹199/month Pro subscription at any time from your account settings. You will keep full access until the end of your billing period.',
-  },
-  {
-    question: 'What is included in the ₹999 Lifetime plan?',
-    answer: 'Lifetime gives you permanent unlimited access to create as many resumes as you want, all current and future premium templates, and AI features forever with a single payment.',
-  },
-  {
-    question: 'Are GetEasyCV templates ATS-friendly?',
-    answer: 'Yes! Every template is engineered and tested against major Applicant Tracking Systems (Workday, Greenhouse, Lever) for 100% scanning accuracy.',
   },
 ];
 
@@ -233,31 +218,30 @@ function PricingContent() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-[#F8F8F6] font-sans py-10 sm:py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[#F8F8F6] font-sans">
+        <InnerBanner
+          badge="Simple & Transparent Pricing"
+          badgeIcon={CreditCard}
+          breadcrumbs={[{ label: "Pricing", href: "/pricing" }]}
+          variant="center"
+          title="Invest in Your Career with"
+          highlightText="GetEasyCV"
+          description="Choose the plan that fits your job search. One-time options and flexible monthly plans with no hidden fees."
+          features={[
+            "No Hidden Fees",
+            "Instant PDF Export",
+            "Money Back Guarantee",
+          ]}
+        >
           {reason === 'download_limit' && (
-            <div className="mx-auto mb-8 flex max-w-2xl items-center justify-center gap-2.5 rounded-xl border border-[#F5D17B] bg-[#FFF6D9] p-4 text-xs font-bold text-[#5E4810] animate-in fade-in duration-200 sm:text-sm">
+            <div className="mx-auto mb-4 flex max-w-2xl items-center justify-center gap-2.5 rounded-xl border border-[#F5D17B] bg-[#FFF6D9] p-4 text-xs font-bold text-[#5E4810] animate-in fade-in duration-200 sm:text-sm">
               <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
               <span>You've reached the free account limit (1 download used). Select a plan below to continue downloading your CV!</span>
             </div>
           )}
+        </InnerBanner>
 
-          {/* Header Badge */}
-          <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#0F0F0F]/10 bg-[#FFE0CF] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F0F0F] shadow-2xs">
-              <CreditCard className="h-4 w-4 text-[#F3645C]" />
-              SIMPLE &amp; TRANSPARENT PRICING
-            </span>
-          </div>
-
-          {/* Heading & Subtitle */}
-          <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-[#0F0F0F] sm:text-4xl lg:text-5xl">
-            Invest in Your Career with GetEasyCV
-          </h1>
-          <p className="mx-auto mb-12 max-w-2xl text-base leading-relaxed text-[#333333] sm:text-lg">
-            Choose the plan that fits your job search. One-time options and flexible monthly plans with no hidden fees.
-          </p>
-
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           {/* Pricing Cards Grid */}
           <div className="mb-20 grid grid-cols-1 items-stretch gap-5 md:grid-cols-3 lg:gap-6">
             {PRICING_PLANS.map((plan) => {
@@ -266,20 +250,19 @@ function PricingContent() {
               return (
                 <div
                   key={plan.id}
-                  className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border bg-white text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  className={`relative flex flex-col justify-between rounded-2xl bg-white text-left transition-all duration-300 ${
                     plan.highlight
-                      ? 'border-[#0F0F0F] shadow-xl shadow-[#0F0F0F]/15 ring-2 ring-[#F5D17B]'
-                      : 'border-[#0F0F0F]/10 shadow-xs'
+                      ? 'border-2 border-[#0F0F0F] shadow-2xl ring-4 ring-[#F5D17B]/25 transform lg:-translate-y-2 z-10'
+                      : 'border border-slate-200/90 shadow-sm hover:shadow-xl hover:-translate-y-1'
                   }`}
                 >
                   {/* Top Ribbon */}
                   {plan.badge && (
                     <div
-                      className={`text-white text-[11px] font-bold text-center uppercase tracking-wider py-1.5 px-4 flex items-center justify-center gap-1.5 ${
-                        plan.id === 'pro' ? 'bg-[#0F0F0F]' : 'bg-[#58C09D]'
-                      }`}
+                      className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-xs font-extrabold uppercase tracking-wider text-[#0F0F0F] shadow-md flex items-center gap-1.5 whitespace-nowrap"
+                      style={{ background: '#F5D17B' }}
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      <Sparkles className="w-3.5 h-3.5 text-[#0F0F0F]" />
                       <span>{plan.badge}</span>
                     </div>
                   )}
@@ -293,13 +276,13 @@ function PricingContent() {
                           <Award className="w-5 h-5 text-amber-500" />
                         )}
                       </h2>
-                      <p className="min-h-[36px] text-xs leading-relaxed text-[#666666] sm:text-sm">
+                      <p className="min-h-[36px] text-xs leading-relaxed text-[#666666] sm:text-sm font-normal">
                         {plan.description}
                       </p>
                     </div>
 
                     {/* Price Tag */}
-                    <div className="flex items-baseline gap-1.5 border-y border-[#0F0F0F]/10 py-3">
+                    <div className="flex items-baseline gap-1.5 border-y border-slate-100 py-3">
                       <span className="text-3xl font-extrabold text-[#0F0F0F] sm:text-4xl">
                         {plan.price}
                       </span>
@@ -311,12 +294,14 @@ function PricingContent() {
                     {/* Features List */}
                     <div className="space-y-3 pt-2">
                       <p className="text-[11px] font-bold uppercase tracking-wider text-[#999999]">
-                        WHAT'S INCLUDED:
+                        WHAT&apos;S INCLUDED:
                       </p>
                       {plan.features.map((feature, fIdx) => (
-                        <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#58C09D]" />
-                          <span className="font-medium text-[#333333]">{feature}</span>
+                        <div key={fIdx} className="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 shadow-2xs" style={{ background: plan.highlight ? '#F5D17B' : 'rgba(88,192,157,0.18)' }}>
+                            <Check className="h-3.5 w-3.5" style={{ color: plan.highlight ? '#0F0F0F' : '#059669' }} />
+                          </div>
+                          <span className="text-[#333333]">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -328,10 +313,10 @@ function PricingContent() {
                       type="button"
                       disabled={isLoading}
                       onClick={() => handleSelectPlan(plan.id)}
-                      className={`w-full py-3.5 px-4 rounded-md font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-60 ${
+                      className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-60 ${
                         plan.highlight
-                          ? 'bg-[#0F0F0F] hover:bg-[#333333] text-white shadow-[#0F0F0F]/25'
-                          : 'bg-[#F5D17B] hover:bg-[#EBC35D] text-[#0F0F0F]'
+                          ? 'bg-[#0F0F0F] hover:bg-[#262626] text-white shadow-lg hover:scale-[1.02]'
+                          : 'bg-white hover:bg-slate-50 text-[#0F0F0F] border border-slate-200/90 shadow-2xs'
                       }`}
                     >
                       {isLoading ? (
@@ -386,28 +371,15 @@ function PricingContent() {
           </div>
 
           {/* FAQs Section */}
-          <div className="mx-auto mb-16 max-w-4xl rounded-2xl border border-[#0F0F0F]/10 bg-[#FFE0CF] p-8 text-left shadow-2xs sm:p-12">
-            <div className="text-center mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-slate-500 text-xs sm:text-sm">
-                Everything you need to know about GetEasyCV plans and billing.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {FAQS.map((faq, idx) => (
-                <div key={idx} className="border-b border-slate-100 pb-5 last:border-b-0 last:pb-0">
-                  <h3 className="font-bold text-slate-900 text-base mb-2">
-                    {faq.question}
-                  </h3>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    {faq.answer}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="mx-auto mb-16 max-w-4xl">
+            <FAQ
+              items={PRICING_FAQS}
+              badge="Pricing Questions"
+              title="Frequently Asked"
+              highlightText="Questions"
+              subtitle="Everything you need to know about GetEasyCV plans, billing, and lifetime access."
+              variant="embedded"
+            />
           </div>
         </div>
       </main>

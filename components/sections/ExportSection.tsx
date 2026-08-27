@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -73,7 +73,7 @@ export default function ExportSection() {
   const { filledCount, badgeVisible, ref } = useSequentialFill(TOTAL, 260);
 
   return (
-    <section className="py-16 sm:py-20" style={{ background: '#F8F8F6' }}>
+    <section className="py-16 sm:py-20 relative overflow-hidden font-sans" style={{ background: '#F8F8F6' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">

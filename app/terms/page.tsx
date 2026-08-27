@@ -1,7 +1,9 @@
-﻿import Navigation from "@/components/Navigation";
+import Navigation from "@/components/Navigation";
+import InnerBanner from "@/components/InnerBanner";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { FileText } from "lucide-react";
 
 export const metadata = {
   title: 'Terms of Service — GetEasyCV',
@@ -67,15 +69,32 @@ export default function TermsPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Terms of Service</h1>
-            <p className="text-sm text-slate-500 font-medium">Last updated: {new Date().toLocaleDateString()}</p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="Legal Terms"
+          badgeIcon={FileText}
+          breadcrumbs={[{ label: "Terms of Service", href: "/terms" }]}
+          title="GetEasyCV"
+          highlightText="Terms of Service"
+          description="Please read these terms carefully before using GetEasyCV. These terms govern your access to and use of our resume builder and AI services."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Contact Support",
+            href: "/contact",
+          }}
+          features={[
+            "Clear & Transparent Terms",
+            "Fair Usage Policies",
+            "Secure Account Protection",
+          ]}
+        />
 
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="space-y-5">
-            <p className="text-slate-600 leading-relaxed text-sm bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs">
+            <p className="text-slate-600 leading-relaxed text-sm bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs font-normal">
               Please read these Terms of Service carefully before using GetEasyCV. These terms govern your
               access to and use of our platform, including all features, templates, and AI-assisted tools.
             </p>
@@ -83,14 +102,14 @@ export default function TermsPage() {
             {SECTIONS.map((section) => (
               <div key={section.title} className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-2 shadow-2xs">
                 <h2 className="text-base font-bold text-slate-900">{section.title}</h2>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{section.content}</p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{section.content}</p>
               </div>
             ))}
 
-            <div className="bg-[#FFF8F5]/70 border border-[#FF570F] rounded-2xl p-6 text-center">
-              <p className="text-xs sm:text-sm text-indigo-900 font-medium">
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 text-center shadow-2xs">
+              <p className="text-xs sm:text-sm text-slate-700 font-medium">
                 Have questions about these Terms?{' '}
-                <Link href="/contact" className="text-[#FF570F] font-bold hover:underline">Contact our support team &rarr;</Link>
+                <Link href="/contact" className="text-[#F3645C] font-bold hover:underline">Contact our support team &rarr;</Link>
               </p>
             </div>
           </div>
