@@ -19,6 +19,7 @@ import {
   FileText
 } from 'lucide-react';
 import { BlogPostItem, getStoredBlogPosts, incrementBlogPostView } from '@/lib/blogData';
+import { ArticleSchema } from '@/components/seo/SchemaOrg';
 
 export default function BlogPostDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -52,6 +53,14 @@ export default function BlogPostDetailPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
+      <ArticleSchema
+        title={post.title}
+        description={post.excerpt}
+        url={`/blog/${post.slug}`}
+        imageUrl={post.coverImage}
+        datePublished={post.date}
+        authorName={post.author}
+      />
       <Navigation />
       <main className="min-h-screen bg-slate-50/40 pb-20">
         <InnerBanner

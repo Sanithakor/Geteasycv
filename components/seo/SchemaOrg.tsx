@@ -4,7 +4,7 @@ import React from 'react';
  * Global Organization & Website JSON-LD Schema
  */
 export function OrganizationSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -31,7 +31,7 @@ export function OrganizationSchema() {
  * WebApplication / SoftwareApplication JSON-LD Schema for Homepage & Resume Tools
  */
 export function SoftwareAppSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -51,6 +51,56 @@ export function SoftwareAppSchema() {
     },
     url: baseUrl,
     description: 'Online ATS-friendly resume builder and CV maker with live PDF export.',
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
+
+/**
+ * Article JSON-LD Schema for Blog Posts
+ */
+export function ArticleSchema({
+  title,
+  description,
+  url,
+  imageUrl,
+  datePublished,
+  authorName,
+}: {
+  title: string;
+  description: string;
+  url: string;
+  imageUrl?: string;
+  datePublished?: string;
+  authorName?: string;
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+    image: imageUrl || `${baseUrl}/images/templates/modern_professional.png`,
+    datePublished: datePublished || new Date().toISOString(),
+    author: {
+      '@type': 'Person',
+      name: authorName || 'GetEasyCV Team',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'GetEasyCV',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/logo.svg`,
+      },
+    },
   };
 
   return (
@@ -92,7 +142,7 @@ export function FAQSchema({ faqs }: { faqs: { question: string; answer: string }
  * BreadcrumbList JSON-LD Schema
  */
 export function BreadcrumbSchema({ items }: { items: { name: string; url: string }[] }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
 
   const schemaData = {
     '@context': 'https://schema.org',

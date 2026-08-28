@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import UserLayout from '@/components/layout/UserLayout';
@@ -134,7 +134,7 @@ export default function UserSubscriptionPage() {
                     </div>
 
                     <ul className="space-y-2.5 pt-4 border-t border-slate-100">
-                      {plan.features.map((feat) => (
+                      {Array.isArray(plan.features) && plan.features.map((feat: string) => (
                         <li key={feat} className="flex items-center gap-2 text-xs text-slate-700">
                           <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                           <span>{feat}</span>

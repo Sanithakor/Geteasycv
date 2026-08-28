@@ -3,7 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import "../styles/enhanced.css";
 import AuthModal from "@/components/auth/AuthModal";
-import { OrganizationSchema } from "@/components/seo/SchemaOrg";
+import { OrganizationSchema, SoftwareAppSchema } from "@/components/seo/SchemaOrg";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],
@@ -12,7 +12,7 @@ const roboto = Roboto({
   variable: "--font-roboto",
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -84,6 +84,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-slate-50 font-sans">
         <OrganizationSchema />
+        <SoftwareAppSchema />
         {children}
         <AuthModal />
       </body>
