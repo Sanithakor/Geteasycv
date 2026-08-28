@@ -103,7 +103,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
         {/* Sidebar Tabs */}
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <div className="px-3 py-1.5 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+          <div className="px-3 py-1.5 text-[10px] font-bold tracking-widest text-slate-500 uppercase">
             Navigation
           </div>
 
@@ -121,7 +121,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
                     : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-teal-600' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${active ? 'text-teal-600' : 'text-slate-500'}`} />
                 <span className="truncate">{item.title}</span>
               </Link>
             );
@@ -130,7 +130,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
           {/* Admin Control Panel link if Admin */}
           {user?.role === 'admin' && (
             <div className="pt-4 mt-4 border-t border-slate-100">
-              <div className="px-3 py-1 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+              <div className="px-3 py-1 text-[10px] font-bold tracking-widest text-slate-500 uppercase">
                 Admin Privilege
               </div>
               <Link

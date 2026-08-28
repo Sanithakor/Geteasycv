@@ -177,7 +177,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
             Email Address
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               id="email"
               name="email"
@@ -186,7 +186,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email address"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
               disabled={isLoading}
             />
           </div>
@@ -198,7 +198,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
             Password
           </label>
           <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               id="password"
               name="password"
@@ -207,13 +207,13 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+              className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
               disabled={isLoading}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors cursor-pointer"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -252,7 +252,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-200" />
         </div>
-        <span className="relative px-3 bg-white text-xs font-medium text-slate-400">or continue with</span>
+        <span className="relative px-3 bg-white text-xs font-medium text-slate-500">or continue with</span>
       </div>
 
       {/* Google Auth */}

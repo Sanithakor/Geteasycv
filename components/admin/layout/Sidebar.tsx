@@ -140,7 +140,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
               }`}
             >
-              <LayoutDashboard className={`w-[18px] h-[18px] ${pathname === '/admin' ? 'text-violet-600' : 'text-slate-400'}`} />
+              <LayoutDashboard className={`w-[18px] h-[18px] ${pathname === '/admin' ? 'text-violet-600' : 'text-slate-500'}`} />
               <span>Dashboard</span>
             </Link>
           </div>
@@ -148,7 +148,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           {/* Grouped Links */}
           {SIDEBAR_GROUPS.map((group) => (
             <div key={group.groupName} className="space-y-1">
-              <div className="px-6 py-1.5 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+              <div className="px-6 py-1.5 text-[10px] font-bold tracking-widest text-slate-500 uppercase">
                 {group.groupName}
               </div>
               <div className="px-3 space-y-[2px]">
@@ -166,7 +166,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                           : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50/80'
                       }`}
                     >
-                      <Icon className={`w-[18px] h-[18px] ${active ? 'text-violet-600' : 'text-slate-400'}`} />
+                      <Icon className={`w-[18px] h-[18px] ${active ? 'text-violet-600' : 'text-slate-500'}`} />
                       <span className="truncate">{item.title}</span>
                     </Link>
                   );
@@ -188,7 +188,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             </div>
             <div className="min-w-0">
               <span className="block text-sm font-bold text-slate-900 truncate">{user?.name || 'Admin User'}</span>
-              <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">{user?.role || 'Admin'}</span>
+              <span className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">{user?.role || 'Admin'}</span>
             </div>
           </div>
           <div className="relative">

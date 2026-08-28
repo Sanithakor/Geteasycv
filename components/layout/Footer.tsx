@@ -25,7 +25,7 @@ const FOOTER_LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800">
+    <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 mb-12">
           {/* Brand */}
@@ -33,14 +33,14 @@ export default function Footer() {
             <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
               <img src="/logo.svg" alt="GetEasyCV" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
             </Link>
-            <p className="text-sm leading-relaxed text-slate-500 max-w-xs">
+            <p className="text-sm leading-relaxed text-slate-300 max-w-xs">
               Build professional, ATS-optimized resumes with AI-powered assistance and 200+ templates.
             </p>
             <div className="flex gap-3 mt-5">
               {/* Social icons — placeholder shapes */}
               {['Twitter', 'LinkedIn', 'GitHub'].map((s) => (
                 <a key={s} href="#" aria-label={s}
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors text-[10px] font-bold">
+                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition-colors text-[10px] font-bold">
                   {s[0]}
                 </a>
               ))}
@@ -54,7 +54,7 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {links.map((l) => (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-sm text-slate-500 hover:text-white transition-colors">
+                    <Link href={l.href} className="text-sm text-slate-300 hover:text-white transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -64,12 +64,12 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-600">
+        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
           <p>© {new Date().getFullYear()} GetEasyCV. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms</Link>
-            <Link href="/contact" className="hover:text-slate-400 transition-colors">Support</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/contact" className="hover:text-white transition-colors">Support</Link>
           </div>
         </div>
       </div>
