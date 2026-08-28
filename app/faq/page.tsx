@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Navigation from "@/components/Navigation";
+import InnerBanner from "@/components/InnerBanner";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -70,104 +71,48 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export default function FAQPage() {
-  const [faqs, setFaqs] = useState(FALLBACK_FAQS);
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    fetch('/api/faqs')
-      .then((r) => r.json())
-      .then((d) => { if (d?.success && d.data?.length > 0) setFaqs(d.data); })
-      .catch(() => {});
-  }, []);
-
-  const filtered = faqs.filter((f) => {
-    const matchCat = activeCategory === 'All' || f.category === activeCategory;
-    const matchSearch = !search || f.question.toLowerCase().includes(search.toLowerCase()) || f.answer.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
-
   return (
     <>
       <FAQSchema faqs={faqs} />
       <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'FAQ', url: '/faq' }]} />
       <Navigation />
 
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFF8F5] border border-[#FF570F] rounded-full text-indigo-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Help & Answers</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Find instant answers to common questions about our resume builder, ATS compatibility, and account features.
-            </p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="Help & Answers"
+          badgeIcon={HelpCircle}
+          breadcrumbs={[{ label: "FAQ", href: "/faq" }]}
+          title="Frequently Asked"
+          highlightText="Questions"
+          description="Find quick, clear answers to common questions about our resume builder, ATS compatibility, AI writer, and account features."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Contact Support",
+            href: "/contact",
+          }}
+          features={[
+            "Instant Guidance",
+            "ATS Tips & Insights",
+            "Account & Billing Help",
+          ]}
+        />
 
-          {/* Search & Category Filter Bar */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 mb-8">
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search questions..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                    activeCategory === cat
-                      ? 'bg-[#FF570F] text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* FAQ Accordion List */}
-          <div className="space-y-3">
-            {filtered.length === 0 ? (
-              <div className="bg-white rounded-2xl p-10 text-center border border-slate-200/80">
-                <HelpCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                <h3 className="text-sm font-bold text-slate-900">No questions found</h3>
-                <p className="text-xs text-slate-500 mt-1">Try searching for a different keyword or topic.</p>
-              </div>
-            ) : (
-              filtered.map((faq, index) => (
-                <FAQItem key={index} question={faq.question} answer={faq.answer} />
-              ))
-            )}
-          </div>
-
-          {/* Contact Support Banner */}
-          <div className="mt-12 text-center bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-[#FF570F]/80 shadow-2xs">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Still have questions?</h3>
-            <p className="text-xs sm:text-sm text-slate-600 mb-5 max-w-md mx-auto">
-              Our friendly customer support team is ready to help you land your dream role.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs shadow-md shadow-[#FF570F]/25 transition-all"
-            >
-              Contact Support
-            </Link>
-          </div>
+        <div className="py-12 sm:py-16">
+          <FAQ
+            items={ALL_FAQS}
+            badge="Search Knowledge Base"
+            title="Browse All"
+            highlightText="Questions & Topics"
+            subtitle="Filter by category or search for specific keywords to get instant answers."
+            showSearch={true}
+            showCategories={true}
+            categories={FAQ_CATEGORIES}
+            showContactCta={true}
+            variant="embedded"
+          />
         </div>
       </main>
 

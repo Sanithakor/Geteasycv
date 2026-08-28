@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -11,6 +11,12 @@ const JOB_TITLES = [
   "Marketing Manager",
   "Data Scientist",
   "Project Manager",
+];
+
+const DESCRIPTIONS = [
+  "Designing accessible product experiences for growing teams.",
+  "Building reliable web applications used by thousands of customers.",
+  "Turning user research into clear, useful product decisions.",
 ];
 
 const TYPE_SPEED = 60;
@@ -51,17 +57,18 @@ function useTypingAnimation(words: string[]) {
 
 export default function LiveEditingSection() {
   const displayed = useTypingAnimation(JOB_TITLES);
+  const displayedDescription = useTypingAnimation(DESCRIPTIONS);
 
   return (
-    <section className="py-16 sm:py-20" style={{ background: '#FFFFFF' }}>
+    <section className="py-16 sm:py-20 relative overflow-hidden font-sans" style={{ background: '#FFFFFF' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Visual Demo */}
-          <div className="order-2 lg:order-1">
-            <div className="relative">
+          <div className="order-2 lg:order-1 max-w-lg mx-auto lg:max-w-none w-full">
+            <div className="relative pt-6 sm:pt-4 pr-3 sm:pr-6 lg:pr-8">
               {/* Editor Panel */}
-              <div className="relative bg-white rounded-2xl shadow-xl border p-6 z-10" style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+              <div className="relative bg-white rounded-2xl shadow-xl border p-5 sm:p-6 z-10" style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
+                <div className="mb-4 flex items-center gap-2 pb-3 border-b" style={{ borderColor: 'rgba(15,15,15,0.06)' }}>
                   <div className="flex gap-1.5">
                     <div className="w-3 h-3 rounded-full bg-red-400" />
                     <div className="w-3 h-3 rounded-full bg-yellow-400" />
@@ -76,20 +83,21 @@ export default function LiveEditingSection() {
                     <label className="text-xs font-medium mb-1 block" style={{ color: '#9ca3af' }}>Job Title</label>
                     <div className="h-8 rounded-lg border flex items-center px-3 transition-all"
                       style={{ background: '#F8F8F6', borderColor: '#BAC7FE' }}>
-                      <span className="text-sm font-medium" style={{ color: '#0F0F0F' }} aria-live="polite">
+                      <span className="text-xs sm:text-sm font-medium truncate" style={{ color: '#0F0F0F' }} aria-live="polite">
                         {displayed}
                       </span>
-                      <span className="ml-0.5 inline-block w-[2px] h-4 rounded-sm align-middle"
+                      <span className="ml-0.5 inline-block w-[2px] h-4 rounded-sm align-middle shrink-0"
                         style={{ background: '#F3645C', animation: 'cursorBlink 1s step-start infinite' }} />
                     </div>
                   </div>
 
                   <div>
                     <label className="text-xs font-medium mb-1 block" style={{ color: '#9ca3af' }}>Description</label>
-                    <div className="h-20 rounded-lg border p-3 space-y-1" style={{ background: '#F8F8F6', borderColor: 'rgba(15,15,15,0.08)' }}>
-                      <div className="h-2 rounded w-full" style={{ background: 'rgba(15,15,15,0.12)' }} />
-                      <div className="h-2 rounded w-5/6" style={{ background: 'rgba(15,15,15,0.10)' }} />
-                      <div className="h-2 rounded w-4/6" style={{ background: 'rgba(15,15,15,0.08)' }} />
+                    <div className="min-h-20 rounded-lg p-3" style={{ background: '#F8F8F6' }}>
+                      <p className="text-xs leading-relaxed" style={{ color: '#333333' }} aria-live="polite">
+                        {displayedDescription}
+                        <span className="ml-0.5 inline-block h-3 w-[2px] rounded-sm align-middle" style={{ background: '#F3645C', animation: 'cursorBlink 1s step-start infinite' }} />
+                      </p>
                     </div>
                   </div>
 
@@ -105,27 +113,28 @@ export default function LiveEditingSection() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t flex items-center gap-2" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="mt-4 flex items-center gap-2 pt-3 border-t border-slate-100">
                   <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#58C09D' }} />
                   <span className="text-xs font-medium" style={{ color: '#58C09D' }}>Live Preview Active</span>
                 </div>
               </div>
 
-              {/* Floating preview card */}
-              <div className="absolute z-10 top-8 -right-8 lg:-right-12 w-48 bg-white rounded-lg shadow-2xl border p-4 transform rotate-3 hover:rotate-0 transition-transform"
-                style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
-                <div className="space-y-2">
-                  <div className="h-3 rounded w-2/3" style={{ background: '#0F0F0F' }} />
-                  <div className="h-2 rounded w-full" style={{ background: 'rgba(15,15,15,0.12)' }} />
-                  <div className="h-2 rounded w-5/6" style={{ background: 'rgba(15,15,15,0.10)' }} />
-                  <div className="h-2 rounded w-4/6" style={{ background: 'rgba(15,15,15,0.08)' }} />
-                  <div className="pt-2 space-y-1">
-                    <div className="h-2 rounded w-1/2" style={{ background: '#BAC7FE' }} />
-                    <div className="h-1.5 rounded w-full" style={{ background: '#F8F8F6' }} />
-                    <div className="h-1.5 rounded w-full" style={{ background: '#F8F8F6' }} />
+              {/* Floating preview card - positioned safely inside viewport */}
+              <div className="absolute z-20 -top-2 right-0 sm:-top-3 sm:-right-2 lg:top-6 lg:-right-6 w-40 sm:w-48 rounded-xl bg-white p-3 sm:p-4 shadow-2xl border border-slate-100 transform rotate-2 sm:rotate-3 transition-transform hover:rotate-0">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider" style={{ color: '#0F0F0F' }}>Live score</span>
+                    <span className="text-xs sm:text-sm font-extrabold" style={{ color: '#58C09D' }}>92%</span>
+                  </div>
+                  <div className="h-1.5 sm:h-2 overflow-hidden rounded-full" style={{ background: '#F8F8F6' }}>
+                    <div className="h-full w-[92%] rounded-full" style={{ background: '#58C09D', animation: 'progressGrow 900ms ease-out both' }} />
+                  </div>
+                  <div className="space-y-1 text-[9px] sm:text-[10px]" style={{ color: '#333333' }}>
+                    <p className="flex items-center justify-between"><span>Keywords matched</span><strong>18 / 20</strong></p>
+                    <p className="flex items-center justify-between"><span>Readable layout</span><strong>Excellent</strong></p>
                   </div>
                 </div>
-                <div className="absolute -top-2 -right-2 text-white text-xs font-bold px-2 py-1 rounded shadow-lg"
+                <div className="absolute -top-2 -right-1.5 sm:-right-2 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:py-1 rounded shadow-lg"
                   style={{ background: '#58C09D' }}>
                   ⚡ Updated
                 </div>
@@ -186,6 +195,10 @@ export default function LiveEditingSection() {
         @keyframes cursorBlink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
+        }
+        @keyframes progressGrow {
+          from { width: 0; }
+          to { width: 92%; }
         }
       `}</style>
     </section>

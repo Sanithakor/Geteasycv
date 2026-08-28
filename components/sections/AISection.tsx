@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -38,12 +38,12 @@ export default function AISection() {
 
           {/* Left */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border font-bold text-xs uppercase tracking-wider"
-              style={{ background: '#D0B9EF', borderColor: 'rgba(15,15,15,0.12)', color: '#0F0F0F' }}>
-              <Sparkles className="w-3.5 h-3.5" /> AI-POWERED
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
+              <span>AI-Powered Assistant</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight" style={{ color: '#0F0F0F' }}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-[#0F0F0F]">
               Improve Your Resume with{' '}
               <span style={{ color: '#F3645C' }}>One Click</span>
             </h2>

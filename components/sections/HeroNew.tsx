@@ -153,7 +153,7 @@ export default function HeroNew() {
             </div>
 
             {/* Floating badge */}
-            <div className="absolute -top-4 -right-4 px-4 py-2 rounded-full shadow-lg text-sm font-bold text-white transform rotate-12"
+            <div className="absolute -top-4 right-0 sm:-right-4 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg text-xs sm:text-sm font-bold text-white transform rotate-6 sm:rotate-12 pointer-events-none"
               style={{ background: '#F3645C' }}>
               ⚡ Instant Updates
             </div>

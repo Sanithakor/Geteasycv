@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   ArrowRight, User, AlignLeft, Briefcase, GraduationCap, Paperclip,
   Folder, Award, Globe, GripVertical, Plus, Mail, Phone, MapPin,
-  Link as LinkIcon, ChevronDown, Eye, Download, FileText, Pencil,
+  ChevronDown, Eye, Download, FileText, Pencil,
   Sparkles, BarChart3, Smartphone, Shield, Headphones,
 } from "lucide-react";
 
@@ -79,7 +79,7 @@ export default function ResumeBuilderFeatures() {
             <div className="bg-white rounded-2xl border shadow-2xl p-4 sm:p-5" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-start">
                 {/* Sections panel */}
-                <div className="md:col-span-3 rounded-xl border p-2.5" style={{ background: '#F8F8F6', borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="md:col-span-3 rounded-xl p-2.5" style={{ background: '#F8F8F6' }}>
                   <div className="text-[10px] font-bold uppercase tracking-wider mb-2 px-1" style={{ color: '#9ca3af' }}>Sections</div>
                   <div className="space-y-1">
                     {SECTIONS.map((sec) => {
@@ -89,7 +89,7 @@ export default function ResumeBuilderFeatures() {
                           className="flex items-center justify-between px-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors"
                           style={sec.selected
                             ? { background: '#BAC7FE', color: '#0F0F0F', border: '1px solid rgba(186,199,254,0.5)' }
-                            : { background: '#FFFFFF', color: '#333333', border: '1px solid rgba(15,15,15,0.06)' }}>
+                            : { background: '#FFFFFF', color: '#333333' }}>
                           <div className="flex items-center gap-1.5 truncate">
                             <IC className="w-3.5 h-3.5 shrink-0" style={{ color: sec.selected ? '#0F0F0F' : '#9ca3af' }} />
                             <span className="truncate">{sec.label}</span>
@@ -106,8 +106,8 @@ export default function ResumeBuilderFeatures() {
                 </div>
 
                 {/* Canvas preview */}
-                <div className="md:col-span-6 bg-white border rounded-xl p-4 shadow-sm text-left font-sans space-y-3" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
-                  <div className="flex items-center gap-3 pb-2 border-b" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="md:col-span-6 space-y-3 rounded-xl bg-white p-4 text-left font-sans shadow-sm">
+                  <div className="flex items-center gap-3 pb-2">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm overflow-hidden" style={{ background: '#0F0F0F' }}>
                       <svg className="w-full h-full" viewBox="0 0 100 100" fill="currentColor">
                         <rect width="100" height="100" fill="#0F0F0F" />
@@ -126,13 +126,13 @@ export default function ResumeBuilderFeatures() {
                     </div>
                   </div>
                   <div>
-                    <h5 className="text-[9px] font-bold uppercase tracking-wider border-b pb-0.5 mb-1" style={{ color: '#0F0F0F', borderColor: 'rgba(15,15,15,0.08)' }}>SUMMARY</h5>
+                    <h5 className="mb-1 text-[9px] font-bold uppercase tracking-wider" style={{ color: '#0F0F0F' }}>SUMMARY</h5>
                     <p className="text-[9.5px] leading-snug" style={{ color: '#333333' }}>
                       Passionate Full Stack Developer with 6+ years of experience building scalable web applications.
                     </p>
                   </div>
                   <div>
-                    <h5 className="text-[9px] font-bold uppercase tracking-wider border-b pb-0.5 mb-1" style={{ color: '#0F0F0F', borderColor: 'rgba(15,15,15,0.08)' }}>EXPERIENCE</h5>
+                    <h5 className="mb-1 text-[9px] font-bold uppercase tracking-wider" style={{ color: '#0F0F0F' }}>EXPERIENCE</h5>
                     <div className="flex justify-between items-baseline">
                       <span className="font-bold text-[10px]" style={{ color: '#0F0F0F' }}>Senior Full Stack Developer</span>
                       <span className="text-[8.5px] font-medium" style={{ color: '#9ca3af' }}>2021 – Present</span>
@@ -146,12 +146,11 @@ export default function ResumeBuilderFeatures() {
                 </div>
 
                 {/* Controls panel */}
-                <div className="md:col-span-3 rounded-xl border p-3 text-left space-y-3" style={{ background: '#F8F8F6', borderColor: 'rgba(15,15,15,0.08)' }}>
+                <div className="md:col-span-3 space-y-3 rounded-xl p-3 text-left" style={{ background: '#F8F8F6' }}>
                   {['Template','Font','Spacing'].map((label) => (
                     <div key={label}>
                       <label className="block text-[10px] font-medium mb-1" style={{ color: '#9ca3af' }}>{label}</label>
-                      <div className="bg-white border rounded-lg px-2.5 py-1.5 text-xs font-medium flex items-center justify-between shadow-sm"
-                        style={{ borderColor: 'rgba(15,15,15,0.08)', color: '#0F0F0F' }}>
+                      <div className="flex items-center justify-between rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium shadow-sm" style={{ color: '#0F0F0F' }}>
                         <span>{label === 'Template' ? 'Modern' : label === 'Font' ? 'Roboto' : 'Normal'}</span>
                         <ChevronDown className="w-3.5 h-3.5" style={{ color: '#9ca3af' }} />
                       </div>
@@ -199,13 +198,11 @@ export default function ResumeBuilderFeatures() {
         </div>
 
         {/* Trust */}
-        <div className="flex items-center justify-center max-w-xl mx-auto">
-          <div className="flex-1 h-px" style={{ background: 'rgba(15,15,15,0.10)' }} />
-          <div className="px-4 flex items-center gap-2 text-xs sm:text-sm font-medium" style={{ color: '#333333' }}>
+        <div className="mx-auto flex max-w-xl items-center justify-center">
+          <div className="flex items-center gap-2 px-4 text-xs font-medium sm:text-sm" style={{ color: '#333333' }}>
             <User className="w-4 h-4" style={{ color: '#9ca3af' }} />
             <span>Trusted by 50,000+ job seekers worldwide</span>
           </div>
-          <div className="flex-1 h-px" style={{ background: 'rgba(15,15,15,0.10)' }} />
         </div>
       </div>
     </section>

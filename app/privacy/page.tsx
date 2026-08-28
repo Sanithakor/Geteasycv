@@ -1,7 +1,9 @@
-﻿import Navigation from "@/components/Navigation";
+import Navigation from "@/components/Navigation";
+import InnerBanner from "@/components/InnerBanner";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
 
 export const metadata = {
   title: 'Privacy Policy — GetEasyCV',
@@ -86,15 +88,32 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Privacy Policy</h1>
-            <p className="text-sm text-slate-500 font-medium">Last updated: {new Date().toLocaleDateString()}</p>
-          </div>
+      <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
+        <InnerBanner
+          badge="Legal & Transparency"
+          badgeIcon={ShieldCheck}
+          breadcrumbs={[{ label: "Privacy Policy", href: "/privacy" }]}
+          title="GetEasyCV"
+          highlightText="Privacy Policy"
+          description="Learn how GetEasyCV collects, uses, encrypts, and protects your personal information and resume data."
+          primaryAction={{
+            label: "Create Resume Free",
+            href: "/templates",
+          }}
+          secondaryAction={{
+            label: "Contact Support",
+            href: "/contact",
+          }}
+          features={[
+            "256-Bit SSL Encryption",
+            "No Data Selling",
+            "GDPR & CCPA Compliant",
+          ]}
+        />
 
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="space-y-6">
-            <p className="text-slate-600 leading-relaxed text-sm bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs">
+            <p className="text-slate-600 leading-relaxed text-sm bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs font-normal">
               GetEasyCV is committed to protecting your privacy. This policy explains what information we collect,
               how we use it, and what choices you have. By using GetEasyCV, you agree to the practices described here.
             </p>
@@ -104,14 +123,14 @@ export default function PrivacyPolicyPage() {
                 <h2 className="text-base font-bold text-slate-900">{section.title}</h2>
                 <ul className="space-y-2">
                   {section.content.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF570F] mt-2 shrink-0" />
+                    <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#F3645C] mt-2 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
                 {section.links?.map((l) => (
-                  <Link key={l.href} href={l.href} className="text-xs font-bold text-[#FF570F] hover:underline block mt-2">
+                  <Link key={l.href} href={l.href} className="text-xs font-bold text-[#F3645C] hover:underline inline-block mt-2">
                     {l.text} {'→'}
                   </Link>
                 ))}

@@ -13,13 +13,13 @@ export default function SectionHeader({ badge, title, subtitle, align = 'center'
   return (
     <div className={`flex flex-col gap-3 ${alignClass} ${className}`}>
       {badge && (
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-violet-50 text-violet-700 border border-violet-200/60">
+        <span className="inline-flex items-center rounded-full border border-[#0F0F0F]/10 bg-[#FFE0CF] px-3 py-1 text-xs font-bold text-[#0F0F0F]">
           {badge}
         </span>
       )}
-      <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight text-balance">{title}</h2>
+      <h2 className="text-balance text-3xl font-black tracking-tight text-[#0F0F0F] sm:text-4xl">{title}</h2>
       {subtitle && (
-        <p className={`text-base text-slate-500 max-w-2xl ${align === 'center' ? 'mx-auto' : ''}`}>{subtitle}</p>
+        <p className={`max-w-2xl text-base text-[#333333] ${align === 'center' ? 'mx-auto' : ''}`}>{subtitle}</p>
       )}
     </div>
   );
