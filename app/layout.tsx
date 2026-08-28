@@ -1,26 +1,73 @@
 import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import "../styles/enhanced.css";
 import AuthModal from "@/components/auth/AuthModal";
+import { OrganizationSchema } from "@/components/seo/SchemaOrg";
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700", "900"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+});
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
 export const metadata: Metadata = {
-  title: "GetEasyCV - Professional Resume Builder",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Free ATS Resume Builder & Professional CV Maker | GetEasyCV",
+    template: "%s | GetEasyCV",
+  },
   description:
-    "Create professional resumes with our easy-to-use resume builder. Choose from ATS-friendly templates, customize easily, and export as PDF in minutes.",
-  keywords: "resume builder, CV maker, ATS friendly resume, professional resume templates",
-  authors: [{ name: "GetEasyCV Team" }],
+    "Build a recruiter-approved resume in 10 minutes. Clean formatting, ATS-tested templates, and instant PDF download with zero layout shifts.",
+  keywords: [
+    "resume builder",
+    "free CV maker",
+    "ATS friendly resume templates",
+    "professional resume builder",
+    "ATS checker",
+    "resume PDF download",
+  ],
+  authors: [{ name: "GetEasyCV Team", url: baseUrl }],
+  creator: "GetEasyCV",
+  publisher: "GetEasyCV",
+  alternates: {
+    canonical: "./",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: "GetEasyCV - Professional Resume Builder",
-    description: "Build your professional resume in minutes with our drag-and-drop editor and expert-designed templates.",
-    url: "https://geteasycv.com",
+    title: "Free ATS Resume Builder & Professional CV Maker | GetEasyCV",
+    description: "Build a recruiter-approved resume in minutes. Clean formatting, ATS-tested templates, and instant PDF download.",
+    url: baseUrl,
     siteName: "GetEasyCV",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: `${baseUrl}/images/templates/modern_professional.png`,
+        width: 1200,
+        height: 630,
+        alt: "GetEasyCV Professional Resume Builder",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GetEasyCV - Professional Resume Builder",
-    description: "Build your professional resume in minutes.",
+    title: "Free ATS Resume Builder & Professional CV Maker | GetEasyCV",
+    description: "Build a recruiter-approved resume in minutes with ATS-tested templates.",
+    images: [`${baseUrl}/images/templates/modern_professional.png`],
   },
 };
 
@@ -32,18 +79,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased"
+      className={`h-full antialiased ${roboto.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="min-h-full flex flex-col bg-slate-50 font-roboto">
+      <body className="min-h-full flex flex-col bg-slate-50 font-sans">
+        <OrganizationSchema />
         {children}
         <AuthModal />
       </body>

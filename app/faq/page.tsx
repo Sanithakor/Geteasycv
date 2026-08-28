@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
@@ -6,6 +6,7 @@ import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ChevronDown, ChevronUp, Search, HelpCircle, Sparkles } from "lucide-react";
+import { FAQSchema, BreadcrumbSchema } from "@/components/seo/SchemaOrg";
 
 const FALLBACK_FAQS = [
   {
@@ -88,6 +89,8 @@ export default function FAQPage() {
 
   return (
     <>
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema items={[{ name: 'Home', url: '/' }, { name: 'FAQ', url: '/faq' }]} />
       <Navigation />
 
       <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">

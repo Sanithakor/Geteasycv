@@ -1,13 +1,10 @@
 import { MetadataRoute } from 'next';
-import { getSystemSettings } from '@/lib/settings';
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
+export default function robots(): MetadataRoute.Robots {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+  const isExplicitComingSoon = process.env.COMING_SOON_MODE === 'true';
 
-  const settings = await getSystemSettings();
-  const isComingSoon = settings.comingSoonMode ?? true;
-
-  if (isComingSoon) {
+  if (isExplicitComingSoon) {
     return {
       rules: {
         userAgent: '*',
@@ -21,7 +18,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/', '/dashboard/', '/coming-soon'],
+      disallow: ['/admin/', '/api/', '/dashboard/', '/editor/', '/my-resumes/', '/coming-soon'],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

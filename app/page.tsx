@@ -12,10 +12,12 @@ import PricingSimplified from "@/components/sections/PricingSimplified";
 import BlogSection from "@/components/sections/BlogSection";
 import ReadyToBuild from "@/components/sections/ReadyToBuild";
 import Footer from "@/components/Footer";
+import { SoftwareAppSchema } from "@/components/seo/SchemaOrg";
 
 export default function Home() {
   return (
     <>
+      <SoftwareAppSchema />
       <Navigation />
 
       <main className="min-h-screen">

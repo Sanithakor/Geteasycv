@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -27,15 +27,15 @@ export default function HeroNew() {
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style={{ color: '#0F0F0F' }}>
-              Create Your Perfect Resume{" "}
+              Build an ATS Resume That{" "}
               <span className="relative inline-block">
-                <span style={{ color: '#F3645C' }}>in Minutes</span>
+                <span style={{ color: '#F3645C' }}>Recruiters Read</span>
                 <span className="absolute -bottom-1 left-0 right-0 h-1 rounded-full" style={{ background: '#F5D17B' }} />
               </span>
             </h1>
 
             <p className="text-lg sm:text-xl mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: '#333333' }}>
-              Professional templates with AI-powered assistance. Build, customize, and export your resume instantly.
+              Select from 100+ recruiter-tested templates, resolve formatting bugs automatically, and download a high-res PDF ready for submission.
             </p>
 
             {/* CTAs */}

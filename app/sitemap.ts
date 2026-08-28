@@ -1,13 +1,11 @@
 import { MetadataRoute } from 'next';
-import { getSystemSettings } from '@/lib/settings';
+import { templateCategories } from '@/data/templateCategories';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+  const isExplicitComingSoon = process.env.COMING_SOON_MODE === 'true';
 
-  const settings = await getSystemSettings();
-  const isComingSoon = settings.comingSoonMode ?? true;
-
-  if (isComingSoon) {
+  if (isExplicitComingSoon) {
     return [
       {
         url: `${baseUrl}/coming-soon`,
@@ -18,28 +16,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   }
 
-  const routes = [
+  const staticRoutes = [
     '',
     '/templates',
-    '/pricing',
-    '/about',
-    '/blog',
-    '/contact',
-    '/faq',
     '/ats-checker',
     '/cover-letter',
+    '/ai-features',
+    '/pricing',
+    '/about',
+    '/how-it-works',
+    '/faq',
+    '/help-center',
+    '/reviews',
+    '/blog',
+    '/contact',
     '/privacy',
     '/terms',
     '/refund',
     '/cookie-policy',
-    '/help-center',
-    '/reviews',
   ];
 
-  return routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString().split('T')[0],
-    changeFrequency: route === '' || route === '/templates' ? 'daily' : 'weekly',
-    priority: route === '' ? 1.0 : route === '/templates' || route === '/pricing' ? 0.9 : 0.7,
-  }));
+  const categoryRoutes = templateCategories.map((cat) => `/templates?category=${cat.id}`);
+
+  const allRoutes = [...staticRoutes, ...categoryRoutes];
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  return allRoutes.map((route) => {
+    const isHome = route === '';
+    const isCoreTool = route === '/templates' || route === '/ats-checker' || route === '/pricing';
+
+    return {
+      url: `${baseUrl}${route}`,
+      lastModified: currentDate,
+      changeFrequency: isHome || isCoreTool ? 'daily' : 'weekly',
+      priority: isHome ? 1.0 : isCoreTool ? 0.9 : 0.7,
+    };
+  });
 }
