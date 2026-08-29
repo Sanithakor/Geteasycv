@@ -5,6 +5,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { SignJWT } from 'jose';
+import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
+import { createSystemNotification } from '@/lib/notifications';
 
 const getJWTSecret = () => {
   const secret = process.env.JWT_SECRET || 'fallback-jwt-secret-key-geteasycv-32-chars';
@@ -256,6 +258,25 @@ export async function POST(req: Request) {
         subscriptionTier: 'free',
       };
     }
+
+    // Sync Google user into global user registry store so Admin User List immediately reflects real user data
+    registerOrUpdateUserInStore({
+      id: user.id,
+      name: user.name || realName,
+      email: user.email || realEmail,
+      avatar: user.avatar || realAvatar,
+      googleId: user.googleId || sub || null,
+      role: user.role || 'user',
+      subscriptionTier: user.subscriptionTier || user.tier || 'free',
+      createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : new Date().toISOString(),
+    });
+
+    createSystemNotification({
+      title: 'New User Registered',
+      message: `${user.email || realEmail} joined GetEasyCV via Google`,
+      type: 'user_signup',
+      target: 'all',
+    }).catch(() => {});
 
     // Generate JWT auth token using jose (edge-compatible)
     const secret = getJWTSecret();

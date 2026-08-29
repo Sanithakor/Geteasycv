@@ -1,5 +1,6 @@
 import { verifyToken } from '@/lib/utils/auth';
 import { prisma } from '@/lib/db';
+import { getAllAppUsers } from '@/lib/userRegistry';
 
 export interface AuthPayload {
   userId: string;
@@ -46,9 +47,6 @@ export async function getAuthFromRequest(req: Request): Promise<AuthPayload | nu
   }
 }
 
-/**
- * Get current user from auth payload
- */
 export async function getCurrentUser(auth: AuthPayload | null) {
   if (!auth) return null;
 
@@ -75,16 +73,40 @@ export async function getCurrentUser(auth: AuthPayload | null) {
       },
     });
 
-    if (!user) {
-      console.log('[AUTH] User not found:', auth.userId);
-      return null;
-    }
-
-    return user;
+    if (user) return user;
   } catch (err) {
-    console.error('[GET_CURRENT_USER_ERROR]', err);
-    return null;
+    console.warn('[GET_CURRENT_USER_DB_WARN] Prisma user lookup fallback:', err);
   }
+
+  // Fallback to userRegistry or auth payload if DB record not found or DB offline
+  try {
+    const allUsers = await getAllAppUsers();
+    const regUser = allUsers.find(u => u.id === auth.userId || u.email.toLowerCase() === auth.email?.toLowerCase());
+
+    if (regUser) {
+      return {
+        id: regUser.id,
+        email: regUser.email,
+        name: regUser.name,
+        avatar: regUser.avatar || null,
+        role: regUser.role || 'user',
+        subscriptionTier: regUser.subscriptionTier || 'free',
+      };
+    }
+  } catch {}
+
+  if (auth.userId && auth.email) {
+    return {
+      id: auth.userId,
+      email: auth.email,
+      name: auth.email.split('@')[0],
+      avatar: null,
+      role: auth.role || 'user',
+      subscriptionTier: 'free',
+    };
+  }
+
+  return null;
 }
 
 /**

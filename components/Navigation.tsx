@@ -19,18 +19,28 @@ const navItems = [
 function OpenAuthWatcher() {
   const searchParams = useSearchParams();
   const { openLogin, openSignup } = useAuthModalStore();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     const param = searchParams.get('openAuth');
     if (!param) return;
-    const callbackUrl = searchParams.get('callbackUrl') || (typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/templates');
+
+    if (isAuthenticated) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('openAuth');
+      url.searchParams.delete('callbackUrl');
+      window.history.replaceState({}, '', url.toString());
+      return;
+    }
+
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
     if (param === 'signup') openSignup(callbackUrl);
     else openLogin(callbackUrl);
     const url = new URL(window.location.href);
     url.searchParams.delete('openAuth');
     url.searchParams.delete('callbackUrl');
     window.history.replaceState({}, '', url.toString());
-  }, [searchParams, openLogin, openSignup]);
+  }, [searchParams, openLogin, openSignup, isAuthenticated]);
 
   return null;
 }

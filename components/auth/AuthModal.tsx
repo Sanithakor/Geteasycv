@@ -366,6 +366,12 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
         delete user.subscriptionTier;
         useAuthStore.setState({ user, token: result.token ?? null, isAuthenticated: true, _hydrated: true, isLoading: false, error: null });
         close();
+        if (typeof window !== 'undefined') {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('openAuth');
+          url.searchParams.delete('callbackUrl');
+          window.history.replaceState({}, '', url.toString());
+        }
         router.push(result.user?.role === 'admin' ? '/admin' : redirectTo);
       } else {
         setError(result.error || 'Google sign-in failed. Please try again.');

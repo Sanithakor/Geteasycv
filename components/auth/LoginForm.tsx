@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, Sparkles, User } from 'lucide-react';
 import { useAuthStore } from '../../lib/store/authStore';
+import { useAuthModalStore } from '../../lib/store/authModalStore';
 import { triggerGoogleSignIn, preloadGoogleAuth } from '../../lib/auth/googleAuth';
 
 interface LoginFormProps {
@@ -67,7 +68,16 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
           token: result.token ?? null,
           isAuthenticated: true,
           _hydrated: true,
+          isLoading: false,
+          error: null,
         });
+        useAuthModalStore.getState().close();
+        if (typeof window !== 'undefined') {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('openAuth');
+          url.searchParams.delete('callbackUrl');
+          window.history.replaceState({}, '', url.toString());
+        }
         const targetPath = result.user?.role === 'admin' ? '/admin' : targetRedirect;
         router.push(targetPath);
       } else {

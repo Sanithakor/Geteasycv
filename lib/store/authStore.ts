@@ -66,18 +66,18 @@ export const useAuthStore = create<AuthState>()(
       // Initialize / Validate existing session with backend
       initializeAuth: async () => {
         const currentToken = get().token;
-        if (!currentToken) {
-          set({ _hydrated: true, isAuthenticated: false, user: null, token: null });
-          return;
-        }
 
         try {
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+          };
+          if (currentToken) {
+            headers.Authorization = `Bearer ${currentToken}`;
+          }
+
           const response = await fetch(`${API_BASE_URL}/auth/me`, {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${currentToken}`,
-            },
+            headers,
             credentials: 'include',
           });
 
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthState>()(
 
               set({
                 user,
-                token: currentToken,
+                token: currentToken || data.token || null,
                 isAuthenticated: true,
                 _hydrated: true,
                 isLoading: false,
@@ -101,8 +101,12 @@ export const useAuthStore = create<AuthState>()(
             }
           }
 
-          // If token verification fails (401/403), perform clean logout
-          await get().logout();
+          if (response.status === 401 || response.status === 403) {
+            await get().logout();
+            return;
+          }
+
+          set({ _hydrated: true });
         } catch (error) {
           console.warn('[AUTH_STORE_INITIALIZE_WARN]', error);
           set({ _hydrated: true });
