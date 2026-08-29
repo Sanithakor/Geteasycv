@@ -105,113 +105,14 @@ function PricingContent() {
     });
   };
 
-  const handleSelectPlan = async (planId: string) => {
-    setLoadingPlan(planId);
-    try {
-      // 1. Verify Authentication Server-Side
-      const authRes = await fetch('/api/auth/me');
-      const authData = await authRes.json();
-
-      if (!authRes.ok || !authData.user) {
-        toast.error('Please sign in or create an account to choose a plan.');
-        const targetCallback = encodeURIComponent(`/pricing?plan=${planId}`);
-        router.push(`/login?callbackUrl=${targetCallback}`);
-        return;
-      }
-
-      // 2. Load Razorpay Checkout Script
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        toast.error('Could not load Razorpay payment gateway. Please check your internet connection.');
-        setLoadingPlan(null);
-        return;
-      }
-
-      // 3. Create Razorpay Order Server-Side
-      const orderRes = await fetch('/api/razorpay/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planId }),
-      });
-
-      const orderData = await orderRes.json();
-
-      if (!orderRes.ok || !orderData.orderId) {
-        toast.error(orderData.error || 'Failed to create payment order. Please try again.');
-        setLoadingPlan(null);
-        return;
-      }
-
-      // 4. Trigger Razorpay Payment Modal
-      const options = {
-        key: orderData.keyId,
-        amount: orderData.amount,
-        currency: orderData.currency || 'INR',
-        name: 'GetEasyCV',
-        description: `GetEasyCV ${planId.toUpperCase()} Plan Upgrade`,
-        order_id: orderData.orderId,
-        handler: async function (response: any) {
-          toast.loading('Verifying payment...', { id: 'razorpay-verify' });
-          try {
-            const verifyRes = await fetch('/api/razorpay/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                plan: planId,
-                isSimulation: orderData.isSimulation,
-              }),
-            });
-
-            const verifyData = await verifyRes.json();
-
-            if (verifyRes.ok && verifyData.success) {
-              toast.success('Payment verified! Activating plan...', { id: 'razorpay-verify' });
-              router.push(`/payment/success?plan=${planId}`);
-            } else {
-              toast.error(verifyData.error || 'Payment verification failed.', { id: 'razorpay-verify' });
-              setLoadingPlan(null);
-            }
-          } catch {
-            toast.error('Error verifying payment response.', { id: 'razorpay-verify' });
-            setLoadingPlan(null);
-          }
-        },
-        prefill: {
-          name: authData.user?.name || '',
-          email: authData.user?.email || '',
-        },
-        theme: {
-          color: '#FF570F',
-        },
-        modal: {
-          ondismiss: function () {
-            setLoadingPlan(null);
-          },
-        },
-      };
-
-      const razorpay = new (window as any).Razorpay(options);
-      razorpay.open();
-    } catch {
-      toast.error('Network error starting checkout. Please try again.');
-      setLoadingPlan(null);
-    }
+  const handleSelectPlan = (planId: string) => {
+    router.push(`/payment/checkout?plan=${planId}&from=/templates`);
   };
 
   useEffect(() => {
     if (autoPlan && !autoCheckoutTriggered) {
       setAutoCheckoutTriggered(true);
-      fetch('/api/auth/me')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.user) {
-            handleSelectPlan(autoPlan);
-          }
-        })
-        .catch(() => {});
+      router.push(`/payment/checkout?plan=${autoPlan}&from=/templates`);
     }
   }, [autoPlan, autoCheckoutTriggered]);
 

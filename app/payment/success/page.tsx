@@ -2,18 +2,22 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { CheckCircle2, Sparkles, ArrowRight, LayoutDashboard, RefreshCw, FileText } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { CheckCircle2, Sparkles, ArrowRight, LayoutTemplate, RefreshCw, FileText } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import PurchaseSuccessModal from '@/components/PurchaseSuccessModal';
 
 function PaymentSuccessContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get('plan') || 'Pro';
+  const fromParam = searchParams.get('from') || '/templates';
   const planFormatted = planParam.charAt(0).toUpperCase() + planParam.slice(1);
 
   const [isVerifying, setIsVerifying] = useState(true);
   const [activePlan, setActivePlan] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(true);
 
   useEffect(() => {
     let attempts = 0;
@@ -41,67 +45,80 @@ function PaymentSuccessContent() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    router.push(fromParam);
+  };
+
   return (
-    <div className="bg-white border border-slate-200/80 rounded-xl p-8 sm:p-12 shadow-sm space-y-6">
-      {/* Animated Icon */}
-      <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center border-4 border-emerald-50">
-        <CheckCircle2 className="w-10 h-10" />
-      </div>
+    <>
+      <PurchaseSuccessModal
+        isOpen={showModal}
+        planName={planFormatted}
+        onClose={handleCloseModal}
+      />
 
-      {/* Title & Subtitle */}
-      <div className="space-y-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5" />
-          PAYMENT CONFIRMED
-        </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Welcome to GetEasyCV {planFormatted}!
-        </h1>
-        <p className="text-slate-600 text-sm leading-relaxed">
-          Thank you for upgrading. Your transaction has been processed securely via Razorpay.
-        </p>
-      </div>
-
-      {/* Verification State */}
-      <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg text-left text-xs text-slate-600 space-y-2">
-        <div className="flex items-center justify-between font-bold text-slate-900 border-b border-slate-200 pb-2">
-          <span>Selected Plan:</span>
-          <span className="text-purple-600 uppercase">{planFormatted}</span>
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-8 sm:p-12 shadow-sm space-y-6">
+        {/* Animated Icon */}
+        <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center border-4 border-emerald-50">
+          <CheckCircle2 className="w-10 h-10" />
         </div>
 
-        {isVerifying ? (
-          <div className="flex items-center gap-2 text-purple-600 font-semibold py-1">
-            <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
-            <span>Syncing access with database...</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 text-emerald-600 font-bold py-1">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>Your Premium access is now active!</span>
-          </div>
-        )}
-      </div>
+        {/* Title & Subtitle */}
+        <div className="space-y-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            PAYMENT CONFIRMED
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Welcome to GetEasyCV {planFormatted}!
+          </h1>
+          <p className="text-slate-600 text-sm leading-relaxed">
+            Thank you for upgrading. Your transaction has been processed securely via Razorpay.
+          </p>
+        </div>
 
-      {/* Actions */}
-      <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <Link
-          href="/dashboard"
-          className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-md transition-all flex items-center justify-center gap-2"
-        >
-          <LayoutDashboard className="w-4 h-4" />
-          <span>Go to Dashboard</span>
-        </Link>
+        {/* Verification State */}
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-left text-xs text-slate-600 space-y-2">
+          <div className="flex items-center justify-between font-bold text-slate-900 border-b border-slate-200 pb-2">
+            <span>Selected Plan:</span>
+            <span className="text-purple-600 uppercase font-black">{planFormatted}</span>
+          </div>
 
-        <Link
-          href="/editor"
-          className="w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs sm:text-sm rounded-md transition-all flex items-center justify-center gap-2"
-        >
-          <FileText className="w-4 h-4" />
-          <span>Create Resume Now</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+          {isVerifying ? (
+            <div className="flex items-center gap-2 text-purple-600 font-semibold py-1">
+              <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
+              <span>Syncing plan access with database...</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-emerald-600 font-bold py-1">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>Your Premium plan access is active!</span>
+            </div>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/templates"
+            className="w-full sm:w-auto px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+          >
+            <LayoutTemplate className="w-4 h-4" />
+            <span>Back to Templates</span>
+          </Link>
+
+          <Link
+            href="/editor"
+            className="w-full sm:w-auto px-6 py-3.5 bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Create Resume Now</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

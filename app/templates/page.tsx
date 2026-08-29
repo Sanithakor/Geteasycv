@@ -10,6 +10,7 @@ import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
 import { GeneratedTemplate, generateTemplates } from '@/lib/generateTemplates';
 import { useAuthStore } from '@/lib/store/authStore';
+import PurchaseSuccessModal from '@/components/PurchaseSuccessModal';
 import { 
   experienceLevels, 
   styleCategories,
@@ -429,10 +430,35 @@ function TemplatesContent() {
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  const purchaseParam = searchParams?.get('purchase');
+  const planParam = searchParams?.get('plan') || 'Pro';
+  const [showPurchaseSuccessModal, setShowPurchaseSuccessModal] = useState(false);
+
+  useEffect(() => {
+    if (purchaseParam === 'success') {
+      setShowPurchaseSuccessModal(true);
+    }
+  }, [purchaseParam]);
+
+  const handleClosePurchaseModal = () => {
+    setShowPurchaseSuccessModal(false);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('purchase');
+      url.searchParams.delete('plan');
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
+
   const categoriesToShow = showMoreCategories ? activeCategories : activeCategories.slice(0, 7);
 
   return (
     <>
+      <PurchaseSuccessModal
+        isOpen={showPurchaseSuccessModal}
+        planName={planParam}
+        onClose={handleClosePurchaseModal}
+      />
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F]">
         <InnerBanner

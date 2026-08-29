@@ -25,7 +25,7 @@ function OpenAuthWatcher() {
   useEffect(() => {
     const param = searchParams.get('openAuth');
     if (!param) return;
-    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+    const callbackUrl = searchParams.get('callbackUrl') || (typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/templates');
     if (param === 'signup') openSignup(callbackUrl);
     else openLogin(callbackUrl);
     const url = new URL(window.location.href);
@@ -92,7 +92,7 @@ export default function Navigation() {
           ) : (
             <button
               type="button"
-              onClick={() => openLogin()}
+              onClick={() => openLogin(pathname)}
               className="rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90 cursor-pointer shadow-sm"
               style={{ background: '#0F0F0F' }}
             >
@@ -156,7 +156,7 @@ export default function Navigation() {
             ) : (
               <button
                 type="button"
-                onClick={() => { setOpen(false); openLogin(); }}
+                onClick={() => { setOpen(false); openLogin(pathname); }}
                 className="w-full rounded-xl px-4 py-3 text-center text-sm font-bold text-white"
                 style={{ background: '#0F0F0F' }}
               >
