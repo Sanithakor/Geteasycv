@@ -1,10 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Sparkles, FileCheck, Zap } from "lucide-react";
 
 export default function HeroNew() {
+  const [downloadCount, setDownloadCount] = useState<number>(0);
+
+  useEffect(() => {
+    fetch('/api/templates/download')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && typeof data.totalDownloads === 'number') {
+          setDownloadCount(data.totalDownloads);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const badgeText = downloadCount > 0 
+    ? `${downloadCount.toLocaleString()}+ CVs Downloaded` 
+    : '10,000+ CVs Downloaded';
+
   return (
     <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28" style={{ background: '#F8F8F6' }}>
       {/* Soft decorative blobs */}
@@ -21,7 +38,7 @@ export default function HeroNew() {
               style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.12)' }}>
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#58C09D' }} />
               <span className="text-sm font-semibold" style={{ color: '#333333' }}>
-                150+ ATS-Friendly Templates
+                {badgeText}
               </span>
             </div>
 

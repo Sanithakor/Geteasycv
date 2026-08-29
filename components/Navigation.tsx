@@ -9,13 +9,11 @@ import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import { Menu, X, LayoutDashboard } from 'lucide-react';
 
 const navItems = [
-  { name: 'Template',     href: '/templates' },
-  { name: 'Ai Feature',   href: '/ai-features' },
-  { name: 'Cover Letter', href: '/cover-letter' },
-  { name: 'ATS Checker',  href: '/ats-checker' },
-  { name: 'Blog',         href: '/blog' },
-  { name: 'Pricing',      href: '/pricing' },
-  { name: 'Contact',      href: '/contact' },
+  { name: 'Resume Builder', href: '/resume-builder' },
+  { name: 'Templates',      href: '/templates' },
+  { name: 'ATS Checker',   href: '/ats-checker' },
+  { name: 'Examples',       href: '/resume-examples' },
+  { name: 'Pricing',       href: '/pricing' },
 ];
 
 function OpenAuthWatcher() {

@@ -50,6 +50,14 @@ async function verifyAuthToken(request: NextRequest) {
 }
 
 export async function middleware(request: NextRequest) {
+  // 0. Canonical host redirect (www -> non-www)
+  const host = request.headers.get('host') || '';
+  if (host.startsWith('www.geteasycv.com')) {
+    const canonicalUrl = new URL(request.url);
+    canonicalUrl.hostname = 'geteasycv.com';
+    return NextResponse.redirect(canonicalUrl, 301);
+  }
+
   const pathname    = request.nextUrl.pathname;
   const authPayload = await verifyAuthToken(request);
   const isAdmin     = authPayload?.role === 'admin';

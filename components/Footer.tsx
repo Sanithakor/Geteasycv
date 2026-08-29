@@ -26,13 +26,15 @@ export default function Footer() {
 
           {/* Product */}
           <div className="space-y-4">
-            <h4 className="font-bold text-sm sm:text-base uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Product</h4>
+            <h4 className="font-bold text-sm sm:text-base uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Tools & Builder</h4>
             <ul className="space-y-2.5 text-sm sm:text-base font-medium">
               {[
+                ['/resume-builder', 'Resume Builder'],
+                ['/cv-builder', 'CV Builder'],
                 ['/templates', 'Resume Templates'],
-                ['/editor', 'Live Resume Editor'],
+                ['/ats-checker', 'ATS Resume Checker'],
+                ['/cover-letter', 'Cover Letter Builder'],
                 ['/pricing', 'Pricing & Plans'],
-                ['/blog', 'Career Blog'],
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="transition-colors hover:underline" style={{ color: '#9ca3af' }}
@@ -45,18 +47,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources & Categories */}
+          {/* Resources & Examples */}
           <div className="space-y-4">
-            <h4 className="font-bold text-sm sm:text-base uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Popular Categories</h4>
+            <h4 className="font-bold text-sm sm:text-base uppercase tracking-wider" style={{ color: '#F8F8F6' }}>Resume Examples</h4>
             <ul className="space-y-2.5 text-sm sm:text-base font-medium">
               {[
-                ['/templates?category=tech', 'Software Engineer Resumes'],
-                ['/templates?category=executive', 'Executive CV Templates'],
-                ['/templates?category=healthcare', 'Healthcare & Nursing CVs'],
-                ['/templates?category=student', 'Student & Entry-Level Resumes'],
-                ['/ats-checker', 'Free ATS Resume Checker'],
-                ['/cover-letter', 'AI Cover Letter Builder'],
-                ['/faq', 'Resume Builder FAQ'],
+                ['/resume-examples', 'All Resume Examples'],
+                ['/resume-examples/software-engineer', 'Software Engineer Resume'],
+                ['/resume-examples/web-developer', 'Web Developer Resume'],
+                ['/resume-examples/accountant', 'Accountant Resume'],
+                ['/resume-examples/nursing', 'Nursing Resume'],
+                ['/resume-examples/project-manager', 'Project Manager Resume'],
+                ['/blog', 'Career & Resume Blog'],
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="transition-colors hover:underline" style={{ color: '#9ca3af' }}

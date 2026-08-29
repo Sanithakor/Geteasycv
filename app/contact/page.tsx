@@ -22,9 +22,17 @@ export default function ContactPage() {
     setSubmitting(true);
     setError('');
     try {
-      // Simulate API call
-      await new Promise((r) => setTimeout(r, 1000));
-      setSent(true);
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSent(true);
+      } else {
+        setError(data.error || 'Something went wrong. Please try again or email us directly.');
+      }
     } catch {
       setError('Something went wrong. Please try again or email us directly.');
     } finally {

@@ -12,7 +12,7 @@ const roboto = Roboto({
   variable: "--font-roboto",
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

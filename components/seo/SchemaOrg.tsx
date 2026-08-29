@@ -1,10 +1,12 @@
 import React from 'react';
 
+const getBaseUrl = () => process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
+
 /**
  * Global Organization & Website JSON-LD Schema
  */
 export function OrganizationSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+  const baseUrl = getBaseUrl();
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -28,10 +30,36 @@ export function OrganizationSchema() {
 }
 
 /**
+ * WebSite JSON-LD Schema (Enables Sitelinks Searchbox)
+ */
+export function WebSiteSchema() {
+  const baseUrl = getBaseUrl();
+
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'GetEasyCV',
+    url: baseUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${baseUrl}/templates?search={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
+
+/**
  * WebApplication / SoftwareApplication JSON-LD Schema for Homepage & Resume Tools
  */
 export function SoftwareAppSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+  const baseUrl = getBaseUrl();
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -43,11 +71,6 @@ export function SoftwareAppSchema() {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '1250',
     },
     url: baseUrl,
     description: 'Online ATS-friendly resume builder and CV maker with live PDF export.',
@@ -79,7 +102,7 @@ export function ArticleSchema({
   datePublished?: string;
   authorName?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+  const baseUrl = getBaseUrl();
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -142,7 +165,7 @@ export function FAQSchema({ faqs }: { faqs: { question: string; answer: string }
  * BreadcrumbList JSON-LD Schema
  */
 export function BreadcrumbSchema({ items }: { items: { name: string; url: string }[] }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+  const baseUrl = getBaseUrl();
 
   const schemaData = {
     '@context': 'https://schema.org',
@@ -153,6 +176,41 @@ export function BreadcrumbSchema({ items }: { items: { name: string; url: string
       name: item.name,
       item: item.url.startsWith('http') ? item.url : `${baseUrl}${item.url}`,
     })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
+
+/**
+ * Technical WebPage Schema for Role Example / Guide Pages
+ */
+export function WebPageSchema({
+  name,
+  description,
+  url,
+}: {
+  name: string;
+  description: string;
+  url: string;
+}) {
+  const baseUrl = getBaseUrl();
+
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name,
+    description,
+    url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'GetEasyCV',
+      url: baseUrl,
+    },
   };
 
   return (

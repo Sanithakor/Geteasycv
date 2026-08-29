@@ -1,14 +1,18 @@
 import { MetadataRoute } from 'next';
 import { INITIAL_BLOG_POSTS } from '@/lib/blogData';
+import { RESUME_EXAMPLES } from '@/data/resumeExamplesData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.geteasycv.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
   const currentDate = new Date().toISOString().split('T')[0];
 
   const staticRoutes = [
     { route: '', priority: 1.0, changeFrequency: 'daily' as const },
+    { route: '/resume-builder', priority: 1.0, changeFrequency: 'daily' as const },
+    { route: '/cv-builder', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/templates', priority: 0.9, changeFrequency: 'daily' as const },
     { route: '/ats-checker', priority: 0.9, changeFrequency: 'daily' as const },
+    { route: '/resume-examples', priority: 0.9, changeFrequency: 'weekly' as const },
     { route: '/cover-letter', priority: 0.8, changeFrequency: 'weekly' as const },
     { route: '/ai-features', priority: 0.8, changeFrequency: 'weekly' as const },
     { route: '/pricing', priority: 0.9, changeFrequency: 'weekly' as const },
@@ -32,6 +36,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
+  // Dynamic Resume Examples Entries
+  const exampleEntries: MetadataRoute.Sitemap = RESUME_EXAMPLES.map((example) => ({
+    url: `${baseUrl}/resume-examples/${example.slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   // Dynamic Blog Post Entries
   const publishedBlogPosts = INITIAL_BLOG_POSTS.filter((post) => post.status === 'published');
   const blogEntries: MetadataRoute.Sitemap = publishedBlogPosts.map((post) => ({
@@ -41,5 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticEntries, ...blogEntries];
+  return [...staticEntries, ...exampleEntries, ...blogEntries];
 }

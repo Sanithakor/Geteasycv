@@ -16,21 +16,29 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: true, count });
     }
 
+    let counts: Record<string, number> = { ...getAllTemplateDownloadCounts() };
+
     // Try fetching from DB if available
     try {
       const dbTemplates = await prisma.template.findMany({
         select: { id: true, downloads: true },
       });
-      const counts: Record<string, number> = { ...getAllTemplateDownloadCounts() };
       dbTemplates.forEach((t: typeof dbTemplates[number]) => {
         if (t.downloads > 0) {
           counts[t.id] = t.downloads;
         }
       });
-      return NextResponse.json({ success: true, counts });
     } catch {
-      return NextResponse.json({ success: true, counts: getAllTemplateDownloadCounts() });
+      // Fallback to memory counts
     }
+
+    const totalDownloads = Object.values(counts).reduce((a, b) => a + b, 0);
+
+    return NextResponse.json({
+      success: true,
+      totalDownloads,
+      counts,
+    });
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
