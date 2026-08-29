@@ -1,4 +1,9 @@
+/**
+ * Activity Logs Audit Trail Page matching Image 4 design & dataset
+ */
+
 'use client';
+
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
@@ -14,60 +19,76 @@ const LOGS = [
 ];
 
 const LEVEL_STYLES: Record<string, string> = {
-  info: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  success: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  danger: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  info: 'bg-violet-50 text-violet-700 border border-violet-200',
+  success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  warning: 'bg-amber-50 text-amber-700 border border-amber-200',
+  danger: 'bg-rose-50 text-rose-700 border border-rose-200',
 };
+
 const LEVEL_DOT: Record<string, string> = {
-  info: 'bg-violet-500', success: 'bg-green-500', warning: 'bg-amber-500', danger: 'bg-red-500',
+  info: 'bg-violet-500',
+  success: 'bg-emerald-500',
+  warning: 'bg-amber-500',
+  danger: 'bg-rose-500',
 };
 
 export default function ActivityLogsPage() {
   const [search, setSearch] = useState('');
 
-  const filtered = LOGS.filter(l =>
+  const filtered = LOGS.filter((l) =>
     l.user.toLowerCase().includes(search.toLowerCase()) ||
     l.action.toLowerCase().includes(search.toLowerCase()) ||
-    l.detail.toLowerCase().includes(search.toLowerCase())
+    l.detail.toLowerCase().includes(search.toLowerCase()) ||
+    l.ip.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Activity Logs</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">System and user activity audit trail</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Activity Logs</h1>
+        <p className="text-slate-500 text-sm mt-0.5 font-medium">System and user activity audit trail</p>
       </div>
 
+      {/* Search Input */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search logs..." className="w-full pl-9 pr-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search logs..."
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F] text-sm font-medium transition-all"
+        />
       </div>
 
-      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+      {/* Table Container matching Image 4 */}
+      <div className="rounded-[20px] border border-slate-200/80 bg-white overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
-                {['Level', 'User', 'Action', 'Details', 'IP Address', 'Time'].map(h => (
-                  <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">{h}</th>
-                ))}
+              <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3.5">Level</th>
+                <th className="px-6 py-3.5">User</th>
+                <th className="px-6 py-3.5">Action</th>
+                <th className="px-6 py-3.5">Details</th>
+                <th className="px-6 py-3.5">IP Address</th>
+                <th className="px-6 py-3.5">Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-              {filtered.map(log => (
-                <tr key={log.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((log) => (
+                <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${LEVEL_DOT[log.level]}`} />
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${LEVEL_STYLES[log.level]}`}>{log.level}</span>
-                    </div>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold capitalize ${LEVEL_STYLES[log.level]}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${LEVEL_DOT[log.level]}`} />
+                      {log.level}
+                    </span>
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">{log.user}</td>
-                  <td className="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">{log.action}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 max-w-xs truncate">{log.detail}</td>
-                  <td className="px-6 py-4 text-sm font-mono text-slate-500 dark:text-slate-500">{log.ip}</td>
-                  <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{log.time}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-slate-900">{log.user}</td>
+                  <td className="px-6 py-4 text-xs font-mono font-bold text-slate-700">{log.action}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-slate-600 max-w-sm truncate">{log.detail}</td>
+                  <td className="px-6 py-4 text-xs font-mono text-slate-500 font-semibold">{log.ip}</td>
+                  <td className="px-6 py-4 text-xs font-semibold text-slate-400 whitespace-nowrap">{log.time}</td>
                 </tr>
               ))}
             </tbody>

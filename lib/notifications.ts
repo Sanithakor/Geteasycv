@@ -12,7 +12,7 @@ export interface NotificationItem {
   createdAt: string | Date;
 }
 
-// In-memory fallback cache for notifications when database is connecting or unavailable
+// In-memory fallback notifications matching Image 5 dataset exactly
 let memoryNotifications: NotificationItem[] = [
   {
     id: 'notif-default-1',
@@ -21,7 +21,7 @@ let memoryNotifications: NotificationItem[] = [
     type: 'user_signup',
     target: 'all',
     isRead: false,
-    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
   },
   {
     id: 'notif-default-2',
@@ -30,7 +30,7 @@ let memoryNotifications: NotificationItem[] = [
     type: 'subscription',
     target: 'all',
     isRead: false,
-    createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
   },
   {
     id: 'notif-default-3',

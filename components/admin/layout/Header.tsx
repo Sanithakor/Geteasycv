@@ -1,11 +1,11 @@
-﻿/**
+/**
  * Redesigned Admin Header matching mock dashboard layout
  */
 
 'use client';
 
 import React from 'react';
-import { Menu, Search, Bell, LogOut, Plus, Settings, User } from 'lucide-react';
+import { Menu, Search, Bell, LogOut, Plus, Settings, User, CreditCard, FileText, Coins } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import Link from 'next/link';
@@ -239,19 +239,15 @@ export default function Header({ onMenuClick }: HeaderProps) {
 function getNotificationIcon(type: string) {
   switch (type) {
     case 'user_signup':
-      return '👤';
+      return <User className="w-4 h-4 text-slate-700" />;
     case 'subscription':
-      return '💳';
+      return <CreditCard className="w-4 h-4 text-amber-600" />;
     case 'resume_created':
-      return '📄';
+      return <FileText className="w-4 h-4 text-slate-600" />;
     case 'payment':
-      return '💵';
-    case 'warning':
-      return '⚠️';
-    case 'promo':
-      return '🎉';
+      return <Coins className="w-4 h-4 text-emerald-600" />;
     default:
-      return '🔔';
+      return <Bell className="w-4 h-4 text-slate-600" />;
   }
 }
 
@@ -276,7 +272,7 @@ function NotificationItem({
   isRead,
   onClick,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   message: string;
   time: string;
@@ -286,22 +282,24 @@ function NotificationItem({
   return (
     <div
       onClick={onClick}
-      className={`flex items-start gap-3 p-2.5 rounded-md transition-colors cursor-pointer ${
-        isRead ? 'hover:bg-slate-50' : 'bg-[#FFF8F5]/40 hover:bg-[#FFF8F5]/70 border border-[#FF570F]/50'
+      className={`flex items-start gap-3 p-3 rounded-xl transition-all cursor-pointer ${
+        isRead
+          ? 'hover:bg-slate-50 border border-transparent'
+          : 'bg-[#FFF8F5]/60 hover:bg-[#FFF8F5] border border-[#FF570F]'
       }`}
     >
-      <div className="w-8 h-8 rounded-md bg-slate-100 flex items-center justify-center text-sm flex-shrink-0 shadow-2xs">
+      <div className="w-9 h-9 rounded-xl bg-slate-100/80 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200/50">
         {icon}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-1">
-          <p className={`text-xs font-bold truncate ${isRead ? 'text-slate-800' : 'text-slate-900'}`}>
+          <p className="text-xs font-bold text-slate-900 truncate">
             {title}
           </p>
-          {!isRead && <span className="w-2 h-2 rounded-full bg-[#FF570F] shrink-0"></span>}
+          {!isRead && <span className="w-2.5 h-2.5 rounded-full bg-[#FF570F] shrink-0" />}
         </div>
-        <p className="text-[11px] text-slate-500 truncate mt-0.5">{message}</p>
-        <span className="block text-[9px] text-slate-400 mt-1 font-semibold">{time}</span>
+        <p className="text-[11px] font-medium text-slate-500 truncate mt-0.5">{message}</p>
+        <span className="block text-[10px] font-semibold text-slate-400 mt-1">{time}</span>
       </div>
     </div>
   );

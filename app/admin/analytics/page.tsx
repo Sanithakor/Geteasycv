@@ -1,15 +1,11 @@
-﻿/**
- * Analytics Dashboard Page
+/**
+ * Analytics Dashboard Page matching Image 3 layout and design specs
  */
 
 'use client';
 
 import React from 'react';
 import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
   BarChart,
   Bar,
   PieChart,
@@ -19,144 +15,139 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 
 const countryData = [
-  { name: 'United States', value: 4000, percentage: 40 },
-  { name: 'Canada', value: 3000, percentage: 30 },
-  { name: 'United Kingdom', value: 2000, percentage: 20 },
-  { name: 'Others', value: 1000, percentage: 10 },
+  { name: 'United States', value: 40, color: '#FF570F' },
+  { name: 'Canada', value: 30, color: '#FF8C5A' },
+  { name: 'United Kingdom', value: 20, color: '#ec4899' },
+  { name: 'Others', value: 10, color: '#06b6d4' },
 ];
 
 const deviceData = [
-  { name: 'Desktop', value: 6500, percentage: 65 },
-  { name: 'Mobile', value: 2500, percentage: 25 },
-  { name: 'Tablet', value: 1000, percentage: 10 },
+  { name: 'Desktop', value: 6500 },
+  { name: 'Mobile', value: 2400 },
+  { name: 'Tablet', value: 1000 },
 ];
 
-const trafficData = [
-  { source: 'Direct', value: 4000, percentage: 40 },
-  { source: 'Google', value: 3000, percentage: 30 },
-  { source: 'Social', value: 2000, percentage: 20 },
-  { source: 'Other', value: 1000, percentage: 10 },
+const trafficSources = [
+  { source: 'Direct', percentage: 40 },
+  { source: 'Google', percentage: 30 },
+  { source: 'Social', percentage: 20 },
+  { source: 'Other', percentage: 10 },
 ];
-
-const COLORS = ['#FF570F', '#FF570F', '#ec4899', '#06b6d4', '#10b981'];
 
 export default function AnalyticsPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
           Analytics
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
+        <p className="text-slate-500 text-sm mt-0.5 font-medium">
           Detailed insights about your platform
         </p>
       </div>
 
-      {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Overview Stat Cards matching Image 3 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { label: 'Page Views', value: '124.5K', change: '+12%' },
-          { label: 'Unique Visitors', value: '65.3K', change: '+8%' },
-          { label: 'Bounce Rate', value: '32.5%', change: '-2%' },
-          { label: 'Avg Session', value: '4m 23s', change: '+15%' },
+          { label: 'Page Views', value: '124.5K', change: '+12% from last month', isPositive: true },
+          { label: 'Unique Visitors', value: '65.3K', change: '+8% from last month', isPositive: true },
+          { label: 'Bounce Rate', value: '32.5%', change: '-2% from last month', isPositive: true },
+          { label: 'Avg Session', value: '4m 23s', change: '+15% from last month', isPositive: true },
         ].map((stat, idx) => (
           <div
             key={idx}
-            className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6"
+            className="rounded-[20px] border border-slate-200/80 bg-white p-5 shadow-2xs space-y-1.5"
           >
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               {stat.label}
-            </p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            </span>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">
               {stat.value}
             </p>
-            <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-              {stat.change} from last month
+            <p className="text-xs font-bold text-emerald-600">
+              {stat.change}
             </p>
           </div>
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Top Countries & Device Usage Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Country Analytics */}
-        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+        {/* Top Countries (Donut Chart) */}
+        <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 shadow-2xs space-y-4">
+          <h2 className="text-base font-bold text-slate-900">
             Top Countries
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={countryData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {countryData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="h-64 w-full relative flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={countryData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {countryData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Device Analytics */}
-        <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+        {/* Device Usage (Bar Chart) */}
+        <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 shadow-2xs space-y-4">
+          <h2 className="text-base font-bold text-slate-900">
             Device Usage
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={deviceData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="name" stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#f1f5f9',
-                }}
-              />
-              <Bar dataKey="value" fill="#FF570F" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={deviceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: '#ffffff',
+                    fontSize: '12px',
+                  }}
+                />
+                <Bar dataKey="value" fill="#FF570F" radius={[8, 8, 0, 0]} barSize={55} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Traffic Sources */}
-      <div className="rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+      {/* Traffic Sources Horizontal Progress Bars */}
+      <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 shadow-2xs space-y-5">
+        <h2 className="text-base font-bold text-slate-900">
           Traffic Sources
         </h2>
         <div className="space-y-4">
-          {trafficData.map((source, idx) => (
-            <div key={idx}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-slate-900 dark:text-white">
-                  {source.source}
-                </span>
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  {source.percentage}%
-                </span>
+          {trafficSources.map((item) => (
+            <div key={item.source} className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>{item.source}</span>
+                <span className="text-slate-500">{item.percentage}%</span>
               </div>
-              <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#FF570F] to-[#FF570F]"
-                  style={{ width: `${source.percentage}%` }}
+                  className="h-full bg-[#FF570F] rounded-full transition-all duration-500"
+                  style={{ width: `${item.percentage}%` }}
                 />
               </div>
             </div>
