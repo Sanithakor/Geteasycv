@@ -2,6 +2,7 @@
 
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import safeHtml2Canvas from '@/lib/safeHtml2Canvas';
 import { jsPDF } from 'jspdf';
 import toast, { Toaster } from 'react-hot-toast';
@@ -285,12 +286,14 @@ function MobilePreviewCanvas({ customTemplate, visibleData, totalPages }: { cust
 }
 
 export default function EditorPage() {
+  const router = useRouter();
   const templates = useMemo(() => generateTemplates(), []);
   const allThemes = useMemo(() => getAllThemes(), []);
   const allLayouts = useMemo(() => getAllLayouts(), []);
   const exportRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
-  
+  const { token, isAuthenticated, _hydrated } = useAuthStore();
+
   const initialTemplate = useMemo(() => {
     return templates[0];
   }, [templates]);
@@ -313,7 +316,12 @@ export default function EditorPage() {
   const [activeSidebarTab, setActiveSidebarTab] = useState<'Sections' | 'Templates'>('Sections');
   const [mobileTab, setMobileTab] = useState<'form' | 'sections' | 'design' | 'preview' | 'export'>('form');
   const [mobileDesignSubTab, setMobileDesignSubTab] = useState<'templates' | 'styles'>('templates');
-  const { token } = useAuthStore();
+
+  useEffect(() => {
+    if (mounted && _hydrated && !isAuthenticated) {
+      router.replace('/?openAuth=login&callbackUrl=/editor');
+    }
+  }, [mounted, _hydrated, isAuthenticated, router]);
   const [activeAIField, setActiveAIField] = useState<string | null>(null);
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
   const [showATSModal, setShowATSModal] = useState(false);
@@ -1152,6 +1160,21 @@ export default function EditorPage() {
     
     return null;
   };
+
+  if (!mounted || !_hydrated || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-slate-700">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-[#FF570F] flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <p className="text-slate-600 text-sm font-semibold">
+            {!_hydrated ? 'Loading editor session...' : 'Authentication required. Redirecting to login...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[#F3F4F6] text-slate-900 font-sans">

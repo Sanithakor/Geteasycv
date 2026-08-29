@@ -4,8 +4,8 @@ import { jwtVerify, SignJWT } from 'jose';
 /**
  * Get JWT secret from environment
  */
-const getJWTSecret = () => {
-  const secret = process.env.JWT_SECRET || 'your-secret-key-here-change-in-production';
+export const getJWTSecret = () => {
+  const secret = process.env.JWT_SECRET || 'fallback-jwt-secret-key-geteasycv-32-chars';
   return new TextEncoder().encode(secret);
 };
 

@@ -1,11 +1,11 @@
 /**
  * Authentication State Management (Zustand)
- * Handles user authentication, session, and authorization
+ * Handles user authentication, session persistence, and authorization
  */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, AuthResponse, LoginPayload, SignupPayload } from '../../types';
+import type { User, AuthResponse } from '../../types';
 
 interface AuthState {
   // State
@@ -22,6 +22,7 @@ interface AuthState {
   loginWithGoogle: (googlePayload: string | { credential?: string; accessToken?: string }) => Promise<any>;
   loginWithGithub: (token: string) => Promise<void>;
   logout: () => Promise<void>;
+  initializeAuth: () => Promise<void>;
   refreshToken: () => Promise<void>;
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
@@ -38,7 +39,7 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return '/api';
   }
-  let url = process.env.NEXT_PUBLIC_API_URL || 'https://geteasycv.com';
+  let url = process.env.NEXT_PUBLIC_API_URL || 'https://www.geteasycv.com';
   url = url.replace(/['"]/g, '');
   if (url.endsWith('/')) {
     url = url.slice(0, -1);
@@ -54,13 +55,59 @@ const API_BASE_URL = getApiBaseUrl();
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      // Initial state
+      // Initial state — _hydrated starts FALSE to prevent header flicker before localStorage is read
       user: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
-      _hydrated: typeof window !== 'undefined',
+      _hydrated: false,
+
+      // Initialize / Validate existing session with backend
+      initializeAuth: async () => {
+        const currentToken = get().token;
+        if (!currentToken) {
+          set({ _hydrated: true, isAuthenticated: false, user: null, token: null });
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/me`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${currentToken}`,
+            },
+            credentials: 'include',
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.user) {
+              const user = {
+                ...data.user,
+                tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
+              } as User;
+              delete (user as any).subscriptionTier;
+
+              set({
+                user,
+                token: currentToken,
+                isAuthenticated: true,
+                _hydrated: true,
+                isLoading: false,
+              });
+              return;
+            }
+          }
+
+          // If token verification fails (401/403), perform clean logout
+          await get().logout();
+        } catch (error) {
+          console.warn('[AUTH_STORE_INITIALIZE_WARN]', error);
+          set({ _hydrated: true });
+        }
+      },
 
       // Login with email/password
       login: async (email: string, password: string) => {
@@ -79,7 +126,7 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const data: AuthResponse = await response.json();
-          
+
           const user = {
             ...data.user,
             tier: (data.user as any).subscriptionTier ?? (data.user as any).tier ?? 'free',
@@ -218,7 +265,7 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Logout user
+      // Logout user — completely purges auth state and local storage keys to prevent stale user data
       logout: async () => {
         set({ isLoading: true });
         try {
@@ -229,6 +276,26 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           console.error('Logout API call failed:', error);
         } finally {
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.removeItem('auth-store');
+              localStorage.removeItem('geteasycv-draft');
+              localStorage.removeItem('geteasycv-admin-templates');
+              localStorage.removeItem('admin_managed_templates_v2');
+              localStorage.removeItem('admin_faqs_data');
+              
+              // Clear any custom user template keys
+              Object.keys(localStorage).forEach((key) => {
+                if (key.startsWith('geteasycv-custom-template-')) {
+                  localStorage.removeItem(key);
+                }
+              });
+              sessionStorage.clear();
+            } catch (err) {
+              console.warn('[LOGOUT_STORAGE_PURGE_WARN]', err);
+            }
+          }
+
           set({
             user: null,
             token: null,
@@ -314,6 +381,7 @@ export const useAuthStore = create<AuthState>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHydrated(true);
+          state.initializeAuth();
         }
       },
     }

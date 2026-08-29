@@ -71,26 +71,27 @@ async function ensureTemplateExists(templateId: string, userId: string): Promise
 export async function GET(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    const userId = auth?.userId || 'guest';
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+    }
+    const userId = auth.userId;
 
     let dbResumes: any[] = [];
     try {
-      if (auth) {
-        dbResumes = await prisma.resume.findMany({
-          where: { userId: auth.userId },
-          include: {
-            personal: true,
-            template: {
-              select: {
-                id: true,
-                name: true,
-                thumbnail: true,
-              },
+      dbResumes = await prisma.resume.findMany({
+        where: { userId: auth.userId },
+        include: {
+          personal: true,
+          template: {
+            select: {
+              id: true,
+              name: true,
+              thumbnail: true,
             },
           },
-          orderBy: { updatedAt: 'desc' },
-        });
-      }
+        },
+        orderBy: { updatedAt: 'desc' },
+      });
     } catch (dbError) {
       console.warn('[PRISMA_UNAVAILABLE] Falling back to store resumes:', dbError);
     }
@@ -121,7 +122,10 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    const userId = auth?.userId || 'guest';
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+    }
+    const userId = auth.userId;
 
     const body = await req.json();
     const { title, templateId, summary, cvData, customTheme, selectedLayout, sectionVariants, sectionOrder } = body;

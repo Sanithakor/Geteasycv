@@ -89,9 +89,7 @@ export async function middleware(request: NextRequest) {
       const dest = new URL('/', request.url);
       dest.searchParams.set('openAuth', 'login');
       dest.searchParams.set('callbackUrl', pathname);
-      const response = NextResponse.redirect(dest);
-      if (request.cookies.get('auth-token')) response.cookies.delete('auth-token');
-      return response;
+      return NextResponse.redirect(dest);
     }
     if (!isAdmin) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
@@ -107,9 +105,7 @@ export async function middleware(request: NextRequest) {
       const dest = new URL('/', request.url);
       dest.searchParams.set('openAuth', 'login');
       dest.searchParams.set('callbackUrl', pathname);
-      const response = NextResponse.redirect(dest);
-      if (request.cookies.get('auth-token')) response.cookies.delete('auth-token');
-      return response;
+      return NextResponse.redirect(dest);
     }
     return NextResponse.next();
   }

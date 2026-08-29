@@ -84,8 +84,10 @@ export default function Navigation() {
         </div>
 
         {/* Auth buttons */}
-        <div className="hidden items-center gap-3 sm:flex">
-          {_hydrated && isAuthenticated ? (
+        <div className="hidden items-center gap-3 sm:flex min-h-[40px]">
+          {!_hydrated ? (
+            <div className="h-10 w-24 rounded-full bg-slate-100 animate-pulse" />
+          ) : isAuthenticated ? (
             <UserProfileDropdown />
           ) : (
             <button
@@ -132,7 +134,9 @@ export default function Navigation() {
           </div>
 
           <div className="pt-3 border-t flex flex-col gap-2" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
-            {_hydrated && isAuthenticated ? (
+            {!_hydrated ? (
+              <div className="h-10 w-full rounded-xl bg-slate-100 animate-pulse" />
+            ) : isAuthenticated ? (
               <>
                 <Link
                   href={dashboardPath}

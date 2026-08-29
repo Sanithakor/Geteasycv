@@ -46,11 +46,15 @@ export async function GET(
       resume = getStoreResumeById(id, auth?.userId);
     }
 
-    // Security Check: If resume does not exist or belongs to another user and is not marked public, return 404
-    if (!resume || (resume.userId && auth && resume.userId !== auth.userId && !resume.isPublic)) {
+    // Security Check: If resume does not exist return 404, if forbidden return 403
+    if (!resume) {
+      return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+    }
+
+    if (resume.userId && (!auth || (resume.userId !== auth.userId && auth.role !== 'admin')) && !resume.isPublic) {
       return NextResponse.json(
-        { error: 'Resume not found or access denied' },
-        { status: 404 }
+        { error: 'Forbidden: Access denied to this resume' },
+        { status: 403 }
       );
     }
 

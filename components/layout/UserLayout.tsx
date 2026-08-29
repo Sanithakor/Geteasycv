@@ -49,14 +49,16 @@ export default function UserLayout({ children }: UserLayoutProps) {
     }
   }, [_hydrated, isAuthenticated, router]);
 
-  if (typeof window === 'undefined' || (!isAuthenticated && !_hydrated)) {
+  if (typeof window === 'undefined' || !_hydrated || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-700">
         <div className="text-center">
           <div className="w-12 h-12 rounded-md bg-teal-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
             <FileText className="w-6 h-6 text-white" />
           </div>
-          <p className="text-slate-600 text-sm font-semibold">Loading session...</p>
+          <p className="text-slate-600 text-sm font-semibold">
+            {!_hydrated ? 'Loading session...' : 'Access Denied. Redirecting to login...'}
+          </p>
         </div>
       </div>
     );
