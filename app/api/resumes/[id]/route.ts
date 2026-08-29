@@ -43,31 +43,15 @@ export async function GET(
     }
 
     if (!resume) {
-      resume = getStoreResumeById(id);
+      resume = getStoreResumeById(id, auth?.userId);
     }
 
-    if (!resume) {
-      // Fallback default mock item
-      resume = {
-        id,
-        userId,
-        title: id === 'mock-resume-2' ? 'UX/UI Designer Portfolio CV' : 'Senior Software Engineer Resume',
-        status: id === 'mock-resume-2' ? 'draft' : 'published',
-        downloads: 14,
-        views: 45,
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        templateId: id === 'mock-resume-2' ? 'creative-designer-creative-orange' : 'sidebar-left-modern-blue',
-        personal: {
-          firstName: id === 'mock-resume-2' ? 'Emily' : 'John',
-          lastName: id === 'mock-resume-2' ? 'Clark' : 'Doe',
-          title: id === 'mock-resume-2' ? 'UX/UI Designer' : 'Senior Software Engineer',
-          email: id === 'mock-resume-2' ? 'emily.clark@example.com' : 'john.doe@example.com',
-          phone: '+1 555 123 4567',
-          location: 'San Francisco, CA',
-        },
-        summary: 'Senior full-stack engineer with 8+ years of experience...',
-      };
+    // Security Check: If resume does not exist or belongs to another user and is not marked public, return 404
+    if (!resume || (resume.userId && auth && resume.userId !== auth.userId && !resume.isPublic)) {
+      return NextResponse.json(
+        { error: 'Resume not found or access denied' },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
@@ -90,7 +74,9 @@ export async function PUT(
   const { id } = await params;
   try {
     const auth = await getAuthFromRequest(req);
-    const userId = auth?.userId || 'guest';
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+    }
 
     const body = await req.json();
     const { title, status, isPublic, summary, templateId, cvData, customTheme, selectedLayout, sectionVariants, sectionOrder } = body;
@@ -98,31 +84,29 @@ export async function PUT(
     let updatedResume: any = null;
 
     try {
-      if (auth) {
-        const existing = await getResumeOrFail(id, auth.userId);
-        if (existing) {
-          updatedResume = await prisma.resume.update({
-            where: { id },
-            data: {
-              ...(title && { title }),
-              ...(status && { status }),
-              ...(isPublic !== undefined && { isPublic }),
-              ...(summary && { summary }),
-              updatedAt: new Date(),
-            },
-            include: {
-              personal: true,
-              template: true,
-            },
-          });
-        }
+      const existing = await getResumeOrFail(id, auth.userId);
+      if (existing) {
+        updatedResume = await prisma.resume.update({
+          where: { id },
+          data: {
+            ...(title && { title }),
+            ...(status && { status }),
+            ...(isPublic !== undefined && { isPublic }),
+            ...(summary && { summary }),
+            updatedAt: new Date(),
+          },
+          include: {
+            personal: true,
+            template: true,
+          },
+        });
       }
     } catch (dbError) {
       console.warn('[PRISMA_UNAVAILABLE] Falling back to store update:', dbError);
     }
 
-    // Update in-memory fallback store
-    const storeItem = updateStoreResume(id, userId, {
+    // Update in-memory fallback store with ownership check
+    const storeItem = updateStoreResume(id, auth.userId, {
       title,
       status,
       isPublic,
@@ -135,6 +119,10 @@ export async function PUT(
       sectionOrder,
       personal: cvData?.personal,
     });
+
+    if (!updatedResume && !storeItem) {
+      return NextResponse.json({ error: 'Resume not found or access denied' }, { status: 404 });
+    }
 
     return NextResponse.json({
       success: true,
@@ -156,19 +144,19 @@ export async function DELETE(
   const { id } = await params;
   try {
     const auth = await getAuthFromRequest(req);
-    const userId = auth?.userId || 'guest';
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+    }
 
     try {
-      if (auth) {
-        await prisma.resume.delete({
-          where: { id },
-        });
-      }
+      await prisma.resume.deleteMany({
+        where: { id, userId: auth.userId },
+      });
     } catch (dbError) {
       console.warn('[PRISMA_UNAVAILABLE] Falling back to store deletion:', dbError);
     }
 
-    deleteStoreResume(id);
+    deleteStoreResume(id, auth.userId);
 
     return NextResponse.json({
       success: true,
@@ -189,4 +177,3 @@ export async function PATCH(
 ) {
   return PUT(req, context);
 }
-

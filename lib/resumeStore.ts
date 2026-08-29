@@ -1,6 +1,6 @@
 /**
  * In-memory resume store to ensure persistence across API requests
- * during session and database fallback modes. Updated.
+ * during session and database fallback modes with strict user isolation.
  */
 
 export interface ResumeStoreItem {
@@ -45,67 +45,6 @@ if (process.env.NODE_ENV !== 'production') {
   globalForResumeStore.inMemoryResumes = store;
 }
 
-// Initialize with sample mock entries if empty
-if (store.size === 0) {
-  store.set('mock-resume-1', {
-    id: 'mock-resume-1',
-    userId: 'mock-user-1',
-    title: 'Senior Software Engineer Resume',
-    slug: 'senior-software-engineer-resume',
-    templateId: 'sidebar-left-modern-blue',
-    status: 'published',
-    downloads: 14,
-    views: 45,
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    personal: {
-      firstName: 'John',
-      lastName: 'Doe',
-      title: 'Senior Software Engineer',
-      email: 'john.doe@example.com',
-      phone: '+1 555 123 4567',
-      location: 'San Francisco, CA',
-      website: 'portfolio.com',
-      linkedin: 'linkedin.com/in/john-doe',
-    },
-    summary: 'Senior full-stack engineer with 8+ years of experience designing and developing highly scalable SaaS solutions...',
-    template: {
-      id: 'sidebar-left-modern-blue',
-      name: 'Sidebar Left Modern Blue',
-      thumbnail: null,
-    },
-  });
-
-  store.set('mock-resume-2', {
-    id: 'mock-resume-2',
-    userId: 'mock-user-1',
-    title: 'UX/UI Designer Portfolio CV',
-    slug: 'ux-ui-designer-portfolio-cv',
-    templateId: 'creative-designer-creative-orange',
-    status: 'draft',
-    downloads: 8,
-    views: 22,
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    personal: {
-      firstName: 'Emily',
-      lastName: 'Clark',
-      title: 'UX/UI Designer',
-      email: 'emily.clark@example.com',
-      phone: '+1 555 987 6543',
-      location: 'New York, NY',
-      website: 'emilydesign.com',
-      linkedin: 'linkedin.com/in/emily-clark',
-    },
-    summary: 'Creative and detail-oriented UX/UI designer with 5+ years of experience designing mobile and desktop applications...',
-    template: {
-      id: 'creative-designer-creative-orange',
-      name: 'Creative Designer',
-      thumbnail: null,
-    },
-  });
-}
-
 export function getStoreResumes(userId?: string): ResumeStoreItem[] {
   const items = Array.from(store.values());
   if (userId) {
@@ -114,8 +53,13 @@ export function getStoreResumes(userId?: string): ResumeStoreItem[] {
   return items;
 }
 
-export function getStoreResumeById(id: string): ResumeStoreItem | undefined {
-  return store.get(id);
+export function getStoreResumeById(id: string, userId?: string): ResumeStoreItem | undefined {
+  const item = store.get(id);
+  if (!item) return undefined;
+  if (userId && item.userId && item.userId !== userId && !item.isPublic) {
+    return undefined;
+  }
+  return item;
 }
 
 export function saveStoreResume(item: ResumeStoreItem): ResumeStoreItem {
@@ -125,10 +69,14 @@ export function saveStoreResume(item: ResumeStoreItem): ResumeStoreItem {
 
 export function updateStoreResume(id: string, userId: string, updateData: Partial<ResumeStoreItem>): ResumeStoreItem | undefined {
   const existing = store.get(id);
+  if (existing && existing.userId && existing.userId !== userId) {
+    return undefined; // Prevent unauthorized update (BOLA/IDOR protection)
+  }
+
   if (!existing) {
     const newItem: ResumeStoreItem = {
       id,
-      userId: userId || 'mock-user-1',
+      userId: userId || 'guest',
       title: updateData.title || 'Untitled Resume',
       slug: updateData.slug || ('resume-' + Date.now()),
       templateId: updateData.templateId || 'sidebar-left-modern-blue',
@@ -158,6 +106,11 @@ export function updateStoreResume(id: string, userId: string, updateData: Partia
   return updated;
 }
 
-export function deleteStoreResume(id: string): boolean {
+export function deleteStoreResume(id: string, userId?: string): boolean {
+  const existing = store.get(id);
+  if (!existing) return false;
+  if (userId && existing.userId && existing.userId !== userId) {
+    return false; // Prevent unauthorized deletion (BOLA/IDOR protection)
+  }
   return store.delete(id);
 }

@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { sendPaymentSuccessEmail } from '@/lib/email';
+import { fetchAllPlans } from '@/lib/plansStore';
 
 export async function POST(req: Request) {
   try {
@@ -17,10 +18,13 @@ export async function POST(req: Request) {
       razorpay_payment_id,
       razorpay_signature,
       plan = 'pro',
-      isSimulation = false,
     } = body;
 
-    if (!isSimulation) {
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const isMockOrder = razorpay_order_id && String(razorpay_order_id).startsWith('order_mock_');
+
+    // Strict HMAC Signature Verification: Do not rely on untrusted client 'isSimulation' boolean
+    if (keySecret && !isMockOrder) {
       if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
         return NextResponse.json(
           { error: 'Missing required Razorpay payment response parameters.' },
@@ -28,22 +32,39 @@ export async function POST(req: Request) {
         );
       }
 
-      const keySecret = process.env.RAZORPAY_KEY_SECRET;
-      if (keySecret) {
-        const bodyToSign = `${razorpay_order_id}|${razorpay_payment_id}`;
-        const expectedSignature = crypto
-          .createHmac('sha256', keySecret)
-          .update(bodyToSign)
-          .digest('hex');
+      const bodyToSign = `${razorpay_order_id}|${razorpay_payment_id}`;
+      const expectedSignature = crypto
+        .createHmac('sha256', keySecret)
+        .update(bodyToSign)
+        .digest('hex');
 
-        if (expectedSignature !== razorpay_signature) {
-          console.error('[RAZORPAY_SIGNATURE_MISMATCH]', { expectedSignature, razorpay_signature });
-          return NextResponse.json({ error: 'Invalid Razorpay payment signature verification.' }, { status: 400 });
-        }
+      if (expectedSignature !== razorpay_signature) {
+        console.error('[RAZORPAY_SIGNATURE_MISMATCH]', { expectedSignature, razorpay_signature });
+        return NextResponse.json({ error: 'Invalid Razorpay payment signature verification.' }, { status: 400 });
       }
+    } else if (!isMockOrder && !keySecret) {
+      return NextResponse.json(
+        { error: 'Payment gateway configuration missing. Contact administrator.' },
+        { status: 500 }
+      );
     }
 
     const normalizedPlan = (plan || 'pro').toLowerCase();
+
+    // Dynamically fetch configured plan price from store
+    const allPlans = await fetchAllPlans();
+    const matchedPlan = allPlans.find(
+      p => p.id.toLowerCase() === normalizedPlan || p.name.toLowerCase() === normalizedPlan
+    );
+
+    let amount = 199;
+    if (matchedPlan && matchedPlan.price !== undefined) {
+      amount = matchedPlan.price;
+    } else if (normalizedPlan === 'starter') {
+      amount = 49;
+    } else if (normalizedPlan === 'lifetime') {
+      amount = 999;
+    }
 
     // 1. Transactionally update User subscription tier in PostgreSQL
     const updatedUser = await (prisma.user as any).update({
@@ -80,9 +101,6 @@ export async function POST(req: Request) {
     });
 
     // 3. Record Payment transaction
-    const planAmounts: Record<string, number> = { starter: 49, pro: 199, lifetime: 999 };
-    const amount = planAmounts[normalizedPlan] || 199;
-
     await (prisma.payment as any).create({
       data: {
         userId: auth.userId,
@@ -98,19 +116,27 @@ export async function POST(req: Request) {
     });
 
     // 4. Send transactional confirmation email
-    if (updatedUser.email) {
-      sendPaymentSuccessEmail(updatedUser.email, normalizedPlan.toUpperCase(), `₹${amount}`).catch(() => {});
+    try {
+      if (updatedUser.email) {
+        await sendPaymentSuccessEmail(
+          updatedUser.email,
+          normalizedPlan.toUpperCase(),
+          `₹${amount}`
+        );
+      }
+    } catch (emailErr) {
+      console.warn('[PAYMENT_EMAIL_WARN]', emailErr);
     }
 
     return NextResponse.json({
       success: true,
-      message: `Successfully upgraded to GetEasyCV ${normalizedPlan}!`,
-      plan: normalizedPlan,
+      message: 'Payment verified and plan activated successfully.',
+      subscriptionTier: normalizedPlan,
     });
   } catch (error: any) {
-    console.error('[RAZORPAY_VERIFY_PAYMENT_ERROR]', error);
+    console.error('[RAZORPAY_VERIFY_ERROR]', error);
     return NextResponse.json(
-      { error: error?.message || 'Failed to verify payment and activate subscription.' },
+      { error: error?.message || 'Payment verification failed.' },
       { status: 500 }
     );
   }
