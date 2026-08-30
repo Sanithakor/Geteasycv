@@ -8,6 +8,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyPassword, generateToken, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
+import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
 
 function normalizePhone(phone: string): string {
   return phone.replace(/[\s\-()]/g, '').toLowerCase();
@@ -132,6 +133,17 @@ export async function POST(req: Request) {
     }
 
     const token = await generateToken(user.id, user.role);
+
+    registerOrUpdateUserInStore({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      role: user.role || 'user',
+      subscriptionTier: user.subscriptionTier || 'free',
+      lastLoginAt: new Date().toISOString(),
+      lastSeenAt: new Date().toISOString(),
+    });
 
     if (user.id && !user.id.startsWith('usr_demo_')) {
       try {

@@ -45,6 +45,29 @@ function OpenAuthWatcher() {
   return null;
 }
 
+function AuthHeartbeat() {
+  const { isAuthenticated, token } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const sendHeartbeat = async () => {
+      try {
+        await fetch('/api/users/heartbeat', {
+          method: 'POST',
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+      } catch {}
+    };
+
+    sendHeartbeat();
+    const interval = setInterval(sendHeartbeat, 120000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, token]);
+
+  return null;
+}
+
 export default function Navigation() {
   const pathname = usePathname();
   const router   = useRouter();
@@ -65,6 +88,7 @@ export default function Navigation() {
       <Suspense fallback={null}>
         <OpenAuthWatcher />
       </Suspense>
+      <AuthHeartbeat />
 
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo */}

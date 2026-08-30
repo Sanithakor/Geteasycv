@@ -10,6 +10,7 @@ import { hashPassword, generateToken, validatePassword, sanitizeEmail, validateE
 import { sendWelcomeEmail } from '@/lib/email';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 import { createSystemNotification } from '@/lib/notifications';
+import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
 
 /** Validate international phone number (E.164 basic check) */
 function validatePhone(phone: string): boolean {
@@ -129,6 +130,18 @@ export async function POST(req: Request) {
 
       token = await generateToken(user.id, user.role);
 
+      registerOrUpdateUserInStore({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role || 'user',
+        subscriptionTier: user.subscriptionTier || 'free',
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        lastSeenAt: new Date().toISOString(),
+      });
+
       // Send transactional welcome email
       if (email) {
         sendWelcomeEmail(user.email, user.name).catch((err) => {
@@ -158,6 +171,18 @@ export async function POST(req: Request) {
         subscriptionTier: 'free',
       };
       token = await generateToken(userId, 'user');
+
+      registerOrUpdateUserInStore({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+        subscriptionTier: user.subscriptionTier,
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        lastSeenAt: new Date().toISOString(),
+      });
     }
 
     const response = NextResponse.json(

@@ -1,7 +1,7 @@
 /**
  * User Registry Utility
- * Manages user lookup, creation, profile updates, and admin user list synchronization
- * ensuring Google OAuth users and regular users are consistently tracked across DB and in-memory stores.
+ * Manages permanent user records, activity tracking, online/offline presence,
+ * and admin statistics for the complete platform user registry.
  */
 
 import { prisma } from '@/lib/db';
@@ -18,35 +18,43 @@ export interface UserRegistryItem {
   isBanned: boolean;
   createdAt: string;
   lastLoginAt?: string | null;
+  lastSeenAt?: string | null;
+  isOnline: boolean;
   resumes: number;
 }
 
-// Default initial users for fallback / admin presentation
-const INITIAL_DEMO_USERS: UserRegistryItem[] = [
-  { id: 'usr_demo_1', name: 'John Doe', email: 'john@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-15T00:00:00.000Z', resumes: 5 },
-  { id: 'usr_demo_2', name: 'Jane Smith', email: 'jane@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-20T00:00:00.000Z', resumes: 2 },
-  { id: 'usr_demo_3', name: 'Mike Johnson', email: 'mike@example.com', subscriptionTier: 'pro', role: 'user', isActive: false, isBanned: false, createdAt: '2024-03-10T00:00:00.000Z', resumes: 8 },
-  { id: 'usr_demo_4', name: 'Sarah Williams', email: 'sarah@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-05T00:00:00.000Z', resumes: 1 },
-  { id: 'usr_demo_5', name: 'Tom Brown', email: 'tom@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-14T00:00:00.000Z', resumes: 12 },
+// Initial fallback users if DB is empty or connecting
+const INITIAL_DEMO_USERS: Omit<UserRegistryItem, 'isOnline'>[] = [
+  { id: 'usr_demo_1', name: 'John Doe', email: 'john@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-15T00:00:00.000Z', lastLoginAt: '2026-08-30T10:00:00.000Z', lastSeenAt: '2026-08-30T16:50:00.000Z', resumes: 5 },
+  { id: 'usr_demo_2', name: 'Jane Smith', email: 'jane@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-20T00:00:00.000Z', lastLoginAt: '2026-08-29T14:30:00.000Z', lastSeenAt: '2026-08-29T14:35:00.000Z', resumes: 2 },
+  { id: 'usr_demo_3', name: 'Mike Johnson', email: 'mike@example.com', subscriptionTier: 'pro', role: 'user', isActive: false, isBanned: false, createdAt: '2024-03-10T00:00:00.000Z', lastLoginAt: '2026-08-15T09:00:00.000Z', lastSeenAt: '2026-08-15T09:12:00.000Z', resumes: 8 },
+  { id: 'usr_demo_4', name: 'Sarah Williams', email: 'sarah@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-05T00:00:00.000Z', lastLoginAt: '2026-08-30T16:52:00.000Z', lastSeenAt: new Date().toISOString(), resumes: 1 },
+  { id: 'usr_demo_5', name: 'Tom Brown', email: 'tom@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-14T00:00:00.000Z', lastLoginAt: '2026-08-28T18:00:00.000Z', lastSeenAt: '2026-08-28T18:45:00.000Z', resumes: 12 },
 ];
 
-// Global in-memory user registry map across hot-reloads
 const globalForUserRegistry = globalThis as unknown as {
-  userRegistryMap: Map<string, UserRegistryItem> | undefined;
+  userRegistryMap: Map<string, Omit<UserRegistryItem, 'isOnline'>> | undefined;
 };
 
-const userMap = globalForUserRegistry.userRegistryMap ?? new Map<string, UserRegistryItem>();
+const userMap = globalForUserRegistry.userRegistryMap ?? new Map<string, Omit<UserRegistryItem, 'isOnline'>>();
 if (process.env.NODE_ENV !== 'production') {
   globalForUserRegistry.userRegistryMap = userMap;
 }
 
-// Seed default demo users if map is empty
 if (userMap.size === 0) {
   INITIAL_DEMO_USERS.forEach((u) => userMap.set(u.email.toLowerCase(), u));
 }
 
+/** Check if user is currently online (active within last 5 minutes and not banned) */
+export function isUserOnline(lastSeenAt?: string | null, isBanned?: boolean): boolean {
+  if (!lastSeenAt || isBanned) return false;
+  const lastSeenMs = new Date(lastSeenAt).getTime();
+  if (isNaN(lastSeenMs)) return false;
+  return Date.now() - lastSeenMs < 5 * 60 * 1000;
+}
+
 /**
- * Register or update a user in the global registry store
+ * Register or update a user in the permanent store
  */
 export function registerOrUpdateUserInStore(userData: {
   id: string;
@@ -59,12 +67,15 @@ export function registerOrUpdateUserInStore(userData: {
   isActive?: boolean;
   isBanned?: boolean;
   createdAt?: string;
+  lastLoginAt?: string | null;
+  lastSeenAt?: string | null;
   resumes?: number;
 }): UserRegistryItem {
   const normalizedEmail = userData.email.trim().toLowerCase();
   const existing = userMap.get(normalizedEmail);
+  const now = new Date().toISOString();
 
-  const updatedItem: UserRegistryItem = {
+  const rawItem: Omit<UserRegistryItem, 'isOnline'> = {
     id: userData.id || existing?.id || `usr_${Date.now()}`,
     name: userData.name || existing?.name || normalizedEmail.split('@')[0],
     email: normalizedEmail,
@@ -74,13 +85,68 @@ export function registerOrUpdateUserInStore(userData: {
     role: userData.role || existing?.role || 'user',
     isActive: userData.isActive !== undefined ? userData.isActive : (existing?.isActive ?? true),
     isBanned: userData.isBanned !== undefined ? userData.isBanned : (existing?.isBanned ?? false),
-    createdAt: userData.createdAt || existing?.createdAt || new Date().toISOString(),
-    lastLoginAt: new Date().toISOString(),
+    createdAt: userData.createdAt || existing?.createdAt || now,
+    lastLoginAt: userData.lastLoginAt || existing?.lastLoginAt || now,
+    lastSeenAt: userData.lastSeenAt || now,
     resumes: userData.resumes !== undefined ? userData.resumes : (existing?.resumes ?? 0),
   };
 
-  userMap.set(normalizedEmail, updatedItem);
-  return updatedItem;
+  userMap.set(normalizedEmail, rawItem);
+
+  return {
+    ...rawItem,
+    isOnline: isUserOnline(rawItem.lastSeenAt, rawItem.isBanned),
+  };
+}
+
+/**
+ * Touch user activity / heartbeat timestamp
+ */
+export async function touchUserActivity(userIdOrEmail: string): Promise<void> {
+  if (!userIdOrEmail) return;
+  const now = new Date().toISOString();
+  const normalized = userIdOrEmail.trim().toLowerCase();
+
+  const found = Array.from(userMap.values()).find(
+    (u) => u.id === userIdOrEmail || u.email.toLowerCase() === normalized
+  );
+
+  if (found) {
+    found.lastSeenAt = now;
+    userMap.set(found.email.toLowerCase(), found);
+  }
+
+  try {
+    await prisma.user.updateMany({
+      where: {
+        OR: [
+          { id: userIdOrEmail },
+          { email: normalized },
+        ],
+      },
+      data: {
+        lastLoginAt: new Date(),
+      },
+    });
+  } catch {}
+}
+
+/**
+ * Mark user offline (e.g. on explicit logout)
+ */
+export async function markUserOffline(userIdOrEmail: string): Promise<void> {
+  if (!userIdOrEmail) return;
+  const offlineTime = new Date(Date.now() - 3600 * 1000).toISOString(); // 1 hour ago
+  const normalized = userIdOrEmail.trim().toLowerCase();
+
+  const found = Array.from(userMap.values()).find(
+    (u) => u.id === userIdOrEmail || u.email.toLowerCase() === normalized
+  );
+
+  if (found) {
+    found.lastSeenAt = offlineTime;
+    userMap.set(found.email.toLowerCase(), found);
+  }
 }
 
 /**
@@ -115,6 +181,12 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
     for (const u of dbUsers) {
       const emailLower = u.email.toLowerCase();
       seenEmails.add(emailLower);
+
+      // Check if memory has a more recent lastSeenAt timestamp
+      const memUser = userMap.get(emailLower);
+      const lastSeenAt = memUser?.lastSeenAt || u.lastLoginAt?.toISOString() || null;
+      const lastLoginAt = u.lastLoginAt ? u.lastLoginAt.toISOString() : memUser?.lastLoginAt || null;
+
       const item: UserRegistryItem = {
         id: u.id,
         name: u.name || emailLower.split('@')[0],
@@ -126,22 +198,41 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
         isActive: u.isActive !== false,
         isBanned: u.isBanned === true,
         createdAt: u.createdAt.toISOString(),
-        lastLoginAt: u.lastLoginAt ? u.lastLoginAt.toISOString() : null,
+        lastLoginAt,
+        lastSeenAt,
+        isOnline: isUserOnline(lastSeenAt, u.isBanned === true),
         resumes: u._count ? u._count.resumes : 0,
       };
+
       resultList.push(item);
-      // Keep memory map in sync
-      userMap.set(emailLower, item);
+      userMap.set(emailLower, {
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        avatar: item.avatar,
+        googleId: item.googleId,
+        subscriptionTier: item.subscriptionTier,
+        role: item.role,
+        isActive: item.isActive,
+        isBanned: item.isBanned,
+        createdAt: item.createdAt,
+        lastLoginAt: item.lastLoginAt,
+        lastSeenAt: item.lastSeenAt,
+        resumes: item.resumes,
+      });
     }
   } catch (dbErr) {
     console.warn('[USER_REGISTRY_DB_WARN] Prisma user query fallback:', dbErr);
   }
 
-  // Include in-memory users that were not in DB results (e.g. fallback sessions / newly logged in Google users)
+  // Include in-memory users that were not in DB results
   Array.from(userMap.values()).forEach((memUser) => {
     if (!seenEmails.has(memUser.email.toLowerCase())) {
       seenEmails.add(memUser.email.toLowerCase());
-      resultList.push(memUser);
+      resultList.push({
+        ...memUser,
+        isOnline: isUserOnline(memUser.lastSeenAt, memUser.isBanned),
+      });
     }
   });
 
@@ -149,20 +240,42 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
 }
 
 /**
- * Update user status/plan in the registry
+ * Update user status/plan/role in the registry and database
  */
-export function updateUserInRegistry(emailOrId: string, updateData: Partial<UserRegistryItem>): UserRegistryItem | null {
+export async function updateUserInRegistry(
+  emailOrId: string,
+  updateData: Partial<Omit<UserRegistryItem, 'isOnline'>>
+): Promise<UserRegistryItem | null> {
+  const normalized = emailOrId.trim().toLowerCase();
   const target = Array.from(userMap.values()).find(
-    (u) => u.id === emailOrId || u.email.toLowerCase() === emailOrId.toLowerCase()
+    (u) => u.id === emailOrId || u.email.toLowerCase() === normalized
   );
 
   if (!target) return null;
 
-  const updated: UserRegistryItem = {
+  const updated: Omit<UserRegistryItem, 'isOnline'> = {
     ...target,
     ...updateData,
   };
 
   userMap.set(target.email.toLowerCase(), updated);
-  return updated;
+
+  try {
+    await prisma.user.updateMany({
+      where: {
+        OR: [{ id: emailOrId }, { email: normalized }],
+      },
+      data: {
+        ...(updateData.isActive !== undefined && { isActive: updateData.isActive }),
+        ...(updateData.isBanned !== undefined && { isBanned: updateData.isBanned }),
+        ...(updateData.subscriptionTier !== undefined && { subscriptionTier: updateData.subscriptionTier }),
+        ...(updateData.role !== undefined && { role: updateData.role }),
+      },
+    });
+  } catch {}
+
+  return {
+    ...updated,
+    isOnline: isUserOnline(updated.lastSeenAt, updated.isBanned),
+  };
 }
