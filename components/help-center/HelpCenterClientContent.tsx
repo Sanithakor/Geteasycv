@@ -27,7 +27,6 @@ export default function HelpCenterClientContent() {
         <InnerBanner
           badge="Customer Support & Help Hub"
           badgeIcon={HelpCircle}
-          pageType="help"
           breadcrumbs={[{ label: "Help Center", href: "/help-center" }]}
           title="How Can We Help"
           highlightText="You Today?"

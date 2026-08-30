@@ -40,6 +40,7 @@ export type InnerBannerPageType =
   | "contact"
   | "templates"
   | "help-center"
+  | "help"
   | "faq"
   | "default";
 

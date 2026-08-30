@@ -192,7 +192,7 @@ export default function UserProfilePage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="e.g. john@example.com"
+                    placeholder="e.g. john@geteasycv.com"
                     className="w-full pl-10 pr-4 py-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-teal-500"
                     required
                   />

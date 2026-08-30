@@ -111,7 +111,7 @@ export default function ContactClientContent() {
                         type="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        placeholder="john@example.com"
+                        placeholder="john@geteasycv.com"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:border-[#F3645C] focus:ring-2 focus:ring-[#F3645C]/15 outline-none transition-all"
                       />
                     </div>

@@ -4,7 +4,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { SoftwareAppSchema, BreadcrumbSchema } from '@/components/seo/SchemaOrg';
-import { Sparkles, ArrowRight, AcademicCapIcon, GraduationCap } from 'lucide-react';
+import { Sparkles, ArrowRight, GraduationCap } from 'lucide-react';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
