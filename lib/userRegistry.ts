@@ -1,10 +1,12 @@
 /**
  * User Registry Utility
  * Manages permanent user records, activity tracking, online/offline presence,
- * and admin statistics for the complete platform user registry.
+ * file-backed disk persistence, and admin statistics for the complete platform user registry.
  */
 
 import { prisma } from '@/lib/db';
+import fs from 'fs';
+import path from 'path';
 
 export interface UserRegistryItem {
   id: string;
@@ -23,7 +25,7 @@ export interface UserRegistryItem {
   resumes: number;
 }
 
-// Initial fallback users if DB is empty or connecting
+// Initial fallback users if DB/Disk is initializing
 const INITIAL_DEMO_USERS: Omit<UserRegistryItem, 'isOnline'>[] = [
   { id: 'usr_demo_1', name: 'John Doe', email: 'john@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-15T00:00:00.000Z', lastLoginAt: '2026-08-30T10:00:00.000Z', lastSeenAt: '2026-08-30T16:50:00.000Z', resumes: 5 },
   { id: 'usr_demo_2', name: 'Jane Smith', email: 'jane@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-20T00:00:00.000Z', lastLoginAt: '2026-08-29T14:30:00.000Z', lastSeenAt: '2026-08-29T14:35:00.000Z', resumes: 2 },
@@ -31,6 +33,8 @@ const INITIAL_DEMO_USERS: Omit<UserRegistryItem, 'isOnline'>[] = [
   { id: 'usr_demo_4', name: 'Sarah Williams', email: 'sarah@example.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-05T00:00:00.000Z', lastLoginAt: '2026-08-30T16:52:00.000Z', lastSeenAt: new Date().toISOString(), resumes: 1 },
   { id: 'usr_demo_5', name: 'Tom Brown', email: 'tom@example.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-14T00:00:00.000Z', lastLoginAt: '2026-08-28T18:00:00.000Z', lastSeenAt: '2026-08-28T18:45:00.000Z', resumes: 12 },
 ];
+
+const REGISTRY_FILE_PATH = path.join(process.cwd(), 'data', 'user_registry.json');
 
 const globalForUserRegistry = globalThis as unknown as {
   userRegistryMap: Map<string, Omit<UserRegistryItem, 'isOnline'>> | undefined;
@@ -41,8 +45,41 @@ if (process.env.NODE_ENV !== 'production') {
   globalForUserRegistry.userRegistryMap = userMap;
 }
 
+function loadRegistryFromDisk(): void {
+  try {
+    if (fs.existsSync(REGISTRY_FILE_PATH)) {
+      const content = fs.readFileSync(REGISTRY_FILE_PATH, 'utf-8');
+      const items: Omit<UserRegistryItem, 'isOnline'>[] = JSON.parse(content);
+      if (Array.isArray(items)) {
+        items.forEach((item) => {
+          if (item && item.email) {
+            userMap.set(item.email.toLowerCase(), item);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('[USER_REGISTRY_DISK_READ_WARN]', err);
+  }
+}
+
+function saveRegistryToDisk(): void {
+  try {
+    const items = Array.from(userMap.values());
+    const dir = path.dirname(REGISTRY_FILE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(REGISTRY_FILE_PATH, JSON.stringify(items, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[USER_REGISTRY_DISK_WRITE_WARN]', err);
+  }
+}
+
+// Initial seed loading
 if (userMap.size === 0) {
   INITIAL_DEMO_USERS.forEach((u) => userMap.set(u.email.toLowerCase(), u));
+  loadRegistryFromDisk();
 }
 
 /** Check if user is currently online (active within last 5 minutes and not banned) */
@@ -54,7 +91,7 @@ export function isUserOnline(lastSeenAt?: string | null, isBanned?: boolean): bo
 }
 
 /**
- * Register or update a user in the permanent store
+ * Register or update a user in the permanent store & disk file
  */
 export function registerOrUpdateUserInStore(userData: {
   id: string;
@@ -71,6 +108,7 @@ export function registerOrUpdateUserInStore(userData: {
   lastSeenAt?: string | null;
   resumes?: number;
 }): UserRegistryItem {
+  loadRegistryFromDisk();
   const normalizedEmail = userData.email.trim().toLowerCase();
   const existing = userMap.get(normalizedEmail);
   const now = new Date().toISOString();
@@ -92,6 +130,7 @@ export function registerOrUpdateUserInStore(userData: {
   };
 
   userMap.set(normalizedEmail, rawItem);
+  saveRegistryToDisk();
 
   return {
     ...rawItem,
@@ -104,6 +143,7 @@ export function registerOrUpdateUserInStore(userData: {
  */
 export async function touchUserActivity(userIdOrEmail: string): Promise<void> {
   if (!userIdOrEmail) return;
+  loadRegistryFromDisk();
   const now = new Date().toISOString();
   const normalized = userIdOrEmail.trim().toLowerCase();
 
@@ -114,6 +154,7 @@ export async function touchUserActivity(userIdOrEmail: string): Promise<void> {
   if (found) {
     found.lastSeenAt = now;
     userMap.set(found.email.toLowerCase(), found);
+    saveRegistryToDisk();
   }
 
   try {
@@ -136,6 +177,7 @@ export async function touchUserActivity(userIdOrEmail: string): Promise<void> {
  */
 export async function markUserOffline(userIdOrEmail: string): Promise<void> {
   if (!userIdOrEmail) return;
+  loadRegistryFromDisk();
   const offlineTime = new Date(Date.now() - 3600 * 1000).toISOString(); // 1 hour ago
   const normalized = userIdOrEmail.trim().toLowerCase();
 
@@ -146,14 +188,16 @@ export async function markUserOffline(userIdOrEmail: string): Promise<void> {
   if (found) {
     found.lastSeenAt = offlineTime;
     userMap.set(found.email.toLowerCase(), found);
+    saveRegistryToDisk();
   }
 }
 
 /**
  * Get all registered users for Admin User List
- * Merges Prisma database records with in-memory synced user records
+ * Merges Prisma database records with disk & memory user registry
  */
 export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
+  loadRegistryFromDisk();
   const resultList: UserRegistryItem[] = [];
   const seenEmails = new Set<string>();
 
@@ -182,7 +226,7 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
       const emailLower = u.email.toLowerCase();
       seenEmails.add(emailLower);
 
-      // Check if memory has a more recent lastSeenAt timestamp
+      // Check if memory/disk has a more recent lastSeenAt timestamp
       const memUser = userMap.get(emailLower);
       const lastSeenAt = memUser?.lastSeenAt || u.lastLoginAt?.toISOString() || null;
       const lastLoginAt = u.lastLoginAt ? u.lastLoginAt.toISOString() : memUser?.lastLoginAt || null;
@@ -225,7 +269,7 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
     console.warn('[USER_REGISTRY_DB_WARN] Prisma user query fallback:', dbErr);
   }
 
-  // Include in-memory users that were not in DB results
+  // Include disk/memory users that were not in DB results (e.g. fallback sessions / newly registered users)
   Array.from(userMap.values()).forEach((memUser) => {
     if (!seenEmails.has(memUser.email.toLowerCase())) {
       seenEmails.add(memUser.email.toLowerCase());
@@ -236,16 +280,20 @@ export async function getAllAppUsers(): Promise<UserRegistryItem[]> {
     }
   });
 
+  // Save current merged state to disk
+  saveRegistryToDisk();
+
   return resultList;
 }
 
 /**
- * Update user status/plan/role in the registry and database
+ * Update user status/plan/role in the registry, disk file, and database
  */
 export async function updateUserInRegistry(
   emailOrId: string,
   updateData: Partial<Omit<UserRegistryItem, 'isOnline'>>
 ): Promise<UserRegistryItem | null> {
+  loadRegistryFromDisk();
   const normalized = emailOrId.trim().toLowerCase();
   const target = Array.from(userMap.values()).find(
     (u) => u.id === emailOrId || u.email.toLowerCase() === normalized
@@ -259,6 +307,7 @@ export async function updateUserInRegistry(
   };
 
   userMap.set(target.email.toLowerCase(), updated);
+  saveRegistryToDisk();
 
   try {
     await prisma.user.updateMany({

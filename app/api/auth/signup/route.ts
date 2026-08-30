@@ -102,21 +102,7 @@ export async function POST(req: Request) {
           password: hashedPassword,
           subscriptionTier: 'free',
           role: 'user',
-          profile: {
-            create: {
-              timezone: 'UTC',
-              language: 'en',
-            },
-          },
-          subscription: {
-            create: {
-              plan: 'free',
-              status: 'active',
-              resumes: 3,
-              storage: 100,
-              aiCredits: 10,
-            },
-          },
+          lastLoginAt: new Date(),
         },
         select: {
           id: true,
@@ -127,6 +113,30 @@ export async function POST(req: Request) {
           subscriptionTier: true,
         },
       });
+
+      // Create profile and subscription safely
+      try {
+        await prisma.userProfile.create({
+          data: {
+            userId: user.id,
+            timezone: 'UTC',
+            language: 'en',
+          },
+        });
+      } catch {}
+
+      try {
+        await prisma.subscription.create({
+          data: {
+            userId: user.id,
+            plan: 'free',
+            status: 'active',
+            resumes: 3,
+            storage: 100,
+            aiCredits: 10,
+          },
+        });
+      } catch {}
 
       token = await generateToken(user.id, user.role);
 

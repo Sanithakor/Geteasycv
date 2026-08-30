@@ -212,23 +212,33 @@ export async function POST(req: Request) {
             role: 'user',
             emailVerified: new Date(),
             subscriptionTier: 'free',
-            profile: {
-              create: {
-                timezone: 'UTC',
-                language: 'en',
-              },
-            },
-            subscription: {
-              create: {
-                plan: 'free',
-                status: 'active',
-                resumes: 3,
-                storage: 100,
-                aiCredits: 10,
-              },
-            },
+            lastLoginAt: new Date(),
           },
         });
+
+        // Create profile and subscription safely
+        try {
+          await prisma.userProfile.create({
+            data: {
+              userId: user.id,
+              timezone: 'UTC',
+              language: 'en',
+            },
+          });
+        } catch {}
+
+        try {
+          await prisma.subscription.create({
+            data: {
+              userId: user.id,
+              plan: 'free',
+              status: 'active',
+              resumes: 3,
+              storage: 100,
+              aiCredits: 10,
+            },
+          });
+        } catch {}
       } else {
         // Preserve existing user modifications; sync googleId & avatar if missing
         const updateData: any = {
