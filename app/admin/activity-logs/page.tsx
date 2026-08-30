@@ -11,7 +11,7 @@ const LOGS = [
   { id: 1, user: 'John Doe', action: 'user.login', detail: 'Logged in from Chrome on Windows', ip: '192.168.1.1', time: '2 min ago', level: 'info' },
   { id: 2, user: 'Admin', action: 'template.publish', detail: 'Published "Modern Resume" template', ip: '10.0.0.1', time: '15 min ago', level: 'success' },
   { id: 3, user: 'Jane Smith', action: 'resume.create', detail: 'Created "Product Manager Resume"', ip: '192.168.1.5', time: '1 hour ago', level: 'info' },
-  { id: 4, user: 'Unknown', action: 'auth.failed', detail: 'Failed login attempt for admin@example.com', ip: '45.33.32.156', time: '2 hours ago', level: 'warning' },
+  { id: 4, user: 'Unknown', action: 'auth.failed', detail: 'Failed login attempt for sthakor890@gmail.com', ip: '45.33.32.156', time: '2 hours ago', level: 'warning' },
   { id: 5, user: 'Admin', action: 'user.ban', detail: 'Banned user spammer@evil.com', ip: '10.0.0.1', time: '3 hours ago', level: 'danger' },
   { id: 6, user: 'Mike Lee', action: 'payment.success', detail: 'Upgraded to Pro plan ($99)', ip: '172.16.0.5', time: '4 hours ago', level: 'success' },
   { id: 7, user: 'Sara Kim', action: 'resume.delete', detail: 'Deleted "Old Resume v1"', ip: '192.168.2.10', time: '5 hours ago', level: 'warning' },

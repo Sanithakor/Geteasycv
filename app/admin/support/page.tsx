@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Search, Plus } from 'lucide-react';
 
 const TICKETS = [
-  { id: 'TKT-001', subject: 'Cannot download PDF', user: 'John Doe', email: 'john@example.com', priority: 'high', status: 'open', created: '2024-06-15', updated: '1 hour ago' },
-  { id: 'TKT-002', subject: 'Billing charge question', user: 'Jane Smith', email: 'jane@example.com', priority: 'medium', status: 'pending', created: '2024-06-14', updated: '3 hours ago' },
-  { id: 'TKT-003', subject: 'Template not loading correctly', user: 'Mike Lee', email: 'mike@example.com', priority: 'low', status: 'resolved', created: '2024-06-13', updated: '1 day ago' },
-  { id: 'TKT-004', subject: 'Forgot password not working', user: 'Sara Kim', email: 'sara@example.com', priority: 'high', status: 'open', created: '2024-06-12', updated: '2 days ago' },
-  { id: 'TKT-005', subject: 'Feature request: Dark mode', user: 'Tom Brown', email: 'tom@example.com', priority: 'low', status: 'resolved', created: '2024-06-10', updated: '4 days ago' },
+  { id: 'TKT-001', subject: 'Cannot download PDF', user: 'John Doe', email: 'john.doe@geteasycv.com', priority: 'high', status: 'open', created: '2024-06-15', updated: '1 hour ago' },
+  { id: 'TKT-002', subject: 'Billing charge question', user: 'Jane Smith', email: 'jane.smith@geteasycv.com', priority: 'medium', status: 'pending', created: '2024-06-14', updated: '3 hours ago' },
+  { id: 'TKT-003', subject: 'Template not loading correctly', user: 'Mike Lee', email: 'mike.lee@geteasycv.com', priority: 'low', status: 'resolved', created: '2024-06-13', updated: '1 day ago' },
+  { id: 'TKT-004', subject: 'Forgot password not working', user: 'Sara Kim', email: 'sara.kim@geteasycv.com', priority: 'high', status: 'open', created: '2024-06-12', updated: '2 days ago' },
+  { id: 'TKT-005', subject: 'Feature request: Dark mode', user: 'Tom Brown', email: 'tom.brown@geteasycv.com', priority: 'low', status: 'resolved', created: '2024-06-10', updated: '4 days ago' },
 ];
 
 const PRIORITY: Record<string, string> = {

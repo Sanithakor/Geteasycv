@@ -231,23 +231,9 @@ export default function UserLayout({ children }: UserLayoutProps) {
             >
               <Menu className="w-5 h-5" />
             </button>
-
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-100">
-                User Dashboard
-              </span>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/templates"
-              className="flex items-center gap-2 px-4 py-2 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-xs"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Create Resume</span>
-            </Link>
-
             {user?.role === 'admin' && (
               <Link
                 href="/admin"

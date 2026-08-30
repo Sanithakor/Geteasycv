@@ -153,8 +153,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
             )}
           </div>
 
-          {/* Notifications bell button */}
-          <div className="relative">
+          {/* Notifications bell button (Desktop only, hidden on mobile/tablet to avoid overflow) */}
+          <div className="relative hidden lg:block">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="p-2 hover:bg-slate-50 rounded-md text-slate-500 hover:text-slate-800 transition-colors relative"

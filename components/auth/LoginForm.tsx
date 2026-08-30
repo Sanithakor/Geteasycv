@@ -92,7 +92,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
   };
 
   const fillDemoCredentials = () => {
-    setFormData({ email: 'demo@example.com', password: 'DemoPassword123!' });
+    setFormData({ email: 'demo@geteasycv.com', password: 'DemoPassword123!' });
     setError('');
   };
 
@@ -160,7 +160,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
       {/* Demo Credentials Callout */}
       <div className="mb-5 p-3 rounded-xl bg-[#FFF8F5]/70 border border-[#FF570F] flex items-center justify-between text-xs text-indigo-900">
         <div>
-          <span className="font-bold">Demo:</span> demo@example.com / DemoPassword123!
+          <span className="font-bold">Demo:</span> demo@geteasycv.com / DemoPassword123!
         </div>
         <button
           type="button"

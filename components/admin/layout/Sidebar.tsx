@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -89,6 +89,25 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const router = useRouter();
   const { logout, user } = useAuthStore();
   const [showFooterMenu, setShowFooterMenu] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      try {
+        const res = await fetch('/api/notifications');
+        const data = await res.json();
+        if (data.success && typeof data.unreadCount === 'number') {
+          setUnreadCount(data.unreadCount);
+        }
+      } catch (e) {
+        console.warn('Error fetching notification count in sidebar:', e);
+      }
+    };
+
+    fetchNotificationCount();
+    const interval = setInterval(fetchNotificationCount, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -168,6 +187,11 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                     >
                       <Icon className={`w-[18px] h-[18px] ${active ? 'text-violet-600' : 'text-slate-500'}`} />
                       <span className="truncate">{item.title}</span>
+                      {item.title === 'Notifications' && unreadCount > 0 && (
+                        <span className="ml-auto min-w-[18px] h-4 px-1.5 bg-[#FF570F] text-white rounded-full text-[10px] font-bold flex items-center justify-center">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}

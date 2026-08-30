@@ -39,6 +39,8 @@ export type InnerBannerPageType =
   | "about"
   | "contact"
   | "templates"
+  | "help-center"
+  | "faq"
   | "default";
 
 export interface InnerBannerProps {

@@ -1231,10 +1231,11 @@ export default function EditorPage() {
                 type="button" 
                 onClick={() => downloadExport('pdf')} 
                 disabled={isExporting} 
-                className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-2xs rounded-l-md cursor-pointer border-r border-violet-500"
+                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-2xs rounded-l-md cursor-pointer border-r border-violet-500 whitespace-nowrap"
+                title="Download PDF"
               >
-                <Download className="w-4 h-4" />
-                <span>{isExporting ? 'Exporting...' : 'Download PDF'}</span>
+                <Download className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">{isExporting ? 'Exporting...' : 'Download PDF'}</span>
               </button>
               <button 
                 type="button"
@@ -1242,7 +1243,7 @@ export default function EditorPage() {
                 className="px-2 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-r-md transition-colors cursor-pointer"
                 title="Export Formats"
               >
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 shrink-0" />
               </button>
             </div>
 

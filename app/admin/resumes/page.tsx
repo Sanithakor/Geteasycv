@@ -13,7 +13,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-1',
     userName: 'John Doe',
-    userEmail: 'john.doe@example.com',
+    userEmail: 'john.doe@geteasycv.com',
     title: 'Senior Software Engineer Resume',
     template: 'Single Column ATS',
     downloads: 14,
@@ -23,7 +23,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-2',
     userName: 'Emily Clark',
-    userEmail: 'emily.clark@example.com',
+    userEmail: 'emily.clark@geteasycv.com',
     title: 'Product Designer Portfolio CV',
     template: 'Bento Grid Design',
     downloads: 8,
@@ -33,7 +33,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-3',
     userName: 'Michael Brown',
-    userEmail: 'michael.brown@example.com',
+    userEmail: 'michael.brown@geteasycv.com',
     title: 'Engineering Manager Resume',
     template: 'Two Column Split',
     downloads: 12,
@@ -43,7 +43,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-4',
     userName: 'Sarah Johnson',
-    userEmail: 'sarah.johnson@example.com',
+    userEmail: 'sarah.johnson@geteasycv.com',
     title: 'Digital Marketing Strategist CV',
     template: 'Modern Professional',
     downloads: 5,
@@ -53,7 +53,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-5',
     userName: 'Alex Johnson',
-    userEmail: 'alex.johnson@example.com',
+    userEmail: 'alex.johnson@geteasycv.com',
     title: 'Full Stack Engineer CV',
     template: 'Compact ATS',
     downloads: 22,
@@ -63,7 +63,7 @@ const REALISTIC_RESUMES = [
   {
     id: 'res-6',
     userName: 'Maria Garcia',
-    userEmail: 'maria.garcia@example.com',
+    userEmail: 'maria.garcia@geteasycv.com',
     title: 'Lead Architect Resume',
     template: 'Luxury Gold',
     downloads: 16,

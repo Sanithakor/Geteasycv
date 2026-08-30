@@ -39,7 +39,7 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return '/api';
   }
-  let url = process.env.NEXT_PUBLIC_API_URL || 'https://www.geteasycv.com';
+  let url = process.env.NEXT_PUBLIC_API_URL || 'https://geteasycv.com';
   url = url.replace(/['"]/g, '');
   if (url.endsWith('/')) {
     url = url.slice(0, -1);

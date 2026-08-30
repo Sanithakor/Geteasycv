@@ -504,7 +504,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
             type="email"
             value={identifier}
             onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-            placeholder="you@example.com"
+            placeholder="you@geteasycv.com"
             autoComplete="email"
             disabled={isLoading}
             icon={<Mail className="w-4 h-4" />}
@@ -579,7 +579,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
           type={isPhone ? 'tel' : 'email'}
           value={identifier}
           onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-          placeholder={isPhone ? '+1 555 000 0000' : 'you@example.com'}
+          placeholder={isPhone ? '+1 555 000 0000' : 'you@geteasycv.com'}
           autoComplete={isPhone ? 'tel' : 'email'}
           disabled={isSending}
           icon={isPhone ? <Phone className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
@@ -819,7 +819,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
             type="email"
             value={identifier}
             onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-            placeholder="you@example.com"
+            placeholder="you@geteasycv.com"
             autoComplete="email"
             disabled={isLoading}
             icon={<Mail className="w-4 h-4" />}
@@ -957,7 +957,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
           type={isPhone ? 'tel' : 'email'}
           value={identifier}
           onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-          placeholder={isPhone ? '+1 555 000 0000' : 'you@example.com'}
+          placeholder={isPhone ? '+1 555 000 0000' : 'you@geteasycv.com'}
           autoComplete={isPhone ? 'tel' : 'email'}
           disabled={isSending}
           icon={isPhone ? <Phone className="w-4 h-4" /> : <Mail className="w-4 h-4" />}

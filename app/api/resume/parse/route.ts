@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       personal: {
         firstName,
         lastName,
-        email: emailMatch ? emailMatch[0] : `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
+        email: emailMatch ? emailMatch[0] : `${firstName.toLowerCase()}.${lastName.toLowerCase()}@geteasycv.com`,
         phone: phoneMatch ? phoneMatch[0] : '+1 (555) 234-5678',
         location: 'San Francisco, CA',
         jobTitle: 'Software Engineer',

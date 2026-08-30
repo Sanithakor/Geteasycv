@@ -12,10 +12,10 @@ async function main() {
 
     // 1. Create demo user (free tier)
     const demoUser = await prisma.user.upsert({
-      where: { email: 'demo@example.com' },
+      where: { email: 'demo@geteasycv.com' },
       update: {}, // Don't update if exists
       create: {
-        email: 'demo@example.com',
+        email: 'demo@geteasycv.com',
         password: hashedPassword,
         name: 'Demo User',
         subscriptionTier: 'free',
@@ -147,11 +147,10 @@ async function main() {
 
     console.log('\n🎉 Database seeded successfully!');
     console.log('\n📝 Demo Credentials:');
-    console.log('   Email: demo@example.com');
+    console.log('   Email: demo@geteasycv.com');
     console.log('   Password: DemoPassword123');
     console.log('\n👨‍💼 Admin Credentials:');
-    console.log('   Email: admin@example.com');
-    console.log('   Password: DemoPassword123');
+    console.log('   Email: sthakor890@gmail.com');
   } catch (error) {
     console.error('❌ Seeding failed:', error);
     throw error;

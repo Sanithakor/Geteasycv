@@ -24,7 +24,7 @@ import {
 export default function CoverLetterEditorPage() {
   const [senderName, setSenderName] = useState('Alex Morgan');
   const [senderTitle, setSenderTitle] = useState('Senior Software Engineer');
-  const [senderEmail, setSenderEmail] = useState('alex.morgan@example.com');
+  const [senderEmail, setSenderEmail] = useState('alex.morgan@geteasycv.com');
   const [senderPhone, setSenderPhone] = useState('+1 (555) 345-6789');
   const [senderLocation, setSenderLocation] = useState('San Francisco, CA');
 

@@ -106,7 +106,7 @@ export default function CreateUserPage() {
               onChange={handleChange}
               required
               className="w-full px-4 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="john@example.com"
+              placeholder="john@geteasycv.com"
             />
           </div>
 

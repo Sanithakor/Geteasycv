@@ -1,60 +1,57 @@
-import { NextResponse } from 'next/server';
+/**
+ * GET, POST & PUT /api/plans
+ * API Endpoint to fetch and update dynamic subscription plans
+ */
 
-const defaultPlans = [
-  {
-    id: 'plan-free',
-    name: 'Free',
-    price: '$0',
-    billingPeriod: 'forever',
-    description: 'Perfect for getting started and building your first resume.',
-    features: [
-      '3 Resume Documents',
-      'Access to Standard Templates',
-      'Basic Export (PDF)',
-      'Live Preview',
-      'Community Support'
-    ],
-    popular: false,
-    ctaText: 'Get Started Free',
-    isCurrentPlan: false
-  },
-  {
-    id: 'plan-pro',
-    name: 'Pro',
-    price: '$9.99',
-    billingPeriod: 'per month',
-    description: 'Best for active job seekers looking for modern ATS templates.',
-    features: [
-      'Unlimited Resume Documents',
-      'All Premium & ATS Templates',
-      'High-Resolution PDF, PNG & JPG Export',
-      'AI Bullet Point Suggestions',
-      'Custom Layout & Section Drag-and-Drop',
-      'Priority Support'
-    ],
-    popular: true,
-    ctaText: 'Upgrade to Pro',
-    isCurrentPlan: false
-  },
-  {
-    id: 'plan-lifetime',
-    name: 'Lifetime',
-    price: '$49.99',
-    billingPeriod: 'one-time payment',
-    description: 'Lifetime access with unlimited updates & premium features forever.',
-    features: [
-      'Everything in Pro Plan',
-      'Lifetime Updates & New Templates',
-      'Unlimited AI Resume Writing Credits',
-      'Custom Domain Hosting & Share Links',
-      '1-on-1 Resume Review Discount'
-    ],
-    popular: false,
-    ctaText: 'Get Lifetime Access',
-    isCurrentPlan: false
-  }
-];
+import { NextResponse } from 'next/server';
+import { fetchAllPlans, saveAllPlans, PlanItem } from '@/lib/plansStore';
+import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
 
 export async function GET() {
-  return NextResponse.json({ success: true, data: defaultPlans });
+  try {
+    const plans = await fetchAllPlans();
+    return NextResponse.json({
+      success: true,
+      data: plans,
+    });
+  } catch (error) {
+    console.error('[PLANS_GET_ERROR]', error);
+    return NextResponse.json({ error: 'Failed to fetch plans' }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const auth = await getAuthFromRequest(req);
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden: Admin authorization required' }, { status: 403 });
+    }
+
+    const body = await req.json();
+    const plans: PlanItem[] = body.plans || (Array.isArray(body) ? body : []);
+
+    if (!Array.isArray(plans) || plans.length === 0) {
+      return NextResponse.json({ error: 'Invalid plans payload array' }, { status: 400 });
+    }
+
+    await saveAllPlans(plans);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Plans updated successfully',
+      data: plans,
+    });
+  } catch (error) {
+    console.error('[PLANS_PUT_ERROR]', error);
+    return NextResponse.json({ error: 'Failed to update plans' }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  return PUT(req);
 }
