@@ -80,8 +80,8 @@
     "resumes": 0
   },
   {
-    "id": "cmsah1som0002doms9p9quwka",
-    "name": "Sanikumar",
+    "id": "cms0k482a0003ybsfmo916nuv",
+    "name": "Admin User",
     "email": "sthakor890@gmail.com",
     "avatar": null,
     "googleId": null,
@@ -89,10 +89,10 @@
     "role": "admin",
     "isActive": true,
     "isBanned": false,
-    "createdAt": "2026-08-01T14:33:34.578Z",
-    "lastLoginAt": "2026-08-30T11:56:03.254Z",
-    "lastSeenAt": "2026-08-30T12:57:56.875Z",
-    "resumes": 0
+    "createdAt": "2026-07-25T16:01:44.914Z",
+    "lastLoginAt": "2026-08-18T20:32:32.073Z",
+    "lastSeenAt": "2026-08-18T20:32:32.073Z",
+    "resumes": 9
   },
   {
     "id": "cms0rlets0000berfc92po8e7",
@@ -108,21 +108,6 @@
     "lastLoginAt": null,
     "lastSeenAt": null,
     "resumes": 0
-  },
-  {
-    "id": "cms0k482a0003ybsfmo916nuv",
-    "name": "Admin User",
-    "email": "sthakor890@gmail.com",
-    "avatar": null,
-    "googleId": null,
-    "subscriptionTier": "premium",
-    "role": "admin",
-    "isActive": true,
-    "isBanned": false,
-    "createdAt": "2026-07-25T16:01:44.914Z",
-    "lastLoginAt": "2026-08-18T20:32:32.073Z",
-    "lastSeenAt": "2026-08-18T20:32:32.073Z",
-    "resumes": 9
   },
   {
     "id": "cms0k46r20000ybsfomrh6kss",
