@@ -125,7 +125,7 @@ export async function protectRoute(req: Request) {
 }
 
 export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
-  if (!auth) return false;
+  if (!auth || !auth.userId) return false;
 
   try {
     const user = await prisma.user.findUnique({
@@ -133,15 +133,30 @@ export async function requireAdmin(auth: AuthPayload | null): Promise<boolean> {
       select: { role: true },
     });
 
-    const isAdmin = user ? user.role === 'admin' : auth.role === 'admin';
-    if (!isAdmin) {
-      console.log('[ADMIN_CHECK] Non-admin access attempt:', auth.userId);
+    if (user) {
+      const isAdmin = user.role === 'admin';
+      if (!isAdmin) {
+        console.log('[ADMIN_CHECK] Non-admin access attempt:', auth.userId);
+      }
+      return isAdmin;
     }
-    return isAdmin;
   } catch (err) {
-    console.warn('[ADMIN_CHECK_DB_FALLBACK] Database query failed, using token role:', err);
-    return auth.role === 'admin';
+    console.warn('[ADMIN_CHECK_DB_WARN] Database query failed:', err);
   }
+
+  // Fallback check against verified user registry if DB lookup fails
+  try {
+    const allUsers = await getAllAppUsers();
+    const regUser = allUsers.find(
+      (u) => u.id === auth.userId || (auth.email && u.email.toLowerCase() === auth.email.toLowerCase())
+    );
+    if (regUser) {
+      return regUser.role === 'admin';
+    }
+  } catch {}
+
+  console.log('[ADMIN_CHECK] Failed admin authorization check for user:', auth.userId);
+  return false;
 }
 
 /**

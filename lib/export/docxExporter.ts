@@ -152,21 +152,54 @@ export function generateWordprocessingML(data: DocxResumeData): string {
     `;
   }
 
-  // Education Section
-  if (data.education && data.education.length > 0) {
+  // Projects Section
+  if (data.projects && data.projects.length > 0) {
     bodyXml += `
       <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
-      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>EDUCATION</w:t></w:r></w:p>
+      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>PROJECTS</w:t></w:r></w:p>
     `;
 
-    data.education.forEach((edu) => {
-      const titleLine = `${edu.degree || 'Degree'} ${edu.field ? `in ${edu.field}` : ''} - ${edu.institution || 'Institution'}`;
+    data.projects.forEach((proj) => {
       bodyXml += `
-        <w:p><w:pPr><w:spacing w:before="120" w:after="120"/></w:pPr>
-        <w:r><w:rPr><w:b/><w:sz w:val="24"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(titleLine)}</w:t></w:r>
+        <w:p><w:pPr><w:spacing w:before="120" w:after="60"/></w:pPr>
+        <w:r><w:rPr><w:b/><w:sz w:val="24"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(proj.title || 'Project')}</w:t></w:r>
+        </w:p>
+      `;
+      if (proj.description) {
+        bodyXml += `
+          <w:p><w:pPr><w:spacing w:after="120"/></w:pPr>
+          <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(proj.description)}</w:t></w:r></w:p>
+        `;
+      }
+    });
+  }
+
+  // Certifications Section
+  if ((data as any).certifications && (data as any).certifications.length > 0) {
+    bodyXml += `
+      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
+      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>CERTIFICATIONS</w:t></w:r></w:p>
+    `;
+
+    (data as any).certifications.forEach((cert: any) => {
+      const certLine = `${cert.name || 'Certification'} - ${cert.issuer || 'Issuer'} (${cert.date || ''})`.trim();
+      bodyXml += `
+        <w:p><w:pPr><w:spacing w:before="60" w:after="60"/></w:pPr>
+        <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>• ${escapeXml(certLine)}</w:t></w:r>
         </w:p>
       `;
     });
+  }
+
+  // Languages Section
+  if ((data as any).languages && (data as any).languages.length > 0) {
+    const langList = (data as any).languages.map((l: any) => `${l.name} (${l.proficiency || 'Proficient'})`).join(', ');
+    bodyXml += `
+      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
+      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>LANGUAGES</w:t></w:r></w:p>
+      <w:p><w:pPr><w:spacing w:after="240"/></w:pPr>
+      <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(langList)}</w:t></w:r></w:p>
+    `;
   }
 
   const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

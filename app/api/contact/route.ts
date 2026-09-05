@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
 import { getSystemSettings } from '@/lib/settings';
+import { createSystemNotification } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
@@ -40,6 +41,14 @@ export async function POST(req: Request) {
       subject,
       html,
     });
+
+    // Create real system notification for admin
+    await createSystemNotification({
+      title: 'New Support Inquiry',
+      message: `${name} (${email}) sent a message: ${topic || 'General Inquiry'}`,
+      type: 'contact_submission',
+      target: 'all',
+    }).catch(() => {});
 
     return NextResponse.json({
       success: true,

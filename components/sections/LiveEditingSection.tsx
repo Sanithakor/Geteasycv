@@ -4,60 +4,113 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Zap, Eye, Palette, Type } from "lucide-react";
 
-const JOB_TITLES = [
-  "Senior Product Designer",
-  "Full Stack Engineer",
-  "UX Researcher",
-  "Marketing Manager",
-  "Data Scientist",
-  "Project Manager",
+interface SampleRolePair {
+  title: string;
+  description: string;
+}
+
+const SAMPLE_PAIRS: SampleRolePair[] = [
+  {
+    title: "Senior Product Designer",
+    description: "Designing accessible product experiences and scalable design systems for growing teams.",
+  },
+  {
+    title: "Full Stack Engineer",
+    description: "Building reliable web applications and high-performance APIs used by thousands of customers.",
+  },
+  {
+    title: "UX Researcher",
+    description: "Turning user research, qualitative feedback, and analytics into clear, actionable product decisions.",
+  },
+  {
+    title: "Project Manager",
+    description: "Leading cross-functional agile teams to deliver key engineering initiatives on time and on budget.",
+  },
+  {
+    title: "Data Scientist",
+    description: "Analyzing complex datasets and training predictive ML models to drive strategic business growth.",
+  },
+  {
+    title: "Marketing Manager",
+    description: "Creating targeted multi-channel campaigns that grow brand awareness and customer acquisition.",
+  },
 ];
 
-const DESCRIPTIONS = [
-  "Designing accessible product experiences for growing teams.",
-  "Building reliable web applications used by thousands of customers.",
-  "Turning user research into clear, useful product decisions.",
-];
-
-const TYPE_SPEED = 60;
-const DELETE_SPEED = 35;
-const PAUSE_AFTER_TYPE = 1800;
-const PAUSE_AFTER_DELETE = 400;
-
-function useTypingAnimation(words: string[]) {
-  const [displayed, setDisplayed] = useState("");
-  const [wordIndex, setWordIndex] = useState(0);
+function useSynchronizedPairTyping(pairs: SampleRolePair[]) {
+  const [pairIndex, setPairIndex] = useState(0);
+  const [displayedTitle, setDisplayedTitle] = useState("");
+  const [displayedDescription, setDisplayedDescription] = useState("");
   const [phase, setPhase] = useState<"typing" | "holding" | "deleting" | "waiting">("typing");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const current = words[wordIndex];
+    const current = pairs[pairIndex];
+    if (!current) return;
+
+    const targetTitle = current.title;
+    const targetDesc = current.description;
+
+    let timer: NodeJS.Timeout;
+
     if (phase === "typing") {
-      if (displayed.length < current.length) {
-        timeoutRef.current = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), TYPE_SPEED);
+      const titleDone = displayedTitle.length >= targetTitle.length;
+      const descDone = displayedDescription.length >= targetDesc.length;
+
+      if (!titleDone || !descDone) {
+        timer = setTimeout(() => {
+          if (!titleDone) {
+            setDisplayedTitle(targetTitle.slice(0, displayedTitle.length + 1));
+          }
+          if (!descDone) {
+            setDisplayedDescription(targetDesc.slice(0, displayedDescription.length + 1));
+          }
+        }, 35);
       } else {
-        timeoutRef.current = setTimeout(() => setPhase("holding"), PAUSE_AFTER_TYPE);
+        // Both finished typing -> hold together
+        timer = setTimeout(() => {
+          setPhase("holding");
+        }, 2400);
       }
     } else if (phase === "holding") {
-      timeoutRef.current = setTimeout(() => setPhase("deleting"), 0);
+      timer = setTimeout(() => {
+        setPhase("deleting");
+      }, 0);
     } else if (phase === "deleting") {
-      if (displayed.length > 0) {
-        timeoutRef.current = setTimeout(() => setDisplayed(displayed.slice(0, -1)), DELETE_SPEED);
+      const titleEmpty = displayedTitle.length === 0;
+      const descEmpty = displayedDescription.length === 0;
+
+      if (!titleEmpty || !descEmpty) {
+        timer = setTimeout(() => {
+          if (!titleEmpty) {
+            setDisplayedTitle(displayedTitle.slice(0, -1));
+          }
+          if (!descEmpty) {
+            const dropChars = targetDesc.length > targetTitle.length * 2 ? 2 : 1;
+            setDisplayedDescription(displayedDescription.slice(0, -Math.min(dropChars, displayedDescription.length)));
+          }
+        }, 20);
       } else {
-        timeoutRef.current = setTimeout(() => { setWordIndex((i) => (i + 1) % words.length); setPhase("waiting"); }, PAUSE_AFTER_DELETE);
+        // Both fully cleared -> transition to next pair
+        timer = setTimeout(() => {
+          setPairIndex((prev) => (prev + 1) % pairs.length);
+          setPhase("waiting");
+        }, 250);
       }
     } else if (phase === "waiting") {
-      timeoutRef.current = setTimeout(() => setPhase("typing"), 0);
+      timer = setTimeout(() => {
+        setPhase("typing");
+      }, 100);
     }
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  }, [displayed, phase, wordIndex, words]);
 
-  return displayed;
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [displayedTitle, displayedDescription, phase, pairIndex, pairs]);
+
+  return { displayedTitle, displayedDescription, phase };
 }
 
 export default function LiveEditingSection() {
-  const displayed = useTypingAnimation(JOB_TITLES);
-  const displayedDescription = useTypingAnimation(DESCRIPTIONS);
+  const { displayedTitle, displayedDescription } = useSynchronizedPairTyping(SAMPLE_PAIRS);
 
   return (
     <section className="py-16 sm:py-20 relative overflow-hidden font-sans" style={{ background: '#FFFFFF' }}>
@@ -84,7 +137,7 @@ export default function LiveEditingSection() {
                     <div className="h-8 rounded-lg border flex items-center px-3 transition-all"
                       style={{ background: '#F8F8F6', borderColor: '#BAC7FE' }}>
                       <span className="text-xs sm:text-sm font-medium truncate" style={{ color: '#0F0F0F' }} aria-live="polite">
-                        {displayed}
+                        {displayedTitle}
                       </span>
                       <span className="ml-0.5 inline-block w-[2px] h-4 rounded-sm align-middle shrink-0"
                         style={{ background: '#F3645C', animation: 'cursorBlink 1s step-start infinite' }} />

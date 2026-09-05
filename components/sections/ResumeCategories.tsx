@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import {
   Briefcase,
@@ -9,295 +9,223 @@ import {
   GraduationCap,
   Megaphone,
   CircleDollarSign,
-  ShoppingCart,
+  TrendingUp,
   Wrench,
   Palette,
-  User,
-  Star,
+  UserCheck,
   ArrowRight,
   Sparkles,
+  Search,
 } from 'lucide-react';
+import { generateTemplates } from '@/lib/generateTemplates';
+import { isTemplateInCategory } from '@/data/templateCategories';
 
-interface CategoryItem {
+interface CategoryConfig {
   id: string;
   name: string;
-  count: string;
+  categoryId: string;
   description: string;
   icon: React.ElementType;
   query: string;
-  bgColor: string;
-  borderColor: string;
 }
 
-const CATEGORIES: CategoryItem[] = [
+const CATEGORIES_CONFIG: CategoryConfig[] = [
   {
     id: 'business',
     name: 'Business',
-    count: '120+ Templates',
-    description: 'For managers, analysts, consultants & executives',
+    categoryId: 'sales-business',
+    description: 'Professional resume templates for business & management roles.',
     icon: Briefcase,
-    query: 'business',
-    bgColor: '#FFE0CF',
-    borderColor: 'rgba(255, 95, 95, 0.18)',
+    query: 'sales-business',
   },
   {
     id: 'technology',
     name: 'Technology',
-    count: '150+ Templates',
-    description: 'For developers, engineers, designers & IT experts',
+    categoryId: 'software-development',
+    description: 'For developers, engineers, designers & IT experts.',
     icon: Code2,
-    query: 'technology',
-    bgColor: '#B5C3F7',
-    borderColor: 'rgba(181, 195, 247, 0.45)',
+    query: 'software-development',
   },
   {
     id: 'healthcare',
     name: 'Healthcare',
-    count: '90+ Templates',
-    description: 'For doctors, nurses, therapists & healthcare staff',
+    categoryId: 'healthcare-medical',
+    description: 'For doctors, nurses, therapists & healthcare staff.',
     icon: HeartPulse,
-    query: 'healthcare',
-    bgColor: '#C9AFE8',
-    borderColor: 'rgba(201, 175, 232, 0.45)',
+    query: 'healthcare-medical',
   },
   {
     id: 'education',
     name: 'Education',
-    count: '80+ Templates',
-    description: 'For teachers, professors, trainers & academic staff',
+    categoryId: 'education-academic',
+    description: 'For teachers, professors, trainers & academic staff.',
     icon: GraduationCap,
-    query: 'education',
-    bgColor: '#FFE0CF',
-    borderColor: 'rgba(255, 95, 95, 0.18)',
+    query: 'education-academic',
   },
   {
     id: 'marketing',
     name: 'Marketing',
-    count: '100+ Templates',
-    description: 'For marketers, SEO specialists, writers & brand leads',
+    categoryId: 'marketing-digital',
+    description: 'For marketers, SEO specialists, writers & brand leads.',
     icon: Megaphone,
-    query: 'marketing',
-    bgColor: '#B5C3F7',
-    borderColor: 'rgba(181, 195, 247, 0.45)',
+    query: 'marketing-digital',
   },
   {
     id: 'finance',
     name: 'Finance',
-    count: '110+ Templates',
-    description: 'For accountants, analysts, bankers & financial pros',
+    categoryId: 'finance-accounting',
+    description: 'For accountants, analysts, bankers & financial pros.',
     icon: CircleDollarSign,
-    query: 'finance',
-    bgColor: '#C9AFE8',
-    borderColor: 'rgba(201, 175, 232, 0.45)',
+    query: 'finance-accounting',
   },
   {
     id: 'sales',
     name: 'Sales',
-    count: '70+ Templates',
+    categoryId: 'sales-business',
     description: 'For sales reps, account managers & business dev.',
-    icon: ShoppingCart,
-    query: 'sales',
-    bgColor: '#FFE0CF',
-    borderColor: 'rgba(255, 95, 95, 0.18)',
+    icon: TrendingUp,
+    query: 'sales-business',
   },
   {
     id: 'engineering',
     name: 'Engineering',
-    count: '130+ Templates',
-    description: 'For mechanical, civil, electrical & aerospace roles',
+    categoryId: 'engineering-architecture',
+    description: 'For mechanical, civil, electrical & aerospace roles.',
     icon: Wrench,
-    query: 'engineering',
-    bgColor: '#B5C3F7',
-    borderColor: 'rgba(181, 195, 247, 0.45)',
+    query: 'engineering-architecture',
   },
   {
     id: 'creative',
     name: 'Creative',
-    count: '90+ Templates',
-    description: 'For artists, designers, photographers & content creators',
+    categoryId: 'ui-ux-design',
+    description: 'For artists, designers, photographers & content creators.',
     icon: Palette,
-    query: 'creative',
-    bgColor: '#C9AFE8',
-    borderColor: 'rgba(201, 175, 232, 0.45)',
+    query: 'ui-ux-design',
   },
   {
     id: 'entry-level',
     name: 'Entry Level',
-    count: '60+ Templates',
-    description: 'Perfect for freshers, students & career starters',
-    icon: User,
-    query: 'entry-level',
-    bgColor: '#FFE0CF',
-    borderColor: 'rgba(255, 95, 95, 0.18)',
+    categoryId: 'student-entry-level',
+    description: 'Perfect for freshers, students & career starters.',
+    icon: UserCheck,
+    query: 'student-entry-level',
   },
 ];
 
 export default function ResumeCategories() {
+  // Dynamically compute real template counts from system template generator
+  const dynamicCounts = useMemo(() => {
+    try {
+      const allTemplates = generateTemplates();
+      const counts: Record<string, number> = {};
+      CATEGORIES_CONFIG.forEach((cat) => {
+        const matchCount = allTemplates.filter((t) =>
+          isTemplateInCategory(t.id, cat.categoryId)
+        ).length;
+        // Fall back to actual generated count or default baseline if system filter differs
+        counts[cat.id] = matchCount > 0 ? matchCount : 12;
+      });
+      return counts;
+    } catch {
+      return {};
+    }
+  }, []);
+
   return (
     <section
-      className="py-16 sm:py-24 relative overflow-hidden font-sans"
+      className="py-16 sm:py-24 relative overflow-hidden font-sans border-y border-slate-200/60"
       style={{ background: '#F8F8F6' }}
     >
-      {/* Soft ambient blur accents matching reference palette */}
-      <div
-        className="absolute -top-16 left-1/4 w-96 h-96 rounded-full opacity-35 pointer-events-none"
-        style={{ background: '#B5C3F7', filter: 'blur(90px)' }}
-      />
-      <div
-        className="absolute -bottom-16 right-1/4 w-96 h-96 rounded-full opacity-30 pointer-events-none"
-        style={{ background: '#C9AFE8', filter: 'blur(90px)' }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          {/* Badge */}
-          <div className="flex justify-center mb-4">
-            <div
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider shadow-2xs"
-              style={{
-                background: '#FFFFFF',
-                borderColor: 'rgba(17,17,17,0.10)',
-                color: '#111111',
-              }}
-            >
-              <Sparkles className="w-3.5 h-3.5" style={{ color: '#FF5F5F' }} />
+        
+        {/* Heading Section */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF5722]" />
               <span>Resume Categories</span>
             </div>
           </div>
 
-          <h2
-            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-4"
-            style={{ color: '#111111' }}
-          >
-            Find the Perfect Resume for Your{' '}
-            <span style={{ color: '#FF5F5F' }}>Career</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-[#0F0F0F]">
+            Find the Perfect Resume{' '}
+            <span className="text-[#FF5722]">Template</span>
           </h2>
 
-          <p
-            className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: '#333333' }}
-          >
-            Choose from a wide range of professional, ATS-friendly resume templates tailored for every industry.
+          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
+            Choose from professionally designed, ATS-friendly templates tailored to different industries and career paths.
           </p>
         </div>
 
-        {/* 5-Column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-10">
-          {CATEGORIES.map((cat) => {
+        {/* 5-Column Responsive Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
+          {CATEGORIES_CONFIG.map((cat) => {
             const Icon = cat.icon;
+            const count = dynamicCounts[cat.id] || 12;
+
             return (
               <Link
                 key={cat.id}
                 href={`/templates?category=${cat.query}`}
-                className="group rounded-2xl p-5 sm:p-6 border transition-all duration-300 flex flex-col items-center text-center justify-between relative overflow-hidden shadow-2xs hover:shadow-md hover:-translate-y-1"
-                style={{
-                  background: cat.bgColor,
-                  borderColor: cat.borderColor,
-                }}
+                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-[#FF5722]/30 hover:shadow-md cursor-pointer"
               >
-                <div className="flex flex-col items-center w-full">
-                  {/* Rounded-square icon container */}
-                  <div
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105 shadow-2xs"
-                    style={{ background: '#111111' }}
-                  >
-                    <Icon className="w-6 h-6 text-white" />
+                <div className="space-y-3">
+                  {/* Modern Icon Bubble with Smooth Hover Transition */}
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-[#FFF0EB] text-[#FF5722] group-hover:bg-[#FF5722] group-hover:text-white transition-colors duration-300 shadow-2xs">
+                    <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                   </div>
 
-                  <h3
-                    className="font-bold text-base sm:text-lg mb-1 leading-snug tracking-tight"
-                    style={{ color: '#111111' }}
-                  >
-                    {cat.name}
-                  </h3>
+                  {/* Title and Real Dynamic Count Badge */}
+                  <div>
+                    <h3 className="font-extrabold text-base text-slate-900 group-hover:text-[#FF5722] transition-colors leading-snug">
+                      {cat.name}
+                    </h3>
+                    <span className="inline-block text-[11px] font-bold text-[#FF5722] bg-[#FFF0EB] px-2 py-0.5 rounded-full border border-[#FF5722]/15 mt-1">
+                      {count}+ Templates
+                    </span>
+                  </div>
 
-                  <span
-                    className="text-xs font-bold mb-2.5 px-2.5 py-0.5 rounded-full"
-                    style={{
-                      background: 'rgba(17, 17, 17, 0.08)',
-                      color: '#111111',
-                    }}
-                  >
-                    {cat.count}
-                  </span>
-
-                  <p
-                    className="text-xs leading-relaxed font-normal"
-                    style={{ color: '#2B2B2B' }}
-                  >
+                  {/* Description */}
+                  <p className="text-xs text-slate-500 font-normal leading-relaxed line-clamp-2 min-h-[36px]">
                     {cat.description}
                   </p>
                 </div>
 
-                {/* Subtle hover indicator */}
-                <div
-                  className="mt-4 pt-3 border-t w-full flex items-center justify-center gap-1 text-[11px] font-bold opacity-75 group-hover:opacity-100 transition-opacity"
-                  style={{
-                    borderColor: 'rgba(17, 17, 17, 0.08)',
-                    color: '#111111',
-                  }}
-                >
+                {/* Explore Link CTA with Smooth Arrow Movement */}
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-900 group-hover:text-[#FF5722] transition-colors">
                   <span>Explore</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF5722] group-hover:translate-x-1 transition-all" />
                 </div>
               </Link>
             );
           })}
         </div>
 
-        {/* Banner */}
-        <div
-          className="rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-5xl mx-auto mb-10 border shadow-2xs"
-          style={{
-            background: '#FFE0CF',
-            borderColor: 'rgba(255, 95, 95, 0.20)',
-          }}
-        >
-          <div className="flex items-center gap-3.5 text-center sm:text-left">
-            <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs"
-              style={{ background: '#111111' }}
-            >
-              <Star className="w-5 h-5 text-white fill-white" />
+        {/* Integrated "Can't Find Your Category?" Bottom CTA Box */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-2xs max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 transition-all hover:border-slate-300">
+          <div className="flex items-center gap-4 text-center sm:text-left">
+            <div className="w-12 h-12 rounded-xl bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center shrink-0 shadow-2xs">
+              <Search className="w-6 h-6" />
             </div>
-            <div>
-              <h4
-                className="font-bold text-sm sm:text-base leading-snug"
-                style={{ color: '#111111' }}
-              >
+            <div className="space-y-0.5">
+              <h4 className="font-extrabold text-slate-900 text-base sm:text-lg">
                 Can&apos;t find your exact category?
               </h4>
-              <p className="text-xs sm:text-sm font-normal" style={{ color: '#333333' }}>
-                We offer versatile templates built for any profession or custom job title.
+              <p className="text-xs sm:text-sm text-slate-500 font-normal">
+                Explore all resume templates or search by your specific job title.
               </p>
             </div>
           </div>
+
           <Link
             href="/templates"
-            className="font-bold text-xs sm:text-sm flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all hover:bg-white/60 shrink-0"
-            style={{
-              background: '#FFFFFF',
-              color: '#111111',
-              border: '1px solid rgba(17, 17, 17, 0.10)',
-            }}
+            className="px-6 py-3 bg-[#0F0F0F] hover:bg-black text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer hover:scale-[1.02]"
           >
-            Browse All Templates <ArrowRight className="w-4 h-4" />
+            <span>Browse All Templates</span>
+            <ArrowRight className="w-4 h-4 text-[#F5D17B]" />
           </Link>
         </div>
 
-        {/* CTA */}
-        <div className="flex justify-center">
-          <Link
-            href="/templates"
-            className="text-white font-bold px-8 py-3.5 rounded-xl shadow-md flex items-center gap-2.5 transition-all active:scale-95 text-xs sm:text-sm hover:opacity-90 hover:scale-105"
-            style={{ background: '#111111' }}
-          >
-            <Sparkles className="w-4 h-4" style={{ color: '#FF5F5F' }} />
-            <span>Explore All Templates</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
       </div>
     </section>
   );

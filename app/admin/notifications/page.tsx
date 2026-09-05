@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Send, Users, User, Bell, CheckCircle2 } from 'lucide-react';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function NotificationsPage() {
   const [form, setForm] = useState({ title: '', message: '', target: 'all', type: 'info' });
@@ -8,9 +9,12 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
 
+  const { token } = useAuthStore();
+
   const fetchNotifications = async () => {
     try {
-      const res = await fetch('/api/notifications');
+      const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await fetch('/api/notifications', { headers });
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setNotifications(data.data);
@@ -22,7 +26,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [token]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +36,10 @@ export default function NotificationsPage() {
     try {
       const res = await fetch('/api/notifications', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(form),
       });
 

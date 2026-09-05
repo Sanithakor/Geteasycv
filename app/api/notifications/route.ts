@@ -1,11 +1,11 @@
 /**
  * GET /api/notifications - List real system/user notifications
- * POST /api/notifications - Create a new notification (Admin)
- * PATCH /api/notifications - Mark notification(s) as read
+ * POST /api/notifications - Create a new system notification (Admin only)
+ * PATCH /api/notifications - Mark notification(s) as read (Authenticated)
  */
 
 import { NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/middleware/auth';
+import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
 import {
   getSystemNotifications,
   createSystemNotification,
@@ -15,8 +15,10 @@ import {
 export async function GET(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    const notifications = await getSystemNotifications(auth?.userId);
+    const userId = auth?.userId || null;
+    const isAdmin = auth?.role === 'admin';
 
+    const notifications = await getSystemNotifications(userId, isAdmin);
     const unreadCount = notifications.filter((n) => !n.isRead).length;
 
     return NextResponse.json({
@@ -36,7 +38,18 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const auth = await getAuthFromRequest(req);
-    // Optional: check admin authorization
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const isAdmin = await requireAdmin(auth);
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Forbidden: Admin authorization required' },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { title, message, type = 'info', target = 'all', link } = body;
 
@@ -70,10 +83,21 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
+    const auth = await getAuthFromRequest(req);
+    const userId = auth?.userId || null;
+    const isAdmin = auth?.role === 'admin';
+
     const body = await req.json();
     const { id } = body;
 
-    await markNotificationAsRead(id);
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Notification ID is required' },
+        { status: 400 }
+      );
+    }
+
+    await markNotificationAsRead(id, userId, isAdmin);
 
     return NextResponse.json({
       success: true,

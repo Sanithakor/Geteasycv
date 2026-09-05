@@ -1,0 +1,13 @@
+[
+  {
+    "id": "cmtmztskh0004s27ti587jewz",
+    "userId": "cms0k482a0003ybsfmo916nuv",
+    "title": "New Resume Created",
+    "message": "\"Sarah Johnson Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-04T13:32:10.337Z"
+  }
+]

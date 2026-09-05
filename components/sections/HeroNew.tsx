@@ -20,7 +20,7 @@ export default function HeroNew() {
 
   const badgeText = downloadCount > 0 
     ? `${downloadCount.toLocaleString()}+ CVs Downloaded` 
-    : '10,000+ CVs Downloaded';
+    : 'Professional ATS Resume Builder';
 
   return (
     <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28" style={{ background: '#F8F8F6' }}>
@@ -38,41 +38,42 @@ export default function HeroNew() {
               style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.12)' }}>
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#58C09D' }} />
               <span className="text-sm font-semibold" style={{ color: '#333333' }}>
-                {badgeText}
+                AI-Powered Resume Builder
               </span>
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style={{ color: '#0F0F0F' }}>
-              Build an ATS Resume That{" "}
+              Build a Professional,{" "}
               <span className="relative inline-block">
-                <span style={{ color: '#F3645C' }}>Recruiters Read</span>
+                <span style={{ color: '#F3645C' }}>ATS-Friendly Resume</span>
                 <span className="absolute -bottom-1 left-0 right-0 h-1 rounded-full" style={{ background: '#F5D17B' }} />
-              </span>
+              </span>{" "}
+              with AI
             </h1>
 
             <p className="text-lg sm:text-xl mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: '#333333' }}>
-              Select from 100+ recruiter-tested templates, resolve formatting bugs automatically, and download a high-res PDF ready for submission.
+              Create and customize your resume online with AI-powered content suggestions, ATS-friendly templates, and a live preview as you edit.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
               <Link
                 href="/templates"
-                className="group px-8 py-4 rounded-xl font-bold text-white transition-all shadow-lg flex items-center justify-center gap-2 hover:opacity-90"
+                className="group px-8 py-4 rounded-xl font-bold text-white transition-all shadow-lg flex items-center justify-center gap-2 hover:opacity-90 cursor-pointer"
                 style={{ background: '#0F0F0F' }}
               >
-                Browse Templates
+                Create My Resume — Free
                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
               <Link
-                href="/editor"
-                className="px-8 py-4 rounded-xl font-semibold transition-all border flex items-center justify-center gap-2 hover:opacity-90"
+                href="/templates"
+                className="px-8 py-4 rounded-xl font-semibold transition-all border flex items-center justify-center gap-2 hover:opacity-90 cursor-pointer"
                 style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.15)', color: '#333333' }}
               >
-                Start Building
+                Browse Resume Templates
               </Link>
             </div>
 
@@ -111,7 +112,10 @@ export default function HeroNew() {
                     <div className="w-3 h-3 rounded-full bg-yellow-400" />
                     <div className="w-3 h-3 rounded-full bg-green-400" />
                   </div>
-                  <div className="text-xs font-medium" style={{ color: '#9ca3af' }}>Resume Editor</div>
+                  <div className="text-xs font-medium flex items-center gap-2" style={{ color: '#9ca3af' }}>
+                    <span>Resume Editor</span>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">SAMPLE DATA</span>
+                  </div>
                 </div>
 
                 {/* Resume preview card */}

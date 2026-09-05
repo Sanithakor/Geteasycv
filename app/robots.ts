@@ -18,7 +18,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/', '/dashboard/', '/editor/', '/my-resumes/', '/coming-soon'],
+      disallow: [
+        '/admin/',
+        '/api/',
+        '/dashboard/',
+        '/editor/',
+        '/my-resumes/',
+        '/settings/',
+        '/profile/',
+        '/subscription/',
+        '/billing/',
+        '/coming-soon',
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
