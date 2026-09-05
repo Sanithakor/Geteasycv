@@ -8,7 +8,13 @@ import { useAuthModalStore } from '@/lib/store/authModalStore';
 import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import { Menu, X, LayoutDashboard } from 'lucide-react';
 
-const navItems = [
+interface NavItem {
+  name: string;
+  href: string;
+  highlight?: boolean;
+}
+
+const navItems: NavItem[] = [
   { name: 'Create Resume', href: '/editor', highlight: true },
   { name: 'Templates', href: '/templates' },
   { name: 'ATS Checker', href: '/ats-checker' },
