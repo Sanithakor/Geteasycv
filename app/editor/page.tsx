@@ -1706,7 +1706,7 @@ export default function EditorPage() {
                             className="relative bg-white shadow-xl overflow-hidden transition-all duration-300"
                             style={{ width: 920, height: sheetHeight }}
                           >
-                            {/* Continuous Seamless Page View Slice */}
+                            {/* Continuous Seamless Page View Slic e */}
                             <div 
                               ref={p === 0 ? cvContentRef : undefined}
                               className="pointer-events-none select-none"
