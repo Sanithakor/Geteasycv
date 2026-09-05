@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { sendPaymentSuccessEmail } from '@/lib/email';
 import { fetchAllPlans } from '@/lib/plansStore';
+import { createSystemNotification } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
@@ -115,7 +116,28 @@ export async function POST(req: Request) {
       },
     });
 
-    // 4. Send transactional confirmation email
+    // 4. Dispatch real system notifications
+    try {
+      await createSystemNotification({
+        title: 'Payment Successful',
+        message: `Received ₹${amount} payment for ${normalizedPlan.toUpperCase()} plan`,
+        type: 'payment',
+        target: 'all',
+        userId: auth.userId,
+      });
+
+      await createSystemNotification({
+        title: 'Subscription Upgraded',
+        message: `Upgraded to ${normalizedPlan.toUpperCase()} plan`,
+        type: 'subscription',
+        target: 'all',
+        userId: auth.userId,
+      });
+    } catch (notifErr) {
+      console.warn('[NOTIF_PAYMENT_WARN]', notifErr);
+    }
+
+    // 5. Send transactional confirmation email
     try {
       if (updatedUser.email) {
         await sendPaymentSuccessEmail(

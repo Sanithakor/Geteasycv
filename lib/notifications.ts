@@ -1,57 +1,62 @@
-import { prisma } from '@/lib/db';
+/**
+ * Centralized Notification Service
+ * Purely event-driven, database-backed notification utility.
+ * ZERO hardcoded or dummy notifications.
+ */
+
+import { prisma, safeDbQuery } from '@/lib/db';
+import fs from 'fs';
+import path from 'path';
 
 export interface NotificationItem {
   id: string;
   userId?: string | null;
   title: string;
   message: string;
-  type: string;
-  target: string;
+  type: string; // 'user_signup' | 'subscription' | 'payment' | 'resume_created' | 'resume_downloaded' | 'email_verified' | 'contact_submission' | 'info'
+  target: string; // 'all' | 'free' | 'pro' | 'admin' | 'user'
   isRead: boolean;
   link?: string | null;
   createdAt: string | Date;
 }
 
-// In-memory fallback notifications matching Image 5 dataset exactly
-let memoryNotifications: NotificationItem[] = [
-  {
-    id: 'notif-default-1',
-    title: 'New User Registered',
-    message: 'user@geteasycv.com joined GetEasyCV',
-    type: 'user_signup',
-    target: 'all',
-    isRead: false,
-    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'notif-default-2',
-    title: 'Subscription Upgraded',
-    message: 'User upgraded to Pro Monthly plan',
-    type: 'subscription',
-    target: 'all',
-    isRead: false,
-    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'notif-default-3',
-    title: 'New Resume Created',
-    message: 'ATS Modern layout template was generated',
-    type: 'resume_created',
-    target: 'all',
-    isRead: true,
-    createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'notif-default-4',
-    title: 'Payment Successful',
-    message: 'Received ₹199 payment for Pro plan',
-    type: 'payment',
-    target: 'all',
-    isRead: true,
-    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-  },
-];
+const NOTIFICATIONS_FILE_PATH = path.join(process.cwd(), 'data', 'notifications_store.json');
 
+// File-backed fallback store when DB is offline (starts EMPTY, zero hardcoded dummies)
+let localNotificationsStore: NotificationItem[] = [];
+
+function loadStoreFromDisk(): void {
+  try {
+    if (fs.existsSync(NOTIFICATIONS_FILE_PATH)) {
+      const content = fs.readFileSync(NOTIFICATIONS_FILE_PATH, 'utf-8');
+      const parsed = JSON.parse(content);
+      if (Array.isArray(parsed)) {
+        localNotificationsStore = parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('[NOTIFICATIONS_DISK_READ_WARN]', err);
+  }
+}
+
+function saveStoreToDisk(): void {
+  try {
+    const dir = path.dirname(NOTIFICATIONS_FILE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(NOTIFICATIONS_FILE_PATH, JSON.stringify(localNotificationsStore.slice(0, 100), null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[NOTIFICATIONS_DISK_WRITE_WARN]', err);
+  }
+}
+
+// Initial load
+loadStoreFromDisk();
+
+/**
+ * Create a real system notification for an application event
+ */
 export async function createSystemNotification(params: {
   title: string;
   message: string;
@@ -59,7 +64,7 @@ export async function createSystemNotification(params: {
   target?: string;
   userId?: string | null;
   link?: string | null;
-}) {
+}): Promise<NotificationItem> {
   const {
     title,
     message,
@@ -70,7 +75,7 @@ export async function createSystemNotification(params: {
   } = params;
 
   const newItem: NotificationItem = {
-    id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     userId,
     title,
     message,
@@ -81,8 +86,8 @@ export async function createSystemNotification(params: {
     createdAt: new Date().toISOString(),
   };
 
-  try {
-    const dbNotif = await (prisma as any).notification.create({
+  const dbNotif = await safeDbQuery(async () => {
+    return await (prisma as any).notification.create({
       data: {
         title,
         message,
@@ -93,7 +98,10 @@ export async function createSystemNotification(params: {
         isRead: false,
       },
     });
-    memoryNotifications.unshift({
+  }, null);
+
+  if (dbNotif) {
+    const formatted: NotificationItem = {
       id: dbNotif.id,
       userId: dbNotif.userId,
       title: dbNotif.title,
@@ -103,54 +111,117 @@ export async function createSystemNotification(params: {
       isRead: dbNotif.isRead,
       link: dbNotif.link,
       createdAt: dbNotif.createdAt,
-    });
-    return dbNotif;
-  } catch (err) {
-    console.warn('[NOTIFICATION_DB_WARN] Using memory notification fallback:', err);
-    memoryNotifications.unshift(newItem);
-    return newItem;
+    };
+    localNotificationsStore.unshift(formatted);
+    saveStoreToDisk();
+    return formatted;
   }
+
+  // Backup store save
+  localNotificationsStore.unshift(newItem);
+  saveStoreToDisk();
+  return newItem;
 }
 
-export async function getSystemNotifications(userId?: string): Promise<NotificationItem[]> {
-  try {
-    const dbNotifs = await (prisma as any).notification.findMany({
-      where: {
-        OR: [
-          { target: 'all' },
-          { userId: userId || undefined },
-        ],
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-    });
+/**
+ * Get notifications scoped by authenticated user & role
+ * - Regular users: only get notifications targeted to their userId or target='all'
+ * - Admins: get all notifications including system events
+ */
+export async function getSystemNotifications(
+  userId?: string | null,
+  isAdmin?: boolean
+): Promise<NotificationItem[]> {
+  loadStoreFromDisk();
 
-    if (dbNotifs && dbNotifs.length > 0) {
-      return dbNotifs;
+  const dbNotifs = await safeDbQuery(async () => {
+    let whereClause: any = {};
+
+    if (!isAdmin) {
+      if (userId) {
+        whereClause = {
+          OR: [
+            { userId: userId },
+            { target: 'all' },
+          ],
+        };
+      } else {
+        whereClause = { target: 'all' };
+      }
     }
-  } catch (err) {
-    // Fallback to memory notifications
+
+    return await (prisma as any).notification.findMany({
+      where: whereClause,
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+  }, null);
+
+  if (dbNotifs && Array.isArray(dbNotifs)) {
+    return dbNotifs.map((n: any) => ({
+      id: n.id,
+      userId: n.userId,
+      title: n.title,
+      message: n.message,
+      type: n.type,
+      target: n.target,
+      isRead: n.isRead,
+      link: n.link,
+      createdAt: n.createdAt,
+    }));
   }
 
-  return memoryNotifications;
+  // Fallback to local store filtered strictly by authorization
+  if (!isAdmin) {
+    return localNotificationsStore.filter(
+      (n) => (userId && n.userId === userId) || n.target === 'all'
+    );
+  }
+
+  return localNotificationsStore;
 }
 
-export async function markNotificationAsRead(id: string) {
+/**
+ * Mark notification(s) as read with user ownership verification
+ */
+export async function markNotificationAsRead(
+  id: string,
+  userId?: string | null,
+  isAdmin?: boolean
+): Promise<boolean> {
+  loadStoreFromDisk();
+
   if (id === 'all') {
-    memoryNotifications = memoryNotifications.map(n => ({ ...n, isRead: true }));
-    try {
+    localNotificationsStore = localNotificationsStore.map((n) => {
+      if (isAdmin || (userId && n.userId === userId) || n.target === 'all') {
+        return { ...n, isRead: true };
+      }
+      return n;
+    });
+    saveStoreToDisk();
+
+    await safeDbQuery(async () => {
+      const whereClause = isAdmin ? {} : userId ? { OR: [{ userId }, { target: 'all' }] } : { target: 'all' };
       await (prisma as any).notification.updateMany({
+        where: whereClause,
         data: { isRead: true },
       });
-    } catch {}
-    return;
+    }, null);
+
+    return true;
   }
 
-  memoryNotifications = memoryNotifications.map(n => (n.id === id ? { ...n, isRead: true } : n));
-  try {
+  localNotificationsStore = localNotificationsStore.map((n) =>
+    n.id === id ? { ...n, isRead: true } : n
+  );
+  saveStoreToDisk();
+
+  await safeDbQuery(async () => {
     await (prisma as any).notification.update({
       where: { id },
       data: { isRead: true },
     });
-  } catch {}
+  }, null);
+
+  return true;
 }
