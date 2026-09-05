@@ -942,37 +942,20 @@ export default function EditorPage() {
         return;
       }
       if (type === 'pdf') {
-        toast.loading('Generating Vector ATS PDF...', { id: 'pdf' });
-        let vectorSuccess = false;
-        if (cvContentRef.current) {
-          vectorSuccess = await exportToVectorPDF(cvContentRef.current, fileName(cvData, 'pdf'));
+        toast.loading('Generating High-Resolution PDF...', { id: 'pdf' });
+        const targetElem = cvContentRef.current || exportRef.current || (typeof document !== 'undefined' ? (document.getElementById('cv-preview-container') as HTMLElement || document.querySelector('.cv-preview-page') as HTMLElement) : null);
+        
+        let pdfSuccess = false;
+        if (targetElem) {
+          pdfSuccess = await exportToVectorPDF(targetElem, fileName(cvData, 'pdf'));
         }
-        if (!vectorSuccess) {
-          const canvas = await exportCanvas();
-          const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4',
-            compress: true,
-          });
-          const pageWidth = pdf.internal.pageSize.getWidth();
-          const pageHeight = pdf.internal.pageSize.getHeight();
-          const imageHeight = (canvas.height * pageWidth) / canvas.width;
-          const image = canvas.toDataURL('image/jpeg', 0.98);
-          let remaining = imageHeight;
-          let offset = 0;
-          pdf.addImage(image, 'JPEG', 0, offset, pageWidth, imageHeight, undefined, 'FAST');
-          remaining -= pageHeight;
-          while (remaining > 0) {
-            offset -= pageHeight;
-            pdf.addPage();
-            pdf.addImage(image, 'JPEG', 0, offset, pageWidth, imageHeight, undefined, 'FAST');
-            remaining -= pageHeight;
-          }
-          pdf.save(fileName(cvData, 'pdf'));
+
+        if (pdfSuccess) {
+          toast.success('PDF downloaded successfully!', { id: 'pdf' });
+          recordTemplateDownload();
+        } else {
+          toast.error('Failed to generate PDF. Please try again.', { id: 'pdf' });
         }
-        toast.success('PDF downloaded successfully!', { id: 'pdf' });
-        recordTemplateDownload();
         return;
       }
       const canvas = await exportCanvas();

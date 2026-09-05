@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { exportToPDF, exportToImage } from '@/lib/exportUtils';
 import { exportToNativeDocx } from '@/lib/export/docxExporter';
+import { exportToVectorPDF } from '@/lib/export/vectorPdfExporter';
 import {
   FileText,
   Sparkles,
@@ -140,6 +141,19 @@ export default function CoverLetterEditorPage() {
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-500" />}
                 <span>{copied ? 'Copied!' : 'Copy Text'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  if (letterRef.current) {
+                    await exportToVectorPDF(letterRef.current, `${senderName.replace(/\s+/g, '_')}_Cover_Letter.pdf`);
+                  }
+                }}
+                className="px-4 py-2.5 bg-[#F3645C] hover:opacity-90 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download PDF</span>
               </button>
 
               <button
