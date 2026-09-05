@@ -4,12 +4,13 @@
  */
 import { redirect } from 'next/navigation';
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { callbackUrl?: string };
+  searchParams: Promise<{ callbackUrl?: string }>;
 }) {
-  const callbackUrl = searchParams.callbackUrl ?? '';
+  const resolved = await searchParams;
+  const callbackUrl = resolved?.callbackUrl ?? '';
   const dest = callbackUrl
     ? `/?openAuth=login&callbackUrl=${encodeURIComponent(callbackUrl)}`
     : '/?openAuth=login';
