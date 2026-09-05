@@ -17,7 +17,8 @@ import {
   User, FileText, Briefcase, GraduationCap, Link as LinkIcon, Folder, Award, 
   Languages, Palette, ArrowLeft, Undo2, Redo2, Eye, Save, Download, ChevronUp, 
   ChevronDown, CheckCircle2, GripVertical, Plus, Trash2, Camera, UserCircle, LineChart,
-  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight, Share2, Sparkles, ShieldCheck
+  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight, Share2, Sparkles, ShieldCheck,
+  Mic, MicOff, Wand2, Volume2
 } from 'lucide-react';
 // AI Assist components & hook
 import AIFieldButton from '@/components/editor/AIFieldButton';
@@ -29,6 +30,8 @@ import AICoverLetterModal from '@/components/editor/AICoverLetterModal';
 import AIImprovementModal from '@/components/editor/AIImprovementModal';
 import DownloadLimitModal from '@/components/editor/DownloadLimitModal';
 import ResumeImportModal from '@/components/modals/ResumeImportModal';
+import VoiceAICommandCenter from '@/components/editor/VoiceAICommandCenter';
+import VoiceAIFieldAssist from '@/components/editor/VoiceAIFieldAssist';
 import A4MultiPageContainer from '@/components/cv/A4MultiPageContainer';
 import { useAIAssist } from '@/lib/hooks/useAIAssist';
 import { exportToNativeDocx } from '@/lib/export/docxExporter';
@@ -301,6 +304,74 @@ export default function EditorPage() {
 
   const [selectedTemplate, setSelectedTemplate] = useState<GeneratedTemplate>(initialTemplate);
   const [cvData, setCvData] = useState<CVData>(sampleCV);
+  const [history, setHistory] = useState<CVData[]>([sampleCV]);
+  const [historyIndex, setHistoryIndex] = useState<number>(0);
+  const [showVoiceAIModal, setShowVoiceAIModal] = useState(false);
+
+  const pushHistory = useCallback((currentData: CVData) => {
+    setHistory((prev) => {
+      const sliced = prev.slice(0, historyIndex + 1);
+      return [...sliced, JSON.parse(JSON.stringify(currentData))];
+    });
+    setHistoryIndex((prev) => prev + 1);
+  }, [historyIndex]);
+
+  const handleUndo = useCallback(() => {
+    if (historyIndex > 0) {
+      const targetIndex = historyIndex - 1;
+      setHistoryIndex(targetIndex);
+      setCvData(JSON.parse(JSON.stringify(history[targetIndex])));
+      toast.success('Undid last modification');
+    }
+  }, [history, historyIndex]);
+
+  const handleRedo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      const targetIndex = historyIndex + 1;
+      setHistoryIndex(targetIndex);
+      setCvData(JSON.parse(JSON.stringify(history[targetIndex])));
+      toast.success('Redid modification');
+    }
+  }, [history, historyIndex]);
+
+  const handleApplyVoiceChange = useCallback((newCvData: CVData, explanation: string) => {
+    pushHistory(cvData);
+    setCvData(newCvData);
+    toast((t) => (
+      <div className="flex items-center justify-between gap-3 text-xs font-medium">
+        <span>{explanation}</span>
+        <button
+          type="button"
+          onClick={() => {
+            handleUndo();
+            toast.dismiss(t.id);
+          }}
+          className="px-2.5 py-1 bg-slate-900 text-[#F5D17B] font-bold rounded-md hover:bg-slate-800 transition-colors"
+        >
+          Undo
+        </button>
+      </div>
+    ), { duration: 7000, icon: '🎙️' });
+  }, [cvData, pushHistory, handleUndo]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        if (e.shiftKey) {
+          e.preventDefault();
+          handleRedo();
+        } else {
+          e.preventDefault();
+          handleUndo();
+        }
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleUndo, handleRedo]);
   const [customTheme, setCustomTheme] = useState<Theme>(initialTemplate.theme);
   const [selectedLayout, setSelectedLayout] = useState<Layout>(initialTemplate.layout);
   const [sectionVariants, setSectionVariants] = useState<SectionVariant>(initialTemplate.sectionVariants);
@@ -993,7 +1064,20 @@ export default function EditorPage() {
             <Field label="First Name" value={cvData.personal.firstName} placeholder="Sarah" onChange={(value: any) => updatePersonal('firstName', value)} />
             <Field label="Last Name" value={cvData.personal.lastName} placeholder="Johnson" onChange={(value: any) => updatePersonal('lastName', value)} />
           </div>
-          <Field label="Professional Title" value={cvData.personal.title} placeholder="Senior Full Stack Developer" onChange={(value: any) => updatePersonal('title', value)} />
+          <div className="space-y-1">
+            <Field label="Professional Title" value={cvData.personal.title} placeholder="Senior Full Stack Developer" onChange={(value: any) => updatePersonal('title', value)} />
+            <VoiceAIFieldAssist
+              fieldName="Professional Title"
+              fieldValue={cvData.personal.title}
+              onAccept={(text) => {
+                pushHistory(cvData);
+                updatePersonal('title', text);
+              }}
+              sectionName="Personal Information"
+              jobTitle={cvData.personal.title || 'Professional'}
+              compact
+            />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Email" value={cvData.personal.email} placeholder="sarah.johnson@email.com" onChange={(value: any) => updatePersonal('email', value)} />
             <Field label="Phone" value={cvData.personal.phone} placeholder="+1 (555) 123-4567" onChange={(value: any) => updatePersonal('phone', value)} />
@@ -1011,6 +1095,16 @@ export default function EditorPage() {
       return (
         <div>
           <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />
+          <VoiceAIFieldAssist
+            fieldName="Professional Summary"
+            fieldValue={cvData.summary}
+            onAccept={(text) => {
+              pushHistory(cvData);
+              setCvData((prev) => ({ ...prev, summary: text }));
+            }}
+            sectionName="Professional Summary"
+            jobTitle={cvData.personal.title || 'Professional'}
+          />
           <AIFieldButton
             fieldName="Professional Summary"
             fieldValue={cvData.summary}
@@ -1036,6 +1130,16 @@ export default function EditorPage() {
               <div className="grid grid-cols-2 gap-4"><Field label="Start" value={item.startDate} onChange={(value: any) => updateExperience(item.id, 'startDate', value)} /><Field label="End" value={item.endDate} onChange={(value: any) => updateExperience(item.id, 'endDate', value)} /></div>
               <div>
                 <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
+                <VoiceAIFieldAssist
+                  fieldName={`Role summary (${item.company})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateExperience(item.id, 'description', text);
+                  }}
+                  sectionName="Work Experience"
+                  jobTitle={item.position || cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Role description (${item.company})`}
                   fieldValue={item.description}
@@ -1050,6 +1154,16 @@ export default function EditorPage() {
               </div>
               <div>
                 <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+                <VoiceAIFieldAssist
+                  fieldName={`Achievements (${item.company})`}
+                  fieldValue={item.achievements.join('\n')}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateExperience(item.id, 'achievements', text.split('\n').filter(Boolean));
+                  }}
+                  sectionName="Work Achievements"
+                  jobTitle={item.position || cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Achievements (${item.company})`}
                   fieldValue={item.achievements.join('\n')}
@@ -1107,6 +1221,16 @@ export default function EditorPage() {
               <Field label="Project Name" value={item.name} onChange={(value: any) => updateProject(item.id, 'name', value)} />
               <div>
                 <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+                <VoiceAIFieldAssist
+                  fieldName={`Project description (${item.name})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateProject(item.id, 'description', text);
+                  }}
+                  sectionName="Projects"
+                  jobTitle={cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Project description (${item.name})`}
                   fieldValue={item.description}
@@ -1205,6 +1329,40 @@ export default function EditorPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* Undo / Redo History Controls */}
+          <div className="hidden sm:flex items-center bg-slate-100 rounded-md border border-slate-200 p-0.5" title="Undo / Redo changes">
+            <button
+              type="button"
+              onClick={handleUndo}
+              disabled={historyIndex <= 0}
+              className="p-1.5 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed rounded hover:bg-white transition-colors cursor-pointer"
+              title="Undo last change (Ctrl+Z)"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleRedo}
+              disabled={historyIndex >= history.length - 1}
+              className="p-1.5 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed rounded hover:bg-white transition-colors cursor-pointer"
+              title="Redo change (Ctrl+Y)"
+            >
+              <Redo2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Voice & AI Assistant Command Center Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowVoiceAIModal(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-[#0F0F0F] hover:bg-[#262626] rounded-md border border-slate-700 shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+            title="Voice Commands & AI Editor"
+          >
+            <Mic className="w-3.5 h-3.5 text-[#F3645C] group-hover:scale-110 transition-transform" />
+            <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
+            <span className="hidden sm:inline">Voice &amp; AI</span>
+          </button>
+
           <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-md border border-slate-800 transition-colors shadow-2xs cursor-pointer">
             <Save className="w-4 h-4 text-teal-400" />
             <span>{isSaving ? 'Saving...' : 'Save & Update'}</span>
@@ -2215,6 +2373,35 @@ export default function EditorPage() {
         }}
       />
       
+      {/* Voice & AI Content Editor Modal (Voice commands & AI patch confirmation) */}
+      <VoiceAICommandCenter
+        isOpen={showVoiceAIModal}
+        onClose={() => setShowVoiceAIModal(false)}
+        cvData={cvData}
+        activeSection={expandedPanel}
+        onApplyChange={handleApplyVoiceChange}
+      />
+
+      {/* Floating Voice & AI Quick Action Button */}
+      <button
+        type="button"
+        onClick={() => setShowVoiceAIModal(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-full shadow-2xl border-2 border-[#F5D17B]/50 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+        title="Open Voice & AI Content Editor"
+      >
+        <div className="relative flex items-center justify-center">
+          <Mic className="w-5 h-5 text-[#F3645C]" />
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#58C09D] animate-ping" />
+        </div>
+        <div className="flex flex-col text-left">
+          <span className="text-xs font-black tracking-tight text-white flex items-center gap-1">
+            <span>Voice &amp; AI</span>
+            <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
+          </span>
+          <span className="text-[9px] text-slate-300 font-medium hidden sm:inline">Click or speak commands</span>
+        </div>
+      </button>
+
       {/* Hidden container for PDF export rendering without scroll interference */}
       <div className="pointer-events-none fixed -left-[10000px] top-0">
         <div ref={exportRef} className="bg-white p-0" style={{ width: 920 }}>

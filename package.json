@@ -20,6 +20,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.21.0",
     "@prisma/client": "^5.7.1",
     "@sentry/nextjs": "^10.70.0",
     "@types/html2canvas": "^0.5.35",
