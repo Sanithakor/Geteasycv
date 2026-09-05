@@ -113,7 +113,7 @@ export default function ReadyToBuild({
                 {typeof title === 'string' ? (
                   <>
                     Ready to Build Your{' '}
-                    <span className="bg-gradient-to-r from-violet-400 via-indigo-300 to-sky-300 bg-clip-text text-transparent">
+                    <span style={{ color: '#F5D17B' }}>
                       Perfect Resume?
                     </span>
                   </>
@@ -149,7 +149,7 @@ export default function ReadyToBuild({
                   href={buttonHref}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-extrabold text-xs sm:text-sm text-slate-950 bg-white hover:bg-slate-100 shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:shadow-[0_0_35px_rgba(255,255,255,0.35)] transition-all hover:scale-102 cursor-pointer"
                 >
-                  <Sparkles className="w-4 h-4 text-violet-600" />
+                  <Sparkles className="w-4 h-4" style={{ color: '#F3645C' }} />
                   <span>{buttonText}</span>
                   <ArrowRight className="w-4 h-4 text-slate-950" />
                 </Link>

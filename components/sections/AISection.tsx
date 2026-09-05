@@ -175,20 +175,19 @@ export default function AISection() {
           
           {/* Left Column: Copy & Interactive Controls */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-200/80 bg-violet-50/70 text-violet-800 text-xs font-bold uppercase tracking-wider shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-violet-600" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-2xs text-xs font-bold uppercase tracking-wider"
+              style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.12)', color: '#0F0F0F' }}>
+              <Sparkles className="w-3.5 h-3.5" style={{ color: '#F3645C' }} />
               <span>AI Resume Copilot</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-slate-900">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-[#0F0F0F]">
               Transform Weak Bullets into{' '}
-              <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">
-                High-Impact Statements
-              </span>
+              <span style={{ color: '#F3645C' }}>High-Impact Statements</span>
             </h2>
 
-            <p className="text-base sm:text-lg leading-relaxed text-slate-600">
-              Turn passive task descriptions into quantified achievements. Our AI extracts measurable results, injects power verbs, and optimizes keywords so your resume passes ATS parsers and catches recruiters&apos; eyes.
+            <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-[#333333]">
+              Turn passive task descriptions into quantified achievements. Our AI extracts measurable outcomes, injects industry action verbs, and optimizes keywords so your resume passes ATS parsers and catches recruiters&apos; attention.
             </p>
 
             {/* Feature Highlights */}
@@ -198,25 +197,26 @@ export default function AISection() {
                   icon: TrendingUp,
                   title: 'Action-Oriented Verbs & Metrics',
                   desc: 'Replaces vague duties with quantifiable numbers, percentages, and leadership impact.',
-                  iconBg: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                  iconBg: '#F5D17B',
                 },
                 {
                   icon: Target,
                   title: 'ATS Keyword Optimization',
                   desc: 'Injects verified industry keywords matched to contemporary ATS job algorithms.',
-                  iconBg: 'bg-violet-50 text-violet-600 border-violet-100',
+                  iconBg: '#BAC7FE',
                 },
               ].map(({ icon: Icon, title, desc, iconBg }) => (
                 <div
                   key={title}
                   className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-all"
                 >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-2xs ${iconBg}`}>
-                    <Icon className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-black/5 shadow-2xs"
+                    style={{ background: iconBg }}>
+                    <Icon className="w-5 h-5 text-[#0F0F0F]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm sm:text-base text-slate-900 mb-0.5">{title}</h3>
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600">{desc}</p>
+                    <h3 className="font-bold text-sm sm:text-base text-[#0F0F0F] mb-0.5">{title}</h3>
+                    <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">{desc}</p>
                   </div>
                 </div>
               ))}

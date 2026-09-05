@@ -123,22 +123,21 @@ export default function ExportSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs mb-5">
-            <FileDown className="w-3.5 h-3.5 text-rose-500" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border shadow-2xs mb-4"
+            style={{ borderColor: 'rgba(15,15,15,0.10)' }}>
+            <FileDown className="w-3.5 h-3.5" style={{ color: '#F3645C' }} />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#0F0F0F]">
               Universal Export Options
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] leading-tight mb-4">
             Export in Any Format,{' '}
-            <span className="bg-gradient-to-r from-rose-500 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-              Without Distortion
-            </span>
+            <span style={{ color: '#F3645C' }}>Without Distortion</span>
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-[#333333] leading-relaxed max-w-2xl mx-auto">
             Download production-ready vector PDFs, fully editable Word DOCX files, or generate a sleek personal web link with zero formatting breakdown.
           </p>
         </div>
