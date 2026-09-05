@@ -7,14 +7,17 @@
 import OpenAI from 'openai';
 
 // ─── Environment & Client Setup ─────────────────────────────────────────────
-const apiKey = process.env.OPENAI_API_KEY?.trim() || '';
-
 let openaiClient: OpenAI | null = null;
 
-if (apiKey) {
-  openaiClient = new OpenAI({
-    apiKey: apiKey,
-  });
+function getOpenAIClient(): OpenAI | null {
+  const apiKey = process.env.OPENAI_API_KEY?.trim() || '';
+  if (!apiKey) return null;
+  if (!openaiClient) {
+    openaiClient = new OpenAI({
+      apiKey: apiKey,
+    });
+  }
+  return openaiClient;
 }
 
 export interface AITaskOptions<T> {
@@ -83,8 +86,10 @@ export async function executeAITask<T>(options: AITaskOptions<T>): Promise<AITas
     model = 'gpt-4o-mini',
   } = options;
 
+  const client = getOpenAIClient();
+
   // 1. If OpenAI API Key is missing, use rule-based fallback immediately
-  if (!openaiClient) {
+  if (!client) {
     console.info(`[OPENAI_SERVICE] API Key not configured. Using rule-based fallback for "${featureName}".`);
     return {
       success: true,
@@ -97,7 +102,7 @@ export async function executeAITask<T>(options: AITaskOptions<T>): Promise<AITas
   // 2. Call OpenAI Chat Completions API with JSON mode
   try {
     const startTime = Date.now();
-    const response = await openaiClient.chat.completions.create({
+    const response = await client.chat.completions.create({
       model: model,
       messages: [
         { role: 'system', content: systemPrompt },

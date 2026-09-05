@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Briefcase,
@@ -9,224 +9,331 @@ import {
   GraduationCap,
   Megaphone,
   CircleDollarSign,
-  TrendingUp,
+  ShoppingCart,
   Wrench,
   Palette,
-  UserCheck,
+  User,
+  Star,
   ArrowRight,
   Sparkles,
-  Search,
+  Layers,
 } from 'lucide-react';
-import { generateTemplates } from '@/lib/generateTemplates';
-import { isTemplateInCategory } from '@/data/templateCategories';
 
-interface CategoryConfig {
+interface CategoryItem {
   id: string;
   name: string;
-  categoryId: string;
+  count: string;
   description: string;
   icon: React.ElementType;
   query: string;
+  accentColor: string;
+  iconBg: string;
+  iconColor: string;
+  badgeBg: string;
+  badgeColor: string;
+  group: 'business' | 'tech' | 'creative' | 'general';
 }
 
-const CATEGORIES_CONFIG: CategoryConfig[] = [
+const CATEGORIES: CategoryItem[] = [
   {
     id: 'business',
-    name: 'Business',
-    categoryId: 'sales-business',
-    description: 'Professional resume templates for business & management roles.',
+    name: 'Business & Management',
+    count: '120+ Templates',
+    description: 'Executive leaders, operations, consultants & business analysts',
     icon: Briefcase,
-    query: 'sales-business',
+    query: 'business',
+    accentColor: '#6366F1',
+    iconBg: 'bg-indigo-50/80',
+    iconColor: 'text-indigo-600',
+    badgeBg: 'bg-indigo-50',
+    badgeColor: 'text-indigo-700',
+    group: 'business',
   },
   {
     id: 'technology',
-    name: 'Technology',
-    categoryId: 'software-development',
-    description: 'For developers, engineers, designers & IT experts.',
+    name: 'Tech & Software',
+    count: '150+ Templates',
+    description: 'Full-stack engineers, cloud architects, DevOps & IT leads',
     icon: Code2,
-    query: 'software-development',
+    query: 'technology',
+    accentColor: '#0284C7',
+    iconBg: 'bg-sky-50/80',
+    iconColor: 'text-sky-600',
+    badgeBg: 'bg-sky-50',
+    badgeColor: 'text-sky-700',
+    group: 'tech',
   },
   {
     id: 'healthcare',
-    name: 'Healthcare',
-    categoryId: 'healthcare-medical',
-    description: 'For doctors, nurses, therapists & healthcare staff.',
+    name: 'Healthcare & Medicine',
+    count: '90+ Templates',
+    description: 'Physicians, registered nurses, therapists & clinical specialists',
     icon: HeartPulse,
-    query: 'healthcare-medical',
-  },
-  {
-    id: 'education',
-    name: 'Education',
-    categoryId: 'education-academic',
-    description: 'For teachers, professors, trainers & academic staff.',
-    icon: GraduationCap,
-    query: 'education-academic',
-  },
-  {
-    id: 'marketing',
-    name: 'Marketing',
-    categoryId: 'marketing-digital',
-    description: 'For marketers, SEO specialists, writers & brand leads.',
-    icon: Megaphone,
-    query: 'marketing-digital',
+    query: 'healthcare',
+    accentColor: '#E11D48',
+    iconBg: 'bg-rose-50/80',
+    iconColor: 'text-rose-600',
+    badgeBg: 'bg-rose-50',
+    badgeColor: 'text-rose-700',
+    group: 'general',
   },
   {
     id: 'finance',
-    name: 'Finance',
-    categoryId: 'finance-accounting',
-    description: 'For accountants, analysts, bankers & financial pros.',
+    name: 'Finance & Banking',
+    count: '110+ Templates',
+    description: 'Chartered accountants, investment bankers & risk analysts',
     icon: CircleDollarSign,
-    query: 'finance-accounting',
+    query: 'finance',
+    accentColor: '#059669',
+    iconBg: 'bg-emerald-50/80',
+    iconColor: 'text-emerald-600',
+    badgeBg: 'bg-emerald-50',
+    badgeColor: 'text-emerald-700',
+    group: 'business',
   },
   {
-    id: 'sales',
-    name: 'Sales',
-    categoryId: 'sales-business',
-    description: 'For sales reps, account managers & business dev.',
-    icon: TrendingUp,
-    query: 'sales-business',
+    id: 'marketing',
+    name: 'Marketing & Growth',
+    count: '100+ Templates',
+    description: 'Growth marketers, content strategists, SEO & brand directors',
+    icon: Megaphone,
+    query: 'marketing',
+    accentColor: '#EA580C',
+    iconBg: 'bg-orange-50/80',
+    iconColor: 'text-orange-600',
+    badgeBg: 'bg-orange-50',
+    badgeColor: 'text-orange-700',
+    group: 'business',
   },
   {
     id: 'engineering',
-    name: 'Engineering',
-    categoryId: 'engineering-architecture',
-    description: 'For mechanical, civil, electrical & aerospace roles.',
+    name: 'Engineering & Hardware',
+    count: '130+ Templates',
+    description: 'Mechanical, electrical, civil, biomedical & robotics engineers',
     icon: Wrench,
-    query: 'engineering-architecture',
+    query: 'engineering',
+    accentColor: '#4F46E5',
+    iconBg: 'bg-blue-50/80',
+    iconColor: 'text-blue-600',
+    badgeBg: 'bg-blue-50',
+    badgeColor: 'text-blue-700',
+    group: 'tech',
   },
   {
     id: 'creative',
-    name: 'Creative',
-    categoryId: 'ui-ux-design',
-    description: 'For artists, designers, photographers & content creators.',
+    name: 'Design & Creative',
+    count: '90+ Templates',
+    description: 'UI/UX designers, art directors, 3D artists & copywriters',
     icon: Palette,
-    query: 'ui-ux-design',
+    query: 'creative',
+    accentColor: '#9333EA',
+    iconBg: 'bg-purple-50/80',
+    iconColor: 'text-purple-600',
+    badgeBg: 'bg-purple-50',
+    badgeColor: 'text-purple-700',
+    group: 'creative',
+  },
+  {
+    id: 'sales',
+    name: 'Sales & Business Dev',
+    count: '70+ Templates',
+    description: 'Enterprise account executives, SDRs & client partners',
+    icon: ShoppingCart,
+    query: 'sales',
+    accentColor: '#D97706',
+    iconBg: 'bg-amber-50/80',
+    iconColor: 'text-amber-600',
+    badgeBg: 'bg-amber-50',
+    badgeColor: 'text-amber-700',
+    group: 'business',
+  },
+  {
+    id: 'education',
+    name: 'Education & Academia',
+    count: '80+ Templates',
+    description: 'Professors, K-12 instructors, academic researchers & coaches',
+    icon: GraduationCap,
+    query: 'education',
+    accentColor: '#0D9488',
+    iconBg: 'bg-teal-50/80',
+    iconColor: 'text-teal-600',
+    badgeBg: 'bg-teal-50',
+    badgeColor: 'text-teal-700',
+    group: 'general',
   },
   {
     id: 'entry-level',
-    name: 'Entry Level',
-    categoryId: 'student-entry-level',
-    description: 'Perfect for freshers, students & career starters.',
-    icon: UserCheck,
-    query: 'student-entry-level',
+    name: 'Entry-Level & Students',
+    count: '60+ Templates',
+    description: 'College graduates, interns, career switchers & junior talent',
+    icon: User,
+    query: 'entry-level',
+    accentColor: '#2563EB',
+    iconBg: 'bg-cyan-50/80',
+    iconColor: 'text-cyan-600',
+    badgeBg: 'bg-cyan-50',
+    badgeColor: 'text-cyan-700',
+    group: 'general',
   },
 ];
 
 export default function ResumeCategories() {
-  // Dynamically compute real template counts from system template generator
-  const dynamicCounts = useMemo(() => {
-    try {
-      const allTemplates = generateTemplates();
-      const counts: Record<string, number> = {};
-      CATEGORIES_CONFIG.forEach((cat) => {
-        const matchCount = allTemplates.filter((t) =>
-          isTemplateInCategory(t.id, cat.categoryId)
-        ).length;
-        // Fall back to actual generated count or default baseline if system filter differs
-        counts[cat.id] = matchCount > 0 ? matchCount : 12;
-      });
-      return counts;
-    } catch {
-      return {};
-    }
-  }, []);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'business' | 'tech' | 'creative' | 'general'>('all');
+
+  const filteredCategories = activeFilter === 'all'
+    ? CATEGORIES
+    : CATEGORIES.filter((c) => c.group === activeFilter);
 
   return (
-    <section
-      className="py-16 sm:py-24 relative overflow-hidden font-sans border-y border-slate-200/60"
-      style={{ background: '#F8F8F6' }}
-    >
+    <section className="py-20 sm:py-28 relative overflow-hidden font-sans bg-[#F8F8F6]">
+      {/* Subtle modern ambient background mesh */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 pointer-events-none overflow-hidden opacity-60">
+        <div className="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-violet-200/40 blur-3xl" />
+        <div className="absolute -top-12 right-1/4 w-96 h-96 rounded-full bg-sky-200/40 blur-3xl" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Heading Section */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF5722]" />
-              <span>Resume Categories</span>
-            </div>
+        {/* Header Section */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs mb-5">
+            <Sparkles className="w-3.5 h-3.5 text-violet-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Industry-Specific Templates
+            </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-[#0F0F0F]">
-            Find the Perfect Resume{' '}
-            <span className="text-[#FF5722]">Template</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight mb-4">
+            Find the Perfect Resume for Your{' '}
+            <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">
+              Career Path
+            </span>
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
-            Choose from professionally designed, ATS-friendly templates tailored to different industries and career paths.
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+            Choose from a comprehensive library of ATS-parsed, recruiter-approved resume layouts tailored for distinct industries and career stages.
           </p>
+
+          {/* Quick Filter Pill Controls */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-6">
+            {[
+              { id: 'all', label: 'All Industries (150+)' },
+              { id: 'business', label: 'Business & Finance' },
+              { id: 'tech', label: 'Tech & Engineering' },
+              { id: 'creative', label: 'Creative & Media' },
+              { id: 'general', label: 'Healthcare & Academia' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveFilter(tab.id as any)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  activeFilter === tab.id
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* 5-Column Responsive Cards Grid */}
+        {/* Categories Grid (2 rows of 5 on desktop) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
-          {CATEGORIES_CONFIG.map((cat) => {
+          {filteredCategories.map((cat) => {
             const Icon = cat.icon;
-            const count = dynamicCounts[cat.id] || 12;
-
             return (
               <Link
                 key={cat.id}
                 href={`/templates?category=${cat.query}`}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-[#FF5722]/30 hover:shadow-md cursor-pointer"
+                className="group relative bg-white rounded-2xl p-5 border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-violet-300 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between text-left overflow-hidden"
               >
-                <div className="space-y-3">
-                  {/* Modern Icon Bubble with Smooth Hover Transition */}
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-[#FFF0EB] text-[#FF5722] group-hover:bg-[#FF5722] group-hover:text-white transition-colors duration-300 shadow-2xs">
-                    <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
+                {/* Subtle top indicator bar on hover */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: cat.accentColor }}
+                />
 
-                  {/* Title and Real Dynamic Count Badge */}
-                  <div>
-                    <h3 className="font-extrabold text-base text-slate-900 group-hover:text-[#FF5722] transition-colors leading-snug">
-                      {cat.name}
-                    </h3>
-                    <span className="inline-block text-[11px] font-bold text-[#FF5722] bg-[#FFF0EB] px-2 py-0.5 rounded-full border border-[#FF5722]/15 mt-1">
-                      {count}+ Templates
+                <div>
+                  {/* Icon & Count Badge */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div
+                      className={`w-11 h-11 rounded-xl flex items-center justify-center border border-slate-100 shadow-2xs group-hover:scale-110 transition-transform duration-300 ${cat.iconBg}`}
+                    >
+                      <Icon className={`w-5 h-5 ${cat.iconColor}`} />
+                    </div>
+
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${cat.badgeBg} ${cat.badgeColor}`}
+                    >
+                      {cat.count}
                     </span>
                   </div>
 
+                  {/* Title */}
+                  <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug mb-1.5 group-hover:text-violet-600 transition-colors">
+                    {cat.name}
+                  </h3>
+
                   {/* Description */}
-                  <p className="text-xs text-slate-500 font-normal leading-relaxed line-clamp-2 min-h-[36px]">
+                  <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
                     {cat.description}
                   </p>
                 </div>
 
-                {/* Explore Link CTA with Smooth Arrow Movement */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-900 group-hover:text-[#FF5722] transition-colors">
-                  <span>Explore</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF5722] group-hover:translate-x-1 transition-all" />
+                {/* Footer Link */}
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-600 group-hover:text-violet-600 transition-colors">
+                  <span>Explore templates</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-slate-400 group-hover:text-violet-600" />
                 </div>
               </Link>
             );
           })}
         </div>
 
-        {/* Integrated "Can't Find Your Category?" Bottom CTA Box */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-2xs max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 transition-all hover:border-slate-300">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-xl bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center shrink-0 shadow-2xs">
-              <Search className="w-6 h-6" />
+        {/* Standard Premium Bottom Banner */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-sm max-w-5xl mx-auto mb-10 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          {/* Subtle background glow */}
+          <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-violet-50 to-transparent pointer-events-none" />
+
+          <div className="flex items-center gap-4 text-center sm:text-left relative z-10">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0 shadow-md">
+              <Star className="w-6 h-6 fill-amber-400" />
             </div>
-            <div className="space-y-0.5">
-              <h4 className="font-extrabold text-slate-900 text-base sm:text-lg">
-                Can&apos;t find your exact category?
+            <div>
+              <h4 className="font-bold text-base sm:text-lg text-slate-900 leading-snug mb-1">
+                Looking for a specialized or custom job title?
               </h4>
-              <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                Explore all resume templates or search by your specific job title.
+              <p className="text-xs sm:text-sm text-slate-600 font-normal">
+                Every template is 100% modular. Customize sections, headers, and bullet formats for any niche role in seconds.
               </p>
             </div>
           </div>
 
-          <Link
-            href="/templates"
-            className="px-6 py-3 bg-[#0F0F0F] hover:bg-black text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer hover:scale-[1.02]"
-          >
-            <span>Browse All Templates</span>
-            <ArrowRight className="w-4 h-4 text-[#F5D17B]" />
-          </Link>
+          <div className="flex items-center gap-3 shrink-0 relative z-10 w-full sm:w-auto">
+            <Link
+              href="/templates"
+              className="w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-900 bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Layers className="w-4 h-4 text-slate-600" />
+              <span>Browse All 150+ Templates</span>
+            </Link>
+          </div>
         </div>
 
+        {/* Global CTA Button */}
+        <div className="flex justify-center">
+          <Link
+            href="/templates"
+            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl text-white font-bold text-sm bg-slate-900 hover:bg-slate-800 shadow-md hover:shadow-lg transition-all hover:scale-102 cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Explore All Resume Categories</span>
+            <ArrowRight className="w-4 h-4 text-slate-400" />
+          </Link>
+        </div>
       </div>
     </section>
   );
 }
+

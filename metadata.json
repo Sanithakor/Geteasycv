@@ -1,0 +1,6 @@
+{
+  "name": "GetEasyCV",
+  "description": "ATS-friendly resume and CV builder with customizable layouts, high-resolution PDF export, and AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

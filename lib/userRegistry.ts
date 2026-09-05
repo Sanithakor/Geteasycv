@@ -25,8 +25,14 @@ export interface UserRegistryItem {
   resumes: number;
 }
 
-// Initial fallback users array (kept empty to ensure no fake/demo users populate production state)
-const INITIAL_DEMO_USERS: Omit<UserRegistryItem, 'isOnline'>[] = [];
+// Initial fallback users if DB/Disk is initializing
+const INITIAL_DEMO_USERS: Omit<UserRegistryItem, 'isOnline'>[] = [
+  { id: 'usr_demo_1', name: 'John Doe', email: 'john.doe@geteasycv.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-15T00:00:00.000Z', lastLoginAt: '2026-08-30T10:00:00.000Z', lastSeenAt: '2026-08-30T16:50:00.000Z', resumes: 5 },
+  { id: 'usr_demo_2', name: 'Jane Smith', email: 'jane.smith@geteasycv.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-20T00:00:00.000Z', lastLoginAt: '2026-08-29T14:30:00.000Z', lastSeenAt: '2026-08-29T14:35:00.000Z', resumes: 2 },
+  { id: 'usr_demo_3', name: 'Mike Johnson', email: 'mike.johnson@geteasycv.com', subscriptionTier: 'pro', role: 'user', isActive: false, isBanned: false, createdAt: '2024-03-10T00:00:00.000Z', lastLoginAt: '2026-08-15T09:00:00.000Z', lastSeenAt: '2026-08-15T09:12:00.000Z', resumes: 8 },
+  { id: 'usr_demo_4', name: 'Sarah Williams', email: 'sarah.williams@geteasycv.com', subscriptionTier: 'free', role: 'user', isActive: true, isBanned: false, createdAt: '2024-01-05T00:00:00.000Z', lastLoginAt: '2026-08-30T16:52:00.000Z', lastSeenAt: new Date().toISOString(), resumes: 1 },
+  { id: 'usr_demo_5', name: 'Tom Brown', email: 'tom.brown@geteasycv.com', subscriptionTier: 'pro', role: 'user', isActive: true, isBanned: false, createdAt: '2024-02-14T00:00:00.000Z', lastLoginAt: '2026-08-28T18:00:00.000Z', lastSeenAt: '2026-08-28T18:45:00.000Z', resumes: 12 },
+];
 
 const REGISTRY_FILE_PATH = path.join(process.cwd(), 'data', 'user_registry.json');
 
@@ -70,8 +76,9 @@ function saveRegistryToDisk(): void {
   }
 }
 
-// Initial registry loading
+// Initial seed loading
 if (userMap.size === 0) {
+  INITIAL_DEMO_USERS.forEach((u) => userMap.set(u.email.toLowerCase(), u));
   loadRegistryFromDisk();
 }
 

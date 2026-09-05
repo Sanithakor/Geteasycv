@@ -30,8 +30,7 @@ const PRICING_PLANS = [
     period: 'one-time payment',
     description: 'Perfect for quick single resume creation.',
     features: [
-      '1 CV',
-      'Basic premium features',
+      '1 CV Creation',
       'High-resolution PDF download',
       'Access to core templates',
       'No recurring payment',
@@ -48,12 +47,10 @@ const PRICING_PLANS = [
     period: 'month',
     description: 'For active job seekers looking to maximize interviews.',
     features: [
-      'Unlimited CVs',
+      'Unlimited CVs & Downloads',
       'All premium templates',
-      'High-resolution PDF download',
-      'All premium customization features',
+      'PDF, PNG, JPG Exports',
       'AI Resume Bullet Rewriter',
-      'Future premium templates included',
       'Cancel anytime',
     ],
     cta: 'Start Pro',
@@ -68,13 +65,10 @@ const PRICING_PLANS = [
     period: 'one-time payment',
     description: 'Permanent access for serious career growth.',
     features: [
-      'Unlimited CVs',
-      'All premium templates',
-      'High-resolution PDF download',
-      'All premium customization features',
-      'Future premium features & templates',
-      'Lifetime access & updates',
-      'No recurring payment',
+      'Everything in Pro',
+      'Lifetime Unlimited Access',
+      'Future Premium Templates',
+      'Priority Customer Support',
     ],
     cta: 'Get Lifetime',
     highlight: false,
@@ -149,6 +143,12 @@ function PricingContent() {
             <div className="mx-auto mb-4 flex max-w-2xl items-center justify-center gap-2.5 rounded-xl border border-[#F5D17B] bg-[#FFF6D9] p-4 text-xs font-bold text-[#5E4810] animate-in fade-in duration-200 sm:text-sm">
               <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
               <span>You've reached the free account limit (1 download used). Select a plan below to continue downloading your CV!</span>
+            </div>
+          )}
+          {reason === 'resume_limit' && (
+            <div className="mx-auto mb-4 flex max-w-2xl items-center justify-center gap-2.5 rounded-xl border border-[#F5D17B] bg-[#FFF6D9] p-4 text-xs font-bold text-[#5E4810] animate-in fade-in duration-200 sm:text-sm">
+              <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+              <span>You have reached your CV creation limit. Upgrade to Pro or Lifetime for unlimited CV creation and downloads!</span>
             </div>
           )}
         </InnerBanner>

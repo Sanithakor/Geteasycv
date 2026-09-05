@@ -20,7 +20,11 @@ export async function GET(req: Request) {
     }
 
     const downloadCount = user.downloadCount || 0;
-    const check = canDownloadCV(user, downloadCount);
+    const planUser = {
+      ...user,
+      subscriptionTier: user.subscriptionTier || auth.subscriptionTier || 'free',
+    };
+    const check = canDownloadCV(planUser, downloadCount);
 
     return NextResponse.json({
       success: true,
@@ -52,7 +56,11 @@ export async function POST(req: Request) {
     }
 
     const currentDownloads = user.downloadCount || 0;
-    const check = canDownloadCV(user, currentDownloads);
+    const planUser = {
+      ...user,
+      subscriptionTier: user.subscriptionTier || auth.subscriptionTier || 'free',
+    };
+    const check = canDownloadCV(planUser, currentDownloads);
 
     if (!check.allowed) {
       return NextResponse.json(

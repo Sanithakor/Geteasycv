@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const allTemplates = generateTemplates();
     
     // Apply filters
-    let filteredTemplates = allTemplates.filter((template) => {
+    const filteredTemplates = allTemplates.filter((template) => {
       // Category filter
       if (category !== 'all') {
         const belongsToCategory = isTemplateInCategory(template.id, category);

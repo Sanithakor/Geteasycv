@@ -30,6 +30,7 @@ export default function AIImprovementModal({
   const [isEditing, setIsEditing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [creditsRemaining, setCreditsRemaining] = useState<number | null>(null);
+  const [upgradeMessage, setUpgradeMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && initialText) {
@@ -47,6 +48,7 @@ export default function AIImprovementModal({
 
     setIsProcessing(true);
     setIsEditing(false);
+    setUpgradeMessage(null);
     try {
       const res = await fetch('/api/ai/resume-improve', {
         method: 'POST',
@@ -68,6 +70,9 @@ export default function AIImprovementModal({
         }
         toast.success('AI suggestion generated!');
       } else {
+        if (data.code === 'PLAN_UPGRADE_REQUIRED' || data.code === 'AI_CREDITS_EXHAUSTED' || res.status === 403 || res.status === 429) {
+          setUpgradeMessage(data.error || 'Upgrade to Pro or Lifetime to unlock unlimited AI bullet rewriting.');
+        }
         toast.error(data.error || 'Failed to generate AI suggestion.');
       }
     } catch (err) {
@@ -129,6 +134,24 @@ export default function AIImprovementModal({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Plan Upgrade Notice */}
+        {upgradeMessage && (
+          <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-900 flex items-center justify-between gap-3 animate-in fade-in duration-150">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+              <span className="font-medium">{upgradeMessage}</span>
+            </div>
+            <a
+              href="/pricing?plan=pro"
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded font-bold text-xs transition-colors"
+            >
+              Upgrade to Pro
+            </a>
+          </div>
+        )}
 
         {/* Action Selectors */}
         <div className="space-y-1.5">

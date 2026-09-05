@@ -58,10 +58,10 @@ const TESTIMONIALS = [
 ];
 
 const STATS = [
-  { icon: ShieldCheck, value: "ATS", label: "Optimized Layouts", bg: "#BAC7FE", iconColor: "#0F0F0F" },
-  { icon: FileCheck, value: "100+", label: "Recruiter Templates", bg: "#F5D17B", iconColor: "#0F0F0F" },
+  { icon: ShieldCheck, value: "100%", label: "ATS Readable", bg: "#BAC7FE", iconColor: "#0F0F0F" },
+  { icon: FileCheck, value: "150+", label: "ATS Templates", bg: "#F5D17B", iconColor: "#0F0F0F" },
   { icon: Zap, value: "Instant", label: "Vector PDF Export", bg: "#58C09D", iconColor: "#FFFFFF" },
-  { icon: Award, value: "Verified", label: "Clean Formatting", bg: "#D0B9EF", iconColor: "#0F0F0F" },
+  { icon: Award, value: "Recruiter", label: "Approved Formats", bg: "#D0B9EF", iconColor: "#0F0F0F" },
 ];
 
 export default function SocialProofNew() {

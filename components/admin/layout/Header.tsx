@@ -15,7 +15,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onMenuClick }: HeaderProps) {
-  const { user, token, logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = React.useState(false);
@@ -25,8 +25,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const fetchNotifications = React.useCallback(async () => {
     try {
-      const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch('/api/notifications', { headers });
+      const res = await fetch('/api/notifications');
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setNotifications(data.data);
@@ -35,7 +34,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     } catch (e) {
       console.warn('Error fetching notifications:', e);
     }
-  }, [token]);
+  }, []);
 
   React.useEffect(() => {
     // Force light theme strictly
@@ -53,10 +52,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'all' }),
       });
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
@@ -70,10 +66,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       });
       setNotifications(prev =>
@@ -200,10 +193,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
                   <div className="p-2 max-h-80 overflow-y-auto space-y-1">
                     {notifications.length === 0 ? (
-                      <div className="p-8 text-center text-slate-400 text-xs font-medium space-y-1">
-                        <Bell className="w-6 h-6 text-slate-300 mx-auto mb-2 opacity-60" />
-                        <p className="font-bold text-slate-600">No new notifications</p>
-                        <p className="text-slate-400 text-[11px]">You're all caught up.</p>
+                      <div className="p-6 text-center text-slate-400 text-xs font-medium">
+                        No notifications yet
                       </div>
                     ) : (
                       notifications.map(n => (
@@ -250,16 +241,11 @@ function getNotificationIcon(type: string) {
     case 'user_signup':
       return <User className="w-4 h-4 text-slate-700" />;
     case 'subscription':
-    case 'subscription_upgraded':
       return <CreditCard className="w-4 h-4 text-amber-600" />;
     case 'resume_created':
-    case 'resume_downloaded':
-      return <FileText className="w-4 h-4 text-violet-600" />;
+      return <FileText className="w-4 h-4 text-slate-600" />;
     case 'payment':
-    case 'payment_success':
       return <Coins className="w-4 h-4 text-emerald-600" />;
-    case 'contact_submission':
-      return <Settings className="w-4 h-4 text-blue-600" />;
     default:
       return <Bell className="w-4 h-4 text-slate-600" />;
   }

@@ -1,10 +1,19 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { FileDown, FileType, Share2, CheckCircle2 } from "lucide-react";
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import {
+  FileDown,
+  FileType,
+  Share2,
+  CheckCircle2,
+  ShieldCheck,
+  Sparkles,
+  ArrowRight,
+  Download,
+} from 'lucide-react';
 
-function useSequentialFill(totalSteps: number, stepDelay = 280) {
+function useSequentialFill(totalSteps: number, stepDelay = 260) {
   const [filledCount, setFilledCount] = useState(0);
   const [badgeVisible, setBadgeVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -21,7 +30,7 @@ function useSequentialFill(totalSteps: number, stepDelay = 280) {
         setTimeout(tick, stepDelay);
       } else {
         setTimeout(() => setBadgeVisible(true), 300);
-        setTimeout(runAnimation, 3000);
+        setTimeout(runAnimation, 3600);
       }
     };
     setTimeout(tick, stepDelay);
@@ -30,42 +39,76 @@ function useSequentialFill(totalSteps: number, stepDelay = 280) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) { started.current = true; runAnimation(); }
-    }, { threshold: 0.4 });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          runAnimation();
+        }
+      },
+      { threshold: 0.3 }
+    );
     observer.observe(el);
     return () => observer.disconnect();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { filledCount, badgeVisible, ref };
 }
 
-function AnimatedLine({ filled, widthClass, color, height = 'h-2', delay = 0 }: {
-  filled: boolean; widthClass: string; color: string; height?: string; delay?: number;
-}) {
-  return (
-    <div className={`${height} rounded overflow-hidden ${widthClass}`} style={{ background: 'rgba(15,15,15,0.06)' }}>
-      <div className={`h-full rounded`} style={{
-        background: color,
-        width: filled ? '100%' : '0%',
-        transition: filled ? `width 0.55s cubic-bezier(0.4,0,0.2,1) ${delay}ms` : 'none',
-      }} />
-    </div>
-  );
-}
-
 const EXPORT_OPTIONS = [
-  { icon: FileDown, title: 'PDF Export',  desc: 'Industry-standard format accepted everywhere',        bg: '#FEE1CF', iconBg: '#F3645C' },
-  { icon: FileType, title: 'DOCX Export', desc: 'Editable Microsoft Word format for flexibility',       bg: '#BAC7FE', iconBg: '#0F0F0F' },
-  { icon: Share2,   title: 'Share Link',  desc: 'Generate shareable link for online portfolios',        bg: '#D0B9EF', iconBg: '#0F0F0F' },
+  {
+    icon: FileDown,
+    format: 'PDF',
+    title: 'Vector PDF Export',
+    tag: 'Industry Standard • 300 DPI',
+    desc: 'Guarantees 100% pixel-perfect typography, embedded fonts, and exact page margins on any device or printer.',
+    accentColor: '#E11D48',
+    iconBg: 'bg-rose-50 text-rose-600 border-rose-100',
+    badge: 'bg-rose-50 text-rose-700',
+    bullets: ['ATS readable text layer', 'Crystal-clear 300 DPI vector rendering', 'Zero formatting displacement'],
+  },
+  {
+    icon: FileType,
+    format: 'DOCX',
+    title: 'Editable Word (DOCX)',
+    tag: 'Recruiter Preferred • Full Edit',
+    desc: 'Structured Microsoft Word format designed for recruiters who require editable resume submissions.',
+    accentColor: '#2563EB',
+    iconBg: 'bg-blue-50 text-blue-600 border-blue-100',
+    badge: 'bg-blue-50 text-blue-700',
+    bullets: ['Native Microsoft Word compatibility', 'Clean tableless semantic layout', 'Retains typography styles'],
+  },
+  {
+    icon: Share2,
+    format: 'LINK',
+    title: 'Live Web Portfolio Link',
+    tag: 'One-Click • Real-Time Stats',
+    desc: 'Generate a fast, mobile-optimized public link to share directly in LinkedIn DMs, emails, or job applications.',
+    accentColor: '#7C3AED',
+    iconBg: 'bg-purple-50 text-purple-600 border-purple-100',
+    badge: 'bg-purple-50 text-purple-700',
+    bullets: ['Instant mobile & desktop rendering', 'Real-time viewer analytics', 'Direct PDF download button for recruiters'],
+  },
 ];
 
 const FEATURES = [
-  'Perfect formatting maintained across all formats',
-  'High-quality output optimized for printing',
-  'ATS-compatible structure preserved',
-  'Custom fonts and colors included',
+  {
+    title: 'Strict ATS Compatibility Preserved',
+    desc: 'Clean text layers with zero invisible tables, multi-column reading order errors, or graphics clipping.',
+  },
+  {
+    title: 'Precision Print-Ready Margins',
+    desc: 'Standardized 0.75" to 1" margins mathematically calculated for US Letter and international A4 papers.',
+  },
+  {
+    title: 'Automatic Page-Break Balancing',
+    desc: 'Intelligent layout engine prevents orphan headers and single hanging bullet lines across page breaks.',
+  },
+  {
+    title: 'True Embedded Vector Fonts',
+    desc: 'Professional typography render identically whether opened on macOS Preview, Adobe Acrobat, or Windows Edge.',
+  },
 ];
 
 export default function ExportSection() {
@@ -73,109 +116,246 @@ export default function ExportSection() {
   const { filledCount, badgeVisible, ref } = useSequentialFill(TOTAL, 260);
 
   return (
-    <section className="py-16 sm:py-20 relative overflow-hidden font-sans" style={{ background: '#F8F8F6' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 sm:py-28 relative overflow-hidden font-sans bg-[#F8F8F6]">
+      {/* Background ambient lighting */}
+      <div className="absolute top-0 right-1/3 w-96 h-96 rounded-full bg-violet-200/30 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-rose-100/40 blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6"
-            style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.12)' }}>
-            <FileDown className="w-4 h-4" style={{ color: '#333333' }} />
-            <span className="text-sm font-bold uppercase tracking-wider" style={{ color: '#333333' }}>Export Options</span>
+        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs mb-5">
+            <FileDown className="w-3.5 h-3.5 text-rose-500" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Universal Export Options
+            </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6" style={{ color: '#0F0F0F' }}>
-            Export in{" "}
-            <span style={{ color: '#F3645C' }}>Any Format</span>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight mb-4">
+            Export in Any Format,{' '}
+            <span className="bg-gradient-to-r from-rose-500 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              Without Distortion
+            </span>
           </h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: '#333333' }}>
-            Download your resume as PDF or DOCX, or share it online with a custom link.
+
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+            Download production-ready vector PDFs, fully editable Word DOCX files, or generate a sleek personal web link with zero formatting breakdown.
           </p>
         </div>
 
-        {/* Export cards */}
+        {/* 3 Executive Format Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {EXPORT_OPTIONS.map(({ icon: Icon, title, desc, bg, iconBg }) => (
-            <div key={title} className="rounded-2xl p-8 border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
-              style={{ background: bg, borderColor: 'rgba(15,15,15,0.08)' }}>
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform"
-                style={{ background: iconBg }}>
-                <Icon className="w-8 h-8 text-white" />
+          {EXPORT_OPTIONS.map(({ icon: Icon, format, title, tag, desc, iconBg, badge, bullets }) => (
+            <div
+              key={title}
+              className="group relative bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div>
+                {/* Header of Card */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shadow-2xs group-hover:scale-110 transition-transform ${iconBg}`}>
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${badge}`}>
+                    {tag}
+                  </span>
+                </div>
+
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-slate-950 transition-colors">
+                  {title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-5">
+                  {desc}
+                </p>
+
+                {/* Feature Checklist */}
+                <div className="space-y-2 pt-2 border-t border-slate-100 mb-6">
+                  {bullets.map((b) => (
+                    <div key={b} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>{b}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-3" style={{ color: '#0F0F0F' }}>{title}</h3>
-              <p className="leading-relaxed" style={{ color: '#333333' }}>{desc}</p>
+
+              {/* Action Button */}
+              <Link
+                href="/editor"
+                className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 group-hover:bg-slate-900 group-hover:text-white transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Select {format} Export</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           ))}
         </div>
 
-        {/* Features + animation */}
-        <div className="rounded-2xl border p-8 lg:p-10" style={{ background: '#FFFFFF', borderColor: 'rgba(15,15,15,0.08)' }}>
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-2xl font-bold mb-6" style={{ color: '#0F0F0F' }}>Perfect Formatting Guaranteed</h3>
-              <div className="space-y-4">
-                {FEATURES.map((f) => (
-                  <div key={f} className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5" style={{ background: '#58C09D33' }}>
-                      <CheckCircle2 className="w-4 h-4" style={{ color: '#58C09D' }} />
+        {/* Executive Document Inspector & Formatting Guarantee Container */}
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-lg mb-12">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            {/* Left: Quality & ATS Guarantees */}
+            <div className="lg:col-span-6 space-y-6 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>100% Fidelity Guarantee</span>
+              </div>
+
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+                Perfect Formatting Guaranteed Across All Screen & Print Sizes
+              </h3>
+
+              <div className="space-y-4 pt-1">
+                {FEATURES.map((item) => (
+                  <div key={item.title} className="flex items-start gap-3.5">
+                    <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     </div>
-                    <p className="leading-relaxed" style={{ color: '#333333' }}>{f}</p>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 mb-0.5">{item.title}</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="relative" ref={ref}>
-              <div className="bg-white rounded-2xl shadow-xl border p-6 transform rotate-2 hover:rotate-0 transition-transform duration-500"
-                style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
-                <div className="flex items-center justify-between mb-4 pb-3 border-b" style={{ borderColor: 'rgba(15,15,15,0.08)' }}>
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-400" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                    <div className="w-3 h-3 rounded-full bg-green-400" />
+            {/* Right: Realistic Resume Document Inspector Animation */}
+            <div className="lg:col-span-6 relative" ref={ref}>
+              <div className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-6 relative overflow-hidden transition-all duration-300">
+                {/* Header Bar */}
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-rose-400" />
+                    <div className="w-3 h-3 rounded-full bg-amber-400" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                    <span className="text-[11px] font-bold text-slate-500 ml-2">
+                      alex-morgan-executive-cv.pdf
+                    </span>
                   </div>
-                  <div className="text-xs font-medium" style={{ color: '#9ca3af' }}>Ready to Export</div>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    ATS Ready
+                  </span>
                 </div>
-                <div className="space-y-3">
-                  <AnimatedLine filled={filledCount >= 1} widthClass="w-2/3" color="#0F0F0F" height="h-4" />
-                  <AnimatedLine filled={filledCount >= 2} widthClass="w-full" color="rgba(15,15,15,0.25)" />
-                  <AnimatedLine filled={filledCount >= 3} widthClass="w-5/6" color="rgba(15,15,15,0.15)" delay={40} />
-                  <div className="pt-2">
-                    <AnimatedLine filled={filledCount >= 4} widthClass="w-1/2" color="#F3645C" height="h-3" />
+
+                {/* Simulated Executive Resume Content */}
+                <div className="space-y-3 font-sans">
+                  {/* Name & Title */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-base font-extrabold text-slate-900 leading-none mb-1">
+                        Alex Morgan, MBA
+                      </div>
+                      <div className="text-xs font-semibold text-violet-700">
+                        Senior Product Management Lead
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-slate-400 font-medium">
+                      San Francisco, CA
+                    </div>
                   </div>
-                  <AnimatedLine filled={filledCount >= 5} widthClass="w-full" color="rgba(15,15,15,0.08)" delay={40} />
-                  <AnimatedLine filled={filledCount >= 6} widthClass="w-full" color="rgba(15,15,15,0.08)" delay={80} />
-                  <div className="flex gap-2 pt-3" style={{
-                    opacity: filledCount >= TOTAL ? 1 : 0,
-                    transform: filledCount >= TOTAL ? 'translateY(0)' : 'translateY(6px)',
-                    transition: 'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s',
-                  }}>
-                    <div className="flex-1 h-8 rounded flex items-center justify-center text-white text-xs font-bold" style={{ background: '#F3645C' }}>PDF</div>
-                    <div className="flex-1 h-8 rounded flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0F0F0F' }}>DOCX</div>
+
+                  {/* Divider line */}
+                  <div className="h-px bg-slate-100 my-2" />
+
+                  {/* Animated Experience Bars */}
+                  <div className="space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-slate-700 font-bold">
+                      <span>Work Experience</span>
+                      <span className="text-[10px] text-slate-400">2019 — Present</span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="h-2 rounded bg-slate-100 overflow-hidden w-full">
+                        <div
+                          className="h-full bg-slate-900 rounded transition-all duration-500"
+                          style={{ width: filledCount >= 1 ? '100%' : '0%' }}
+                        />
+                      </div>
+                      <div className="h-2 rounded bg-slate-100 overflow-hidden w-5/6">
+                        <div
+                          className="h-full bg-slate-700 rounded transition-all duration-500"
+                          style={{ width: filledCount >= 2 ? '100%' : '0%' }}
+                        />
+                      </div>
+                      <div className="h-2 rounded bg-slate-100 overflow-hidden w-2/3">
+                        <div
+                          className="h-full bg-slate-400 rounded transition-all duration-500"
+                          style={{ width: filledCount >= 3 ? '100%' : '0%' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Metrics highlight */}
+                  <div className="p-2.5 rounded-xl bg-violet-50/60 border border-violet-100 flex items-center justify-between">
+                    <span className="text-xs font-bold text-violet-900">
+                      • Spearheaded team of 12, driving +34% YoY growth
+                    </span>
+                    <span className="text-[10px] font-extrabold text-violet-700 bg-violet-100 px-2 py-0.5 rounded-full shrink-0 ml-2">
+                      Parsed
+                    </span>
+                  </div>
+
+                  {/* Skills tags */}
+                  <div className="flex items-center gap-1.5 pt-1">
+                    {['Strategic Roadmapping', 'User Research', 'SQL & Analytics', 'Cross-Functional'].map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Export Buttons Simulation */}
+                  <div
+                    className="flex gap-2 pt-3"
+                    style={{
+                      opacity: filledCount >= TOTAL ? 1 : 0.4,
+                      transition: 'opacity 0.4s ease',
+                    }}
+                  >
+                    <div className="flex-1 py-2 rounded-xl flex items-center justify-center text-white text-xs font-bold bg-slate-900 shadow-xs gap-1.5 cursor-pointer">
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download PDF</span>
+                    </div>
+                    <div className="flex-1 py-2 rounded-xl flex items-center justify-center text-slate-800 text-xs font-bold bg-slate-100 border border-slate-200/80 gap-1.5 cursor-pointer">
+                      <FileType className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Export DOCX</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-3 -right-3 px-4 py-2 rounded-full shadow-lg text-sm font-bold text-white"
+              {/* Floating Verified Badge */}
+              <div
+                className="absolute -bottom-3 -right-2 px-4 py-2 rounded-full shadow-lg text-xs font-bold text-white flex items-center gap-1.5 bg-emerald-600 border-2 border-white"
                 style={{
-                  background: '#58C09D',
                   opacity: badgeVisible ? 1 : 0,
                   transform: badgeVisible ? 'scale(1) translateY(0)' : 'scale(0.7) translateY(8px)',
-                  transition: 'opacity 0.35s cubic-bezier(0.34,1.56,0.64,1), transform 0.35s cubic-bezier(0.34,1.56,0.64,1)',
-                }}>
-                ✓ Format Preserved
+                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+                }}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>100% Format Preserved</span>
               </div>
             </div>
+
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-10">
-          <Link href="/editor"
-            className="inline-flex items-center gap-2 px-8 py-4 text-white rounded-xl font-semibold transition-all shadow-lg hover:opacity-90"
-            style={{ background: '#0F0F0F' }}>
-            Start Creating Now
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+        <div className="text-center">
+          <Link
+            href="/editor"
+            className="inline-flex items-center gap-2.5 px-8 py-4 text-white rounded-xl font-bold text-sm bg-slate-900 hover:bg-slate-800 transition-all shadow-md hover:shadow-lg hover:scale-102 cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Create & Export Your Resume Now</span>
+            <ArrowRight className="w-4 h-4 text-slate-400" />
           </Link>
         </div>
       </div>

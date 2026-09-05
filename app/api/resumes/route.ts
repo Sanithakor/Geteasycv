@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { createSystemNotification } from '@/lib/notifications';
 import { getStoreResumes, saveStoreResume, ResumeStoreItem } from '@/lib/resumeStore';
+import { canCreateCV } from '@/lib/entitlements';
 
 async function ensureTemplateExists(templateId: string, userId: string): Promise<string | undefined> {
   if (!templateId) return undefined;
@@ -126,6 +127,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
     }
     const userId = auth.userId;
+
+    // Enforce Plan CV Creation Limits (Starter: 1 CV, Pro/Lifetime: Unlimited)
+    let currentResumeCount = 0;
+    try {
+      currentResumeCount = await prisma.resume.count({
+        where: { userId: auth.userId },
+      });
+    } catch {
+      currentResumeCount = getStoreResumes().filter((r) => r.userId === auth.userId).length;
+    }
+
+    const checkCreation = canCreateCV(auth, currentResumeCount);
+    if (!checkCreation.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: checkCreation.reason || 'Resume creation limit reached.',
+          code: 'RESUME_LIMIT_REACHED',
+          redirectUrl: '/pricing?reason=resume_limit',
+        },
+        { status: 403 }
+      );
+    }
 
     const body = await req.json();
     const { title, templateId, summary, cvData, customTheme, selectedLayout, sectionVariants, sectionOrder } = body;

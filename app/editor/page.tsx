@@ -292,7 +292,8 @@ export default function EditorPage() {
   const allLayouts = useMemo(() => getAllLayouts(), []);
   const exportRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
-  const { token, isAuthenticated, _hydrated } = useAuthStore();
+  const { user, token, isAuthenticated, _hydrated } = useAuthStore();
+  const userTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
   const initialTemplate = useMemo(() => {
     return templates[0];
@@ -833,6 +834,19 @@ export default function EditorPage() {
       console.warn('[DOWNLOAD_CHECK_WARN]', checkErr);
     }
 
+    // Enforce Plan Format Limits: Starter includes high-res PDF download; PNG and JPG are Pro & Lifetime
+    const isProOrLifetime = userTier === 'pro' || userTier === 'lifetime' || userTier === 'premium';
+    if ((type === 'png' || type === 'jpg') && !isProOrLifetime) {
+      setIsExporting(false);
+      setDownloadLimitModalData({
+        message: 'High-resolution PNG and JPG image exports are included with Pro & Lifetime plans. Starter includes high-resolution PDF downloads.',
+        redirectUrl: '/pricing?plan=pro',
+      });
+      setShowDownloadLimitModal(true);
+      toast.error('PNG & JPG exports are available on Pro and Lifetime plans.');
+      return;
+    }
+
     const activeTmplId = customTemplate?.id || (selectedLayout?.id && customTheme?.id ? `${selectedLayout.id}-${customTheme.id}` : selectedLayout?.id) || 'sidebar-left-modern-blue';
 
     const recordTemplateDownload = () => {
@@ -1267,6 +1281,32 @@ export default function EditorPage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => downloadExport('png')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Download className="w-4 h-4 text-emerald-600" />
+                    <span>High-Res PNG (.png)</span>
+                  </div>
+                  {userTier !== 'pro' && userTier !== 'lifetime' && (
+                    <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadExport('jpg')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Download className="w-4 h-4 text-amber-600" />
+                    <span>High-Res JPG (.jpg)</span>
+                  </div>
+                  {userTier !== 'pro' && userTier !== 'lifetime' && (
+                    <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                  )}
+                </button>
+                <button
+                  type="button"
                   onClick={() => downloadExport('txt')}
                   className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center gap-2 cursor-pointer"
                 >
@@ -1317,10 +1357,25 @@ export default function EditorPage() {
                 <div className="grid grid-cols-2 gap-3">
                   {templates.map((tmpl) => {
                     const isSelected = selectedTemplate.id === tmpl.id;
+                    const isPremium = (tmpl as any).isPremium || tmpl.category === 'Luxury' || tmpl.theme?.id === 'dark-executive' || tmpl.theme?.id === 'gold-luxury';
+                    const isProOrLifetime = userTier === 'pro' || userTier === 'lifetime' || userTier === 'premium';
                     return (
                       <div
                         key={tmpl.id}
                         onClick={() => {
+                          if (isPremium && !isProOrLifetime) {
+                            toast.error(
+                              userTier === 'starter'
+                                ? 'Starter includes access to core templates. Upgrade to Pro or Lifetime to use premium templates.'
+                                : 'Upgrade to Pro or Lifetime to unlock all premium templates.'
+                            );
+                            setDownloadLimitModalData({
+                              message: 'This premium template is exclusively available on Pro and Lifetime plans. Starter includes access to core templates.',
+                              redirectUrl: '/pricing?plan=pro',
+                            });
+                            setShowDownloadLimitModal(true);
+                            return;
+                          }
                           setSelectedTemplate(tmpl);
                           setCustomTheme(tmpl.theme);
                           setSelectedLayout(tmpl.layout);
@@ -1347,9 +1402,16 @@ export default function EditorPage() {
                             </div>
                           )}
 
-                          {/* Category Tag */}
-                          <div className="absolute left-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
-                            {tmpl.category || 'ATS'}
+                          {/* Category / Premium Tag */}
+                          <div className="absolute left-2 top-2 z-10 flex items-center gap-1">
+                            <span className="rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
+                              {tmpl.category || 'ATS'}
+                            </span>
+                            {isPremium && (
+                              <span className="rounded-full bg-amber-500 text-white px-1.5 py-0.5 text-[8px] font-extrabold shadow-2xs uppercase tracking-wider">
+                                PRO
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -1980,17 +2042,23 @@ export default function EditorPage() {
                       type="button"
                       onClick={() => downloadExport('png')}
                       disabled={isExporting}
-                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer"
+                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Download PNG
+                      <span>Download PNG</span>
+                      {userTier !== 'pro' && userTier !== 'lifetime' && (
+                        <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                      )}
                     </button>
                     <button
                       type="button"
                       onClick={() => downloadExport('jpg')}
                       disabled={isExporting}
-                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer"
+                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Download JPG
+                      <span>Download JPG</span>
+                      {userTier !== 'pro' && userTier !== 'lifetime' && (
+                        <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                      )}
                     </button>
                   </div>
 
