@@ -19,10 +19,10 @@ import {
 } from 'recharts';
 
 const countryData = [
-  { name: 'United States', value: 40, color: '#FF570F' },
-  { name: 'Canada', value: 30, color: '#FF8C5A' },
-  { name: 'United Kingdom', value: 20, color: '#ec4899' },
-  { name: 'Others', value: 10, color: '#06b6d4' },
+  { name: 'United States', value: 40, color: '#0F0F0F' },
+  { name: 'Canada', value: 30, color: '#F3645C' },
+  { name: 'United Kingdom', value: 20, color: '#58C09D' },
+  { name: 'Others', value: 10, color: '#BAC7FE' },
 ];
 
 const deviceData = [
@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="value" fill="#FF570F" radius={[8, 8, 0, 0]} barSize={55} />
+                <Bar dataKey="value" fill="#0F0F0F" radius={[8, 8, 0, 0]} barSize={55} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -146,7 +146,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#FF570F] rounded-full transition-all duration-500"
+                  className="h-full bg-[#0F0F0F] rounded-full transition-all duration-500"
                   style={{ width: `${item.percentage}%` }}
                 />
               </div>

@@ -1179,8 +1179,8 @@ export default function EditorPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-slate-700">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-[#FF570F] flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <Sparkles className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-xl bg-[#0F0F0F] flex items-center justify-center mx-auto mb-4 shadow-sm animate-pulse">
+            <Sparkles className="w-6 h-6 text-[#F5D17B]" />
           </div>
           <p className="text-slate-600 text-sm font-semibold">
             {!_hydrated ? 'Loading editor session...' : 'Authentication required. Redirecting to login...'}

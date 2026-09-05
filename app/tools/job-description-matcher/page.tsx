@@ -72,12 +72,15 @@ export default function JobDescriptionMatcherToolPage() {
       />
       <Navigation />
 
-      <main className="min-h-screen bg-slate-50/50 py-12 sm:py-16">
+      <main className="min-h-screen bg-[#F8F8F6] py-12 sm:py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-orange-50 text-[#FF5722] rounded-full text-xs font-bold uppercase tracking-wider">
+            <div
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
+              style={{ background: '#BAC7FE', color: '#0F0F0F' }}
+            >
               <Sparkles className="w-4 h-4" />
               <span>Free ATS Resume Keyword Tool</span>
             </div>
@@ -101,7 +104,7 @@ export default function JobDescriptionMatcherToolPage() {
                   value={jobDescription}
                   onChange={(e) => setJobDescription(e.target.value)}
                   placeholder="Paste the job requirements, responsibilities, and qualifications here..."
-                  className="w-full p-4 rounded-2xl border border-slate-200 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:border-[#FF5722] focus:ring-2 focus:ring-[#FF5722]/15 outline-none resize-none bg-slate-50/40"
+                  className="w-full p-4 rounded-2xl border border-slate-200 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:border-[#0F0F0F] focus:ring-2 focus:ring-[#0F0F0F]/10 outline-none resize-none bg-slate-50/40"
                   required
                 />
               </div>
@@ -115,7 +118,7 @@ export default function JobDescriptionMatcherToolPage() {
                   value={resumeText}
                   onChange={(e) => setResumeText(e.target.value)}
                   placeholder="Paste your work experience, skills, and resume content here..."
-                  className="w-full p-4 rounded-2xl border border-slate-200 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:border-[#FF5722] focus:ring-2 focus:ring-[#FF5722]/15 outline-none resize-none bg-slate-50/40"
+                  className="w-full p-4 rounded-2xl border border-slate-200 text-xs font-normal text-slate-900 placeholder:text-slate-400 focus:border-[#0F0F0F] focus:ring-2 focus:ring-[#0F0F0F]/10 outline-none resize-none bg-slate-50/40"
                   required
                 />
               </div>
@@ -124,7 +127,7 @@ export default function JobDescriptionMatcherToolPage() {
                 <button
                   type="submit"
                   disabled={analyzing}
-                  className="px-8 py-3.5 bg-[#FF5722] hover:bg-[#E64A19] disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md inline-flex items-center gap-2 transition-all cursor-pointer"
+                  className="px-8 py-3.5 bg-[#0F0F0F] hover:bg-[#262626] disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md inline-flex items-center gap-2 transition-all cursor-pointer"
                 >
                   {analyzing ? (
                     <>
@@ -133,7 +136,7 @@ export default function JobDescriptionMatcherToolPage() {
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="w-4 h-4 text-white" />
+                      <ShieldCheck className="w-4 h-4 text-[#58C09D]" />
                       <span>Compare & Calculate Keyword Match</span>
                     </>
                   )}
@@ -188,14 +191,14 @@ export default function JobDescriptionMatcherToolPage() {
                 </div>
 
                 {/* Conversion Funnel CTA */}
-                <div className="bg-[#0F0F0F] text-white p-8 rounded-2xl text-center space-y-4 shadow-lg">
+                <div className="bg-[#0F0F0F] text-white p-8 rounded-2xl text-center space-y-4 shadow-lg border border-white/10">
                   <h4 className="text-xl font-bold">Fix Missing Keywords in Live Resume Builder</h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
                     Load your resume into GetEasyCV editor to inject missing skills and download your updated ATS PDF.
                   </p>
                   <Link
                     href="/editor"
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white hover:bg-slate-100 text-[#0F0F0F] font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
                   >
                     <span>Update Resume in Editor</span>
                     <ArrowRight className="w-4 h-4" />

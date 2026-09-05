@@ -78,7 +78,7 @@ export default function ResumeImportModal({
         </button>
 
         <div className="space-y-1">
-          <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center mb-2">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2" style={{ background: '#FEE1CF', color: '#0F0F0F' }}>
             <Upload className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-bold text-slate-900">Upload Existing Resume</h3>
@@ -102,7 +102,7 @@ export default function ResumeImportModal({
           </div>
         ) : (
           <div className="space-y-4">
-            <label className="border-2 border-dashed border-slate-200 hover:border-[#FF5722] rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer bg-slate-50/50 hover:bg-orange-50/30 transition-all text-center">
+            <label className="border-2 border-dashed border-slate-200 hover:border-[#0F0F0F] rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer bg-slate-50/50 hover:bg-slate-100/50 transition-all text-center">
               <input
                 type="file"
                 accept=".pdf,.docx,.doc,.txt"
@@ -121,7 +121,7 @@ export default function ResumeImportModal({
                 type="button"
                 onClick={handleUpload}
                 disabled={isLoading || !file}
-                className="flex-1 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] text-white py-3 text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="flex-1 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] text-white py-3 text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isLoading ? (
                   <>

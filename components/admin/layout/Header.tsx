@@ -102,7 +102,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full pl-10 pr-16 py-1.5 rounded-[20px] border border-slate-200/80 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/25 focus:border-[#FF570F] text-sm transition-all"
+                className="w-full pl-10 pr-16 py-1.5 rounded-[20px] border border-slate-200/80 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F] text-sm transition-all"
               />
               <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2 bg-white border border-slate-200/60 rounded px-1.5 py-0.5 text-[9px] font-bold text-slate-400 font-mono shadow-sm">
                 Ctrl + K
@@ -117,9 +117,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <div className="relative">
             <button
               onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF570F] to-[#E04800] hover:from-violet-700 hover:to-[#E04800] text-white rounded-md font-semibold text-sm shadow-sm transition-all hover:shadow-violet-100"
+              className="flex items-center gap-1.5 px-4 py-2 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-semibold text-sm shadow-sm transition-all cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-[#F5D17B]" />
               <span>Create New</span>
             </button>
 
@@ -184,7 +184,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     {unreadCount > 0 && (
                       <button
                         onClick={handleMarkAllRead}
-                        className="text-[11px] font-semibold text-[#FF570F] hover:text-[#E04800] transition-colors"
+                        className="text-[11px] font-semibold text-[#F3645C] hover:underline transition-colors cursor-pointer"
                       >
                         Mark all as read
                       </button>
@@ -215,7 +215,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     <Link
                       href="/admin/notifications"
                       onClick={() => setShowNotifications(false)}
-                      className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors block py-1"
+                      className="text-xs font-bold text-[#F3645C] hover:underline transition-colors block py-1"
                     >
                       View All Notifications →
                     </Link>
@@ -285,7 +285,7 @@ function NotificationItem({
       className={`flex items-start gap-3 p-3 rounded-xl transition-all cursor-pointer ${
         isRead
           ? 'hover:bg-slate-50 border border-transparent'
-          : 'bg-[#FFF8F5]/60 hover:bg-[#FFF8F5] border border-[#FF570F]'
+          : 'bg-slate-50 hover:bg-slate-100/70 border border-slate-200'
       }`}
     >
       <div className="w-9 h-9 rounded-xl bg-slate-100/80 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200/50">
@@ -296,7 +296,7 @@ function NotificationItem({
           <p className="text-xs font-bold text-slate-900 truncate">
             {title}
           </p>
-          {!isRead && <span className="w-2.5 h-2.5 rounded-full bg-[#FF570F] shrink-0" />}
+          {!isRead && <span className="w-2.5 h-2.5 rounded-full bg-[#F3645C] shrink-0" />}
         </div>
         <p className="text-[11px] font-medium text-slate-500 truncate mt-0.5">{message}</p>
         <span className="block text-[10px] font-semibold text-slate-400 mt-1">{time}</span>

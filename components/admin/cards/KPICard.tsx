@@ -1,4 +1,4 @@
-﻿/**
+/**
  * KPI Card Component
  * Premium KPI display with trend and comparison
  */
@@ -30,10 +30,10 @@ export function KPICard({
   return (
     <div
       onClick={onClick}
-      className="group relative overflow-hidden rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-[#FF570F]/25 hover:border-[#FF570F] dark:hover:border-[#FF570F] cursor-pointer"
+      className="group relative overflow-hidden rounded-[20px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 transition-all duration-300 hover:shadow-lg hover:border-slate-400 dark:hover:border-slate-600 cursor-pointer"
     >
-      {/* Background gradient on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#FFF8F5] to-transparent dark:from-violet-900/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Background subtle tint on hover */}
+      <div className="absolute inset-0 bg-slate-50/50 dark:bg-slate-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div className="relative z-10">
         {/* Header */}
@@ -81,7 +81,7 @@ export function KPICard({
       </div>
 
       {/* Accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF570F] to-[#FF570F] transform scale-x-0 group- transition-transform duration-300" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#0F0F0F] dark:bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
     </div>
   );
 }

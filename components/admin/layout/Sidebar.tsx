@@ -188,7 +188,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       <Icon className={`w-[18px] h-[18px] ${active ? 'text-violet-600' : 'text-slate-500'}`} />
                       <span className="truncate">{item.title}</span>
                       {item.title === 'Notifications' && unreadCount > 0 && (
-                        <span className="ml-auto min-w-[18px] h-4 px-1.5 bg-[#FF570F] text-white rounded-full text-[10px] font-bold flex items-center justify-center">
+                        <span className="ml-auto min-w-[18px] h-4 px-1.5 bg-[#F3645C] text-white rounded-full text-[10px] font-bold flex items-center justify-center">
                           {unreadCount > 99 ? '99+' : unreadCount}
                         </span>
                       )}

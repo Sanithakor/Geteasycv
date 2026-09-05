@@ -57,7 +57,7 @@ export default function ActivityLogsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search logs..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F] text-sm font-medium transition-all"
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F] text-sm font-medium transition-all"
         />
       </div>
 

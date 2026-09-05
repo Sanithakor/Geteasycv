@@ -198,7 +198,7 @@ export default function CoverLetterClientContent() {
                 <div className="mt-4 space-y-2 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#FF5722] transition-colors">
+                      <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#F3645C] transition-colors">
                         {template.name}
                       </h3>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">

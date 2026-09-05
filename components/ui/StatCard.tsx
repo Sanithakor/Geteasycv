@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 interface StatCardProps {
   title: string;
@@ -28,7 +28,7 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
   );
 }
 
-export default function StatCard({ title, value, trend, trendUp = true, icon, iconBg = 'bg-[#FFF8F5] text-[#FF570F]', sparklinePoints, sparklineColor = '#FF570F', className = '' }: StatCardProps) {
+export default function StatCard({ title, value, trend, trendUp = true, icon, iconBg = 'bg-[#FEE1CF] text-[#0F0F0F]', sparklinePoints, sparklineColor = '#F3645C', className = '' }: StatCardProps) {
   return (
     <div className={`bg-white border border-slate-200/70 rounded-[20px] p-4 hover:shadow-md transition-all duration-200 ${className}`}>
       <div className="flex items-start justify-between">

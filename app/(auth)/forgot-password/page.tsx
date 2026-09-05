@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
@@ -56,11 +56,11 @@ function ForgotPasswordContent() {
         {/* Brand Header */}
         <div className="mb-6">
           <Link href="/" className="inline-flex items-center gap-2 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF570F] to-[#FF8C5A] flex items-center justify-center shadow-md shadow-[#FF570F]/25 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-xl bg-[#0F0F0F] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5 text-[#F5D17B]" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900">
-              Get<span className="text-[#FF570F]">EasyCV</span>
+              Get<span className="text-[#F3645C]">EasyCV</span>
             </span>
           </Link>
         </div>
@@ -81,7 +81,7 @@ function ForgotPasswordContent() {
               <button
                 type="button"
                 onClick={() => { setSubmitted(false); setError(''); }}
-                className="text-[#FF570F] font-bold hover:underline"
+                className="text-[#F3645C] font-bold hover:underline cursor-pointer"
               >
                 try again
               </button>.
@@ -99,7 +99,7 @@ function ForgotPasswordContent() {
           <>
             <div className="mb-6">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5">
-                Forgot <span className="text-[#FF570F]">Password?</span>
+                Forgot <span className="text-[#F3645C]">Password?</span>
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
                 Enter your email and we'll send you a link to reset your password.
@@ -129,7 +129,7 @@ function ForgotPasswordContent() {
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(''); }}
                     placeholder="Enter your email address"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF570F] focus:ring-2 focus:ring-[#FF570F]/20 outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/40 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#0F0F0F] focus:ring-2 focus:ring-[#0F0F0F]/15 outline-none transition-all"
                     disabled={isLoading}
                   />
                 </div>
@@ -138,7 +138,7 @@ function ForgotPasswordContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-sm shadow-md shadow-[#FF570F]/25 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#0F0F0F] hover:bg-[#262626] text-white font-bold text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
                 {isLoading ? 'Sending reset link...' : 'Send Reset Link'}
               </button>
