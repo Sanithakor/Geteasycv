@@ -7,7 +7,7 @@ export const config = {
   ],
 };
 
-// Protected user routes
+// Protected  user routes
 const protectedRoutes = [
   '/dashboard',
   '/editor',
