@@ -9,11 +9,6 @@ import { prisma } from '@/lib/db';
 import { verifyPassword, generateToken, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
-
-function normalizePhone(phone: string): string {
-  return phone.replace(/[\s\-()]/g, '').toLowerCase();
-}
-
 export async function POST(req: Request) {
   // Apply rate limiting (Max 5 attempts per 15 minutes per IP)
   const rateLimit = checkRateLimit(req, {
@@ -31,57 +26,37 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { email, phone, password } = body;
-    const identifier = email || phone;
+    const { email, password } = body;
 
-    if (!identifier || !password) {
+    if (!email || !password) {
       return Response.json(
-        { error: 'Email (or phone) and password are required' },
+        { error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
     let user: any = null;
-    const sanitizedEmail = email ? sanitizeEmail(email) : '';
+    const sanitizedEmail = sanitizeEmail(email);
 
     try {
-      if (email) {
-        if (!validateEmail(sanitizedEmail)) {
-          return Response.json({ error: 'Invalid email format' }, { status: 400 });
-        }
-
-        user = await prisma.user.findUnique({
-          where: { email: sanitizedEmail },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatar: true,
-            password: true,
-            role: true,
-            subscriptionTier: true,
-            isActive: true,
-            isBanned: true,
-          },
-        });
-      } else {
-        // Phone-based login
-        const normalizedPhone = normalizePhone(phone);
-        user = await prisma.user.findFirst({
-          where: { phone: normalizedPhone },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatar: true,
-            password: true,
-            role: true,
-            subscriptionTier: true,
-            isActive: true,
-            isBanned: true,
-          },
-        });
+      if (!validateEmail(sanitizedEmail)) {
+        return Response.json({ error: 'Invalid email format' }, { status: 400 });
       }
+
+      user = await prisma.user.findUnique({
+        where: { email: sanitizedEmail },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          avatar: true,
+          password: true,
+          role: true,
+          subscriptionTier: true,
+          isActive: true,
+          isBanned: true,
+        },
+      });
     } catch (dbError: any) {
       console.warn('[LOGIN_DB_OFFLINE_FALLBACK] Database offline or unreachable, proceeding with session:', dbError?.message);
       const isAdminEmail = sanitizedEmail === 'sthakor890@gmail.com';

@@ -6,7 +6,6 @@ const CANONICAL_DOMAIN = 'https://geteasycv.com';
 const PUBLIC_SEO_ROUTES = [
   '/',
   '/resume-builder',
-  '/cv-builder',
   '/templates',
   '/ats-checker',
   '/cover-letter',

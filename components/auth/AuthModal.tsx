@@ -150,9 +150,9 @@ function PasswordStrength({ password }: { password: string }) {
 // --- OTP Step -----------------------------------------------------------------
 
 function OtpStep({
-  identifier, identifierType, purpose, name, redirectTo, onBack,
+  identifier, identifierType = 'email', purpose, name, redirectTo, onBack,
 }: {
-  identifier: string; identifierType: 'email' | 'phone';
+  identifier: string; identifierType?: 'email';
   purpose: 'login' | 'signup'; name?: string;
   redirectTo: string; onBack: () => void;
 }) {
@@ -215,7 +215,7 @@ function OtpStep({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ identifier, identifierType, otp, purpose, name }),
+        body: JSON.stringify({ identifier, identifierType: 'email', otp, purpose, name }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Verification failed. Please try again.'); return; }
@@ -241,7 +241,7 @@ function OtpStep({
       const res = await fetch('/api/auth/otp/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, identifierType, purpose }),
+        body: JSON.stringify({ identifier, identifierType: 'email', purpose }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to resend. Please try again.'); return; }
@@ -326,7 +326,7 @@ function OtpStep({
 
 // --- Login View ---------------------------------------------------------------
 
-type LoginView = 'methods' | 'email-password' | 'email-otp' | 'phone-otp' | 'otp-verify';
+type LoginView = 'methods' | 'email-password' | 'email-otp' | 'otp-verify';
 
 function LoginPanel({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
@@ -342,7 +342,6 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [otpTarget, setOtpTarget] = useState('');
-  const [otpType, setOtpType] = useState<'email' | 'phone'>('email');
 
   const resetForm = useCallback(() => {
     setIdentifier('');
@@ -405,15 +404,12 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const idType = view === 'phone-otp' ? 'phone' : 'email';
     const trimmed = identifier.trim().toLowerCase();
     const fe: Record<string, string> = {};
     if (!trimmed) {
-      fe.identifier = idType === 'phone' ? 'Phone number is required.' : 'Email is required.';
-    } else if (idType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      fe.identifier = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       fe.identifier = 'Enter a valid email address.';
-    } else if (idType === 'phone' && !/^\+?[1-9]\d{6,14}$/.test(trimmed.replace(/[\s\-()+]/g, ''))) {
-      fe.identifier = 'Enter a valid phone number with country code (e.g. +1 555 000 0000).';
     }
     if (Object.keys(fe).length) { setFieldErrors(fe); return; }
     setFieldErrors({});
@@ -422,12 +418,11 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
       const res = await fetch('/api/auth/otp/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: trimmed, identifierType: idType, purpose: 'login' }),
+        body: JSON.stringify({ identifier: trimmed, identifierType: 'email', purpose: 'login' }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to send code. Please try again.'); return; }
       setOtpTarget(trimmed);
-      setOtpType(idType);
       setView('otp-verify');
     } catch {
       setError('Unable to connect. Please try again.');
@@ -441,10 +436,10 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <OtpStep
         identifier={otpTarget}
-        identifierType={otpType}
+        identifierType="email"
         purpose="login"
         redirectTo={redirectTo}
-        onBack={() => { setView(otpType === 'phone' ? 'phone-otp' : 'email-otp'); resetForm(); }}
+        onBack={() => { setView('email-otp'); resetForm(); }}
       />
     );
   }
@@ -555,8 +550,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     );
   }
 
-  // OTP send form (email or phone)
-  const isPhone = view === 'phone-otp';
+  // OTP send form (email)
   return (
     <div className="space-y-5">
       <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
@@ -564,9 +558,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
       </button>
 
       <div className="text-center">
-        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">
-          {isPhone ? 'Login with Phone' : 'Login with Email OTP'}
-        </h2>
+        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">Login with Email OTP</h2>
         <p className="text-sm text-[#333333] mt-1">We'll send a one-time code to verify you.</p>
       </div>
 
@@ -575,14 +567,14 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
       <form onSubmit={handleSendOtp} className="space-y-4" noValidate>
         <InputField
           id="login-otp-id"
-          label={isPhone ? 'Phone Number' : 'Email Address'}
-          type={isPhone ? 'tel' : 'email'}
+          label="Email Address"
+          type="email"
           value={identifier}
           onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-          placeholder={isPhone ? '+1 555 000 0000' : 'you@geteasycv.com'}
-          autoComplete={isPhone ? 'tel' : 'email'}
+          placeholder="you@geteasycv.com"
+          autoComplete="email"
           disabled={isSending}
-          icon={isPhone ? <Phone className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+          icon={<Mail className="w-4 h-4" />}
           error={fieldErrors.identifier}
         />
         <button
@@ -607,7 +599,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
 
 // --- Signup View --------------------------------------------------------------
 
-type SignupView = 'methods' | 'email-password' | 'email-otp' | 'phone-otp' | 'otp-verify';
+type SignupView = 'methods' | 'email-password' | 'email-otp' | 'otp-verify';
 
 function SignupPanel({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
@@ -627,7 +619,6 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [otpTarget, setOtpTarget] = useState('');
-  const [otpType, setOtpType] = useState<'email' | 'phone'>('email');
   const [otpName, setOtpName] = useState('');
 
   const resetForm = useCallback(() => {
@@ -699,16 +690,13 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const idType = view === 'phone-otp' ? 'phone' : 'email';
     const trimmed = identifier.trim().toLowerCase();
     const fe: Record<string, string> = {};
     if (!name.trim() || name.trim().length < 2) fe.name = 'Full name must be at least 2 characters.';
     if (!trimmed) {
-      fe.identifier = idType === 'phone' ? 'Phone number is required.' : 'Email is required.';
-    } else if (idType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      fe.identifier = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       fe.identifier = 'Enter a valid email address.';
-    } else if (idType === 'phone' && !/^\+?[1-9]\d{6,14}$/.test(trimmed.replace(/[\s\-()+]/g, ''))) {
-      fe.identifier = 'Enter a valid phone number with country code.';
     }
     if (!agreed) fe.agreed = 'You must agree to the Terms and Privacy Policy.';
     if (Object.keys(fe).length) { setFieldErrors(fe); return; }
@@ -718,12 +706,11 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
       const res = await fetch('/api/auth/otp/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: trimmed, identifierType: idType, purpose: 'signup' }),
+        body: JSON.stringify({ identifier: trimmed, identifierType: 'email', purpose: 'signup' }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to send code. Please try again.'); return; }
       setOtpTarget(trimmed);
-      setOtpType(idType);
       setOtpName(name.trim());
       setView('otp-verify');
     } catch {
@@ -737,11 +724,11 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <OtpStep
         identifier={otpTarget}
-        identifierType={otpType}
+        identifierType="email"
         purpose="signup"
         name={otpName}
         redirectTo={redirectTo}
-        onBack={() => { setView(otpType === 'phone' ? 'phone-otp' : 'email-otp'); setError(''); }}
+        onBack={() => { setView('email-otp'); setError(''); }}
       />
     );
   }
@@ -907,9 +894,6 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
           <button type="button" onClick={() => { resetForm(); setView('email-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
             Sign up with Email OTP instead
           </button>
-          <button type="button" onClick={() => { resetForm(); setView('phone-otp'); }} className="w-full py-3 rounded-xl border border-[rgba(15,15,15,0.12)] text-sm font-semibold text-[#333333] hover:bg-[#F8F8F6] transition-all text-center">
-            Sign up with Phone OTP instead
-          </button>
         </div>
 
         <p className="text-center text-[15px] text-[#333333]">
@@ -922,8 +906,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     );
   }
 
-  // OTP signup form (email-otp or phone-otp)
-  const isPhone = view === 'phone-otp';
+  // OTP signup form (email-otp)
   return (
     <div className="space-y-5">
       <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
@@ -932,9 +915,9 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
 
       <div className="text-center">
         <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">
-          {isPhone ? 'Sign up with Phone' : 'Sign up with Email OTP'}
+          Sign up with Email OTP
         </h2>
-        <p className="text-sm text-[#333333] mt-1">We'll send a code to verify your {isPhone ? 'number' : 'email'}.</p>
+        <p className="text-sm text-[#333333] mt-1">We'll send a code to verify your email.</p>
       </div>
 
       {error && <ErrorBanner message={error} />}
@@ -953,14 +936,14 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
         />
         <InputField
           id="signup-otp-id"
-          label={isPhone ? 'Phone Number' : 'Email Address'}
-          type={isPhone ? 'tel' : 'email'}
+          label="Email Address"
+          type="email"
           value={identifier}
           onChange={(v) => { setIdentifier(v); setFieldErrors((p) => ({ ...p, identifier: '' })); }}
-          placeholder={isPhone ? '+1 555 000 0000' : 'you@geteasycv.com'}
-          autoComplete={isPhone ? 'tel' : 'email'}
+          placeholder="you@geteasycv.com"
+          autoComplete="email"
           disabled={isSending}
-          icon={isPhone ? <Phone className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+          icon={<Mail className="w-4 h-4" />}
           error={fieldErrors.identifier}
         />
 

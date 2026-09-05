@@ -12,15 +12,6 @@ import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLi
 import { createSystemNotification } from '@/lib/notifications';
 import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
 
-/** Validate international phone number (E.164 basic check) */
-function validatePhone(phone: string): boolean {
-  return /^\+?[1-9]\d{6,14}$/.test(phone.replace(/[\s\-()]/g, ''));
-}
-
-function normalizePhone(phone: string): string {
-  return phone.replace(/[\s\-()]/g, '').toLowerCase();
-}
-
 export async function POST(req: Request) {
   // Apply rate limiting (Max 10 signups per 15 minutes per IP)
   const rateLimit = checkRateLimit(req, {
@@ -38,36 +29,20 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { email, phone, password, name } = body;
+    const { email, password, name } = body;
 
-    if ((!email && !phone) || !password || !name) {
+    if (!email || !password || !name) {
       return Response.json(
-        { error: 'Email or phone, password, and name are required' },
+        { error: 'Email, password, and name are required' },
         { status: 400 }
       );
     }
 
-    // Build user data based on identifier type
-    const userData: any = { password, name };
-    let sanitizedEmail = '';
-    let normalizedPhone = '';
-
-    if (email) {
-      sanitizedEmail = sanitizeEmail(email);
-      if (!validateEmail(sanitizedEmail)) {
-        return Response.json({ error: 'Invalid email format' }, { status: 400 });
-      }
-      userData.email = sanitizedEmail;
-    } else {
-      // Phone-based registration
-      normalizedPhone = normalizePhone(phone);
-      if (!validatePhone(normalizedPhone)) {
-        return Response.json({ error: 'Invalid phone number format' }, { status: 400 });
-      }
-      userData.phone = normalizedPhone;
-      userData.email = `phone_${normalizedPhone.replace(/\D/g, '')}@geteasycv.placeholder`;
-      sanitizedEmail = userData.email;
+    const sanitizedEmail = sanitizeEmail(email);
+    if (!validateEmail(sanitizedEmail)) {
+      return Response.json({ error: 'Invalid email format' }, { status: 400 });
     }
+    const userData: any = { email: sanitizedEmail, password, name };
 
     const passwordCheck = validatePassword(password);
     if (!passwordCheck.valid) {
@@ -82,16 +57,9 @@ export async function POST(req: Request) {
 
     try {
       // Check existing user in DB
-      if (email) {
-        const existingUser = await prisma.user.findUnique({ where: { email: sanitizedEmail } });
-        if (existingUser) {
-          return Response.json({ error: 'Email already registered' }, { status: 409 });
-        }
-      } else {
-        const existingUser = await prisma.user.findFirst({ where: { phone: normalizedPhone } });
-        if (existingUser) {
-          return Response.json({ error: 'Phone number already registered' }, { status: 409 });
-        }
+      const existingUser = await prisma.user.findUnique({ where: { email: sanitizedEmail } });
+      if (existingUser) {
+        return Response.json({ error: 'Email already registered' }, { status: 409 });
       }
 
       const hashedPassword = await hashPassword(password);

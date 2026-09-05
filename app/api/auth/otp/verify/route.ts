@@ -34,8 +34,8 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    if (!['email', 'phone'].includes(identifierType)) {
-      return NextResponse.json({ error: 'identifierType must be "email" or "phone".' }, { status: 400 });
+    if (!['email'].includes(identifierType)) {
+      return NextResponse.json({ error: 'identifierType must be "email". Phone OTP is not supported.' }, { status: 400 });
     }
     if (!['login', 'signup'].includes(purpose)) {
       return NextResponse.json({ error: 'purpose must be "login" or "signup".' }, { status: 400 });

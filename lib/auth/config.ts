@@ -17,11 +17,6 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
       redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || ''}/api/auth/oauth/google/callback`,
     },
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
-      redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/oauth/github/callback`,
-    },
   },
 
   // Password requirements

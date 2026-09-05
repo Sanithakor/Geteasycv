@@ -30,7 +30,6 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm sm:text-base font-medium">
               {[
                 ['/resume-builder', 'Resume Builder'],
-                ['/cv-builder', 'CV Builder'],
                 ['/templates', 'Resume Templates'],
                 ['/ats-checker', 'ATS Resume Checker'],
                 ['/cover-letter', 'Cover Letter Builder'],

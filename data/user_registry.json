@@ -85,13 +85,13 @@
     "email": "sthakor890@gmail.com",
     "avatar": null,
     "googleId": null,
-    "subscriptionTier": "free",
-    "role": "user",
+    "subscriptionTier": "premium",
+    "role": "admin",
     "isActive": true,
     "isBanned": false,
     "createdAt": "2026-08-01T14:33:34.578Z",
-    "lastLoginAt": "2026-08-30T12:14:04.293Z",
-    "lastSeenAt": "2026-08-30T12:14:04.293Z",
+    "lastLoginAt": "2026-09-05T13:24:13.069Z",
+    "lastSeenAt": "2026-09-05T13:25:25.429Z",
     "resumes": 0
   },
   {

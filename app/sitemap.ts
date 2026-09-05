@@ -9,13 +9,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     { route: '', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/free-resume-builder', priority: 1.0, changeFrequency: 'daily' as const },
-    { route: '/free-cv-builder', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/ats-resume-builder', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/resume-maker', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/resume-builder-for-students', priority: 0.9, changeFrequency: 'weekly' as const },
     { route: '/resume-builder-for-freshers', priority: 0.9, changeFrequency: 'weekly' as const },
     { route: '/resume-builder', priority: 1.0, changeFrequency: 'daily' as const },
-    { route: '/cv-builder', priority: 1.0, changeFrequency: 'daily' as const },
     { route: '/templates', priority: 0.9, changeFrequency: 'daily' as const },
     { route: '/ats-checker', priority: 0.9, changeFrequency: 'daily' as const },
     { route: '/resume-examples', priority: 0.9, changeFrequency: 'weekly' as const },
