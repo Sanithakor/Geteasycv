@@ -38,7 +38,7 @@ export default function ContactClientContent() {
         setError(data.error || 'Failed to send message. Please try again.');
       }
     } catch {
-      setError('An error occurred. Please try emailing us directly at support@geteasycv.com');
+      setError('An error occurred. Please try emailing us directly at info@geteasycv.com');
     } finally {
       setSubmitting(false);
     }
@@ -173,8 +173,8 @@ export default function ContactClientContent() {
                     </div>
                     <div>
                       <span className="font-bold text-slate-900 block">Support Email</span>
-                      <a href="mailto:support@geteasycv.com" className="text-[#F3645C] hover:underline mt-0.5 block">
-                        support@geteasycv.com
+                      <a href="mailto:info@geteasycv.com" className="text-[#F3645C] hover:underline mt-0.5 block">
+                        Info@geteasycv.com
                       </a>
                     </div>
                   </div>

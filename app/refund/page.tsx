@@ -28,7 +28,7 @@ const SECTIONS = [
   {
     title: '3. How to Request a Refund',
     content:
-      'Email us at support@geteasycv.com from your registered account email. Include your full name and the reason for the refund (optional but helpful). We will process your request within 2 business days.',
+      'Email us at info@geteasycv.com from your registered account email. Include your full name and the reason for the refund (optional but helpful). We will process your request within 2 business days.',
     links: [{ text: 'Contact our support team', href: '/contact' }],
   },
   {
@@ -49,7 +49,7 @@ const SECTIONS = [
   {
     title: '7. Contact',
     content:
-      'For refund requests or billing questions, reach us at support@geteasycv.com. We aim to respond within 24 hours on business days.',
+      'For refund requests or billing questions, reach us at info@geteasycv.com. We aim to respond within 24 hours on business days.',
     links: [{ text: 'Go to contact page', href: '/contact' }],
   },
 ];

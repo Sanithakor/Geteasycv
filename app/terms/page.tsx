@@ -61,7 +61,7 @@ const SECTIONS = [
   },
   {
     title: '13. Contact',
-    content: 'Questions? Contact us at support@geteasycv.com or through our Contact page.',
+    content: 'Questions? Contact us at info@geteasycv.com or through our Contact page.',
   },
 ];
 

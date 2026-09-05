@@ -3,16 +3,21 @@
  * Powered by @google/genai with model gemini-3.8-flash
  */
 
-import { GoogleGenAI } from '@google/genai';
 import { CVData, SkillItem } from '@/data/sampleCV';
 
-let aiClient: GoogleGenAI | null = null;
+let aiClient: any = null;
 
-function getGeminiClient(): GoogleGenAI | null {
+function getGeminiClient(): any {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) return null;
   if (!aiClient) {
-    aiClient = new GoogleGenAI({ apiKey });
+    try {
+      // Dynamic require so build succeeds even if @google/genai is not in node_modules
+      const { GoogleGenAI } = require('@google/genai');
+      aiClient = new GoogleGenAI({ apiKey });
+    } catch {
+      return null;
+    }
   }
   return aiClient;
 }

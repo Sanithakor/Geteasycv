@@ -9,11 +9,11 @@ import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import { Menu, X, LayoutDashboard } from 'lucide-react';
 
 const navItems = [
-  { name: 'Resume Builder', href: '/resume-builder' },
-  { name: 'Templates',      href: '/templates' },
-  { name: 'ATS Checker',   href: '/ats-checker' },
-  { name: 'Examples',       href: '/resume-examples' },
-  { name: 'Pricing',       href: '/pricing' },
+  { name: 'Create Resume', href: '/editor', highlight: true },
+  { name: 'Templates', href: '/templates' },
+  { name: 'ATS Checker', href: '/ats-checker' },
+  { name: 'Examples', href: '/resume-examples' },
+  { name: 'Pricing', href: '/pricing' },
 ];
 
 function OpenAuthWatcher() {
@@ -90,24 +90,38 @@ export default function Navigation() {
       </Suspense>
       <AuthHeartbeat />
 
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 font-sans">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <img src="/logo.svg" alt="GetEasyCV" className="h-10 w-auto object-contain" />
+        <Link href="/" className="flex items-center gap-2 group shrink-0">
+          <img src="/logo.svg" alt="GetEasyCV" className="h-9 sm:h-10 w-auto object-contain" />
         </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden items-center gap-1 lg:flex">
+        {/* Desktop Navigation Links */}
+        <div className="hidden items-center gap-1.5 lg:flex">
           {navItems.map((item) => {
             const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href) && pathname !== '/';
+
+            if (item.highlight) {
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="rounded-full px-4 py-2 text-sm font-bold text-white transition-all hover:opacity-90 shadow-2xs mr-1"
+                  style={{ background: '#F3645C' }}
+                >
+                  ⚡ {item.name}
+                </Link>
+              );
+            }
+
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
                   active
-                    ? 'text-[#0F0F0F]'
-                    : 'text-[#333333] hover:text-[#0F0F0F]'
+                    ? 'text-[#0F0F0F] font-bold'
+                    : 'text-slate-700 hover:text-[#0F0F0F] hover:bg-slate-100/70'
                 }`}
                 style={active ? { background: '#F5D17B' } : undefined}
               >
@@ -157,12 +171,15 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm font-semibold text-[#333333] hover:text-[#0F0F0F] transition-colors"
-                style={{ background: 'transparent' }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#F8F8F6')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors flex items-center justify-between ${
+                  item.highlight
+                    ? 'text-white font-bold'
+                    : 'text-[#333333] hover:text-[#0F0F0F] hover:bg-[#F8F8F6]'
+                }`}
+                style={item.highlight ? { background: '#F3645C' } : undefined}
               >
-                {item.name}
+                <span>{item.name}</span>
+                {item.highlight && <span className="text-[10px] uppercase font-bold bg-white/25 px-2 py-0.5 rounded-full">Popular</span>}
               </Link>
             ))}
           </div>

@@ -48,7 +48,7 @@
     "isBanned": false,
     "createdAt": "2024-01-05T00:00:00.000Z",
     "lastLoginAt": "2026-08-30T16:52:00.000Z",
-    "lastSeenAt": "2026-08-30T11:55:08.897Z",
+    "lastSeenAt": "2026-09-05T12:08:38.324Z",
     "resumes": 1
   },
   {
@@ -80,50 +80,19 @@
     "resumes": 0
   },
   {
-    "id": "cms0k482a0003ybsfmo916nuv",
-    "name": "Admin User",
+    "id": "cmsah1som0002doms9p9quwka",
+    "name": "Sanikumar",
     "email": "sthakor890@gmail.com",
     "avatar": null,
     "googleId": null,
-    "subscriptionTier": "premium",
-    "role": "admin",
-    "isActive": true,
-    "isBanned": false,
-    "createdAt": "2026-07-25T16:01:44.914Z",
-    "lastLoginAt": "2026-08-18T20:32:32.073Z",
-    "lastSeenAt": "2026-08-18T20:32:32.073Z",
-    "resumes": 9
-  },
-  {
-    "id": "cms0rlets0000berfc92po8e7",
-    "name": "Alex Johnson",
-    "email": "alex.google@geteasycv.com",
-    "avatar": null,
-    "googleId": null,
     "subscriptionTier": "free",
     "role": "user",
     "isActive": true,
     "isBanned": false,
-    "createdAt": "2026-07-25T19:31:04.142Z",
-    "lastLoginAt": null,
-    "lastSeenAt": null,
+    "createdAt": "2026-08-01T14:33:34.578Z",
+    "lastLoginAt": "2026-08-30T12:14:04.293Z",
+    "lastSeenAt": "2026-08-30T12:14:04.293Z",
     "resumes": 0
-  },
-  {
-    "id": "cms0k46r20000ybsfomrh6kss",
-    "name": "Demo User",
-    "email": "demo@geteasycv.com",
-    "avatar": null,
-    "googleId": null,
-    "subscriptionTier": "free",
-    "role": "user",
-    "isActive": true,
-    "isBanned": false,
-    "createdAt": "2026-07-25T16:01:43.202Z",
-    "lastLoginAt": null,
-    "lastSeenAt": null,
-    "resumes": 0
-<<<<<<< HEAD
   },
   {
     "id": "cms0rlets0000berfc92po8e7",
@@ -151,9 +120,9 @@
     "isActive": true,
     "isBanned": false,
     "createdAt": "2026-07-25T16:01:44.914Z",
-    "lastLoginAt": "2026-09-04T13:11:32.012Z",
-    "lastSeenAt": "2026-09-05T11:27:53.660Z",
-    "resumes": 9
+    "lastLoginAt": "2026-09-05T12:09:07.358Z",
+    "lastSeenAt": "2026-09-05T12:32:05.658Z",
+    "resumes": 10
   },
   {
     "id": "cms0k46r20000ybsfomrh6kss",
@@ -169,7 +138,5 @@
     "lastLoginAt": null,
     "lastSeenAt": null,
     "resumes": 0
-=======
->>>>>>> 05a916e6046ad1acb4dc57b3180f0fd8a60940b3
   }
 ]

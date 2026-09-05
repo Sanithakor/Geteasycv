@@ -33,7 +33,7 @@ export const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
   enableAI: true,
   enableTemplateStore: true,
   enableSocialShare: true,
-  contactEmail: 'support@geteasycv.com',
+  contactEmail: 'info@geteasycv.com',
   companyName: 'GetEasyCV Inc.',
   socialLinks: {
     twitter: 'https://twitter.com/geteasycv',

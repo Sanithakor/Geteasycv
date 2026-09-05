@@ -78,7 +78,7 @@ const SECTIONS = [
   {
     title: '8. Contact Us',
     content: [
-      'Questions about this policy or how we handle your data? Reach us at support@geteasycv.com.',
+      'Questions about this policy or how we handle your data? Reach us at info@geteasycv.com.',
     ],
     links: [{ text: 'Contact our support team', href: '/contact' }],
   },

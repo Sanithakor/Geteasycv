@@ -8,7 +8,7 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState({
     siteName: 'GetEasyCV',
     siteUrl: 'https://geteasycv.com',
-    supportEmail: 'support@geteasycv.com',
+    supportEmail: 'info@geteasycv.com',
     companyName: 'GetEasyCV Inc.',
     maintenanceMode: false,
     comingSoonMode: true,

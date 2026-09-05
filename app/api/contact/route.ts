@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const settings = await getSystemSettings();
-    const recipientEmail = process.env.ADMIN_EMAIL || settings.contactEmail || 'support@geteasycv.com';
+    const recipientEmail = process.env.ADMIN_EMAIL || settings.contactEmail || 'info@geteasycv.com';
 
     const subject = `[Contact Form] ${topic || 'General Inquiry'} from ${name}`;
     const html = `

@@ -80,7 +80,7 @@ export default function InvoicesPage() {
       doc.text('Issued By:', 120, 52);
       doc.setFont('helvetica', 'normal');
       doc.text('GetEasyCV Inc.', 120, 58);
-      doc.text('support@geteasycv.com', 120, 64);
+      doc.text('info@geteasycv.com', 120, 64);
       doc.text('https://geteasycv.com', 120, 70);
 
       // Divider Line
