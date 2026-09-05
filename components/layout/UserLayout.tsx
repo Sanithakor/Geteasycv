@@ -250,7 +250,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
         {/* Content Area */}
         <main className="flex-1 overflow-y-auto p-6 sm:p-8">
-          <div className="max-w-7xl mx-auto">{children}</div>
+          <div className="max-w-[1340px] mx-auto">{children}</div>
         </main>
       </div>
     </div>

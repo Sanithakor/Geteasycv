@@ -1,0 +1,35 @@
+[
+  {
+    "id": "cmtoju0we000deya8n67lyc9r",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"Sarah Johnson Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-05T15:39:58.614Z"
+  },
+  {
+    "id": "cmtohaexk0008eya8y1fqg3j1",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"Sarah Johnson Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-05T14:28:45.387Z"
+  },
+  {
+    "id": "cmtoh3b620003eya8vquotazn",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"Single Column ATS Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-05T14:23:12.732Z"
+  }
+]

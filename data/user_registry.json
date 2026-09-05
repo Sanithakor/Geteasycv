@@ -85,14 +85,14 @@
     "email": "sthakor890@gmail.com",
     "avatar": null,
     "googleId": null,
-    "subscriptionTier": "premium",
-    "role": "admin",
+    "subscriptionTier": "free",
+    "role": "user",
     "isActive": true,
     "isBanned": false,
     "createdAt": "2026-08-01T14:33:34.578Z",
-    "lastLoginAt": "2026-09-05T13:24:13.069Z",
-    "lastSeenAt": "2026-09-05T13:25:25.429Z",
-    "resumes": 0
+    "lastLoginAt": "2026-09-05T15:30:09.068Z",
+    "lastSeenAt": "2026-09-05T15:39:19.478Z",
+    "resumes": 2
   },
   {
     "id": "cms0rlets0000berfc92po8e7",
@@ -120,7 +120,7 @@
     "isActive": true,
     "isBanned": false,
     "createdAt": "2026-07-25T16:01:44.914Z",
-    "lastLoginAt": "2026-09-05T12:09:07.358Z",
+    "lastLoginAt": "2026-09-05T12:32:05.658Z",
     "lastSeenAt": "2026-09-05T12:32:05.658Z",
     "resumes": 10
   },

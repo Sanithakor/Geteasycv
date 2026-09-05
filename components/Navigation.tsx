@@ -15,11 +15,12 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: 'Create Resume', href: '/editor', highlight: true },
-  { name: 'Templates', href: '/templates' },
-  { name: 'ATS Checker', href: '/ats-checker' },
-  { name: 'Examples', href: '/resume-examples' },
-  { name: 'Pricing', href: '/pricing' },
+  { name: 'Resume Builder', href: '/editor', highlight: true },
+  { name: 'About us', href: '/about' },
+  { name: 'Resume Templates', href: '/templates' },
+  { name: 'Cover Letter Builder', href: '/cover-letter' },
+  { name: 'Pricing & Plans', href: '/pricing' },
+  { name: 'Contact us', href: '/contact' },
 ];
 
 function OpenAuthWatcher() {
@@ -96,7 +97,7 @@ export default function Navigation() {
       </Suspense>
       <AuthHeartbeat />
 
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 font-sans">
+      <nav className="mx-auto flex h-16 max-w-[1340px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 font-sans">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group shrink-0">
           <img src="/logo.svg" alt="GetEasyCV" className="h-9 sm:h-10 w-auto object-contain" />

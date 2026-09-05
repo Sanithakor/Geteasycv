@@ -599,7 +599,7 @@ export default function InnerBanner({
         style={{ background: "#FFE0CF", filter: "blur(70px)" }}
       />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-[1340px] px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         {breadcrumbs && breadcrumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className={`mb-5 flex items-center text-xs text-slate-500 font-medium ${isCentered ? "justify-center" : ""}`}>

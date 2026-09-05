@@ -29,7 +29,7 @@ export default function HeroNew() {
       <div className="pointer-events-none absolute top-0 right-0 w-72 h-72 rounded-full opacity-30" style={{ background: '#D0B9EF', filter: 'blur(80px)' }} />
       <div className="pointer-events-none absolute bottom-0 left-1/2 w-72 h-72 rounded-full opacity-25" style={{ background: '#FEE1CF', filter: 'blur(80px)' }} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text + CTAs */}
           <div className="text-center lg:text-left">

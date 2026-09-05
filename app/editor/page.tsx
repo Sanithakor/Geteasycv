@@ -456,9 +456,9 @@ export default function EditorPage() {
     if (!container) return;
 
     const calculateScale = () => {
-      const availableWidth = container.clientWidth - 64; // 64px margin padding
+      const availableWidth = container.clientWidth - 48; // 48px margin padding
       if (availableWidth > 0) {
-        const computedScale = Math.min(1.0, Math.max(0.35, availableWidth / 920));
+        const computedScale = Math.min(1.0, Math.max(0.3, availableWidth / 920));
         setAutoScale(computedScale);
       }
     };
@@ -1654,9 +1654,9 @@ export default function EditorPage() {
           {/* CENTER AREA (Continuous Multi-Page Live Preview) */}
           <section 
             ref={previewScrollRef}
-            className="flex-1 flex flex-col relative bg-[#F1F3F5] min-w-0 z-0 overflow-y-auto"
+            className="flex-1 flex flex-col relative bg-[#F1F3F5] min-w-0 z-0 overflow-y-auto overflow-x-hidden"
           >
-            <div className="flex-1 px-4 py-8 sm:px-8 sm:py-12 flex flex-col items-center pb-28">
+            <div className="flex-1 px-3 py-6 sm:px-6 sm:py-8 flex flex-col items-center pb-28">
               {/* Outer Sizing Box - Matches exact scaled visual width to eliminate right-side white gap */}
               <div 
                 style={{ 
@@ -1664,13 +1664,14 @@ export default function EditorPage() {
                   height: contentHeight ? (contentHeight * autoScale) : undefined,
                   maxWidth: '100%',
                 }}
+                className="mx-auto flex flex-col items-center"
               >
                 {/* Scaled Printable Document Container */}
                 <div 
                   className="printable transition-transform duration-200" 
                   style={{ 
                     transform: `scale(${autoScale})`, 
-                    transformOrigin: 'top left',
+                    transformOrigin: 'top center',
                     width: 920,
                   }}
                 >
@@ -1769,9 +1770,21 @@ export default function EditorPage() {
               </div>
 
               <div className="h-4 w-px bg-slate-200 mx-1" />
-              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-full">
+              <button
+                type="button"
+                onClick={() => {
+                  if (previewScrollRef.current) {
+                    const availableWidth = previewScrollRef.current.clientWidth - 48;
+                    if (availableWidth > 0) {
+                      setAutoScale(Math.min(1.0, Math.max(0.3, availableWidth / 920)));
+                    }
+                  }
+                }}
+                className="text-[10px] font-bold text-slate-600 hover:text-slate-900 uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
+                title="Click to Auto-Fit Template to Screen Width"
+              >
                 Auto Fit ({Math.round(autoScale * 100)}%)
-              </span>
+              </button>
             </div>
           </section>
 
