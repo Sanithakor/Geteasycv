@@ -62,7 +62,7 @@ export const DEFAULT_PRICING_PLANS: PricingPlan[] = [
     name: "Premium",
     price: "$19",
     period: "month",
-    description: "Advanced features for career growth & power users.",
+    description: "Advanced features and lifetime power for professionals.",
     features: [
       "Everything in Pro",
       "Cover letter builder",
@@ -101,7 +101,7 @@ export default function PricingSimplified({
   className = "",
   onPlanClick,
   showTrustBadges = true,
-  footnote = "All paid plans include a 7-day money-back guarantee. Cancel anytime.",
+  footnote = "All plans include a 14-day free trial. No credit card required.",
 }: PricingSectionProps) {
   return (
     <section
@@ -262,7 +262,7 @@ export default function PricingSimplified({
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[#333333] font-semibold pt-2">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-[#58C09D]" />
-              <span>7-day money-back guarantee</span>
+              <span>14-day money-back guarantee</span>
             </div>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-[#58C09D]" />

@@ -92,35 +92,56 @@ export async function POST(req: NextRequest) {
 
     let creditsRemaining: number | null = null;
 
-    // 2. Check AI Credits
+    // 2. Check AI Access & Credits according to Plan
     if (auth?.userId) {
-      try {
-        const sub = await prisma.subscription.findUnique({
-          where: { userId: auth.userId },
-        });
+      const planTier = (auth.subscriptionTier || 'free').toLowerCase();
 
-        if (sub && sub.plan === 'free' && sub.aiCredits <= 0) {
-          return NextResponse.json(
-            {
-              error: 'AI credit limit reached (0 credits remaining). Upgrade to Pro for unlimited AI suggestions.',
-              code: 'AI_CREDITS_EXHAUSTED',
-              creditsRemaining: 0,
-            },
-            { status: 429 }
-          );
-        }
+      // Starter plan does not include the AI Resume Bullet Rewriter
+      if (planTier === 'starter') {
+        return NextResponse.json(
+          {
+            error: 'AI Resume Bullet Rewriter is an exclusive feature of Pro and Lifetime plans. Upgrade to Pro or Lifetime to unlock unlimited AI suggestions.',
+            code: 'PLAN_UPGRADE_REQUIRED',
+            requiredPlan: 'pro',
+          },
+          { status: 403 }
+        );
+      }
 
-        if (sub && sub.plan === 'free' && sub.aiCredits > 0) {
-          const updatedSub = await prisma.subscription.update({
+      // Pro & Lifetime have unlimited AI
+      const isUnlimitedPlan = planTier === 'pro' || planTier === 'lifetime' || planTier === 'premium';
+
+      if (!isUnlimitedPlan) {
+        try {
+          const sub = await prisma.subscription.findUnique({
             where: { userId: auth.userId },
-            data: { aiCredits: { decrement: 1 } },
           });
-          creditsRemaining = updatedSub.aiCredits;
-        } else if (sub) {
-          creditsRemaining = sub.aiCredits;
+
+          const currentCredits = sub?.aiCredits ?? 10;
+
+          if (currentCredits <= 0) {
+            return NextResponse.json(
+              {
+                error: 'AI credit limit reached (0 credits remaining). Upgrade to Pro or Lifetime for unlimited AI suggestions.',
+                code: 'AI_CREDITS_EXHAUSTED',
+                creditsRemaining: 0,
+              },
+              { status: 429 }
+            );
+          }
+
+          if (sub) {
+            const updatedSub = await prisma.subscription.update({
+              where: { userId: auth.userId },
+              data: { aiCredits: { decrement: 1 } },
+            });
+            creditsRemaining = updatedSub.aiCredits;
+          } else {
+            creditsRemaining = currentCredits - 1;
+          }
+        } catch (dbErr) {
+          console.warn('[AI_IMPROVE_DB_WARN]', dbErr);
         }
-      } catch (dbErr) {
-        console.warn('[AI_IMPROVE_DB_WARN]', dbErr);
       }
     }
 

@@ -95,18 +95,34 @@ export async function POST(req: NextRequest) {
     let creditsLimit: number | null = null;
     let isUnlimited = false;
 
-    // 2. Check AI Credits if User is Authenticated
+    // 2. Check AI Credits & Plan Access if User is Authenticated
     if (auth?.userId) {
-      try {
-        const sub = await prisma.subscription.findUnique({
-          where: { userId: auth.userId },
-        });
+      const planTier = (auth.subscriptionTier || 'free').toLowerCase();
 
-        if (sub) {
-          isUnlimited = sub.plan === 'pro' || sub.plan === 'premium';
-          creditsLimit = sub.plan === 'free' ? 10 : null;
+      // Starter plan does not include the AI Resume Bullet Rewriter
+      if (planTier === 'starter') {
+        return NextResponse.json(
+          {
+            error: 'AI Resume Bullet Rewriter is an exclusive feature of Pro and Lifetime plans. Upgrade to Pro or Lifetime to unlock unlimited AI suggestions.',
+            code: 'PLAN_UPGRADE_REQUIRED',
+            requiredPlan: 'pro',
+          },
+          { status: 403 }
+        );
+      }
 
-          if (sub.plan === 'free' && sub.aiCredits <= 0) {
+      isUnlimited = planTier === 'pro' || planTier === 'lifetime' || planTier === 'premium';
+      creditsLimit = isUnlimited ? null : 10;
+
+      if (!isUnlimited) {
+        try {
+          const sub = await prisma.subscription.findUnique({
+            where: { userId: auth.userId },
+          });
+
+          const currentCredits = sub?.aiCredits ?? 10;
+
+          if (currentCredits <= 0) {
             return NextResponse.json(
               {
                 error: 'AI credit limit reached (0 credits remaining). Upgrade to Pro for unlimited AI suggestions.',
@@ -119,18 +135,18 @@ export async function POST(req: NextRequest) {
             );
           }
 
-          if (sub.plan === 'free' && sub.aiCredits > 0) {
+          if (sub) {
             const updatedSub = await prisma.subscription.update({
               where: { userId: auth.userId },
               data: { aiCredits: { decrement: 1 } },
             });
             creditsRemaining = updatedSub.aiCredits;
           } else {
-            creditsRemaining = sub.aiCredits;
+            creditsRemaining = currentCredits - 1;
           }
+        } catch (dbErr) {
+          console.warn('[AI_ASSIST_DB_CREDIT_WARN]', dbErr);
         }
-      } catch (dbErr) {
-        console.warn('[AI_ASSIST_DB_CREDIT_WARN]', dbErr);
       }
     }
 

@@ -17,7 +17,8 @@ import {
   User, FileText, Briefcase, GraduationCap, Link as LinkIcon, Folder, Award, 
   Languages, Palette, ArrowLeft, Undo2, Redo2, Eye, Save, Download, ChevronUp, 
   ChevronDown, CheckCircle2, GripVertical, Plus, Trash2, Camera, UserCircle, LineChart,
-  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight, Share2, Sparkles, ShieldCheck
+  Edit3, Layers, SlidersHorizontal, ChevronLeft, ChevronRight, Share2, Sparkles, ShieldCheck,
+  Mic, MicOff, Wand2, Volume2
 } from 'lucide-react';
 // AI Assist components & hook
 import AIFieldButton from '@/components/editor/AIFieldButton';
@@ -29,6 +30,8 @@ import AICoverLetterModal from '@/components/editor/AICoverLetterModal';
 import AIImprovementModal from '@/components/editor/AIImprovementModal';
 import DownloadLimitModal from '@/components/editor/DownloadLimitModal';
 import ResumeImportModal from '@/components/modals/ResumeImportModal';
+import VoiceAICommandCenter from '@/components/editor/VoiceAICommandCenter';
+import VoiceAIFieldAssist from '@/components/editor/VoiceAIFieldAssist';
 import A4MultiPageContainer from '@/components/cv/A4MultiPageContainer';
 import { useAIAssist } from '@/lib/hooks/useAIAssist';
 import { exportToNativeDocx } from '@/lib/export/docxExporter';
@@ -292,7 +295,8 @@ export default function EditorPage() {
   const allLayouts = useMemo(() => getAllLayouts(), []);
   const exportRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
-  const { token, isAuthenticated, _hydrated } = useAuthStore();
+  const { user, token, isAuthenticated, _hydrated } = useAuthStore();
+  const userTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
   const initialTemplate = useMemo(() => {
     return templates[0];
@@ -300,6 +304,74 @@ export default function EditorPage() {
 
   const [selectedTemplate, setSelectedTemplate] = useState<GeneratedTemplate>(initialTemplate);
   const [cvData, setCvData] = useState<CVData>(sampleCV);
+  const [history, setHistory] = useState<CVData[]>([sampleCV]);
+  const [historyIndex, setHistoryIndex] = useState<number>(0);
+  const [showVoiceAIModal, setShowVoiceAIModal] = useState(false);
+
+  const pushHistory = useCallback((currentData: CVData) => {
+    setHistory((prev) => {
+      const sliced = prev.slice(0, historyIndex + 1);
+      return [...sliced, JSON.parse(JSON.stringify(currentData))];
+    });
+    setHistoryIndex((prev) => prev + 1);
+  }, [historyIndex]);
+
+  const handleUndo = useCallback(() => {
+    if (historyIndex > 0) {
+      const targetIndex = historyIndex - 1;
+      setHistoryIndex(targetIndex);
+      setCvData(JSON.parse(JSON.stringify(history[targetIndex])));
+      toast.success('Undid last modification');
+    }
+  }, [history, historyIndex]);
+
+  const handleRedo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      const targetIndex = historyIndex + 1;
+      setHistoryIndex(targetIndex);
+      setCvData(JSON.parse(JSON.stringify(history[targetIndex])));
+      toast.success('Redid modification');
+    }
+  }, [history, historyIndex]);
+
+  const handleApplyVoiceChange = useCallback((newCvData: CVData, explanation: string) => {
+    pushHistory(cvData);
+    setCvData(newCvData);
+    toast((t) => (
+      <div className="flex items-center justify-between gap-3 text-xs font-medium">
+        <span>{explanation}</span>
+        <button
+          type="button"
+          onClick={() => {
+            handleUndo();
+            toast.dismiss(t.id);
+          }}
+          className="px-2.5 py-1 bg-slate-900 text-[#F5D17B] font-bold rounded-md hover:bg-slate-800 transition-colors"
+        >
+          Undo
+        </button>
+      </div>
+    ), { duration: 7000, icon: '🎙️' });
+  }, [cvData, pushHistory, handleUndo]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        if (e.shiftKey) {
+          e.preventDefault();
+          handleRedo();
+        } else {
+          e.preventDefault();
+          handleUndo();
+        }
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleUndo, handleRedo]);
   const [customTheme, setCustomTheme] = useState<Theme>(initialTemplate.theme);
   const [selectedLayout, setSelectedLayout] = useState<Layout>(initialTemplate.layout);
   const [sectionVariants, setSectionVariants] = useState<SectionVariant>(initialTemplate.sectionVariants);
@@ -833,6 +905,19 @@ export default function EditorPage() {
       console.warn('[DOWNLOAD_CHECK_WARN]', checkErr);
     }
 
+    // Enforce Plan Format Limits: Starter includes high-res PDF download; PNG and JPG are Pro & Lifetime
+    const isProOrLifetime = userTier === 'pro' || userTier === 'lifetime' || userTier === 'premium';
+    if ((type === 'png' || type === 'jpg') && !isProOrLifetime) {
+      setIsExporting(false);
+      setDownloadLimitModalData({
+        message: 'High-resolution PNG and JPG image exports are included with Pro & Lifetime plans. Starter includes high-resolution PDF downloads.',
+        redirectUrl: '/pricing?plan=pro',
+      });
+      setShowDownloadLimitModal(true);
+      toast.error('PNG & JPG exports are available on Pro and Lifetime plans.');
+      return;
+    }
+
     const activeTmplId = customTemplate?.id || (selectedLayout?.id && customTheme?.id ? `${selectedLayout.id}-${customTheme.id}` : selectedLayout?.id) || 'sidebar-left-modern-blue';
 
     const recordTemplateDownload = () => {
@@ -979,7 +1064,20 @@ export default function EditorPage() {
             <Field label="First Name" value={cvData.personal.firstName} placeholder="Sarah" onChange={(value: any) => updatePersonal('firstName', value)} />
             <Field label="Last Name" value={cvData.personal.lastName} placeholder="Johnson" onChange={(value: any) => updatePersonal('lastName', value)} />
           </div>
-          <Field label="Professional Title" value={cvData.personal.title} placeholder="Senior Full Stack Developer" onChange={(value: any) => updatePersonal('title', value)} />
+          <div className="space-y-1">
+            <Field label="Professional Title" value={cvData.personal.title} placeholder="Senior Full Stack Developer" onChange={(value: any) => updatePersonal('title', value)} />
+            <VoiceAIFieldAssist
+              fieldName="Professional Title"
+              fieldValue={cvData.personal.title}
+              onAccept={(text) => {
+                pushHistory(cvData);
+                updatePersonal('title', text);
+              }}
+              sectionName="Personal Information"
+              jobTitle={cvData.personal.title || 'Professional'}
+              compact
+            />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Email" value={cvData.personal.email} placeholder="sarah.johnson@email.com" onChange={(value: any) => updatePersonal('email', value)} />
             <Field label="Phone" value={cvData.personal.phone} placeholder="+1 (555) 123-4567" onChange={(value: any) => updatePersonal('phone', value)} />
@@ -997,6 +1095,16 @@ export default function EditorPage() {
       return (
         <div>
           <TextField label="Professional Summary" value={cvData.summary} rows={6} placeholder="Product-minded developer..." onChange={(value: any) => setCvData((prev) => ({ ...prev, summary: value }))} />
+          <VoiceAIFieldAssist
+            fieldName="Professional Summary"
+            fieldValue={cvData.summary}
+            onAccept={(text) => {
+              pushHistory(cvData);
+              setCvData((prev) => ({ ...prev, summary: text }));
+            }}
+            sectionName="Professional Summary"
+            jobTitle={cvData.personal.title || 'Professional'}
+          />
           <AIFieldButton
             fieldName="Professional Summary"
             fieldValue={cvData.summary}
@@ -1022,6 +1130,16 @@ export default function EditorPage() {
               <div className="grid grid-cols-2 gap-4"><Field label="Start" value={item.startDate} onChange={(value: any) => updateExperience(item.id, 'startDate', value)} /><Field label="End" value={item.endDate} onChange={(value: any) => updateExperience(item.id, 'endDate', value)} /></div>
               <div>
                 <TextField label="Role summary" value={item.description} rows={2} onChange={(value: any) => updateExperience(item.id, 'description', value)} />
+                <VoiceAIFieldAssist
+                  fieldName={`Role summary (${item.company})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateExperience(item.id, 'description', text);
+                  }}
+                  sectionName="Work Experience"
+                  jobTitle={item.position || cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Role description (${item.company})`}
                   fieldValue={item.description}
@@ -1036,6 +1154,16 @@ export default function EditorPage() {
               </div>
               <div>
                 <TextField label="Achievements (one per line)" value={item.achievements.join('\n')} rows={3} onChange={(value: any) => updateExperience(item.id, 'achievements', value.split('\n').filter(Boolean))} />
+                <VoiceAIFieldAssist
+                  fieldName={`Achievements (${item.company})`}
+                  fieldValue={item.achievements.join('\n')}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateExperience(item.id, 'achievements', text.split('\n').filter(Boolean));
+                  }}
+                  sectionName="Work Achievements"
+                  jobTitle={item.position || cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Achievements (${item.company})`}
                   fieldValue={item.achievements.join('\n')}
@@ -1093,6 +1221,16 @@ export default function EditorPage() {
               <Field label="Project Name" value={item.name} onChange={(value: any) => updateProject(item.id, 'name', value)} />
               <div>
                 <TextField label="Description" value={item.description} rows={2} onChange={(value: any) => updateProject(item.id, 'description', value)} />
+                <VoiceAIFieldAssist
+                  fieldName={`Project description (${item.name})`}
+                  fieldValue={item.description}
+                  onAccept={(text) => {
+                    pushHistory(cvData);
+                    updateProject(item.id, 'description', text);
+                  }}
+                  sectionName="Projects"
+                  jobTitle={cvData.personal.title || 'Professional'}
+                />
                 <AIFieldButton
                   fieldName={`Project description (${item.name})`}
                   fieldValue={item.description}
@@ -1165,8 +1303,8 @@ export default function EditorPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-slate-700">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-[#FF570F] flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <Sparkles className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-xl bg-[#0F0F0F] flex items-center justify-center mx-auto mb-4 shadow-sm animate-pulse">
+            <Sparkles className="w-6 h-6 text-[#F5D17B]" />
           </div>
           <p className="text-slate-600 text-sm font-semibold">
             {!_hydrated ? 'Loading editor session...' : 'Authentication required. Redirecting to login...'}
@@ -1191,6 +1329,40 @@ export default function EditorPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* Undo / Redo History Controls */}
+          <div className="hidden sm:flex items-center bg-slate-100 rounded-md border border-slate-200 p-0.5" title="Undo / Redo changes">
+            <button
+              type="button"
+              onClick={handleUndo}
+              disabled={historyIndex <= 0}
+              className="p-1.5 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed rounded hover:bg-white transition-colors cursor-pointer"
+              title="Undo last change (Ctrl+Z)"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleRedo}
+              disabled={historyIndex >= history.length - 1}
+              className="p-1.5 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed rounded hover:bg-white transition-colors cursor-pointer"
+              title="Redo change (Ctrl+Y)"
+            >
+              <Redo2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Voice & AI Assistant Command Center Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowVoiceAIModal(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-[#0F0F0F] hover:bg-[#262626] rounded-md border border-slate-700 shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+            title="Voice Commands & AI Editor"
+          >
+            <Mic className="w-3.5 h-3.5 text-[#F3645C] group-hover:scale-110 transition-transform" />
+            <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
+            <span className="hidden sm:inline">Voice &amp; AI</span>
+          </button>
+
           <button type="button" onClick={saveDraft} disabled={isSaving} className="hidden sm:flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-md border border-slate-800 transition-colors shadow-2xs cursor-pointer">
             <Save className="w-4 h-4 text-teal-400" />
             <span>{isSaving ? 'Saving...' : 'Save & Update'}</span>
@@ -1267,6 +1439,32 @@ export default function EditorPage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => downloadExport('png')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Download className="w-4 h-4 text-emerald-600" />
+                    <span>High-Res PNG (.png)</span>
+                  </div>
+                  {userTier !== 'pro' && userTier !== 'lifetime' && (
+                    <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadExport('jpg')}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Download className="w-4 h-4 text-amber-600" />
+                    <span>High-Res JPG (.jpg)</span>
+                  </div>
+                  {userTier !== 'pro' && userTier !== 'lifetime' && (
+                    <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                  )}
+                </button>
+                <button
+                  type="button"
                   onClick={() => downloadExport('txt')}
                   className="w-full px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 text-left flex items-center gap-2 cursor-pointer"
                 >
@@ -1317,10 +1515,25 @@ export default function EditorPage() {
                 <div className="grid grid-cols-2 gap-3">
                   {templates.map((tmpl) => {
                     const isSelected = selectedTemplate.id === tmpl.id;
+                    const isPremium = (tmpl as any).isPremium || tmpl.category === 'Luxury' || tmpl.theme?.id === 'dark-executive' || tmpl.theme?.id === 'gold-luxury';
+                    const isProOrLifetime = userTier === 'pro' || userTier === 'lifetime' || userTier === 'premium';
                     return (
                       <div
                         key={tmpl.id}
                         onClick={() => {
+                          if (isPremium && !isProOrLifetime) {
+                            toast.error(
+                              userTier === 'starter'
+                                ? 'Starter includes access to core templates. Upgrade to Pro or Lifetime to use premium templates.'
+                                : 'Upgrade to Pro or Lifetime to unlock all premium templates.'
+                            );
+                            setDownloadLimitModalData({
+                              message: 'This premium template is exclusively available on Pro and Lifetime plans. Starter includes access to core templates.',
+                              redirectUrl: '/pricing?plan=pro',
+                            });
+                            setShowDownloadLimitModal(true);
+                            return;
+                          }
                           setSelectedTemplate(tmpl);
                           setCustomTheme(tmpl.theme);
                           setSelectedLayout(tmpl.layout);
@@ -1347,9 +1560,16 @@ export default function EditorPage() {
                             </div>
                           )}
 
-                          {/* Category Tag */}
-                          <div className="absolute left-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
-                            {tmpl.category || 'ATS'}
+                          {/* Category / Premium Tag */}
+                          <div className="absolute left-2 top-2 z-10 flex items-center gap-1">
+                            <span className="rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-bold text-slate-700 shadow-2xs backdrop-blur uppercase tracking-wider">
+                              {tmpl.category || 'ATS'}
+                            </span>
+                            {isPremium && (
+                              <span className="rounded-full bg-amber-500 text-white px-1.5 py-0.5 text-[8px] font-extrabold shadow-2xs uppercase tracking-wider">
+                                PRO
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -1980,17 +2200,23 @@ export default function EditorPage() {
                       type="button"
                       onClick={() => downloadExport('png')}
                       disabled={isExporting}
-                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer"
+                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Download PNG
+                      <span>Download PNG</span>
+                      {userTier !== 'pro' && userTier !== 'lifetime' && (
+                        <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                      )}
                     </button>
                     <button
                       type="button"
                       onClick={() => downloadExport('jpg')}
                       disabled={isExporting}
-                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer"
+                      className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-md text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Download JPG
+                      <span>Download JPG</span>
+                      {userTier !== 'pro' && userTier !== 'lifetime' && (
+                        <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 rounded font-black">PRO</span>
+                      )}
                     </button>
                   </div>
 
@@ -2147,6 +2373,35 @@ export default function EditorPage() {
         }}
       />
       
+      {/* Voice & AI Content Editor Modal (Voice commands & AI patch confirmation) */}
+      <VoiceAICommandCenter
+        isOpen={showVoiceAIModal}
+        onClose={() => setShowVoiceAIModal(false)}
+        cvData={cvData}
+        activeSection={expandedPanel}
+        onApplyChange={handleApplyVoiceChange}
+      />
+
+      {/* Floating Voice & AI Quick Action Button */}
+      <button
+        type="button"
+        onClick={() => setShowVoiceAIModal(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-full shadow-2xl border-2 border-[#F5D17B]/50 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+        title="Open Voice & AI Content Editor"
+      >
+        <div className="relative flex items-center justify-center">
+          <Mic className="w-5 h-5 text-[#F3645C]" />
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#58C09D] animate-ping" />
+        </div>
+        <div className="flex flex-col text-left">
+          <span className="text-xs font-black tracking-tight text-white flex items-center gap-1">
+            <span>Voice &amp; AI</span>
+            <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
+          </span>
+          <span className="text-[9px] text-slate-300 font-medium hidden sm:inline">Click or speak commands</span>
+        </div>
+      </button>
+
       {/* Hidden container for PDF export rendering without scroll interference */}
       <div className="pointer-events-none fixed -left-[10000px] top-0">
         <div ref={exportRef} className="bg-white p-0" style={{ width: 920 }}>

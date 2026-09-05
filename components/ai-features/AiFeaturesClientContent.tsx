@@ -127,7 +127,7 @@ export default function AiFeaturesClientContent() {
           <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF5722] bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#0F0F0F] bg-[#BAC7FE] px-3 py-1 rounded-full">
                   Interactive AI Demo
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-2">
@@ -181,7 +181,7 @@ export default function AiFeaturesClientContent() {
             <div className="pt-2 text-center">
               <Link
                 href="/editor"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#0F0F0F] hover:bg-[#262626] text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
               >
                 <span>Use AI Builder Now</span>
                 <ArrowRight className="w-4 h-4" />

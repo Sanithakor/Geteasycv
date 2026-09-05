@@ -98,9 +98,9 @@ export default function ResumesPage() {
         </div>
         <Link
           href="/editor"
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#FF570F] hover:bg-[#E04800] text-white rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
         >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
+          <Plus className="w-4 h-4 stroke-[2.5] text-[#F5D17B]" />
           <span>Create Resume</span>
         </Link>
       </div>
@@ -113,7 +113,7 @@ export default function ResumesPage() {
           placeholder="Search by title, owner name or email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F] text-sm font-medium transition-all"
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F] text-sm font-medium transition-all"
         />
       </div>
 
@@ -138,8 +138,8 @@ export default function ResumesPage() {
                   {/* Title */}
                   <td className="py-4 px-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center flex-shrink-0">
-                        <FileText className="w-4 h-4" />
+                      <div className="w-8 h-8 rounded-lg bg-[#FEE1CF] text-[#0F0F0F] flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-4 h-4 text-[#F3645C]" />
                       </div>
                       <span className="text-sm font-bold text-slate-900 truncate max-w-xs" title={res.title}>
                         {res.title}

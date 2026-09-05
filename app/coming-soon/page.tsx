@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -44,7 +44,7 @@ export default function ComingSoonPage() {
     <>
       <div className="min-h-screen bg-slate-900 text-white font-sans flex flex-col justify-between relative overflow-hidden">
         {/* Background Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#FF570F]/15 blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#F3645C]/10 blur-[140px] pointer-events-none rounded-full" />
         
         {/* Navigation Header */}
         <header className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
@@ -55,9 +55,9 @@ export default function ComingSoonPage() {
 
           <Link
             href="/login"
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold rounded-md transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
           >
-            <Lock className="w-3.5 h-3.5 text-purple-400" />
+            <Lock className="w-3.5 h-3.5 text-[#BAC7FE]" />
             <span>Admin Sign In</span>
           </Link>
         </header>
@@ -65,15 +65,15 @@ export default function ComingSoonPage() {
         {/* Hero Body Section */}
         <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-8 my-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-[#FF570F]/30 text-purple-300 text-xs font-bold uppercase tracking-wider shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-[#F3645C]/30 text-[#BAC7FE] text-xs font-bold uppercase tracking-wider shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
             <span>LAUNCHING SOON</span>
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
             We're Getting Ready for <br />
-            <span className="bg-gradient-to-r from-purple-400 via-[#FF570F] to-white bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#BAC7FE] via-[#F3645C] to-white bg-clip-text text-transparent">
               GetEasyCV Launch
             </span>
           </h1>
@@ -86,12 +86,12 @@ export default function ComingSoonPage() {
           {/* Interactive Waitlist Form */}
           <div className="max-w-md mx-auto pt-4">
             {isJoined ? (
-              <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-md text-emerald-300 text-sm font-semibold flex items-center justify-center gap-2 animate-in fade-in duration-200">
+              <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-emerald-300 text-sm font-semibold flex items-center justify-center gap-2 animate-in fade-in duration-200">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                 <span>You're on the list! We will notify you when we go live.</span>
               </div>
             ) : (
-              <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row items-center gap-2 bg-slate-800/80 p-2 rounded-md border border-slate-700/80 shadow-xl backdrop-blur-xs">
+              <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row items-center gap-2 bg-slate-800/80 p-2 rounded-2xl border border-slate-700/80 shadow-xl backdrop-blur-xs">
                 <div className="relative w-full">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -106,7 +106,7 @@ export default function ComingSoonPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-[#FF570F] hover:bg-[#FF570F] text-white font-bold text-xs sm:text-sm rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-60"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#F3645C] hover:bg-[#E0524A] text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-60"
                 >
                   <span>{isSubmitting ? 'Joining...' : 'Notify Me'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -114,15 +114,15 @@ export default function ComingSoonPage() {
               </form>
             )}
             <p className="text-[11px] text-slate-400 mt-2 flex items-center justify-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#58C09D]" />
               <span>No spam. Unsubscribe at any time.</span>
             </p>
           </div>
 
           {/* Upcoming Feature Highlights */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-12 text-left">
-            <div className="bg-slate-800/50 border border-slate-800 rounded-md p-5 space-y-2">
-              <div className="w-9 h-9 rounded-md bg-purple-900/60 text-purple-300 flex items-center justify-center mb-3">
+            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-5 space-y-2">
+              <div className="w-9 h-9 rounded-xl bg-slate-800 text-[#BAC7FE] flex items-center justify-center mb-3">
                 <FileText className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-sm text-white">ATS-Optimized Layouts</h3>
@@ -131,8 +131,8 @@ export default function ComingSoonPage() {
               </p>
             </div>
 
-            <div className="bg-slate-800/50 border border-slate-800 rounded-md p-5 space-y-2">
-              <div className="w-9 h-9 rounded-md bg-purple-900/60 text-purple-300 flex items-center justify-center mb-3">
+            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-5 space-y-2">
+              <div className="w-9 h-9 rounded-xl bg-slate-800 text-[#F5D17B] flex items-center justify-center mb-3">
                 <Wand2 className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-sm text-white">AI Writing Assistant</h3>
@@ -141,8 +141,8 @@ export default function ComingSoonPage() {
               </p>
             </div>
 
-            <div className="bg-slate-800/50 border border-slate-800 rounded-md p-5 space-y-2">
-              <div className="w-9 h-9 rounded-md bg-purple-900/60 text-purple-300 flex items-center justify-center mb-3">
+            <div className="bg-slate-800/50 border border-slate-800 rounded-2xl p-5 space-y-2">
+              <div className="w-9 h-9 rounded-xl bg-slate-800 text-[#58C09D] flex items-center justify-center mb-3">
                 <Sparkles className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-sm text-white">High-Speed PDF Export</h3>

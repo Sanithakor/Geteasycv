@@ -179,9 +179,9 @@ export default function UsersPage() {
           </button>
           <Link
             href="/admin/users/new"
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#FF570F] hover:bg-[#E04800] text-white rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <Plus className="w-4 h-4 stroke-[2.5] text-[#F5D17B]" />
             <span>Add User</span>
           </Link>
         </div>
@@ -192,7 +192,7 @@ export default function UsersPage() {
         <div className="rounded-[20px] border border-slate-200/80 bg-white p-5 shadow-2xs space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Registered</span>
-            <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
           </div>
@@ -228,8 +228,8 @@ export default function UsersPage() {
         <div className="rounded-[20px] border border-slate-200/80 bg-white p-5 shadow-2xs space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">New (30 Days)</span>
-            <div className="w-8 h-8 rounded-lg bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center">
-              <UserPlus className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-lg bg-[#FEE1CF] text-[#0F0F0F] flex items-center justify-center">
+              <UserPlus className="w-4 h-4 text-[#F3645C]" />
             </div>
           </div>
           <p className="text-2xl font-black text-slate-900 tracking-tight">{newUsersCount}</p>
@@ -245,7 +245,7 @@ export default function UsersPage() {
           placeholder="Search by name or email address..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F] text-sm font-medium transition-all"
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F] text-sm font-medium transition-all"
         />
       </div>
 
@@ -258,7 +258,7 @@ export default function UsersPage() {
                 <th className="px-5 py-3.5 w-10">
                   <input
                     type="checkbox"
-                    className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F]"
+                    className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F]"
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedUsers(filteredUsers.map((u) => u.id));
@@ -316,7 +316,7 @@ export default function UsersPage() {
                               );
                             }
                           }}
-                          className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F]"
+                          className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F]"
                         />
                       </td>
                       <td className="px-5 py-4">
@@ -328,7 +328,7 @@ export default function UsersPage() {
                               className="w-9 h-9 rounded-full object-cover border border-slate-200"
                             />
                           ) : (
-                            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-400 to-[#FF570F] text-white font-bold text-sm flex items-center justify-center shadow-xs">
+                            <div className="w-9 h-9 rounded-full bg-[#0F0F0F] text-[#F5D17B] font-bold text-sm flex items-center justify-center shadow-xs">
                               {user.name?.[0]?.toUpperCase() || 'U'}
                             </div>
                           )}
@@ -451,7 +451,7 @@ export default function UsersPage() {
             <button className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">
               Previous
             </button>
-            <button className="w-8 h-8 rounded-lg bg-[#FF570F] text-white text-xs font-bold flex items-center justify-center shadow-xs">
+            <button className="w-8 h-8 rounded-lg bg-[#0F0F0F] text-white text-xs font-bold flex items-center justify-center shadow-xs">
               1
             </button>
             <button className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">

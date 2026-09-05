@@ -110,9 +110,9 @@ function PaymentSuccessContent() {
 
           <Link
             href="/editor"
-            className="w-full sm:w-auto px-6 py-3.5 bg-[#FF570F] hover:bg-[#E04800] text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full sm:w-auto px-6 py-3.5 bg-[#0F0F0F] hover:bg-[#262626] text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4 text-[#F5D17B]" />
             <span>Create Resume Now</span>
             <ArrowRight className="w-4 h-4" />
           </Link>

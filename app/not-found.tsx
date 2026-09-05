@@ -35,7 +35,7 @@ export default function NotFound() {
           </p>
           <Link
             href="/"
-            className="inline-block rounded bg-[#FF570F] px-5 py-3 text-[15px] font-semibold leading-tight text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#E04800] sm:px-6 sm:text-base"
+            className="inline-block rounded-xl bg-[#0F0F0F] px-6 py-3.5 text-sm font-bold leading-tight text-white transition-all duration-300 hover:bg-[#262626] shadow-sm cursor-pointer"
           >
             Go to Home
           </Link>

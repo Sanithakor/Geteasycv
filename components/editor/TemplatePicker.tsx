@@ -18,7 +18,7 @@ interface TemplatePickerProps {
   templates: GeneratedTemplate[];
   selectedTemplateId: string;
   onSelectTemplate: (template: GeneratedTemplate) => void;
-  userTier?: 'free' | 'pro' | 'premium';
+  userTier?: 'free' | 'starter' | 'pro' | 'premium' | 'lifetime' | string;
 }
 
 // Tiny thumbnail that renders the actual template (FR1.1, FR6.6)
@@ -99,9 +99,14 @@ const TemplatePicker: React.FC<TemplatePickerProps> = ({
   }, [templates, activeCategory, search]);
 
   const handleSelect = (template: GeneratedTemplate) => {
-    const premium = isPremiumTemplate(template);
-    if (premium && userTier === 'free') {
-      toast.error('Upgrade to Pro to use premium templates');
+    const premium = isPremiumTemplate(template) || Boolean((template as any).isPremium);
+    const isProOrLifetime = userTier === 'pro' || userTier === 'lifetime' || userTier === 'premium';
+    if (premium && !isProOrLifetime) {
+      toast.error(
+        userTier === 'starter'
+          ? 'Starter includes core templates. Upgrade to Pro or Lifetime to unlock all premium templates!'
+          : 'Upgrade to Pro or Lifetime to unlock all premium templates!'
+      );
       return;
     }
     onSelectTemplate(template);

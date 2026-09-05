@@ -594,7 +594,7 @@ function TemplatesContent() {
                 </h3>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs font-bold text-[#FF5722] hover:text-[#E64A19] transition-colors cursor-pointer"
+                  className="text-xs font-bold text-[#F3645C] hover:underline transition-colors cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -609,9 +609,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedCategory === 'all'}
                         onChange={() => handleFilterChange('category', 'all')}
-                        className="rounded border-slate-300 text-[#FF5722] focus:ring-[#FF5722] h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedCategory === 'all' ? 'font-bold text-[#FF5722]' : ''}>
+                      <span className={selectedCategory === 'all' ? 'font-bold text-[#0F0F0F]' : ''}>
                         All Categories
                       </span>
                     </div>
@@ -629,9 +629,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('category', cat.id)}
-                            className="rounded border-slate-300 text-[#FF5722] focus:ring-[#FF5722] h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-[#FF5722]' : ''}`}>
+                          <span className={`line-clamp-1 ${isChecked ? 'font-bold text-[#0F0F0F]' : ''}`}>
                             {cat.name}
                           </span>
                         </div>
@@ -644,7 +644,7 @@ function TemplatesContent() {
                 {activeCategories.length > 7 && (
                   <button
                     onClick={() => setShowMoreCategories(!showMoreCategories)}
-                    className="text-xs font-bold text-[#FF5722] hover:text-[#E64A19] transition-colors pt-1 cursor-pointer"
+                    className="text-xs font-bold text-[#F3645C] hover:underline transition-colors pt-1 cursor-pointer"
                   >
                     {showMoreCategories ? 'Show Less' : 'Show More'}
                   </button>
@@ -660,9 +660,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedExperienceLevel === 'all'}
                         onChange={() => handleFilterChange('experience', 'all')}
-                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedExperienceLevel === 'all' ? 'font-bold text-[#FF570F]' : ''}>All Levels</span>
+                      <span className={selectedExperienceLevel === 'all' ? 'font-bold text-[#0F0F0F]' : ''}>All Levels</span>
                     </div>
                   </label>
 
@@ -675,9 +675,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('experience', lvl.id)}
-                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={isChecked ? 'font-bold text-[#FF570F]' : ''}>{lvl.name.split('/')[0].trim()}</span>
+                          <span className={isChecked ? 'font-bold text-[#0F0F0F]' : ''}>{lvl.name.split('/')[0].trim()}</span>
                         </div>
                       </label>
                     );
@@ -694,9 +694,9 @@ function TemplatesContent() {
                         type="checkbox"
                         checked={selectedStyle === 'all'}
                         onChange={() => handleFilterChange('style', 'all')}
-                        className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                       />
-                      <span className={selectedStyle === 'all' ? 'font-bold text-[#FF570F]' : ''}>All Styles</span>
+                      <span className={selectedStyle === 'all' ? 'font-bold text-[#0F0F0F]' : ''}>All Styles</span>
                     </div>
                   </label>
 
@@ -709,9 +709,9 @@ function TemplatesContent() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleFilterChange('style', st.id)}
-                            className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F] h-4 w-4 cursor-pointer"
+                            className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F] h-4 w-4 cursor-pointer"
                           />
-                          <span className={isChecked ? 'font-bold text-[#FF570F]' : ''}>{st.name}</span>
+                          <span className={isChecked ? 'font-bold text-[#0F0F0F]' : ''}>{st.name}</span>
                         </div>
                       </label>
                     );
@@ -725,14 +725,14 @@ function TemplatesContent() {
                   <button
                     onClick={() => handleFilterChange('style', 'all')}
                     title="All Colors"
-                    className="w-6 h-6 rounded-full transition-transform cursor-pointer relative flex items-center justify-center bg-gradient-to-r from-blue-500 via-[#FF570F] to-pink-500 border border-slate-300"
+                    className="w-6 h-6 rounded-full transition-transform cursor-pointer relative flex items-center justify-center bg-gradient-to-r from-blue-500 via-[#F3645C] to-pink-500 border border-slate-300"
                   />
                   <div className="w-6 h-6 rounded-full bg-blue-900 transition-transform cursor-pointer" title="Navy Blue" />
                   <div className="w-6 h-6 rounded-full bg-teal-600 transition-transform cursor-pointer" title="Teal" />
                   <div className="w-6 h-6 rounded-full bg-sky-500 transition-transform cursor-pointer" title="Light Blue" />
-                  <div className="w-6 h-6 rounded-full bg-[#FF570F] transition-transform cursor-pointer" title="Purple" />
+                  <div className="w-6 h-6 rounded-full bg-[#BAC7FE] transition-transform cursor-pointer" title="Periwinkle" />
                   <div className="w-6 h-6 rounded-full bg-pink-600 transition-transform cursor-pointer" title="Pink" />
-                  <div className="w-6 h-6 rounded-full bg-orange-600 transition-transform cursor-pointer" title="Orange" />
+                  <div className="w-6 h-6 rounded-full bg-[#F3645C] transition-transform cursor-pointer" title="Coral" />
                   <div className="w-6 h-6 rounded-full bg-slate-800 transition-transform cursor-pointer" title="Dark Gray" />
                 </div>
               </div>
@@ -750,7 +750,7 @@ function TemplatesContent() {
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="inline-flex items-center gap-2 rounded-md bg-[#FF570F] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#E04800] transition-colors shadow-xs"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#0F0F0F] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#262626] transition-colors shadow-xs cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                     Reset All Filters
@@ -802,8 +802,8 @@ function TemplatesContent() {
                                 Popular
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF0EB]/90 text-purple-800 px-2 py-0.5 text-[9px] font-bold border border-purple-200/70 backdrop-blur-xs shadow-2xs">
-                                <Sparkles className="w-2.5 h-2.5 text-[#FF5722]" />
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#FEE1CF] text-[#0F0F0F] px-2 py-0.5 text-[9px] font-bold border border-[#F5D17B]/40 backdrop-blur-xs shadow-2xs">
+                                <Sparkles className="w-2.5 h-2.5 text-[#F3645C]" />
                                 New
                               </span>
                             )}
@@ -813,7 +813,7 @@ function TemplatesContent() {
                         <div className="mt-3 space-y-2 flex-1 flex flex-col justify-between">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0 flex-1">
-                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#FF5722] transition-colors">
+                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#F3645C] transition-colors">
                                 {template.layout.name}
                               </h3>
                               <p className="line-clamp-1 text-xs text-slate-500 font-medium mt-0.5">
@@ -822,10 +822,10 @@ function TemplatesContent() {
                             </div>
 
                             <div 
-                              className="flex items-center gap-1.5 text-xs font-bold text-[#FF570F] bg-[#EEF2FF] px-2.5 py-1 rounded-xl border border-[#E0E7FF] flex-shrink-0 cursor-default shadow-2xs"
+                              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-xl border border-slate-200/80 flex-shrink-0 cursor-default shadow-2xs"
                               title="Live Dynamic Template Downloads"
                             >
-                              <Download className="w-3.5 h-3.5 text-[#FF570F]" />
+                              <Download className="w-3.5 h-3.5 text-slate-600" />
                               <span>{formatDownloadCount(downloadCounts[template.id] ?? getTemplateDownloadCount(template.id))}</span>
                             </div>
                           </div>

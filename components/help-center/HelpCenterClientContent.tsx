@@ -49,14 +49,14 @@ export default function HelpCenterClientContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#FEE1CF', color: '#0F0F0F' }}>
                 <FileText className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-slate-900 text-base">Resume Building</h3>
               <p className="text-xs text-slate-500 font-normal leading-relaxed">
                 Learn how to edit sections, choose templates, and format bullet points.
               </p>
-              <Link href="/faq" className="text-xs font-bold text-[#FF5722] hover:underline flex items-center gap-1">
+              <Link href="/faq" className="text-xs font-bold text-[#F3645C] hover:underline flex items-center gap-1">
                 <span>View Articles</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>

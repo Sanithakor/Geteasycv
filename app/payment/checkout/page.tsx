@@ -181,7 +181,7 @@ function CheckoutContent() {
           email: user.email || '',
         },
         theme: {
-          color: '#FF570F',
+          color: '#0F0F0F',
         },
         modal: {
           ondismiss: function () {
@@ -246,7 +246,7 @@ function CheckoutContent() {
             <div className="md:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-[#FFF8F5] text-[#FF570F] text-xs font-extrabold uppercase rounded-full tracking-wider">
+                  <span className="px-3 py-1 bg-[#FEE1CF] text-[#0F0F0F] text-xs font-extrabold uppercase rounded-full tracking-wider">
                     Selected Plan
                   </span>
                   <span className="text-xs font-bold text-slate-400">100% Safe &amp; Secure</span>
@@ -290,7 +290,7 @@ function CheckoutContent() {
             {/* Right: Payment Authorization & Checkout Trigger */}
             <div className="md:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
               <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-[#FF570F]" />
+                <CreditCard className="w-5 h-5 text-[#F3645C]" />
                 <span>Account &amp; Checkout</span>
               </h3>
 
@@ -329,7 +329,7 @@ function CheckoutContent() {
               <button
                 onClick={handleStartPayment}
                 disabled={isProcessing}
-                className="w-full py-4 px-6 bg-[#FF570F] hover:bg-[#E04800] text-white font-black text-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                className="w-full py-4 px-6 bg-[#0F0F0F] hover:bg-[#262626] text-white font-black text-sm rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
               >
                 {isProcessing ? (
                   <>
@@ -338,7 +338,7 @@ function CheckoutContent() {
                   </>
                 ) : (
                   <>
-                    <ShieldCheck className="w-5 h-5" />
+                    <ShieldCheck className="w-5 h-5 text-[#F5D17B]" />
                     <span>Pay {planDetails?.price || '₹199'} &amp; Unlock Plan</span>
                   </>
                 )}

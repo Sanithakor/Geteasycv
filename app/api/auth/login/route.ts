@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     }
 
     let user: any = null;
-    let sanitizedEmail = email ? sanitizeEmail(email) : '';
+    const sanitizedEmail = email ? sanitizeEmail(email) : '';
 
     try {
       if (email) {

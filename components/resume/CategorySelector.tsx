@@ -33,17 +33,6 @@ export default function CategorySelector({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ResumeCategory | null>(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCategoryId && categories.length > 0) {
-      const category = categories.find(c => c.id === selectedCategoryId);
-      setSelectedCategory(category || null);
-    }
-  }, [selectedCategoryId, categories]);
-
   const fetchCategories = async () => {
     try {
       setLoading(true);
@@ -59,6 +48,17 @@ export default function CategorySelector({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategoryId && categories.length > 0) {
+      const category = categories.find(c => c.id === selectedCategoryId);
+      setSelectedCategory(category || null);
+    }
+  }, [selectedCategoryId, categories]);
 
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

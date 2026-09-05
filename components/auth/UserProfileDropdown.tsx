@@ -51,7 +51,7 @@ export default function UserProfileDropdown() {
           <img
             src={user.avatar}
             alt={user.name || 'User'}
-            className="w-7 h-7 rounded-full object-cover flex-shrink-0 border border-[#FF5722]/40"
+            className="w-7 h-7 rounded-full object-cover flex-shrink-0 border border-[#0F0F0F]/15"
           />
         ) : (
           <div className="w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center flex-shrink-0"

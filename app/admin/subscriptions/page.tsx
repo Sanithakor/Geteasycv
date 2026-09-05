@@ -160,9 +160,9 @@ export default function SubscriptionsPage() {
           </button>
           <button
             onClick={handleOpenNewPlanModal}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#FF570F] hover:bg-[#E04800] text-white rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <Plus className="w-4 h-4 stroke-[2.5] text-[#F5D17B]" />
             <span>New Plan</span>
           </button>
         </div>
@@ -195,7 +195,7 @@ export default function SubscriptionsPage() {
             <div
               key={plan.id}
               className={`rounded-[20px] border bg-white overflow-hidden shadow-2xs transition-all flex flex-col justify-between ${
-                plan.popular ? 'border-[#FF570F] ring-2 ring-[#FF570F]/15' : 'border-slate-200/80'
+                plan.popular ? 'border-[#0F0F0F] ring-2 ring-[#0F0F0F]/15' : 'border-slate-200/80'
               }`}
             >
               <div className={`p-6 border-b border-slate-100 ${plan.popular ? 'bg-[#FFF8F5]' : ''}`}>
@@ -203,7 +203,7 @@ export default function SubscriptionsPage() {
                   <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <span>{plan.name}</span>
                     {plan.badge && (
-                      <span className="px-2.5 py-0.5 bg-[#FF570F] text-white text-[10px] rounded-full font-black uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 bg-[#0F0F0F] text-[#F5D17B] text-[10px] rounded-full font-black uppercase tracking-wider">
                         {plan.badge}
                       </span>
                     )}
@@ -235,7 +235,7 @@ export default function SubscriptionsPage() {
                   <span className="font-bold text-slate-900">{plan.currency || '₹'}{plan.price}</span>
                   <button
                     onClick={() => handleOpenEditModal(plan)}
-                    className="flex items-center gap-1.5 text-[#FF570F] hover:text-[#E04800] font-bold cursor-pointer transition-all hover:underline"
+                    className="flex items-center gap-1.5 text-[#0F0F0F] hover:text-[#F3645C] font-bold cursor-pointer transition-all hover:underline"
                   >
                     <Edit className="w-3.5 h-3.5" />
                     <span>Edit Plan</span>
@@ -253,8 +253,8 @@ export default function SubscriptionsPage() {
           <div className="w-full max-w-lg rounded-[24px] border border-slate-200 bg-white p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-[#FFF0EB] text-[#FF570F] flex items-center justify-center font-bold">
-                  <Edit className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-xl bg-[#FEE1CF] text-[#0F0F0F] flex items-center justify-center font-bold">
+                  <Edit className="w-4 h-4 text-[#F3645C]" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Edit Plan — {editingPlan.name}</h3>
@@ -279,7 +279,7 @@ export default function SubscriptionsPage() {
                     required
                     value={editingPlan.name}
                     onChange={(e) => setEditingPlan({ ...editingPlan, name: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                   />
                 </div>
                 <div>
@@ -290,7 +290,7 @@ export default function SubscriptionsPage() {
                     min="0"
                     value={editingPlan.price}
                     onChange={(e) => setEditingPlan({ ...editingPlan, price: Number(e.target.value) })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                   />
                 </div>
               </div>
@@ -302,7 +302,7 @@ export default function SubscriptionsPage() {
                   <select
                     value={editingPlan.billingPeriod}
                     onChange={(e) => setEditingPlan({ ...editingPlan, billingPeriod: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                   >
                     <option value="month">Monthly (/month)</option>
                     <option value="one-time payment">One-Time Payment</option>
@@ -316,7 +316,7 @@ export default function SubscriptionsPage() {
                     placeholder="e.g. MOST POPULAR"
                     value={editingPlan.badge || ''}
                     onChange={(e) => setEditingPlan({ ...editingPlan, badge: e.target.value || null, popular: Boolean(e.target.value) })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                   />
                 </div>
               </div>
@@ -329,7 +329,7 @@ export default function SubscriptionsPage() {
                   required
                   value={editingPlan.description}
                   onChange={(e) => setEditingPlan({ ...editingPlan, description: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                 />
               </div>
 
@@ -342,7 +342,7 @@ export default function SubscriptionsPage() {
                   rows={4}
                   value={featuresText}
                   onChange={(e) => setFeaturesText(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-medium leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#FF570F]/20 focus:border-[#FF570F]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 font-medium leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F]"
                   placeholder="Enter features list..."
                 />
               </div>
@@ -354,7 +354,7 @@ export default function SubscriptionsPage() {
                     type="checkbox"
                     checked={editingPlan.isActive}
                     onChange={(e) => setEditingPlan({ ...editingPlan, isActive: e.target.checked })}
-                    className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F]"
+                    className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F]"
                   />
                   <span className="font-bold text-slate-700">Active Plan</span>
                 </label>
@@ -363,7 +363,7 @@ export default function SubscriptionsPage() {
                     type="checkbox"
                     checked={editingPlan.popular}
                     onChange={(e) => setEditingPlan({ ...editingPlan, popular: e.target.checked })}
-                    className="rounded border-slate-300 text-[#FF570F] focus:ring-[#FF570F]"
+                    className="rounded border-slate-300 text-[#0F0F0F] focus:ring-[#0F0F0F]"
                   />
                   <span className="font-bold text-slate-700">Highlight Card</span>
                 </label>
@@ -381,9 +381,9 @@ export default function SubscriptionsPage() {
                 <button
                   type="submit"
                   disabled={savingPlan}
-                  className="flex items-center gap-2 px-5 py-2 bg-[#FF570F] hover:bg-[#E04800] text-white rounded-xl font-bold transition-all cursor-pointer disabled:opacity-60 shadow-md"
+                  className="flex items-center gap-2 px-5 py-2 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold transition-all cursor-pointer disabled:opacity-60 shadow-sm"
                 >
-                  {savingPlan ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 stroke-[3]" />}
+                  {savingPlan ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 stroke-[3] text-[#F5D17B]" />}
                   <span>Save Plan Changes</span>
                 </button>
               </div>

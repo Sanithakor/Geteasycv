@@ -107,12 +107,16 @@ export default function CreateResumePage() {
 
         // Redirect to editor
         router.push(`/editor?id=${resumeId}`);
+      } else if (createResponse.status === 403 || createData.code === 'RESUME_LIMIT_REACHED') {
+        const redirectUrl = createData.redirectUrl || '/pricing?reason=resume_limit';
+        alert(createData.error || 'You have reached your CV creation limit. Upgrade to Pro or Lifetime for unlimited CVs.');
+        router.push(redirectUrl);
       } else {
         throw new Error(createData.error || 'Failed to create resume');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating resume:', error);
-      alert('Failed to create resume. Please try again.');
+      alert(error.message || 'Failed to create resume. Please try again.');
     } finally {
       setCreating(false);
     }

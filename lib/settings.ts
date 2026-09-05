@@ -25,7 +25,7 @@ export const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
   appName: 'GetEasyCV',
   logo: '/logo.svg',
   favicon: '/favicon.ico',
-  primaryColor: '#FF570F',
+  primaryColor: '#0F0F0F',
   maintenanceMode: false,
   comingSoonMode: true,
   registrationOpen: true,

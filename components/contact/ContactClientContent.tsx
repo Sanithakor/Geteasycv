@@ -168,12 +168,12 @@ export default function ContactClientContent() {
                 
                 <div className="space-y-4 text-xs font-medium">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#FEE1CF', color: '#0F0F0F' }}>
                       <Mail className="w-4 h-4" />
                     </div>
                     <div>
                       <span className="font-bold text-slate-900 block">Support Email</span>
-                      <a href="mailto:support@geteasycv.com" className="text-[#FF5722] hover:underline mt-0.5 block">
+                      <a href="mailto:support@geteasycv.com" className="text-[#F3645C] hover:underline mt-0.5 block">
                         support@geteasycv.com
                       </a>
                     </div>

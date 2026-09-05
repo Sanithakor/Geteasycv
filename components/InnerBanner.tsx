@@ -39,6 +39,7 @@ export type InnerBannerPageType =
   | "about"
   | "contact"
   | "templates"
+  | "resume-examples"
   | "help-center"
   | "help"
   | "faq"
@@ -511,6 +512,7 @@ export default function InnerBanner({
     if (pageType === "how-it-works") return <HowItWorksVisual />;
     if (pageType === "about") return <AboutVisual />;
     if (pageType === "contact") return <ContactVisual />;
+    if (pageType === "resume-examples") return <CoverLetterVisual />;
 
     // Auto-detect based on breadcrumbs
     if (breadcrumbs && breadcrumbs.length > 0) {

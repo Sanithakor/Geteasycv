@@ -16,7 +16,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: true, count });
     }
 
-    let counts: Record<string, number> = { ...getAllTemplateDownloadCounts() };
+    const counts: Record<string, number> = { ...getAllTemplateDownloadCounts() };
 
     // Try fetching from DB if available
     try {

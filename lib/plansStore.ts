@@ -15,6 +15,7 @@ export interface PlanItem {
   canUseAI: boolean;
   canUsePremiumTemplates: boolean;
   canExportPDF: boolean;
+  canExportImages?: boolean;
   sortOrder: number;
 }
 
@@ -36,9 +37,10 @@ export const DEFAULT_PLANS: PlanItem[] = [
     badge: null,
     isActive: true,
     maxResumes: 1,
-    canUseAI: true,
+    canUseAI: false,
     canUsePremiumTemplates: false,
     canExportPDF: true,
+    canExportImages: false,
     sortOrder: 1,
   },
   {
@@ -62,6 +64,7 @@ export const DEFAULT_PLANS: PlanItem[] = [
     canUseAI: true,
     canUsePremiumTemplates: true,
     canExportPDF: true,
+    canExportImages: true,
     sortOrder: 2,
   },
   {
@@ -84,6 +87,7 @@ export const DEFAULT_PLANS: PlanItem[] = [
     canUseAI: true,
     canUsePremiumTemplates: true,
     canExportPDF: true,
+    canExportImages: true,
     sortOrder: 3,
   },
 ];

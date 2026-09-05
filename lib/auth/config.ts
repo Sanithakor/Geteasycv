@@ -13,9 +13,9 @@ export const authConfig = {
   // OAuth - Google
   oauth: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientId: process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/oauth/google/callback`,
+      redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || ''}/api/auth/oauth/google/callback`,
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID || '',

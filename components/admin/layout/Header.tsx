@@ -15,7 +15,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onMenuClick }: HeaderProps) {
-  const { user, token, logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = React.useState(false);
@@ -25,8 +25,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const fetchNotifications = React.useCallback(async () => {
     try {
-      const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch('/api/notifications', { headers });
+      const res = await fetch('/api/notifications');
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setNotifications(data.data);
@@ -35,7 +34,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     } catch (e) {
       console.warn('Error fetching notifications:', e);
     }
-  }, [token]);
+  }, []);
 
   React.useEffect(() => {
     // Force light theme strictly
@@ -53,10 +52,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'all' }),
       });
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
@@ -70,10 +66,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       });
       setNotifications(prev =>
@@ -109,7 +102,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full pl-10 pr-16 py-1.5 rounded-[20px] border border-slate-200/80 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#FF570F]/25 focus:border-[#FF570F] text-sm transition-all"
+                className="w-full pl-10 pr-16 py-1.5 rounded-[20px] border border-slate-200/80 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F0F0F]/15 focus:border-[#0F0F0F] text-sm transition-all"
               />
               <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2 bg-white border border-slate-200/60 rounded px-1.5 py-0.5 text-[9px] font-bold text-slate-400 font-mono shadow-sm">
                 Ctrl + K
@@ -124,9 +117,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <div className="relative">
             <button
               onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF570F] to-[#E04800] hover:from-violet-700 hover:to-[#E04800] text-white rounded-md font-semibold text-sm shadow-sm transition-all hover:shadow-violet-100"
+              className="flex items-center gap-1.5 px-4 py-2 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-semibold text-sm shadow-sm transition-all cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-[#F5D17B]" />
               <span>Create New</span>
             </button>
 
@@ -191,7 +184,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     {unreadCount > 0 && (
                       <button
                         onClick={handleMarkAllRead}
-                        className="text-[11px] font-semibold text-[#FF570F] hover:text-[#E04800] transition-colors"
+                        className="text-[11px] font-semibold text-[#F3645C] hover:underline transition-colors cursor-pointer"
                       >
                         Mark all as read
                       </button>
@@ -200,10 +193,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
                   <div className="p-2 max-h-80 overflow-y-auto space-y-1">
                     {notifications.length === 0 ? (
-                      <div className="p-8 text-center text-slate-400 text-xs font-medium space-y-1">
-                        <Bell className="w-6 h-6 text-slate-300 mx-auto mb-2 opacity-60" />
-                        <p className="font-bold text-slate-600">No new notifications</p>
-                        <p className="text-slate-400 text-[11px]">You're all caught up.</p>
+                      <div className="p-6 text-center text-slate-400 text-xs font-medium">
+                        No notifications yet
                       </div>
                     ) : (
                       notifications.map(n => (
@@ -224,7 +215,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     <Link
                       href="/admin/notifications"
                       onClick={() => setShowNotifications(false)}
-                      className="text-xs font-bold text-[#FF570F] hover:text-[#E04800] transition-colors block py-1"
+                      className="text-xs font-bold text-[#F3645C] hover:underline transition-colors block py-1"
                     >
                       View All Notifications →
                     </Link>
@@ -250,16 +241,11 @@ function getNotificationIcon(type: string) {
     case 'user_signup':
       return <User className="w-4 h-4 text-slate-700" />;
     case 'subscription':
-    case 'subscription_upgraded':
       return <CreditCard className="w-4 h-4 text-amber-600" />;
     case 'resume_created':
-    case 'resume_downloaded':
-      return <FileText className="w-4 h-4 text-violet-600" />;
+      return <FileText className="w-4 h-4 text-slate-600" />;
     case 'payment':
-    case 'payment_success':
       return <Coins className="w-4 h-4 text-emerald-600" />;
-    case 'contact_submission':
-      return <Settings className="w-4 h-4 text-blue-600" />;
     default:
       return <Bell className="w-4 h-4 text-slate-600" />;
   }
@@ -299,7 +285,7 @@ function NotificationItem({
       className={`flex items-start gap-3 p-3 rounded-xl transition-all cursor-pointer ${
         isRead
           ? 'hover:bg-slate-50 border border-transparent'
-          : 'bg-[#FFF8F5]/60 hover:bg-[#FFF8F5] border border-[#FF570F]'
+          : 'bg-slate-50 hover:bg-slate-100/70 border border-slate-200'
       }`}
     >
       <div className="w-9 h-9 rounded-xl bg-slate-100/80 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200/50">
@@ -310,7 +296,7 @@ function NotificationItem({
           <p className="text-xs font-bold text-slate-900 truncate">
             {title}
           </p>
-          {!isRead && <span className="w-2.5 h-2.5 rounded-full bg-[#FF570F] shrink-0" />}
+          {!isRead && <span className="w-2.5 h-2.5 rounded-full bg-[#F3645C] shrink-0" />}
         </div>
         <p className="text-[11px] font-medium text-slate-500 truncate mt-0.5">{message}</p>
         <span className="block text-[10px] font-semibold text-slate-400 mt-1">{time}</span>
