@@ -118,9 +118,10 @@ export const useBuilderStore = create<EditorState>()(
           ...content,
         };
 
-        // Add to history
+        // Add to history (deep clone to prevent reference mutation)
+        const snapshot = JSON.parse(JSON.stringify(state.resume.content));
         const newHistory = state.history.slice(0, state.historyIndex + 1);
-        newHistory.push(state.resume.content);
+        newHistory.push(snapshot);
 
         if (newHistory.length > state.maxHistory) {
           newHistory.shift();

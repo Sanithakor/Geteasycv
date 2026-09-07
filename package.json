@@ -11,6 +11,7 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "start": "next start -p 3000 -H 0.0.0.0",
     "lint": "eslint",
+    "test": "vitest run",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
@@ -26,6 +27,7 @@
     "@types/html2canvas": "^0.5.35",
     "axios": "^1.6.5",
     "bcryptjs": "^3.0.3",
+    "docx": "^9.7.1",
     "html2canvas": "^1.4.1",
     "immer": "11.1.11",
     "jose": "^6.2.3",
@@ -55,6 +57,8 @@
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0",
     "wrangler": "^4.123.0"
   }
 }

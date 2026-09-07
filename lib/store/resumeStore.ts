@@ -61,6 +61,9 @@ export const useResumeStore = create<ResumeEditorState>((set) => ({
     set((state) => {
       if (!state.currentResume) return state;
 
+      const previousSnapshot = JSON.parse(JSON.stringify(state.currentResume.content));
+      const newUndoStack = [...state.undoStack, previousSnapshot].slice(-50);
+
       const newResume = {
         ...state.currentResume,
         content: {
@@ -72,6 +75,7 @@ export const useResumeStore = create<ResumeEditorState>((set) => ({
       return {
         currentResume: newResume,
         isDirty: true,
+        undoStack: newUndoStack,
         redoStack: [], // Clear redo stack on new change
       };
     }),

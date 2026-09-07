@@ -27,7 +27,7 @@ export const DEFAULT_PRICING_PLANS: PricingPlan[] = [
     period: "forever",
     description: "Perfect for creating and downloading your first resume.",
     features: [
-      "3 Resume exports",
+      "1 Free Resume Export",
       "Access to basic ATS templates",
       "Real-time live visual editor",
       "Standard section customization",

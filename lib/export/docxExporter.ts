@@ -1,8 +1,19 @@
 /**
  * Native Word (.docx) Exporter
- * Constructs clean OpenXML-based Microsoft Word document structures
- * without HTML MIME wrapper warnings in MS Word or Google Docs.
+ * Generates 100% compliant, genuine zipped OpenXML Microsoft Word packages (.docx)
+ * using the official 'docx' package, ensuring flawless opening in all versions of
+ * Microsoft Word, Apple Pages, Google Docs, and LibreOffice.
  */
+
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  HeadingLevel,
+  AlignmentType,
+  BorderStyle,
+} from 'docx';
 
 export interface DocxResumeData {
   personal?: {
@@ -47,153 +58,374 @@ export interface DocxResumeData {
     technologies?: string[];
     link?: string;
   }>;
+  certifications?: Array<{
+    name?: string;
+    issuer?: string;
+    date?: string;
+  }>;
+}
+
+const PRIMARY_COLOR = '1E3A8A'; // Deep Navy / Royal
+const TEXT_MUTED = '475569';    // Slate 600
+
+function createSectionHeading(title: string): Paragraph {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_2,
+    spacing: { before: 280, after: 120 },
+    border: {
+      bottom: {
+        color: PRIMARY_COLOR,
+        space: 4,
+        style: BorderStyle.SINGLE,
+        size: 12,
+      },
+    },
+    children: [
+      new TextRun({
+        text: title.toUpperCase(),
+        bold: true,
+        size: 24, // 12pt
+        color: PRIMARY_COLOR,
+        font: 'Calibri',
+      }),
+    ],
+  });
 }
 
 /**
- * Escapes special XML characters
+ * Builds the docx Document object from structured resume data
  */
-function escapeXml(str: string = ''): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-/**
- * Generates OpenXML WordprocessingML content for native .docx documents
- */
-export function generateWordprocessingML(data: DocxResumeData): string {
+export function buildDocxDocument(data: DocxResumeData): Document {
   const p = data.personal || {};
   const fullName = `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Resume';
 
-  let bodyXml = `
-    <w:p>
-      <w:pPr><w:jc w:val="center"/><w:spacing w:after="120"/></w:pPr>
-      <w:r><w:rPr><w:b/><w:sz w:val="48"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(fullName)}</w:t></w:r>
-    </w:p>
-  `;
+  const children: Paragraph[] = [];
+
+  // ==========================================
+  // 1. CANDIDATE HEADER (Name & Job Title)
+  // ==========================================
+  children.push(
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 80 },
+      children: [
+        new TextRun({
+          text: fullName,
+          bold: true,
+          size: 40, // 20pt
+          font: 'Calibri',
+          color: '0F172A',
+        }),
+      ],
+    })
+  );
 
   if (p.jobTitle) {
-    bodyXml += `
-      <w:p>
-        <w:pPr><w:jc w:val="center"/><w:spacing w:after="180"/></w:pPr>
-        <w:r><w:rPr><w:b/><w:color w:val="333333"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(p.jobTitle)}</w:t></w:r>
-      </w:p>
-    `;
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 0, after: 140 },
+        children: [
+          new TextRun({
+            text: p.jobTitle,
+            bold: true,
+            size: 24, // 12pt
+            font: 'Calibri',
+            color: PRIMARY_COLOR,
+          }),
+        ],
+      })
+    );
   }
 
-  const contactItems = [p.email, p.phone, p.location, p.linkedin, p.github].filter(Boolean);
+  // ==========================================
+  // 2. CONTACT INFORMATION BAR
+  // ==========================================
+  const contactItems = [
+    p.email,
+    p.phone,
+    p.location,
+    p.linkedin,
+    p.github,
+    p.website,
+  ].filter(Boolean);
+
   if (contactItems.length > 0) {
-    bodyXml += `
-      <w:p>
-        <w:pPr><w:jc w:val="center"/><w:spacing w:after="240"/></w:pPr>
-        <w:r><w:rPr><w:color w:val="555555"/><w:sz w:val="20"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(contactItems.join(' | '))}</w:t></w:r>
-      </w:p>
-    `;
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 0, after: 220 },
+        children: [
+          new TextRun({
+            text: contactItems.join('  •  '),
+            size: 19, // 9.5pt
+            font: 'Calibri',
+            color: TEXT_MUTED,
+          }),
+        ],
+      })
+    );
   }
 
-  // Summary Section
-  if (p.summary) {
-    bodyXml += `
-      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
-      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>PROFESSIONAL SUMMARY</w:t></w:r></w:p>
-      <w:p><w:pPr><w:spacing w:after="240"/></w:pPr>
-      <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(p.summary)}</w:t></w:r></w:p>
-    `;
+  // ==========================================
+  // 3. PROFESSIONAL SUMMARY / COVER LETTER BODY
+  // ==========================================
+  if (p.summary && p.summary.trim()) {
+    children.push(createSectionHeading('Professional Summary'));
+    
+    // Support multi-line summaries or paragraphs
+    const paragraphs = p.summary.split('\n\n').filter(Boolean);
+    paragraphs.forEach((paraText) => {
+      children.push(
+        new Paragraph({
+          spacing: { before: 60, after: 120 },
+          children: [
+            new TextRun({
+              text: paraText.trim(),
+              size: 21, // 10.5pt
+              font: 'Calibri',
+              color: '1E293B',
+            }),
+          ],
+        })
+      );
+    });
   }
 
-  // Experience Section
+  // ==========================================
+  // 4. WORK EXPERIENCE
+  // ==========================================
   if (data.experience && data.experience.length > 0) {
-    bodyXml += `
-      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
-      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>WORK EXPERIENCE</w:t></w:r></w:p>
-    `;
+    children.push(createSectionHeading('Work Experience'));
 
     data.experience.forEach((exp) => {
-      const titleLine = `${exp.position || 'Position'} - ${exp.company || 'Company'}`;
-      const dates = `${exp.startDate || ''} ${exp.startDate || exp.endDate ? 'to' : ''} ${exp.current ? 'Present' : exp.endDate || ''}`.trim();
+      const roleText = `${exp.position || 'Position'}${exp.company ? ` | ${exp.company}` : ''}`;
+      const datesLocation = [
+        exp.startDate && exp.endDate ? `${exp.startDate} - ${exp.endDate}` : exp.startDate || '',
+        exp.location || '',
+      ].filter(Boolean).join('  •  ');
 
-      bodyXml += `
-        <w:p><w:pPr><w:spacing w:before="120" w:after="60"/></w:pPr>
-        <w:r><w:rPr><w:b/><w:sz w:val="24"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(titleLine)}</w:t></w:r>
-        ${dates ? `<w:r><w:rPr><w:i/><w:color w:val="666666"/><w:sz w:val="20"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>  (${escapeXml(dates)})</w:t></w:r>` : ''}
-        </w:p>
-      `;
+      children.push(
+        new Paragraph({
+          spacing: { before: 140, after: 40 },
+          children: [
+            new TextRun({
+              text: roleText,
+              bold: true,
+              size: 22, // 11pt
+              font: 'Calibri',
+              color: '0F172A',
+            }),
+            datesLocation ? new TextRun({
+              text: `   (${datesLocation})`,
+              italics: true,
+              size: 19, // 9.5pt
+              font: 'Calibri',
+              color: TEXT_MUTED,
+            }) : new TextRun({ text: '' }),
+          ],
+        })
+      );
 
-      if (exp.description) {
-        bodyXml += `
-          <w:p><w:pPr><w:spacing w:after="120"/></w:pPr>
-          <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(exp.description)}</w:t></w:r></w:p>
-        `;
+      if (exp.description && exp.description.trim()) {
+        children.push(
+          new Paragraph({
+            spacing: { before: 40, after: 60 },
+            children: [
+              new TextRun({
+                text: exp.description.trim(),
+                size: 21, // 10.5pt
+                font: 'Calibri',
+                color: '334155',
+              }),
+            ],
+          })
+        );
       }
 
       if (exp.highlights && exp.highlights.length > 0) {
-        exp.highlights.forEach((h) => {
-          bodyXml += `
-            <w:p><w:pPr><w:spacing w:after="60"/><w:ind w:left="360"/></w:pPr>
-            <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>• </w:t></w:r>
-            <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(h)}</w:t></w:r></w:p>
-          `;
+        exp.highlights.forEach((highlight) => {
+          if (!highlight.trim()) return;
+          children.push(
+            new Paragraph({
+              bullet: { level: 0 },
+              spacing: { before: 20, after: 40 },
+              children: [
+                new TextRun({
+                  text: highlight.trim(),
+                  size: 21,
+                  font: 'Calibri',
+                  color: '334155',
+                }),
+              ],
+            })
+          );
         });
       }
     });
   }
 
-  // Skills Section
-  if (data.skills && data.skills.length > 0) {
-    const skillList = data.skills.map((s) => s.name || '').filter(Boolean).join(', ');
-    bodyXml += `
-      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
-      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>SKILLS</w:t></w:r></w:p>
-      <w:p><w:pPr><w:spacing w:after="240"/></w:pPr>
-      <w:r><w:rPr><w:sz w:val="22"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(skillList)}</w:t></w:r></w:p>
-    `;
-  }
-
-  // Education Section
+  // ==========================================
+  // 5. EDUCATION
+  // ==========================================
   if (data.education && data.education.length > 0) {
-    bodyXml += `
-      <w:p><w:pPr><w:spacing w:before="240" w:after="120"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="2B4C7E"/></w:pBdr></w:pPr>
-      <w:r><w:rPr><w:b/><w:color w:val="2B4C7E"/><w:sz w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>EDUCATION</w:t></w:r></w:p>
-    `;
+    children.push(createSectionHeading('Education'));
 
     data.education.forEach((edu) => {
-      const titleLine = `${edu.degree || 'Degree'} ${edu.field ? `in ${edu.field}` : ''} - ${edu.institution || 'Institution'}`;
-      bodyXml += `
-        <w:p><w:pPr><w:spacing w:before="120" w:after="120"/></w:pPr>
-        <w:r><w:rPr><w:b/><w:sz w:val="24"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>${escapeXml(titleLine)}</w:t></w:r>
-        </w:p>
-      `;
+      const degreeText = `${edu.degree || 'Degree'}${edu.field ? ` in ${edu.field}` : ''}`;
+      const instLocation = [
+        edu.institution,
+        edu.location,
+        edu.startDate && edu.endDate ? `${edu.startDate} - ${edu.endDate}` : edu.endDate || edu.startDate || '',
+      ].filter(Boolean).join('  •  ');
+
+      children.push(
+        new Paragraph({
+          spacing: { before: 120, after: 40 },
+          children: [
+            new TextRun({
+              text: degreeText,
+              bold: true,
+              size: 22,
+              font: 'Calibri',
+              color: '0F172A',
+            }),
+            instLocation ? new TextRun({
+              text: `   (${instLocation})`,
+              italics: true,
+              size: 19,
+              font: 'Calibri',
+              color: TEXT_MUTED,
+            }) : new TextRun({ text: '' }),
+          ],
+        })
+      );
+
+      if (edu.gpa) {
+        children.push(
+          new Paragraph({
+            spacing: { before: 20, after: 40 },
+            children: [
+              new TextRun({
+                text: `GPA / Honors: ${edu.gpa}`,
+                size: 20,
+                font: 'Calibri',
+                color: '334155',
+              }),
+            ],
+          })
+        );
+      }
     });
   }
 
-  const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:body>
-    ${bodyXml}
-    <w:sectPr>
-      <w:pgSz w:w="12240" w:h="15840"/>
-      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/>
-    </w:sectPr>
-  </w:body>
-</w:document>`;
+  // ==========================================
+  // 6. SKILLS
+  // ==========================================
+  if (data.skills && data.skills.length > 0) {
+    children.push(createSectionHeading('Skills & Competencies'));
 
-  return documentXml;
+    const skillNames = data.skills.map((s) => s.name || '').filter(Boolean);
+    if (skillNames.length > 0) {
+      children.push(
+        new Paragraph({
+          spacing: { before: 80, after: 120 },
+          children: [
+            new TextRun({
+              text: skillNames.join('   •   '),
+              size: 21,
+              font: 'Calibri',
+              color: '1E293B',
+            }),
+          ],
+        })
+      );
+    }
+  }
+
+  // ==========================================
+  // 7. PROJECTS (Optional)
+  // ==========================================
+  if (data.projects && data.projects.length > 0) {
+    children.push(createSectionHeading('Key Projects'));
+
+    data.projects.forEach((proj) => {
+      children.push(
+        new Paragraph({
+          spacing: { before: 120, after: 40 },
+          children: [
+            new TextRun({
+              text: proj.title || 'Project',
+              bold: true,
+              size: 22,
+              font: 'Calibri',
+              color: '0F172A',
+            }),
+            proj.link ? new TextRun({
+              text: `  [${proj.link}]`,
+              size: 19,
+              font: 'Calibri',
+              color: PRIMARY_COLOR,
+            }) : new TextRun({ text: '' }),
+          ],
+        })
+      );
+
+      if (proj.description) {
+        children.push(
+          new Paragraph({
+            spacing: { before: 20, after: 40 },
+            children: [
+              new TextRun({
+                text: proj.description,
+                size: 21,
+                font: 'Calibri',
+                color: '334155',
+              }),
+            ],
+          })
+        );
+      }
+    });
+  }
+
+  // Build standard A4 Document with 1-inch margins
+  return new Document({
+    sections: [
+      {
+        properties: {
+          page: {
+            margin: {
+              top: 1440,    // 1 inch = 1440 dxa
+              right: 1440,
+              bottom: 1440,
+              left: 1440,
+            },
+          },
+        },
+        children,
+      },
+    ],
+  });
 }
 
 /**
- * Triggers clean download of native Word Document
+ * Triggers clean download of native zipped Word Document (.docx)
  */
-export function exportToNativeDocx(data: DocxResumeData, filename: string = 'resume.docx'): void {
-  const xmlContent = generateWordprocessingML(data);
-  const blob = new Blob([xmlContent], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-  
+export async function exportToNativeDocx(
+  data: DocxResumeData,
+  filename: string = 'resume.docx'
+): Promise<void> {
+  const doc = buildDocxDocument(data);
+  const blob = await Packer.toBlob(doc);
+
+  const cleanFilename = filename.endsWith('.docx') ? filename : `${filename}.docx`;
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename.endsWith('.docx') ? filename : `${filename}.docx`;
+  link.href = url;
+  link.download = cleanFilename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }

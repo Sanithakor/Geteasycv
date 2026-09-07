@@ -4,6 +4,7 @@
  */
 
 import { CVData, SkillItem } from '@/data/sampleCV';
+import { GoogleGenAI } from '@google/genai';
 
 let aiClient: any = null;
 
@@ -12,8 +13,6 @@ function getGeminiClient(): any {
   if (!apiKey) return null;
   if (!aiClient) {
     try {
-      // Dynamic require so build succeeds even if @google/genai is not in node_modules
-      const { GoogleGenAI } = require('@google/genai');
       aiClient = new GoogleGenAI({ apiKey });
     } catch {
       return null;

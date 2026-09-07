@@ -56,49 +56,25 @@ export async function exportToPDF(
   const contentWidth = pageWidth - (margin * 2);
   const contentHeight = pageHeight - (margin * 2);
   
-  const imageWidth = contentWidth;
-  const imageHeight = (canvas.height * contentWidth) / canvas.width;
-  
-  const imageData = canvas.toDataURL('image/png', opts.quality);
-  
-  let yPosition = margin;
-  let remainingHeight = imageHeight;
-  
-  // First page
-  const heightToAdd = Math.min(remainingHeight, contentHeight);
-  pdf.addImage(
-    imageData, 
-    'PNG', 
-    margin, 
-    yPosition, 
-    imageWidth, 
-    heightToAdd,
-    undefined,
-    'FAST'
-  );
-  
-  remainingHeight -= heightToAdd;
-  
-  // Additional pages if needed
-  while (remainingHeight > 0) {
+  const imgWidth = contentWidth;
+  const imgHeight = (canvas.height * contentWidth) / canvas.width;
+  const imageData = canvas.toDataURL('image/jpeg', opts.quality || 0.98);
+
+  let heightLeft = imgHeight;
+  let position = margin;
+
+  // Render first page
+  pdf.addImage(imageData, 'JPEG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+  heightLeft -= contentHeight;
+
+  // Render subsequent pages if content exceeds single page height
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight + margin;
     pdf.addPage();
-    yPosition = margin - (imageHeight - remainingHeight);
-    
-    const heightToAdd = Math.min(remainingHeight, contentHeight);
-    pdf.addImage(
-      imageData,
-      'PNG',
-      margin,
-      yPosition,
-      imageWidth,
-      imageHeight,
-      undefined,
-      'FAST'
-    );
-    
-    remainingHeight -= contentHeight;
+    pdf.addImage(imageData, 'JPEG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+    heightLeft -= contentHeight;
   }
-  
+
   pdf.save(filename);
 }
 
