@@ -2,18 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, CheckCircle2, Star, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, Star, Zap, FileText, ShieldCheck } from 'lucide-react';
 
-export default function ReadyToBuild({
-  title = "Ready to Build Your Perfect Resume?",
-  subtitle = "Join over 40,000 ambitious professionals who landed interviews at Google, Amazon, Microsoft, and leading companies.",
-  buttonText = "Create My Resume Now",
-  buttonHref = "/templates",
-  secondaryButtonText = "Explore 150+ Templates",
-  secondaryButtonHref = "/templates",
-  badgeText,
-  imageSrc = "/images/cta-laptop-mockup.jpg",
-}: {
+interface ReadyToBuildProps {
   title?: string | React.ReactNode;
   subtitle?: string;
   buttonText?: string;
@@ -22,152 +13,179 @@ export default function ReadyToBuild({
   secondaryButtonHref?: string;
   badgeText?: string;
   imageSrc?: string;
-}) {
+  containerBg?: string;
+}
+
+export default function ReadyToBuild({
+  title = "Ready to Build Your Perfect Resume?",
+  subtitle = "Join over 40,000 ambitious professionals who landed interviews at Google, Amazon, Microsoft, and leading companies.",
+  buttonText = "Create My Resume Now",
+  buttonHref = "/templates",
+  secondaryButtonText = "Explore 150+ Templates",
+  secondaryButtonHref = "/templates",
+  badgeText = "4.9/5 Rating by 40,000+ Job Seekers",
+  imageSrc = "/images/cta-rocket-perfect.png",
+  containerBg = "#F8F9FA",
+}: ReadyToBuildProps) {
+  const renderTitle = () => {
+    if (typeof title !== 'string') return title;
+
+    if (title.includes('Perfect Resume?')) {
+      return (
+        <>
+          Ready to Build Your <span className="text-[#FF4D5A]">Perfect</span>
+          <br className="hidden sm:inline" />
+          <span className="text-[#FF4D5A]">Resume?</span>
+        </>
+      );
+    }
+
+    if (title.includes('Recruiter-Ready Resume?')) {
+      return (
+        <>
+          Ready to Build Your <span className="text-[#FF4D5A]">Recruiter-Ready</span>
+          <br className="hidden sm:inline" />
+          <span className="text-[#FF4D5A]">Resume?</span>
+        </>
+      );
+    }
+
+    return title;
+  };
+
   return (
-    <section className="py-16 sm:py-24 font-sans bg-[#F8F8F6]">
+    <section className="py-10 sm:py-14 lg:py-16 font-sans" style={{ backgroundColor: containerBg }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Luxury Obsidian Card Container */}
-        <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#0B0F19] via-[#0F172A] to-[#0A0D17] border border-slate-800/80 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.35)]">
+        {/* Crisp White Card Container */}
+        <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] lg:rounded-[40px] bg-white border border-slate-100 shadow-[0_15px_50px_-10px_rgba(0,0,0,0.06)] p-6 sm:p-8 lg:p-10">
           
-          {/* Ambient Lighting Mesh */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-violet-600/20 via-indigo-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-10 w-96 h-96 bg-gradient-to-tr from-sky-500/10 via-emerald-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+          {/* Top-Right Calligraphy Slogan ("Dream. Prepare. Achieve.") */}
+          <div className="hidden sm:block absolute top-5 right-6 lg:top-7 lg:right-10 pointer-events-none select-none z-10">
+            <img
+              src="/images/cta-dream-slogan.png"
+              alt="Dream. Prepare. Achieve."
+              className="w-18 lg:w-22 h-auto object-contain opacity-95"
+            />
+          </div>
 
-          {/* Grid pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.03] pointer-events-none"
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 1px 1px, #FFFFFF 1px, transparent 0)',
-              backgroundSize: '24px 24px',
-            }}
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-12 p-8 sm:p-12 lg:p-16 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-10 relative z-10">
             
-            {/* Left Column: 3D Mockup with Floating Proof Badges */}
+            {/* Left Column: 3D Rocket Artwork Box */}
             <div className="lg:col-span-5 flex items-center justify-center order-2 lg:order-1">
-              <div className="relative w-full max-w-[440px] group">
-                
-                {/* Floating Glow behind image */}
-                <div className="absolute -inset-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition duration-700" />
-
-                {/* Main Mockup Frame */}
-                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl">
+              <div className="relative w-full max-w-[460px] group">
+                <div className="relative rounded-[22px] sm:rounded-[26px] overflow-hidden group-hover:scale-[1.015] transition-transform duration-700">
                   <img
                     src={imageSrc}
-                    alt="GetEasyCV Editor Mockup"
-                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
+                    alt="Ready to Build Your Perfect Resume"
+                    className="w-full h-auto object-cover"
                   />
-
-                  {/* Gradient bottom overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Micro badge on image */}
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-slate-700/60 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[10px] font-bold text-slate-200 uppercase tracking-wider">
-                      Live AI Preview
-                    </span>
-                  </div>
                 </div>
-
-                {/* Floating Bottom Card */}
-                <div className="absolute -bottom-4 -right-3 sm:-right-4 px-3.5 py-2 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/80 shadow-xl flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-[10px] font-extrabold text-white leading-none">
-                      ATS Verified
-                    </div>
-                    <div className="text-[9px] text-emerald-400 font-semibold mt-0.5">
-                      98% Pass Rate
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
 
-            {/* Right Column: High-Impact Typography & Conversion Actions */}
-            <div className="lg:col-span-7 space-y-5 text-center lg:text-left order-1 lg:order-2">
+            {/* Right Column: High-Impact Typography, Guarantees & Actions */}
+            <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left order-1 lg:order-2">
               
-              {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/80 text-xs font-bold text-slate-200 shadow-sm">
+              {/* Trust Rating Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/60 border border-amber-200/60 text-xs font-semibold text-slate-700 shadow-xs">
                 <div className="flex items-center text-amber-400">
-                  <Star className="w-3 h-3 fill-amber-400" />
-                  <Star className="w-3 h-3 fill-amber-400" />
-                  <Star className="w-3 h-3 fill-amber-400" />
-                  <Star className="w-3 h-3 fill-amber-400" />
-                  <Star className="w-3 h-3 fill-amber-400" />
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 </div>
-                <span className="text-slate-300">
-                  {badgeText || '4.9/5 Rating by 40,000+ Job Seekers'}
+                <span className="text-slate-600 font-medium">
+                  {badgeText}
                 </span>
               </div>
 
               {/* Headline */}
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
-                {typeof title === 'string' ? (
-                  <>
-                    Ready to Build Your{' '}
-                    <span style={{ color: '#F5D17B' }}>
-                      Perfect Resume?
-                    </span>
-                  </>
-                ) : (
-                  title
-                )}
+              <h2 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[46px] font-extrabold text-[#0F172A] tracking-tight leading-[1.15]">
+                {renderTitle()}
               </h2>
 
               {/* Subtitle */}
-              <p className="text-sm sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className="text-sm sm:text-[15px] lg:text-base text-slate-500 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
                 {subtitle}
               </p>
 
-              {/* Guarantees / Checklist */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-2 pt-1 text-xs text-slate-300 font-medium">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>No credit card required</span>
+              {/* 3 Guarantees / Highlights Row */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-2.5 pt-0.5">
+                {/* Item 1 */}
+                <div className="flex items-center gap-2 text-left">
+                  <div className="w-6 h-6 rounded-full bg-[#FFF1F2] flex items-center justify-center text-[#FF4D5A] shrink-0">
+                    <Zap className="w-3.5 h-3.5 fill-[#FF4D5A]" />
+                  </div>
+                  <span className="text-xs font-medium text-slate-600">
+                    No credit card required
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Free PDF download included</span>
+
+                {/* Item 2 */}
+                <div className="flex items-center gap-2 text-left">
+                  <div className="w-6 h-6 rounded-full bg-[#FFF1F2] flex items-center justify-center text-[#FF4D5A] shrink-0">
+                    <FileText className="w-3.5 h-3.5 text-[#FF4D5A]" />
+                  </div>
+                  <span className="text-xs font-medium text-slate-600">
+                    Free PDF download included
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>100% ATS compliant format</span>
+
+                {/* Item 3 */}
+                <div className="flex items-center gap-2 text-left">
+                  <div className="w-6 h-6 rounded-full bg-[#FFF1F2] flex items-center justify-center text-[#FF4D5A] shrink-0">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#FF4D5A]" />
+                  </div>
+                  <span className="text-xs font-medium text-slate-600">
+                    100% ATS compliant format
+                  </span>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="pt-3 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-center">
+              {/* Action Buttons Row */}
+              <div className="pt-1.5 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-center">
+                {/* Primary Coral/Red CTA */}
                 <Link
                   href={buttonHref}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-extrabold text-xs sm:text-sm text-slate-950 bg-white hover:bg-slate-100 shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:shadow-[0_0_35px_rgba(255,255,255,0.35)] transition-all hover:scale-102 cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#FF4D5A] hover:bg-[#EE3B48] active:bg-[#DE283A] shadow-[0_6px_20px_rgba(255,77,90,0.35)] hover:shadow-[0_8px_25px_rgba(255,77,90,0.45)] transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
-                  <Sparkles className="w-4 h-4" style={{ color: '#F3645C' }} />
+                  <Sparkles className="w-4 h-4 text-white fill-white" />
                   <span>{buttonText}</span>
-                  <ArrowRight className="w-4 h-4 text-slate-950" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </Link>
 
+                {/* Secondary White CTA */}
                 {secondaryButtonText && (
                   <Link
                     href={secondaryButtonHref}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700/80 shadow-md transition-all hover:scale-102 cursor-pointer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs hover:border-slate-300 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                   >
                     <span>{secondaryButtonText}</span>
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                    <ArrowRight className="w-4 h-4 text-slate-600" />
                   </Link>
                 )}
+              </div>
+
+              {/* Social Proof Avatars Bar */}
+              <div className="pt-2 flex items-center justify-center lg:justify-start gap-3">
+                <img
+                  src="/images/cta-avatars.png"
+                  alt="40,000+ happy job seekers"
+                  className="h-8 w-auto object-contain"
+                />
+                <div className="h-6 w-[1px] bg-slate-200" />
+                <div className="text-left text-xs leading-tight">
+                  <span className="font-bold text-slate-800">Trusted by 40,000+ job seekers</span>
+                  <br />
+                  <span className="text-[11px] text-slate-500">to build a brighter future</span>
+                </div>
               </div>
 
             </div>
 
           </div>
+
         </div>
       </div>
     </section>
