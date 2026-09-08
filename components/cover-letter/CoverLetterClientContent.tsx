@@ -176,50 +176,58 @@ export default function CoverLetterClientContent() {
             })}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-6">
             {filteredTemplates.map((template) => (
               <div
                 key={template.id}
-                className="group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
               >
-                <div className="relative aspect-[1/1.3] w-full overflow-hidden rounded-xl bg-slate-100 border border-slate-200/60 p-3 flex flex-col justify-between">
-                  <div className="origin-top scale-[0.62] transform-gpu">
-                    <CoverLetterRenderer template={template} data={(template as any).previewData || (template as any).sampleData} />
-                  </div>
+                {/* Premium Paper Stage */}
+                <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-xl bg-white border border-slate-200/80 shadow-[0_4px_16px_rgba(0,0,0,0.06)] group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.12)] group-hover:border-slate-300 transition-all duration-300 flex flex-col justify-start">
+                  <CoverLetterRenderer
+                    template={template}
+                    data={(template as any).previewData || (template as any).sampleData}
+                    isCompact={true}
+                  />
 
+                  {/* Integrated Popular Badge */}
                   {template.isPopular && (
-                    <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 text-[10px] font-extrabold uppercase shadow-2xs">
-                      <Flame className="w-3 h-3 text-amber-600 fill-amber-500" />
-                      Popular
-                    </span>
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-white border border-amber-400/50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md backdrop-blur-xs">
+                        <Flame className="w-3 h-3 text-white fill-white" />
+                        Popular
+                      </span>
+                    </div>
                   )}
                 </div>
 
+                {/* Card Content & Metadata */}
                 <div className="mt-4 space-y-2 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#F3645C] transition-colors">
+                      <h3 className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight group-hover:text-[#F3645C] transition-colors line-clamp-1">
                         {template.name}
                       </h3>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-full shrink-0">
                         {template.category}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 font-normal mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1.5 leading-relaxed line-clamp-2 min-h-[2.5rem]">
                       {template.description}
                     </p>
                   </div>
 
+                  {/* Action Buttons */}
                   <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                     <Link
                       href={`/cover-letter/editor?template=${template.id}`}
-                      className="flex-1 text-center py-2.5 bg-[#0F0F0F] hover:bg-black text-white font-bold text-xs rounded-xl shadow-2xs transition-all cursor-pointer"
+                      className="flex-1 py-2.5 sm:py-3 bg-[#0F0F0F] hover:bg-black text-white font-bold text-xs sm:text-sm rounded-xl shadow-2xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      Use Template
+                      <span>Use Template</span>
                     </Link>
                     <button
                       onClick={() => setPreviewTemplate(template)}
-                      className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all cursor-pointer"
+                      className="p-2.5 sm:p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all border border-slate-200/80 cursor-pointer active:scale-95"
                       title="Preview Template"
                     >
                       <Eye className="w-4 h-4" />

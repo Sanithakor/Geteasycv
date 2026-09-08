@@ -154,14 +154,6 @@ const navItems: NavItem[] = [
     name: 'Pricing & Plans',
     href: '/pricing',
   },
-  {
-    name: 'About Us',
-    href: '/about',
-  },
-  {
-    name: 'Contact Us',
-    href: '/contact',
-  },
 ];
 
 function OpenAuthWatcher() {

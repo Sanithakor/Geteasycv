@@ -43,77 +43,12 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 
-const pageSize = 12;
-
 // Sorting options
 const sortOptions = [
   { id: 'popular', name: 'Most Popular', icon: Star },
   { id: 'newest', name: 'Newest First', icon: Zap },
   { id: 'alphabetical', name: 'A-Z', icon: FileText },
   { id: 'category', name: 'By Category', icon: Award }
-];
-
-const platformFeatures = [
-  {
-    icon: FileText,
-    accent: '#BAC7FE',
-    title: 'ATS Friendly Templates',
-    description: 'Professionally designed templates that pass ATS scans and get you noticed by recruiters.',
-  },
-  {
-    icon: Edit,
-    accent: '#F5D17B',
-    title: 'Easy Customization',
-    description: 'Drag, drop, and customize sections to create a resume that perfectly matches your style.',
-  },
-  {
-    icon: Sparkles,
-    accent: '#58C09D',
-    title: 'AI-Powered Suggestions',
-    description: 'Get intelligent suggestions for your content, skills, and achievements powered by AI.',
-  },
-  {
-    icon: Eye,
-    accent: '#D0B9EF',
-    title: 'Real-time Preview',
-    description: 'See changes instantly with our real-time preview as you build your resume.',
-  },
-  {
-    icon: Download,
-    accent: '#FEE1CF',
-    title: 'Multiple Export Options',
-    description: 'Download your resume in PDF, Word, or plain text format with perfect formatting.',
-  },
-  {
-    icon: BarChart2,
-    accent: '#BAC7FE',
-    title: 'Resume Score Analysis',
-    description: 'Get a detailed score and tips to improve your resume and increase your interview chances.',
-  },
-  {
-    icon: Globe,
-    accent: '#F5D17B',
-    title: 'Multi-language Support',
-    description: 'Create resumes in multiple languages and reach global opportunities.',
-  },
-  {
-    icon: Smartphone,
-    accent: '#58C09D',
-    title: 'Mobile Responsive',
-    description: 'Build and edit your resume seamlessly on any device, anywhere, anytime.',
-  },
-  {
-    icon: ShieldCheck,
-    accent: '#D0B9EF',
-    title: 'Data Privacy & Security',
-    description: 'Your data is encrypted and secure. We never share your information with third parties.',
-  },
-  {
-    icon: Headphones,
-    accent: '#FEE1CF',
-    title: 'Expert Support',
-    description: 'Get help when you need it with our dedicated support team available 24/7.',
-  },
 ];
 
 function getTemplateCategories(template: GeneratedTemplate): string[] {
@@ -150,23 +85,25 @@ function TemplatePreview({ template }: { template: GeneratedTemplate }) {
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[1/1.414] w-full overflow-hidden rounded-md border border-slate-200/80 bg-white shadow-xs group-hover:border-teal-400/80 group-hover:shadow-md transition-all duration-300"
+      className="relative aspect-[1/1.32] w-full overflow-hidden rounded-xl bg-white border border-slate-200/80 shadow-[0_4px_16px_rgba(0,0,0,0.06)] group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.12)] group-hover:border-slate-300 transition-all duration-300 flex flex-col justify-start"
     >
-      {mounted ? (
-        <div
-          className="absolute left-0 top-0 origin-top-left pointer-events-none select-none"
-          style={{
-            width: '794px',
-            transform: `scale(${scale})`,
-          }}
-        >
-          <TemplateRenderer template={template} data={sampleCV} scale={1} />
-        </div>
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-slate-50 text-slate-400 text-xs font-semibold">
-          Loading Preview...
-        </div>
-      )}
+      <div className="relative w-full h-full bg-white overflow-hidden">
+        {mounted ? (
+          <div
+            className="absolute left-0 top-0 origin-top-left pointer-events-none select-none"
+            style={{
+              width: '794px',
+              transform: `scale(${scale})`,
+            }}
+          >
+            <TemplateRenderer template={template} data={sampleCV} scale={1} />
+          </div>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-slate-50 text-slate-400 text-xs font-semibold">
+            Loading Preview...
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -183,7 +120,8 @@ function TemplatesContent() {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('popular');
   
-  const [page, setPage] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const loaderRef = React.useRef<HTMLDivElement>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<GeneratedTemplate | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
@@ -257,7 +195,7 @@ function TemplatesContent() {
     }
     
     updateURL(newFilters);
-    setPage(1);
+    setVisibleCount(12);
   };
 
   const handleSearchChange = (value: string) => {
@@ -271,7 +209,7 @@ function TemplatesContent() {
       sort: sortBy
     };
     updateURL(newFilters);
-    setPage(1);
+    setVisibleCount(12);
   };
 
   const handleSortChange = (value: string) => {
@@ -285,7 +223,7 @@ function TemplatesContent() {
       sort: value
     };
     updateURL(newFilters);
-    setPage(1);
+    setVisibleCount(12);
   };
 
   const clearAllFilters = () => {
@@ -296,7 +234,7 @@ function TemplatesContent() {
     setSearch('');
     setSortBy('popular');
     router.replace('/templates');
-    setPage(1);
+    setVisibleCount(12);
   };
 
   const filteredTemplates = useMemo(() => {
@@ -371,15 +309,34 @@ function TemplatesContent() {
     }
   }, [filteredTemplates, sortBy]);
 
-  const totalPages = Math.ceil(sortedTemplates.length / pageSize) || 1;
-  const pagedTemplates = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return sortedTemplates.slice(start, start + pageSize);
-  }, [sortedTemplates, page]);
+  const displayedTemplates = useMemo(() => {
+    return sortedTemplates.slice(0, visibleCount);
+  }, [sortedTemplates, visibleCount]);
 
   useEffect(() => {
-    setPage(1);
+    setVisibleCount(12);
   }, [selectedCategory, selectedExperienceLevel, selectedStyle, selectedIndustry, search, sortBy]);
+
+  useEffect(() => {
+    if (visibleCount >= sortedTemplates.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + 9, sortedTemplates.length));
+        }
+      },
+      { rootMargin: '300px' }
+    );
+
+    const currentRef = loaderRef.current;
+    if (currentRef) observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [sortedTemplates.length, visibleCount]);
 
   const handleUseTemplate = async (template: GeneratedTemplate) => {
     if (!isAuthenticated) {
@@ -739,7 +696,7 @@ function TemplatesContent() {
             </aside>
 
             <div className="lg:col-span-9 space-y-6">
-              {pagedTemplates.length === 0 ? (
+              {displayedTemplates.length === 0 ? (
                 <div className="rounded-md border border-dashed border-slate-200 bg-white p-12 text-center">
                   <div className="mx-auto w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                     <Search className="w-8 h-8 text-slate-400" />
@@ -757,8 +714,8 @@ function TemplatesContent() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {pagedTemplates.map((template, idx) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                  {displayedTemplates.map((template, idx) => {
                     const categories = getTemplateCategories(template);
                     const isFavorited = favorites.includes(template.id);
                     const isPopular = idx % 2 === 0;
@@ -766,7 +723,7 @@ function TemplatesContent() {
                     return (
                       <article
                         key={template.id}
-                        className="group relative flex flex-col justify-between rounded-2xl border border-[#0F0F0F]/10 bg-white p-3.5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                        className="group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden"
                       >
                         <div className="relative">
                           <TemplatePreview template={template} />
@@ -780,7 +737,7 @@ function TemplatesContent() {
                                   : [...prev, template.id]
                               )
                             }
-                            className={`absolute right-2.5 top-2.5 rounded-full p-1.5 shadow-sm backdrop-blur-xs transition-colors cursor-pointer z-10 ${
+                            className={`absolute right-3 top-3 rounded-full p-2 shadow-sm backdrop-blur-xs transition-colors cursor-pointer z-10 ${
                               isFavorited
                                 ? 'bg-rose-50 text-rose-500 border border-rose-200'
                                 : 'bg-white/90 text-slate-400 hover:text-rose-500'
@@ -789,34 +746,28 @@ function TemplatesContent() {
                             <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
                           </button>
 
-                          <div className="absolute right-2.5 top-2.5 font-bold z-0 pointer-events-none">
-                            <span className="hidden group-hover:hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-100/90 text-emerald-800 px-2 py-0.5 text-[9px] border border-emerald-200 backdrop-blur-xs">
-                              ATS Friendly
-                            </span>
-                          </div>
-
-                          <div className="absolute left-2.5 bottom-2.5 z-10">
+                          <div className="absolute left-3 top-3 z-10">
                             {isPopular ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100/90 text-amber-800 px-2 py-0.5 text-[9px] font-bold border border-amber-200/70 backdrop-blur-xs shadow-2xs">
-                                <Flame className="w-2.5 h-2.5 text-amber-600 fill-amber-500" />
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-white border border-amber-400/50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-sm backdrop-blur-xs">
+                                <Flame className="w-3 h-3 text-white fill-white" />
                                 Popular
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#FEE1CF] text-[#0F0F0F] px-2 py-0.5 text-[9px] font-bold border border-[#F5D17B]/40 backdrop-blur-xs shadow-2xs">
-                                <Sparkles className="w-2.5 h-2.5 text-[#F3645C]" />
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500 text-white border border-rose-400/50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-sm backdrop-blur-xs">
+                                <Sparkles className="w-3 h-3 text-white fill-white" />
                                 New
                               </span>
                             )}
                           </div>
                         </div>
 
-                        <div className="mt-3 space-y-2 flex-1 flex flex-col justify-between">
+                        <div className="mt-4 space-y-2 flex-1 flex flex-col justify-between">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0 flex-1">
-                              <h3 className="line-clamp-1 text-sm font-bold text-slate-900 group-hover:text-[#F3645C] transition-colors">
+                              <h3 className="line-clamp-1 text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#F3645C] transition-colors tracking-tight">
                                 {template.layout.name}
                               </h3>
-                              <p className="line-clamp-1 text-xs text-slate-500 font-medium mt-0.5">
+                              <p className="line-clamp-1 text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
                                 {categories[0] || template.category || 'Software Development'}
                               </p>
                             </div>
@@ -836,12 +787,12 @@ function TemplatesContent() {
                             <div className="w-2.5 h-2.5 rounded-full bg-slate-800"></div>
                           </div>
 
-                          <div className="flex items-center gap-2 pt-2">
+                          <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => handleUseTemplate(template)}
                               disabled={addingId === template.id}
-                              className="flex flex-1 cursor-pointer items-center justify-center gap-1 rounded-lg bg-[#0F0F0F] px-3 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-[#333333]"
+                              className="flex-1 py-2.5 sm:py-3 bg-[#0F0F0F] hover:bg-black text-white font-bold text-xs sm:text-sm rounded-xl shadow-2xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
                             >
                               <span>{addingId === template.id ? 'Adding...' : 'Use Template'}</span>
                             </button>
@@ -850,7 +801,7 @@ function TemplatesContent() {
                               type="button"
                               onClick={() => setSelectedTemplate(template)}
                               title="Quick Preview"
-                              className="cursor-pointer rounded-lg border border-[#0F0F0F]/10 bg-[#F5D17B] p-2 text-[#0F0F0F] transition-colors hover:bg-[#EBC35D]"
+                              className="p-2.5 sm:p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all border border-slate-200/80 cursor-pointer active:scale-95"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
@@ -862,60 +813,18 @@ function TemplatesContent() {
                 </div>
               )}
 
-              {totalPages > 1 && (
-                <div className="mt-8 flex items-center justify-center gap-2 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 disabled:opacity-40 cursor-pointer shadow-2xs"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-xs font-semibold text-slate-500 px-3">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                    className="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 disabled:opacity-40 cursor-pointer shadow-2xs"
-                  >
-                    Next
-                  </button>
+              {visibleCount < sortedTemplates.length && (
+                <div ref={loaderRef} className="pt-8 pb-4 flex justify-center items-center">
+                  <div className="flex items-center gap-2.5 text-xs font-bold text-slate-500 bg-white px-5 py-2.5 rounded-full border border-slate-200 shadow-2xs">
+                    <div className="w-4 h-4 border-2 border-slate-300 border-t-[#F3645C] rounded-full animate-spin" />
+                    <span>Loading more templates...</span>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="pt-12 border-t border-slate-200/80">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {platformFeatures.map((feat, idx) => {
-                const Icon = feat.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="space-y-2.5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition-all duration-200 hover:shadow-md"
-                  >
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-2xs"
-                      style={{ backgroundColor: feat.accent }}
-                    >
-                      <Icon className="w-5 h-5 text-[#0F0F0F]" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-[#0F0F0F] text-xs sm:text-sm">
-                        {feat.title}
-                      </h3>
-                      <p className="text-slate-500 text-xs leading-relaxed mt-0.5 font-normal">
-                        {feat.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+
         </div>
 
         {selectedTemplate && (
