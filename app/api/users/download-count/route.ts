@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
     const user = await (prisma.user as any).findUnique({
       where: { id: auth.userId },
-      select: { id: true, subscriptionTier: true, downloadCount: true },
+      select: { id: true, subscriptionTier: true, downloadCount: true, role: true },
     });
 
     if (!user) {
@@ -20,18 +20,23 @@ export async function GET(req: Request) {
     }
 
     const downloadCount = user.downloadCount || 0;
+    const role = (user.role || auth.role || 'user').toLowerCase();
+    const isAdmin = role === 'admin';
+
     const planUser = {
       ...user,
-      subscriptionTier: user.subscriptionTier || auth.subscriptionTier || 'free',
+      role,
+      subscriptionTier: isAdmin ? 'lifetime' : (user.subscriptionTier || auth.subscriptionTier || 'free'),
     };
     const check = canDownloadCV(planUser, downloadCount);
 
     return NextResponse.json({
       success: true,
       downloadCount,
-      canDownload: check.allowed,
-      redirectUrl: check.redirectUrl,
-      reason: check.reason,
+      canDownload: isAdmin ? true : check.allowed,
+      redirectUrl: isAdmin ? undefined : check.redirectUrl,
+      reason: isAdmin ? undefined : check.reason,
+      isAdmin,
     });
   } catch (error) {
     console.error('[GET_DOWNLOAD_COUNT_ERROR]', error);
@@ -48,7 +53,7 @@ export async function POST(req: Request) {
 
     const user = await (prisma.user as any).findUnique({
       where: { id: auth.userId },
-      select: { id: true, subscriptionTier: true, downloadCount: true },
+      select: { id: true, subscriptionTier: true, downloadCount: true, role: true },
     });
 
     if (!user) {
@@ -56,13 +61,17 @@ export async function POST(req: Request) {
     }
 
     const currentDownloads = user.downloadCount || 0;
+    const role = (user.role || auth.role || 'user').toLowerCase();
+    const isAdmin = role === 'admin';
+
     const planUser = {
       ...user,
-      subscriptionTier: user.subscriptionTier || auth.subscriptionTier || 'free',
+      role,
+      subscriptionTier: isAdmin ? 'lifetime' : (user.subscriptionTier || auth.subscriptionTier || 'free'),
     };
     const check = canDownloadCV(planUser, currentDownloads);
 
-    if (!check.allowed) {
+    if (!isAdmin && !check.allowed) {
       return NextResponse.json(
         {
           success: false,
@@ -84,7 +93,8 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       allowed: true,
-      downloadCount: updatedUser.downloadCount,
+      downloadCount: updatedUser?.downloadCount || currentDownloads + 1,
+      isAdmin,
     });
   } catch (error) {
     console.error('[POST_DOWNLOAD_COUNT_ERROR]', error);

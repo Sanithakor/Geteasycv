@@ -13,7 +13,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  X, Mail, Phone, Lock, Eye, EyeOff, User,
+  X, Mail, Lock, Eye, EyeOff, User,
   ArrowLeft, CheckCircle2, Loader2, AlertCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -215,7 +215,7 @@ function OtpStep({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ identifier, identifierType: 'email', otp, purpose, name }),
+        body: JSON.stringify({ identifier, identifierType, otp, purpose, name }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Verification failed. Please try again.'); return; }
@@ -241,7 +241,7 @@ function OtpStep({
       const res = await fetch('/api/auth/otp/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, identifierType: 'email', purpose }),
+        body: JSON.stringify({ identifier, identifierType, purpose }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to resend. Please try again.'); return; }
@@ -342,6 +342,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [otpTarget, setOtpTarget] = useState('');
+  const [otpType, setOtpType] = useState<'email'>('email');
 
   const resetForm = useCallback(() => {
     setIdentifier('');
@@ -423,6 +424,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to send code. Please try again.'); return; }
       setOtpTarget(trimmed);
+      setOtpType('email');
       setView('otp-verify');
     } catch {
       setError('Unable to connect. Please try again.');
@@ -436,7 +438,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <OtpStep
         identifier={otpTarget}
-        identifierType="email"
+        identifierType={otpType}
         purpose="login"
         redirectTo={redirectTo}
         onBack={() => { setView('email-otp'); resetForm(); }}
@@ -550,7 +552,7 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
     );
   }
 
-  // OTP send form (email)
+  // Email OTP send form
   return (
     <div className="space-y-5">
       <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">
@@ -558,8 +560,10 @@ function LoginPanel({ redirectTo }: { redirectTo: string }) {
       </button>
 
       <div className="text-center">
-        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">Login with Email OTP</h2>
-        <p className="text-sm text-[#333333] mt-1">We'll send a one-time code to verify you.</p>
+        <h2 className="text-[24px] font-black text-[#0F0F0F] tracking-tight">
+          Login with Email OTP
+        </h2>
+        <p className="text-sm text-[#333333] mt-1">We'll send a one-time code to verify your email.</p>
       </div>
 
       {error && <ErrorBanner message={error} />}
@@ -619,6 +623,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [otpTarget, setOtpTarget] = useState('');
+  const [otpType, setOtpType] = useState<'email'>('email');
   const [otpName, setOtpName] = useState('');
 
   const resetForm = useCallback(() => {
@@ -711,6 +716,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Failed to send code. Please try again.'); return; }
       setOtpTarget(trimmed);
+      setOtpType('email');
       setOtpName(name.trim());
       setView('otp-verify');
     } catch {
@@ -724,7 +730,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     return (
       <OtpStep
         identifier={otpTarget}
-        identifierType="email"
+        identifierType={otpType}
         purpose="signup"
         name={otpName}
         redirectTo={redirectTo}
@@ -906,7 +912,7 @@ function SignupPanel({ redirectTo }: { redirectTo: string }) {
     );
   }
 
-  // OTP signup form (email-otp)
+  // Email OTP signup form
   return (
     <div className="space-y-5">
       <button type="button" onClick={() => { setView('methods'); resetForm(); }} className="flex items-center gap-1.5 text-sm font-semibold text-[#333333] hover:text-slate-800 transition-colors">

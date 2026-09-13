@@ -8,45 +8,59 @@ export type PlanType = 'free' | 'starter' | 'pro' | 'lifetime' | 'premium';
 export interface UserEntitlement {
   plan: PlanType;
   status: 'active' | 'canceled' | 'expired' | 'paused';
+  isAdmin: boolean;
   isPaid: boolean;
   isStarter: boolean;
   isPro: boolean;
   isLifetime: boolean;
   maxResumes: number; // 1 for free/starter, -1 for unlimited
-  canUseAI: boolean; // Pro and Lifetime only
-  canUsePremiumTemplates: boolean; // Pro and Lifetime only
+  canUseAI: boolean; // Pro, Lifetime, and Admin
+  canUsePremiumTemplates: boolean; // Pro, Lifetime, and Admin
   canExportPDF: boolean; // All plans (free limited to 1 download)
-  canExportImages: boolean; // Pro and Lifetime only (PNG, JPG)
+  canExportImages: boolean; // Pro, Lifetime, and Admin (PNG, JPG)
+  canDownloadEverything: boolean; // Full unrestricted download capability
 }
 
 export function getUserEntitlements(userPayload: any): UserEntitlement {
-  const plan: PlanType = (userPayload?.subscriptionTier || userPayload?.tier || userPayload?.plan || 'free').toLowerCase() as PlanType;
+  const role = (userPayload?.role || '').toLowerCase();
+  const isAdmin = role === 'admin' || userPayload?.isAdmin === true;
+
+  const plan: PlanType = isAdmin
+    ? 'lifetime'
+    : ((userPayload?.subscriptionTier || userPayload?.tier || userPayload?.plan || 'free').toLowerCase() as PlanType);
   const status = userPayload?.subscriptionStatus || userPayload?.status || 'active';
 
-  const isStarter = plan === 'starter' && status === 'active';
-  const isPro = (plan === 'pro' || plan === 'premium') && (status === 'active' || status === 'on_trial' || status === 'canceled');
-  const isLifetime = plan === 'lifetime' && status === 'active';
+  const isStarter = !isAdmin && plan === 'starter' && status === 'active';
+  const isPro = isAdmin || ((plan === 'pro' || plan === 'premium') && (status === 'active' || status === 'on_trial' || status === 'canceled'));
+  const isLifetime = isAdmin || (plan === 'lifetime' && status === 'active');
 
-  const isPaid = isStarter || isPro || isLifetime;
+  const isPaid = isAdmin || isStarter || isPro || isLifetime;
 
   return {
     plan,
-    status,
+    status: 'active',
+    isAdmin,
     isPaid,
     isStarter,
     isPro,
     isLifetime,
-    maxResumes: isPro || isLifetime ? -1 : 1,
-    canUseAI: isPro || isLifetime,
-    canUsePremiumTemplates: isPro || isLifetime,
+    maxResumes: isAdmin || isPro || isLifetime ? -1 : 1,
+    canUseAI: isAdmin || isPro || isLifetime,
+    canUsePremiumTemplates: isAdmin || isPro || isLifetime,
     canExportPDF: true,
-    canExportImages: isPro || isLifetime,
+    canExportImages: isAdmin || isPro || isLifetime,
+    canDownloadEverything: isAdmin || isPaid,
   };
 }
 
 export function canCreateCV(userPayload: any, currentCount: number): { allowed: boolean; reason?: string } {
+  const role = (userPayload?.role || '').toLowerCase();
+  if (role === 'admin' || userPayload?.isAdmin === true) {
+    return { allowed: true };
+  }
+
   const entitlements = getUserEntitlements(userPayload);
-  if (entitlements.maxResumes === -1) {
+  if (entitlements.isAdmin || entitlements.maxResumes === -1) {
     return { allowed: true };
   }
 
@@ -63,10 +77,16 @@ export function canCreateCV(userPayload: any, currentCount: number): { allowed: 
 }
 
 export function canDownloadCV(userPayload: any, downloadsCompleted: number = 0): { allowed: boolean; redirectUrl?: string; reason?: string } {
+  const role = (userPayload?.role || '').toLowerCase();
+  // Administrators have full unrestricted access: can download everything, anytime, with zero limits
+  if (role === 'admin' || userPayload?.isAdmin === true) {
+    return { allowed: true };
+  }
+
   const entitlements = getUserEntitlements(userPayload);
 
-  // Paid users (Starter, Pro, Lifetime) have unlimited PDF downloads under their active entitlement
-  if (entitlements.isPaid) {
+  // Admin or Paid users (Starter, Pro, Lifetime) have unlimited PDF downloads under their active entitlement
+  if (entitlements.isAdmin || entitlements.isPaid) {
     return { allowed: true };
   }
 
@@ -83,7 +103,16 @@ export function canDownloadCV(userPayload: any, downloadsCompleted: number = 0):
 }
 
 export function canExportFormat(userPayload: any, format: 'pdf' | 'png' | 'jpg' | 'docx' | 'txt'): { allowed: boolean; reason?: string; redirectUrl?: string } {
+  const role = (userPayload?.role || '').toLowerCase();
+  // Administrators can export any format at any time without restriction
+  if (role === 'admin' || userPayload?.isAdmin === true) {
+    return { allowed: true };
+  }
+
   const entitlements = getUserEntitlements(userPayload);
+  if (entitlements.isAdmin) {
+    return { allowed: true };
+  }
 
   if (format === 'png' || format === 'jpg') {
     if (entitlements.canExportImages) {
@@ -102,12 +131,20 @@ export function canExportFormat(userPayload: any, format: 'pdf' | 'png' | 'jpg' 
 }
 
 export function canUsePremiumTemplate(userPayload: any): boolean {
+  const role = (userPayload?.role || '').toLowerCase();
+  if (role === 'admin' || userPayload?.isAdmin === true) {
+    return true;
+  }
   return getUserEntitlements(userPayload).canUsePremiumTemplates;
 }
 
 export function canUseAI(userPayload: any): { allowed: boolean; reason?: string; redirectUrl?: string } {
+  const role = (userPayload?.role || '').toLowerCase();
+  if (role === 'admin' || userPayload?.isAdmin === true) {
+    return { allowed: true };
+  }
   const entitlements = getUserEntitlements(userPayload);
-  if (entitlements.canUseAI) {
+  if (entitlements.isAdmin || entitlements.canUseAI) {
     return { allowed: true };
   }
   return {

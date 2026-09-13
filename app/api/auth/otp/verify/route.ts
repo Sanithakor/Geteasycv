@@ -101,14 +101,7 @@ export async function POST(req: Request) {
     let user: any = null;
 
     if (purpose === 'login') {
-      if (identifierType === 'email') {
-        user = await prisma.user.findUnique({ where: { email: normalized } });
-      } else {
-        user = await prisma.user.findFirst({ where: { phone: normalized } });
-        if (!user) {
-          user = await prisma.user.findFirst({ where: { phone: identifier.trim() } });
-        }
-      }
+      user = await prisma.user.findUnique({ where: { email: normalized } });
 
       if (!user) {
         return NextResponse.json(
@@ -127,55 +120,33 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Full name is required for sign up.' }, { status: 400 });
       }
 
-      if (identifierType === 'email') {
-        user = await prisma.user.findUnique({ where: { email: normalized } });
-      } else {
-        user = await prisma.user.findFirst({ where: { phone: normalized } });
-      }
+      user = await prisma.user.findUnique({ where: { email: normalized } });
 
       if (user) {
         if (user.isBanned) return NextResponse.json({ error: 'Account has been banned.' }, { status: 403 });
         // existing user — log them in
       } else {
-        const sharedData = {
-          name: name.trim(),
-          subscriptionTier: 'free',
-          role: 'user',
-          profile: { create: { timezone: 'UTC', language: 'en' } },
-          subscription: {
-            create: { plan: 'free', status: 'active', resumes: 3, storage: 100, aiCredits: 10 },
+        user = await prisma.user.create({
+          data: {
+            name: name.trim(),
+            email: normalized,
+            emailVerified: new Date(),
+            subscriptionTier: 'free',
+            role: 'user',
+            profile: { create: { timezone: 'UTC', language: 'en' } },
+            subscription: {
+              create: { plan: 'free', status: 'active', resumes: 3, storage: 100, aiCredits: 10 },
+            },
           },
-        } as const;
+        });
 
-        if (identifierType === 'email') {
-          user = await prisma.user.create({
-            data: {
-              ...sharedData,
-              email: normalized,
-              emailVerified: new Date(),
-            },
-          });
-        } else {
-          const digits = normalized.replace(/\D/g, '');
-          user = await prisma.user.create({
-            data: {
-              ...sharedData,
-              email: `phone_${digits}@geteasycv.placeholder`,
-              phone: normalized,
-              phoneVerified: new Date(),
-            },
-          });
-        }
-
-        if (identifierType === 'email') {
-          sendWelcomeEmail(user.email, user.name).catch((e: Error) =>
-            console.warn('[WELCOME_EMAIL_WARN]', e),
-          );
-        }
+        sendWelcomeEmail(user.email, user.name).catch((e: Error) =>
+          console.warn('[WELCOME_EMAIL_WARN]', e),
+        );
 
         await createSystemNotification({
           title: 'New User Registered',
-          message: `${identifierType === 'email' ? user.email : normalized} joined GetEasyCV via OTP`,
+          message: `${user.email} joined GetEasyCV via OTP`,
           type: 'user_signup',
           target: 'all',
           userId: user.id,

@@ -20,7 +20,6 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   loginWithGoogle: (googlePayload: string | { credential?: string; accessToken?: string }) => Promise<any>;
-  loginWithGithub: (token: string) => Promise<void>;
   logout: () => Promise<void>;
   initializeAuth: () => Promise<void>;
   refreshToken: () => Promise<void>;
@@ -229,38 +228,6 @@ export const useAuthStore = create<AuthState>()(
           return { success: true, user, token: data.token };
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Google login failed';
-          set({
-            error: message,
-            isLoading: false,
-          });
-          throw error;
-        }
-      },
-
-      // Login with GitHub OAuth
-      loginWithGithub: async (token: string) => {
-        set({ isLoading: true, error: null });
-        try {
-          const response = await fetch(`${API_BASE_URL}/auth/github`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token }),
-          });
-
-          if (!response.ok) {
-            throw new Error('GitHub login failed');
-          }
-
-          const data: AuthResponse = await response.json();
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
-            _hydrated: true,
-          });
-        } catch (error) {
-          const message = error instanceof Error ? error.message : 'GitHub login failed';
           set({
             error: message,
             isLoading: false,

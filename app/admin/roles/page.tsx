@@ -2,7 +2,7 @@
 import React from 'react';
 
 const ROLES = [
-  { name: 'Admin', users: 2, color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', permissions: ['All permissions'] },
+  { name: 'Admin', users: 2, color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', permissions: ['Full access to all features', 'Unlimited downloads anytime', 'All templates & formats', 'System administration'] },
   { name: 'Editor', users: 5, color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', permissions: ['Manage templates', 'Manage blog', 'View analytics'] },
   { name: 'Support', users: 3, color: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400', permissions: ['View users', 'Manage tickets', 'Send notifications'] },
   { name: 'User', users: 2533, color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', permissions: ['Create resumes', 'Download PDF', 'Use templates'] },
@@ -11,7 +11,7 @@ const ROLES = [
 const ALL_PERMISSIONS = [
   { group: 'Users', items: ['View users', 'Create users', 'Edit users', 'Delete users', 'Ban users'] },
   { group: 'Templates', items: ['View templates', 'Manage templates', 'Publish templates', 'Delete templates'] },
-  { group: 'Resumes', items: ['View all resumes', 'Delete resumes'] },
+  { group: 'Resumes & Downloads', items: ['View all resumes', 'Delete resumes', 'Download everything anytime (unlimited)', 'Export full resume data'] },
   { group: 'Analytics', items: ['View analytics', 'Export reports'] },
   { group: 'Billing', items: ['View payments', 'Issue refunds', 'Manage subscriptions'] },
   { group: 'Content', items: ['Manage blog', 'Send notifications', 'Manage email templates'] },

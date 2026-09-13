@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, Eye, Download, Trash2, FileText, Plus } from 'lucide-react';
+import { Search, Eye, Download, Trash2, FileText, Plus, ShieldCheck } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const REALISTIC_RESUMES = [
   {
@@ -86,23 +87,70 @@ export default function ResumesPage() {
     setResumes((prev) => prev.filter((r) => r.id !== id));
   };
 
+  const handleDownloadResume = (res: (typeof REALISTIC_RESUMES)[0]) => {
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `${res.title.replace(/[^a-z0-9]/gi, '_')}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      toast.success(`Admin download initiated for "${res.title}" with zero limits!`);
+    } catch {
+      toast.error('Failed to initiate download');
+    }
+  };
+
+  const handleExportAllResumes = () => {
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(resumes, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `all_platform_resumes_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      toast.success(`Exported all ${resumes.length} resumes successfully!`);
+    } catch {
+      toast.error('Failed to export all resumes');
+    }
+  };
+
   return (
     <div className="space-y-6 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Resumes</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Resumes</h1>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              Admin Full Access • Unlimited Downloads
+            </span>
+          </div>
           <p className="text-slate-500 text-sm mt-0.5 font-medium">
-            Monitor and view all resumes created by platform users ({resumes.length} total)
+            Monitor, edit, and download all resumes created across the platform with no limits ({resumes.length} total)
           </p>
         </div>
-        <Link
-          href="/editor"
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5] text-[#F5D17B]" />
-          <span>Create Resume</span>
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleExportAllResumes}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-sm shadow-2xs transition-all cursor-pointer"
+            title="Download full backup of all resumes"
+          >
+            <Download className="w-4 h-4 text-slate-600" />
+            <span>Export All ({resumes.length})</span>
+          </button>
+          <Link
+            href="/editor"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#0F0F0F] hover:bg-[#262626] text-white rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5] text-[#F5D17B]" />
+            <span>Create Resume</span>
+          </Link>
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -190,7 +238,12 @@ export default function ResumesPage() {
                       <Link href={`/editor?id=${res.id}`} className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-colors" title="View/Edit">
                         <Eye className="w-4 h-4" />
                       </Link>
-                      <button type="button" className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-colors cursor-pointer" title="Download">
+                      <button 
+                        type="button" 
+                        onClick={() => handleDownloadResume(res)} 
+                        className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-colors cursor-pointer" 
+                        title="Download (Admin Unlimited)"
+                      >
                         <Download className="w-4 h-4" />
                       </button>
                       <button type="button" onClick={() => handleDelete(res.id)} className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-red-600 transition-colors cursor-pointer" title="Delete">

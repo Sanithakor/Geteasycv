@@ -51,7 +51,7 @@ export interface SignupPayload {
 }
 
 export interface OAuthPayload {
-  provider: 'google' | 'github';
+  provider: 'google';
   token: string;
   profile: {
     id: string;

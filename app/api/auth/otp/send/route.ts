@@ -1,13 +1,12 @@
 /**
  * POST /api/auth/otp/send
- * Sends an OTP to email or phone.
+ * Sends an OTP to email.
  * Compatible with Cloudflare Workers (no Buffer, no Node-only APIs).
  */
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
-import { sendSms } from '@/lib/sms';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 const OTP_EXPIRY_MINUTES = 10;
@@ -106,25 +105,10 @@ export async function POST(req: Request) {
 
     // For login, check user exists (anti-enumeration: always 200 if not found)
     if (purpose === 'login') {
-      let user = null;
-      if (identifierType === 'email') {
-        user = await prisma.user.findUnique({
-          where: { email: normalized },
-          select: { id: true, isBanned: true, isActive: true },
-        });
-      } else {
-        // Try lowercase first, then original casing
-        user = await prisma.user.findFirst({
-          where: { phone: normalized },
-          select: { id: true, isBanned: true, isActive: true },
-        });
-        if (!user) {
-          user = await prisma.user.findFirst({
-            where: { phone: identifier.trim() },
-            select: { id: true, isBanned: true, isActive: true },
-          });
-        }
-      }
+      const user = await prisma.user.findUnique({
+        where: { email: normalized },
+        select: { id: true, isBanned: true, isActive: true },
+      });
 
       if (!user) {
         return NextResponse.json(
@@ -144,55 +128,28 @@ export async function POST(req: Request) {
     await saveOtpToken(normalized, identifierType, purpose, hashedOtp, expiresAt);
 
     // ── Deliver OTP ───────────────────────────────────────────────────────
-    if (identifierType === 'email') {
-      await sendEmail({
-        to: normalized,
-        subject: `Your GetEasyCV verification code: ${otp}`,
-        html: `
-          <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#334155;">
-            <h2 style="color:#0f172a;margin-bottom:8px;">Your One-Time Password</h2>
-            <p style="margin-bottom:20px;color:#64748b;">
-              Use the code below to ${purpose === 'login' ? 'sign in to' : 'verify your'}
-              GetEasyCV account. It expires in <strong>${OTP_EXPIRY_MINUTES} minutes</strong>.
-            </p>
-            <div style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:12px;
-                        padding:20px 24px;text-align:center;margin:20px 0;">
-              <span style="font-size:36px;font-weight:900;letter-spacing:12px;
-                           color:#4F39F6;font-family:monospace;">${otp}</span>
-            </div>
-            <p style="font-size:12px;color:#94a3b8;margin-top:20px;">
-              If you didn't request this, you can safely ignore this email.
-            </p>
-          </div>`,
-      });
-
-      return NextResponse.json({ success: true, message: 'OTP sent to your email.' }, { status: 200 });
-    }
-
-    // Deliver SMS OTP
-    const smsResult = await sendSms({
+    await sendEmail({
       to: normalized,
-      otp,
-      message: `Your GetEasyCV verification code is: ${otp}. It expires in ${OTP_EXPIRY_MINUTES} minutes.`,
+      subject: `Your GetEasyCV verification code: ${otp}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#334155;">
+          <h2 style="color:#0f172a;margin-bottom:8px;">Your One-Time Password</h2>
+          <p style="margin-bottom:20px;color:#64748b;">
+            Use the code below to ${purpose === 'login' ? 'sign in to' : 'verify your'}
+            GetEasyCV account. It expires in <strong>${OTP_EXPIRY_MINUTES} minutes</strong>.
+          </p>
+          <div style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:12px;
+                      padding:20px 24px;text-align:center;margin:20px 0;">
+            <span style="font-size:36px;font-weight:900;letter-spacing:12px;
+                         color:#4F39F6;font-family:monospace;">${otp}</span>
+          </div>
+          <p style="font-size:12px;color:#94a3b8;margin-top:20px;">
+            If you didn't request this, you can safely ignore this email.
+          </p>
+        </div>`,
     });
 
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json(
-        {
-          success: true,
-          message: 'OTP sent to your phone number.',
-          _dev_otp: otp,
-          _dev_note: 'Development mode active. Use this code to verify.',
-          provider: smsResult?.provider || 'simulated',
-        },
-        { status: 200 },
-      );
-    }
-
-    return NextResponse.json(
-      { success: true, message: 'OTP sent to your phone number.' },
-      { status: 200 },
-    );
+    return NextResponse.json({ success: true, message: 'OTP sent to your email.' }, { status: 200 });
   } catch (err) {
     console.error('[OTP_SEND_ERROR]', err);
     const msg =
