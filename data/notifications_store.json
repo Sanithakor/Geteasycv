@@ -1,5 +1,38 @@
 [
   {
+    "id": "cmu00ywkj000412ogukbdllek",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"My Professional Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-13T16:25:08.706Z"
+  },
+  {
+    "id": "cmtzxoeyt000meya8rhj81ega",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"Single Column ATS Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-13T14:53:00.483Z"
+  },
+  {
+    "id": "cmtzvja6p000ieya8zc0lc67y",
+    "userId": "cmsah1som0002doms9p9quwka",
+    "title": "New Resume Created",
+    "message": "\"My Professional Resume\" was created",
+    "type": "resume_created",
+    "target": "all",
+    "isRead": false,
+    "link": null,
+    "createdAt": "2026-09-13T13:53:01.776Z"
+  },
+  {
     "id": "cmtoju0we000deya8n67lyc9r",
     "userId": "cmsah1som0002doms9p9quwka",
     "title": "New Resume Created",

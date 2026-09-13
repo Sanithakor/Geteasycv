@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import PricingClientContent from '@/components/pricing/PricingClientContent';
+import { ProductSchema, BreadcrumbSchema } from '@/components/seo/SchemaOrg';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
@@ -19,5 +20,21 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
-  return <PricingClientContent />;
+  return (
+    <>
+      <ProductSchema
+        name="GetEasyCV Premium Resume Plan"
+        description="Access 100+ ATS resume templates, AI bullet optimization, unlimited PDF downloads, and cover letter builder."
+        price="0"
+        url="/pricing"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Pricing', url: '/pricing' },
+        ]}
+      />
+      <PricingClientContent />
+    </>
+  );
 }

@@ -61,11 +61,11 @@ describe('Entitlements & Access Control Engine', () => {
 
   describe('canDownloadCV', () => {
     it('allows initial download for free user', () => {
-      expect(canDownloadCV({ ytier: 'free' }, 0).allowed).toBe(true);
+      expect(canDownloadCV({ tier: 'free' }, 0).allowed).toBe(true);
     });
 
     it('blocks free user who has already downloaded 1 time', () => {
-      const result = canDownloadCV({ ytier: 'free' }, 1);
+      const result = canDownloadCV({ tier: 'free' }, 1);
       expect(result.allowed).toBe(false);
       expect(result.redirectUrl).toBe('/pricing?reason=download_limit');
     });

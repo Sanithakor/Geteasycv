@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, Copy, Check, Wand2 } from 'lucide-react';
-import { BreadcrumbSchema } from '@/components/seo/SchemaOrg';
+import { BreadcrumbSchema, ToolAppSchema } from '@/components/seo/SchemaOrg';
 
 export default function ResumeSummaryGeneratorPage() {
   const [jobTitle, setJobTitle] = useState('');
@@ -43,6 +43,11 @@ export default function ResumeSummaryGeneratorPage() {
 
   return (
     <>
+      <ToolAppSchema
+        name="Free Resume Summary Generator"
+        description="Generate professional recruiter-tested summary statements tailored to your target job title."
+        url="/tools/resume-summary-generator"
+      />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

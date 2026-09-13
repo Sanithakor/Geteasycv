@@ -52,7 +52,7 @@ export default function HeroNew() {
             </h1>
 
             <p className="text-lg sm:text-xl mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: '#333333' }}>
-              Select from 100+ recruiter-tested templates, resolve formatting bugs automatically, and download a high-res PDF ready for submission.
+              Select from 100+ recruiter-tested template variations, resolve formatting bugs automatically, and download a high-res PDF ready for submission.
             </p>
 
             {/* CTAs */}

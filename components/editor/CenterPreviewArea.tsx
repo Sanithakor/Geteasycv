@@ -81,130 +81,72 @@ export default function CenterPreviewArea({
 
   return (
     <div className="flex flex-col h-full bg-slate-100/90 relative overflow-hidden select-none">
-      {/* Top Floating Preview Control Toolbar */}
-      <div className="h-12 border-b border-slate-200/80 bg-white/95 backdrop-blur px-4 flex items-center justify-between shrink-0 z-20 shadow-2xs">
-        {/* Left Toolbar Items: Toggle Left Sidebar & Live Sync Indicator */}
-        <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
-            className={`p-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-              showLeftSidebar
-                ? 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                : 'border-violet-300 bg-violet-50 text-violet-700'
-            }`}
-            title={showLeftSidebar ? 'Collapse Left Content Sidebar' : 'Expand Left Content Sidebar'}
-          >
-            {showLeftSidebar ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeftOpen className="w-4 h-4" />}
-            <span className="hidden xl:inline text-[11px] font-bold">
-              {showLeftSidebar ? 'Hide Editor' : 'Show Editor'}
-            </span>
-          </button>
-
-          <div className="h-4 w-px bg-slate-200 hidden sm:block" />
-
-          {/* Live Sync Status */}
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Live Sync</span>
-          </div>
-
-          {/* Page Navigation */}
-          <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5 border border-slate-200">
-            <button
-              type="button"
-              disabled={currentPage <= 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              title="Previous Page"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            <span className="px-2 text-[11px] font-bold text-slate-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              type="button"
-              disabled={currentPage >= totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              title="Next Page"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Center: Template & Layout Info */}
-        <div className="hidden md:flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-800">
-            {customTemplate.layout.name}
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="text-[11px] font-medium text-slate-500">
-            {customTemplate.theme.name}
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded">
-            A4
-          </span>
-        </div>
-
-        {/* Right Toolbar Items: Density, Zoom Controls & Toggle Right Sidebar */}
+      {/* Top Clean Preview Control Toolbar */}
+      <div className="h-11 border-b border-slate-200 bg-white/95 backdrop-blur px-4 flex items-center justify-between shrink-0 z-20 shadow-2xs">
+        {/* Left: Live Indicator */}
         <div className="flex items-center gap-2">
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5 border border-slate-200">
-            <button
-              type="button"
-              onClick={handleZoomOut}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer"
-              title="Zoom Out"
-            >
-              <ZoomOut className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleResetZoom}
-              className="px-1.5 py-0.5 text-[11px] font-mono font-bold text-slate-700 hover:text-violet-600 transition-colors"
-              title="Reset to 85%"
-            >
-              {Math.round(scale * 100)}%
-            </button>
-            <button
-              type="button"
-              onClick={handleZoomIn}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer"
-              title="Zoom In"
-            >
-              <ZoomIn className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleAutoFit}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer"
-              title="Auto-Fit to Screen"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-xs font-extrabold text-slate-800 tracking-tight">Live CV Preview</span>
+        </div>
 
-          <div className="h-4 w-px bg-slate-200 hidden sm:block" />
-
-          {/* Toggle Right Sidebar Button */}
+        {/* Center: Page Navigation */}
+        <div className="flex items-center gap-1 bg-slate-100/90 rounded-lg p-0.5 border border-slate-200">
           <button
             type="button"
-            onClick={() => setShowRightSidebar(!showRightSidebar)}
-            className={`p-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-              showRightSidebar
-                ? 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                : 'border-violet-300 bg-violet-50 text-violet-700'
-            }`}
-            title={showRightSidebar ? 'Collapse Right Design Sidebar' : 'Expand Right Design Sidebar'}
+            disabled={currentPage <= 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            title="Previous Page"
           >
-            <span className="hidden xl:inline text-[11px] font-bold">
-              {showRightSidebar ? 'Hide Design' : 'Show Design'}
-            </span>
-            {showRightSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+          <span className="px-2 text-[11px] font-bold text-slate-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            type="button"
+            disabled={currentPage >= totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            title="Next Page"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Right: Zoom Controls */}
+        <div className="flex items-center gap-1 bg-slate-100/90 rounded-lg p-0.5 border border-slate-200">
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer"
+            title="Zoom Out"
+          >
+            <ZoomOut className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={handleResetZoom}
+            className="px-1.5 py-0.5 text-[11px] font-mono font-bold text-slate-700 hover:text-violet-600 transition-colors cursor-pointer"
+            title="Reset to 85%"
+          >
+            {Math.round(scale * 100)}%
+          </button>
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer"
+            title="Zoom In"
+          >
+            <ZoomIn className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={handleAutoFit}
+            className="p-1 text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-colors cursor-pointer ml-0.5"
+            title="Auto-Fit to Screen"
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

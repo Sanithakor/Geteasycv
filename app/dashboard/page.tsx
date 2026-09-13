@@ -199,9 +199,9 @@ export default function UserDashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {resumes.slice(0, 6).map((resume) => (
+              {resumes.slice(0, 6).map((resume, idx) => (
                 <div
-                  key={resume.id}
+                  key={resume.id || `resume-${idx}-${resume.title || ''}`}
                   onClick={() => router.push(`/editor?id=${resume.id}`)}
                   className="group bg-white border border-slate-200 hover:border-teal-500 rounded-md p-5 cursor-pointer transition-all duration-200 hover:shadow-md flex flex-col justify-between"
                 >

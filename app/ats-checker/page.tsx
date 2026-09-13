@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import AtsCheckerClientContent from '@/components/ats-checker/AtsCheckerClientContent';
+import { ToolAppSchema, BreadcrumbSchema } from '@/components/seo/SchemaOrg';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
@@ -19,5 +20,20 @@ export const metadata: Metadata = {
 };
 
 export default function ATSCheckerPage() {
-  return <AtsCheckerClientContent />;
+  return (
+    <>
+      <ToolAppSchema
+        name="Free ATS Resume Checker & Format Scanner"
+        description="Scan your resume against ATS algorithms to ensure 100% readability and keyword optimization."
+        url="/ats-checker"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'ATS Checker', url: '/ats-checker' },
+        ]}
+      />
+      <AtsCheckerClientContent />
+    </>
+  );
 }

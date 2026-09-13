@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { ShieldCheck, Sparkles, ArrowRight, Check, AlertCircle, RefreshCw, FileText } from 'lucide-react';
-import { BreadcrumbSchema } from '@/components/seo/SchemaOrg';
+import { BreadcrumbSchema, ToolAppSchema } from '@/components/seo/SchemaOrg';
 
 export default function JobDescriptionMatcherToolPage() {
   const [jobDescription, setJobDescription] = useState('');
@@ -63,6 +63,11 @@ export default function JobDescriptionMatcherToolPage() {
 
   return (
     <>
+      <ToolAppSchema
+        name="Job Description Matcher & Keyword Scanner"
+        description="Compare your resume against any job description to uncover missing keywords and increase ATS scores."
+        url="/tools/job-description-matcher"
+      />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

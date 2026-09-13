@@ -25,7 +25,7 @@ const RESUME_STEPS = [
   {
     step: '01',
     title: 'Select a Recruiter-Tested Template',
-    desc: 'Choose from 150+ ATS-verified designs designed for executive, technical, and creative disciplines.',
+    desc: 'Choose from 100+ ATS-verified designs designed for executive, technical, and creative disciplines.',
     tag: 'Step 1 • Design',
     icon: Layers,
     color: '#BAC7FE',

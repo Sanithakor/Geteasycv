@@ -27,11 +27,12 @@ import { useAIAssist } from '@/lib/hooks/useAIAssist';
 import { exportToNativeDocx } from '@/lib/export/docxExporter';
 import { exportToVectorPDF } from '@/lib/export/vectorPdfExporter';
 
-// 3-Part Redesigned Workspace Components
+// 2-Column Redesigned Workspace Components
 import EditorTopNavbar from '@/components/editor/EditorTopNavbar';
 import LeftContentSidebar from '@/components/editor/LeftContentSidebar';
 import CenterPreviewArea from '@/components/editor/CenterPreviewArea';
 import RightDesignSidebar from '@/components/editor/RightDesignSidebar';
+import RightWorkspaceArea from '@/components/editor/RightWorkspaceArea';
 
 type ExportType = 'pdf' | 'docx' | 'txt' | 'png' | 'jpg';
 type SectionKey = 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'languages';
@@ -676,16 +677,12 @@ export default function EditorPage() {
         onUpgradeClick={() => router.push('/pricing')}
       />
 
-      {/* 2. MAIN 3-PART WORKSPACE */}
+      {/* 2. MAIN 50/50 WORKSPACE */}
       <main className="flex-1 overflow-hidden relative flex">
-        {/* DESKTOP VIEW: 3-COLUMN WORKSPACE */}
+        {/* DESKTOP VIEW: 2-COLUMN WORKSPACE (50% LEFT EDITOR & DESIGN CONTROLS / 50% RIGHT LIVE PREVIEW) */}
         <div className="hidden md:flex w-full h-full overflow-hidden">
-          {/* COLUMN 1: LEFT SIDEBAR — CV CONTENT EDITING */}
-          <div
-            className={`h-full border-r border-slate-200/90 transition-all duration-200 ease-in-out shrink-0 ${
-              showLeftSidebar ? 'w-[380px] lg:w-[410px]' : 'w-0 overflow-hidden'
-            }`}
-          >
+          {/* COLUMN 1: LEFT PANEL (50% — DESIGN CONTROLS + CV CONTENT EDITOR) */}
+          <div className="w-1/2 flex-1 h-full overflow-hidden border-r border-slate-200/90 shrink-0">
             <LeftContentSidebar
               cvData={cvData}
               setCvData={setCvData}
@@ -702,11 +699,22 @@ export default function EditorPage() {
               aiCreditsInfo={aiCreditsInfo}
               buildAIContext={buildAIContext}
               onScrollToPreview={scrollToPreviewSection}
+              templates={templates}
+              selectedTemplate={selectedTemplate}
+              setSelectedTemplate={setSelectedTemplate}
+              customTheme={customTheme}
+              setCustomTheme={setCustomTheme}
+              selectedLayout={selectedLayout}
+              setSelectedLayout={setSelectedLayout}
+              sectionVariants={sectionVariants}
+              setSectionVariants={setSectionVariants}
+              density={density}
+              setDensity={setDensity}
             />
           </div>
 
-          {/* COLUMN 2: CENTER — LIVE CV PREVIEW */}
-          <div className="flex-1 h-full min-w-0">
+          {/* COLUMN 2: RIGHT PANEL (50% — LIVE MULTI-PAGE CV PREVIEW CANVAS) */}
+          <div className="w-1/2 flex-1 h-full overflow-hidden shrink-0 min-w-0">
             <CenterPreviewArea
               customTemplate={customTemplate}
               visibleData={visibleData}
@@ -723,35 +731,6 @@ export default function EditorPage() {
               showRightSidebar={showRightSidebar}
               setShowRightSidebar={setShowRightSidebar}
               cvContentRef={cvContentRef}
-            />
-          </div>
-
-          {/* COLUMN 3: RIGHT SIDEBAR — DESIGN & LAYOUT CUSTOMIZATION */}
-          <div
-            className={`h-full border-l border-slate-200/90 transition-all duration-200 ease-in-out shrink-0 ${
-              showRightSidebar ? 'w-[340px] lg:w-[370px]' : 'w-0 overflow-hidden'
-            }`}
-          >
-            <RightDesignSidebar
-              templates={templates}
-              selectedTemplate={selectedTemplate}
-              setSelectedTemplate={setSelectedTemplate}
-              customTheme={customTheme}
-              setCustomTheme={setCustomTheme}
-              selectedLayout={selectedLayout}
-              setSelectedLayout={setSelectedLayout}
-              sectionVariants={sectionVariants}
-              setSectionVariants={setSectionVariants}
-              sectionOrder={sectionOrder}
-              setSectionOrder={setSectionOrder}
-              density={density}
-              setDensity={setDensity}
-              userTier={userTier}
-              isAdmin={isAdmin}
-              onShowUpgradeModal={({ message, redirectUrl }) => {
-                setDownloadLimitModalData({ message, redirectUrl });
-                setShowDownloadLimitModal(true);
-              }}
             />
           </div>
         </div>

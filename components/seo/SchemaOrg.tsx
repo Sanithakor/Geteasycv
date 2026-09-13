@@ -220,3 +220,85 @@ export function WebPageSchema({
     />
   );
 }
+
+/**
+ * Product & Offer JSON-LD Schema for Pricing Page
+ */
+export function ProductSchema({
+  name,
+  description,
+  price,
+  priceCurrency = 'USD',
+  url = '/pricing',
+}: {
+  name: string;
+  description: string;
+  price: string;
+  priceCurrency?: string;
+  url?: string;
+}) {
+  const baseUrl = getBaseUrl();
+
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    description,
+    image: `${baseUrl}/images/templates/modern_professional.png`,
+    offers: {
+      '@type': 'Offer',
+      price,
+      priceCurrency,
+      url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+      availability: 'https://schema.org/InStock',
+    },
+    brand: {
+      '@type': 'Brand',
+      name: 'GetEasyCV',
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
+
+/**
+ * SoftwareApplication Schema for Interactive Tools (ATS Checker, Summary Gen, JD Matcher)
+ */
+export function ToolAppSchema({
+  name,
+  description,
+  url,
+}: {
+  name: string;
+  description: string;
+  url: string;
+}) {
+  const baseUrl = getBaseUrl();
+
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name,
+    description,
+    operatingSystem: 'Web',
+    applicationCategory: 'BusinessApplication',
+    url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
