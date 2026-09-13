@@ -23,7 +23,6 @@
   "dependencies": {
     "@google/genai": "^2.21.0",
     "@prisma/client": "^5.7.1",
-    "@sentry/nextjs": "^10.70.0",
     "@types/html2canvas": "^0.5.35",
     "axios": "^1.6.5",
     "bcryptjs": "^3.0.3",
@@ -48,7 +47,7 @@
     "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
