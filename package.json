@@ -46,6 +46,7 @@
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4",
+    "esbuild": "^0.28.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.0.0",
     "@types/react": "^19",
