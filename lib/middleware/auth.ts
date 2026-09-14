@@ -11,38 +11,57 @@ export interface AuthPayload {
 }
 
 /**
- * Extract auth payload from request headers
- * Expects: Authorization: Bearer <token>
+ * Extract auth payload from request headers or body fallback
  */
 export async function getAuthFromRequest(req: Request): Promise<AuthPayload | null> {
   try {
     let token = '';
 
     // 1. Try Authorization header
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
     if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.replace('Bearer ', '');
+      token = authHeader.replace('Bearer ', '').trim();
     }
 
-    // 2. Try Cookie header
+    // 2. Try x-auth-token header
+    if (!token) {
+      token = (req.headers.get('x-auth-token') || req.headers.get('X-Auth-Token') || '').trim();
+    }
+
+    // 3. Try Cookie header
     if (!token) {
       const cookieHeader = req.headers.get('cookie') || '';
-      const authTokenMatch = cookieHeader.match(/auth-token=([^;]+)/);
+      const authTokenMatch = cookieHeader.match(/(?:^|;\s*)(?:auth-token|auth_token|token)=([^;]+)/);
       if (authTokenMatch) {
-        token = authTokenMatch[1];
+        token = decodeURIComponent(authTokenMatch[1]).trim();
       }
     }
 
-    if (!token) {
-      return null;
+    if (token) {
+      const payload = await verifyToken(token);
+      if (payload && payload.userId) {
+        return payload as AuthPayload;
+      }
     }
 
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return null;
-    }
+    // 4. Try request body fallback if JSON request contains token or userId
+    try {
+      const clonedReq = req.clone();
+      const body = await clonedReq.json().catch(() => null);
+      if (body) {
+        if (body.token) {
+          const payload = await verifyToken(body.token);
+          if (payload && payload.userId) {
+            return payload as AuthPayload;
+          }
+        }
+        if (body.userId && typeof body.userId === 'string') {
+          return { userId: body.userId, email: body.userEmail || body.email };
+        }
+      }
+    } catch {}
 
-    return payload;
+    return null;
   } catch (err) {
     console.error('[AUTH_ERROR]', err);
     return null;

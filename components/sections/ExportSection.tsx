@@ -198,11 +198,11 @@ export default function ExportSection() {
             <div className="lg:col-span-6 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>100% Fidelity Guarantee</span>
+                <span>High-Fidelity PDF Export</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                Perfect Formatting Guaranteed Across All Screen & Print Sizes
+                Consistent Formatting Across Screen & Print Sizes
               </h3>
 
               <div className="space-y-4 pt-1">
@@ -339,7 +339,7 @@ export default function ExportSection() {
                 }}
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>100% Format Preserved</span>
+                <span>Format Preserved</span>
               </div>
             </div>
 

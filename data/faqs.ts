@@ -36,7 +36,7 @@ export const ALL_FAQS: FAQItem[] = [
     category: 'ATS & Optimization',
     question: 'What makes a resume "ATS-friendly"?',
     answer:
-      'Applicant Tracking Systems (ATS) scan resumes for keywords, parseable single- or dual-column structures, standard headings (Experience, Education, Skills), and clean typography without complex graphic tables or unreadable text layers. Every template in GetEasyCV is engineered and verified against systems like Workday, Greenhouse, Taleo, and Lever.',
+      'Applicant Tracking Systems (ATS) scan resumes for keywords, parseable single- or dual-column structures, standard headings (Experience, Education, Skills), and clean typography without complex graphic tables or unreadable text layers. Every template in GetEasyCV is engineered around common applicant tracking system parsing standards and clean document hierarchy.',
   },
   {
     id: 'faq-4',
@@ -113,7 +113,7 @@ export const ALL_FAQS: FAQItem[] = [
     category: 'Privacy & Security',
     question: 'Is my personal data secure and private?',
     answer:
-      'Yes, 100%. We take privacy seriously. Your data is encrypted in transit and at rest using industry-standard SSL encryption. We never sell, rent, or monetize your resume data with third-party advertisers or recruiters without your explicit permission.',
+      'Yes. We take privacy seriously. Your data is encrypted in transit and at rest using industry-standard SSL encryption. We never sell, rent, or monetize your resume data with third-party advertisers or recruiters without your explicit permission.',
   },
 ];
 
@@ -178,17 +178,17 @@ export const ATS_FAQS: FAQItem[] = [
   {
     question: 'What is an ATS (Applicant Tracking System)?',
     answer:
-      'An ATS is software used by over 90% of Fortune 500 companies and recruitment agencies to scan, parse, rank, and filter resumes before a human hiring manager reviews them.',
+      'An ATS is software widely used by medium and large enterprises as well as recruitment agencies to scan, parse, organize, and filter resumes before human recruiters review them.',
   },
   {
     question: 'Why do resumes get rejected by ATS filters?',
     answer:
-      'Resumes often fail ATS scans due to complex tables, text boxes, graphics, non-standard fonts, missing job-description keywords, or unparseable headers/footers. GetEasyCV prevents all of these issues.',
+      'Resumes often experience parsing issues due to complex graphic tables, non-standard text boxes, multi-column reading order errors, or unparseable headers and footers. GetEasyCV formats resumes to avoid these structural problems.',
   },
   {
-    question: 'How does GetEasyCV ensure 100% ATS readability?',
+    question: 'Is GetEasyCV ATS-friendly?',
     answer:
-      'Every template uses standard semantic headings, vector font encoding, clean column flow, and keyword-rich structures verified across major platforms like Workday, Greenhouse, Taleo, and Lever.',
+      'GetEasyCV uses clear layouts and formatting principles designed to improve compatibility with common applicant tracking systems. However, no resume format can guarantee acceptance by every ATS because different systems and employer configurations may process documents differently.',
   },
   {
     question: 'Can I check my resume score before applying?',

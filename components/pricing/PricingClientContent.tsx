@@ -76,7 +76,7 @@ function PricingContent() {
       const json = await res.json();
       if (json.success && Array.isArray(json.data) && json.data.length > 0) {
         const formatted: PricingPlan[] = json.data
-          .filter((p: any) => p.isActive !== false)
+          .filter((p: any) => p.isActive !== false && p.id.toLowerCase() !== 'free')
           .map((p: any) => {
             const staticConfig = getPlanById(p.id);
             return {

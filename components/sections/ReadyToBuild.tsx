@@ -18,12 +18,12 @@ interface ReadyToBuildProps {
 
 export default function ReadyToBuild({
   title = "Ready to Build Your Perfect Resume?",
-  subtitle = "Join ambitious professionals who landed interviews at Google, Amazon, Microsoft, and leading companies.",
+  subtitle = "Join ambitious professionals preparing clean, recruiter-ready resumes for leading companies.",
   buttonText = "Create My Resume Now",
   buttonHref = "/templates",
   secondaryButtonText = "Explore All Templates",
   secondaryButtonHref = "/templates",
-  badgeText = "Rated 5 Stars by Job Seekers",
+  badgeText = "Trusted by Modern Job Seekers",
   imageSrc = "/images/cta-rocket-perfect.png",
   containerBg = "#F8F9FA",
 }: ReadyToBuildProps) {
@@ -138,7 +138,7 @@ export default function ReadyToBuild({
                     <ShieldCheck className="w-3.5 h-3.5 text-[#FF4D5A]" />
                   </div>
                   <span className="text-xs font-medium text-slate-600">
-                    100% ATS compliant format
+                    ATS-friendly format
                   </span>
                 </div>
               </div>

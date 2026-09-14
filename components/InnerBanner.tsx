@@ -163,7 +163,7 @@ export function CoverLetterVisual() {
 
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[8.5px]">
             <span className="font-bold text-slate-900">Sincerely, Sarah Jenkins</span>
-            <span className="text-[#58C09D] font-bold">✓ 100% ATS Ready</span>
+            <span className="text-[#58C09D] font-bold">✓ ATS-Friendly</span>
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@ export function ATSCheckerVisual() {
       {/* Floating Match Badge */}
       <div className="absolute -right-2 -top-3 rounded-full bg-[#58C09D] px-3.5 py-1 text-xs font-bold text-white shadow-lg shadow-[#58C09D]/30 sm:-right-4 sm:-top-4 pointer-events-none flex items-center gap-1">
         <Zap className="w-3.5 h-3.5" />
-        <span>98% ATS Pass</span>
+        <span>Sample Diagnostic</span>
       </div>
 
       {/* Mac Window Header */}
@@ -198,42 +198,25 @@ export function ATSCheckerVisual() {
       {/* Circular Gauge + Parser Breakdown */}
       <div className="grid grid-cols-[110px_1fr] sm:grid-cols-[125px_1fr] gap-4 items-center">
         {/* Gauge */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-50 border border-slate-100 text-center">
-          <div className="grid h-18 w-18 place-items-center rounded-full border-6 border-emerald-400 text-xl font-extrabold text-emerald-600 shadow-inner">
-            98%
-          </div>
-          <span className="text-[9px] font-bold text-emerald-700 mt-2 uppercase tracking-wider">
-            Top 2% Scan
-          </span>
+        <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-100 text-center">
+          <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">92</div>
+          <div className="text-[9.5px] font-extrabold uppercase text-[#58C09D] tracking-wider mt-0.5">Strong Match</div>
+          <div className="text-[8.5px] text-slate-400 mt-1">Diagnostic Score</div>
         </div>
 
-        {/* Breakdown Items */}
+        {/* Section Checks */}
         <div className="space-y-2 text-xs">
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-900 border-b border-slate-100 pb-1">
-            <span>ATS Compatibility</span>
-            <span className="text-[#58C09D]">EXCELLENT</span>
-          </div>
-
-          <div className="space-y-1.5 text-[10px] text-slate-600 font-medium">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>19/20 Keyword Density Matched</span>
+          {[
+            { label: 'Parseable Contact Layer', ok: true },
+            { label: 'Standard Section Hierarchy', ok: true },
+            { label: 'Keyword Density & Match', ok: true },
+            { label: 'Clean Single-Page Margins', ok: true },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center justify-between text-[11px]">
+              <span className="text-slate-600 font-medium">{item.label}</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#58C09D] shrink-0" />
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>Standard Heading Structure (H1/H2)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>Parseable Single/Two Column Layout</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
@@ -247,9 +230,9 @@ export function AIFeaturesVisual() {
   return (
     <div className="relative mx-auto w-full max-w-[480px] rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-7 text-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-left transition-all">
       {/* Floating Badge */}
-      <div className="absolute -right-2 -top-3 rounded-full bg-[#F3645C] px-3.5 py-1 text-xs font-bold text-white shadow-lg shadow-[#F3645C]/30 sm:-right-4 sm:-top-4 pointer-events-none flex items-center gap-1">
-        <Bot className="w-3.5 h-3.5" />
-        <span>10x Bullet Impact</span>
+      <div className="absolute -right-2 -top-3 rounded-full bg-[#F3645C] px-3.5 py-1 text-xs font-bold text-white shadow-lg shadow-[#F3645C]/30 sm:-right-4 sm:-top-4 pointer-events-none flex items-center gap-1.5">
+        <Sparkles className="w-3.5 h-3.5" />
+        <span>Live AI Polish</span>
       </div>
 
       {/* Mac Window Header */}
@@ -260,17 +243,17 @@ export function AIFeaturesVisual() {
           <i className="h-2.5 w-2.5 rounded-full bg-[#00CA4E]" />
         </div>
         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          AI Bullet Point Rewriter
+          AI Bullet Optimizer Demo
         </span>
       </div>
 
-      {/* Before / After Comparison */}
+      {/* Before / After Container */}
       <div className="space-y-3">
-        {/* Before */}
+        {/* Before AI Enhancement */}
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
           <div className="flex items-center justify-between text-[10px] font-bold">
             <span className="text-slate-400 uppercase tracking-wider">ORIGINAL DRAFT</span>
-            <span className="text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded text-[9px]">Score: 54%</span>
+            <span className="text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded text-[9px]">Draft</span>
           </div>
           <p className="text-[10px] sm:text-[11px] text-slate-500 line-through decoration-slate-300">
             &quot;Managed team and helped increase sales for marketing campaigns.&quot;
@@ -284,10 +267,10 @@ export function AIFeaturesVisual() {
               <Sparkles className="w-3 h-3" />
               AI ENHANCED SUGGESTION
             </span>
-            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px]">Score: 98%</span>
+            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px]">Polished</span>
           </div>
           <p className="text-[10.5px] sm:text-[11.5px] text-slate-900 font-semibold leading-relaxed">
-            &quot;Spearheaded a 9-person growth team, orchestrating multi-channel campaigns that generated <span className="text-[#F3645C] font-bold">\$1.4M in pipeline revenue (+38% YoY)</span>.&quot;
+            &quot;Managed sales initiatives and improved pipeline performance through targeted multi-channel campaign optimization.&quot;
           </p>
         </div>
 
@@ -295,7 +278,7 @@ export function AIFeaturesVisual() {
         <div className="flex items-center justify-between pt-1">
           <div className="flex gap-1.5">
             <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[9px] font-bold">Professional</span>
-            <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[9px] font-bold">Quantified</span>
+            <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[9px] font-bold">Action-Oriented</span>
           </div>
           <span className="text-[9.5px] font-bold text-[#58C09D]">✓ 1-Click Apply</span>
         </div>
@@ -324,43 +307,27 @@ export function HowItWorksVisual() {
           <i className="h-2.5 w-2.5 rounded-full bg-[#00CA4E]" />
         </div>
         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          Live Creation Pipeline
+          Builder Workflow
         </span>
       </div>
 
-      {/* 4 Steps Checklist */}
+      {/* Step Sequence */}
       <div className="space-y-2.5">
         {[
-          { num: "01", title: "Select Template", desc: "200+ Template Variations", color: "#BAC7FE", done: true },
-          { num: "02", title: "Fill Details & Skills", desc: "Interactive Real-Time Preview", color: "#F5D17B", done: true },
-          { num: "03", title: "Optimize with AI", desc: "Automated Bullet Rewrites & Scoring", color: "#D0B9EF", done: true, active: true },
-          { num: "04", title: "Export PDF / DOCX", desc: "Instant Download & Share Link", color: "#58C09D", done: false },
-        ].map((step) => (
-          <div
-            key={step.num}
-            className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
-              step.active
-                ? "bg-[#FFF9F6] border-[#F3645C]/30 shadow-2xs"
-                : "bg-slate-50/70 border-slate-100"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center font-extrabold text-[10px] text-[#0F0F0F]"
-                style={{ background: step.color }}
-              >
-                {step.num}
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-slate-900">{step.title}</h4>
-                <p className="text-[9.5px] text-slate-500">{step.desc}</p>
-              </div>
+          { step: '01', title: 'Pick a Template', desc: 'Choose from 200+ clean template variations', color: 'text-[#F3645C] bg-[#FFF9F6]' },
+          { step: '02', title: 'Enter Work Experience', desc: 'Fill in your roles or use AI writing assists', color: 'text-[#2563EB] bg-[#F6F8FF]' },
+          { step: '03', title: 'Run ATS Diagnostic', desc: 'Check keyword balance and layout structure', color: 'text-[#58C09D] bg-[#F0FDF4]' },
+          { step: '04', title: 'Export Vector PDF', desc: 'Download clean, print-ready documents', color: 'text-[#7C3AED] bg-[#F7F4FD]' },
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
+            <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-extrabold text-[11px] shrink-0 ${item.color}`}>
+              {item.step}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-bold text-slate-900 leading-tight">{item.title}</div>
+              <div className="text-[10px] text-slate-500 truncate">{item.desc}</div>
             </div>
-            {step.done ? (
-              <CheckCircle2 className="w-4 h-4 text-[#58C09D]" />
-            ) : (
-              <span className="text-[9px] font-bold text-slate-400 px-2 py-0.5 rounded bg-slate-200/60">Ready</span>
-            )}
+            <Check className="w-3.5 h-3.5 text-slate-300" />
           </div>
         ))}
       </div>
@@ -369,15 +336,15 @@ export function HowItWorksVisual() {
 }
 
 /* ========================================================================= */
-/* 5. ABOUT / MISSION DEDICATED RIGHT-SIDE VISUAL                             */
+/* 5. ABOUT US DEDICATED RIGHT-SIDE VISUAL                                    */
 /* ========================================================================= */
 export function AboutVisual() {
   return (
     <div className="relative mx-auto w-full max-w-[480px] rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-7 text-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-left transition-all">
       {/* Floating Badge */}
-      <div className="absolute -right-2 -top-3 rounded-full bg-[#58C09D] px-3.5 py-1 text-xs font-bold text-white shadow-lg shadow-[#58C09D]/30 sm:-right-4 sm:-top-4 pointer-events-none flex items-center gap-1">
-        <Award className="w-3.5 h-3.5" />
-        <span>Proven Results</span>
+      <div className="absolute -right-2 -top-3 rounded-full bg-[#0F0F0F] px-3.5 py-1 text-xs font-bold text-white shadow-lg sm:-right-4 sm:-top-4 pointer-events-none flex items-center gap-1.5">
+        <Sparkles className="w-3.5 h-3.5 text-[#F5D17B]" />
+        <span>Our Platform</span>
       </div>
 
       {/* Mac Window Header */}
@@ -388,7 +355,7 @@ export function AboutVisual() {
           <i className="h-2.5 w-2.5 rounded-full bg-[#00CA4E]" />
         </div>
         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          Platform Impact
+          Platform Architecture
         </span>
       </div>
 
@@ -399,16 +366,16 @@ export function AboutVisual() {
           <div className="text-[10px] font-bold text-[#F3645C] uppercase tracking-wider">Template Variations</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#F6F8FF] border border-[#BAC7FE]/40 space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">100%</div>
-          <div className="text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">ATS Compatible</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">ATS</div>
+          <div className="text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">Friendly Layouts</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#FFFDF5] border border-[#F5D17B]/40 space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">20</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">16</div>
           <div className="text-[10px] font-bold text-[#D97706] uppercase tracking-wider">Professional Layouts</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#F7F4FD] border border-[#D0B9EF]/40 space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">100%</div>
-          <div className="text-[10px] font-bold text-[#7C3AED] uppercase tracking-wider">Data Privacy</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">Secure</div>
+          <div className="text-[10px] font-bold text-[#7C3AED] uppercase tracking-wider">Privacy-Focused</div>
         </div>
       </div>
     </div>

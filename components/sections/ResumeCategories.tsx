@@ -264,7 +264,7 @@ export default function ResumeCategories() {
                 Looking for a specialized or custom job title?
               </h4>
               <p className="text-xs sm:text-sm text-[#555555] font-normal leading-relaxed">
-                Every template is 100% modular. Customize sections, reorder bullet points, and choose from modern font pairings in seconds.
+                Every template is fully modular. Customize sections, reorder bullet points, and choose from modern font pairings in seconds.
               </p>
             </div>
           </div>

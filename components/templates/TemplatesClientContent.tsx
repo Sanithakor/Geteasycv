@@ -407,16 +407,16 @@ function TemplatesContent() {
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F]">
         <InnerBanner
-          badge="200+ Template Variations"
+          badge="100+ Resume Templates"
           badgeIcon={Sparkles}
           breadcrumbs={[{ label: "Templates", href: "/templates" }]}
           title="Professional ATS-Friendly"
           highlightText="Resume Templates"
           titleSuffix="for Every Career"
-          description="Choose from 200+ ATS-friendly template variations designed by career experts and recruiters to help you land your dream job."
+          description="Choose from 100+ ATS-friendly resume templates with over 200 variations, designed to help you stand out to recruiters and hiring managers."
           features={[
-            "200+ Template Variations",
-            "100% ATS Ready",
+            "100+ Resume Templates",
+            "ATS-Friendly Layouts",
             "Instant PDF Download",
           ]}
         >

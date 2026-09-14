@@ -34,37 +34,37 @@ const AI_EXAMPLES: AIExample[] = [
     id: 'team-lead',
     category: 'Leadership',
     before: '• Managed a team of employees on sales projects',
-    after: '• Spearheaded cross-functional team of 8 to accelerate delivery, driving 15% YoY revenue growth',
-    metrics: '+15% Revenue',
+    after: '• Spearheaded a cross-functional team of 8, optimizing project delivery and sprint workflows',
+    metrics: 'Active Leadership',
     impactTag: 'High-Impact Leadership',
-    atsScore: 98,
+    atsScore: 95,
   },
   {
     id: 'customer-service',
     category: 'Customer Success',
     before: '• Worked with customers and answered inquiries',
-    after: '• Elevated Customer Satisfaction (CSAT) by 24% through proactive relationship workflows and SLA adherence',
-    metrics: '+24% CSAT',
-    impactTag: 'Retention & Growth',
-    atsScore: 96,
+    after: '• Streamlined customer onboarding and support workflows, improving resolution speed and service quality',
+    metrics: 'Faster Resolution',
+    impactTag: 'Retention & Service',
+    atsScore: 94,
   },
   {
     id: 'project-mgmt',
     category: 'Project Management',
     before: '• Responsible for weekly project updates',
-    after: '• Orchestrated bi-weekly executive briefings and agile roadmaps, cutting delivery cycle time by 2 weeks',
-    metrics: '2 Weeks Faster',
-    impactTag: 'Agile Efficiency',
-    atsScore: 99,
+    after: '• Orchestrated bi-weekly executive briefings and agile roadmaps, accelerating delivery milestone completion',
+    metrics: 'Agile Delivery',
+    impactTag: 'Workflow Efficiency',
+    atsScore: 96,
   },
   {
     id: 'software-eng',
     category: 'Software Engineering',
     before: '• Fixed bugs in mobile app code',
-    after: '• Diagnosed and patched 45+ critical production defects, lowering mobile crash rate by 32%',
-    metrics: '-32% Crashes',
-    impactTag: 'System Stability',
-    atsScore: 97,
+    after: '• Diagnosed and resolved critical production defects, improving application stability and performance',
+    metrics: 'System Stability',
+    impactTag: 'Code Quality',
+    atsScore: 95,
   },
 ];
 
@@ -485,7 +485,7 @@ export default function AISection() {
                 </div>
               </div>
 
-              {/* Sleek Intelligence Metrics Panel (replaces clunky solid purple box) */}
+              {/* Sleek Intelligence Metrics Panel */}
               <div className="rounded-2xl p-4 bg-slate-900 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center shrink-0 border border-violet-500/30">
@@ -496,23 +496,28 @@ export default function AISection() {
                       Context-Aware Role Intelligence
                     </h4>
                     <p className="text-[11px] text-slate-300">
-                      Trained on recruiter-accepted resumes across Fortune 500 job specs.
+                      Designed to help you articulate accomplishments with clear, active verbs.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
                   <div className="text-right">
-                    <div className="text-[10px] uppercase font-bold text-slate-400">Interview Boost</div>
-                    <div className="text-xs font-extrabold text-emerald-400">Recruiter Verified</div>
+                    <div className="text-[10px] uppercase font-bold text-slate-400">Content Quality</div>
+                    <div className="text-xs font-extrabold text-emerald-400">Action-Oriented</div>
                   </div>
                   <div className="w-px h-6 bg-slate-700" />
                   <div className="text-right">
-                    <div className="text-[10px] uppercase font-bold text-slate-400">ATS Pass Rate</div>
-                    <div className="text-xs font-extrabold text-violet-300">100% Ready</div>
+                    <div className="text-[10px] uppercase font-bold text-slate-400">Formatting</div>
+                    <div className="text-xs font-extrabold text-violet-300">ATS-Friendly</div>
                   </div>
                 </div>
               </div>
+
+              {/* AI Disclaimer */}
+              <p className="text-[11px] text-slate-500 text-center font-normal leading-relaxed pt-1">
+                AI-generated content is provided as a starting point. Always review and verify facts, metrics, achievements, and qualifications before adding them to your resume.
+              </p>
 
             </div>
           </div>

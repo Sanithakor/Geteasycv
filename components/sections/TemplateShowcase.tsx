@@ -144,9 +144,9 @@ export default function TemplateShowcase() {
 
                 <div className="flex items-center justify-between text-xs pt-3"
                   style={{ borderTop: '1px solid rgba(15,15,15,0.06)' }}>
-                  <div className="flex items-center gap-1.5 font-bold" style={{ color: '#F5D17B' }}>
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span style={{ color: '#333333' }}>4.9 / 5.0</span>
+                  <div className="flex items-center gap-1.5 font-bold">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <span style={{ color: '#333333' }}>ATS-Optimized</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Download className="w-3.5 h-3.5" style={{ color: '#F3645C' }} />

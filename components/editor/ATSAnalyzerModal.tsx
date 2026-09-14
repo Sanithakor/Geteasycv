@@ -65,7 +65,7 @@ export default function ATSAnalyzerModal({
   suggestions.push({
     type: 'success',
     title: 'Standardized Typography (Roboto)',
-    detail: 'Your document uses standard Roboto typography which parses cleanly in all top ATS scanners (Greenhouse, Workday, Lever).',
+    detail: 'Your document uses standard Roboto typography which parses cleanly in common ATS scanners.',
   });
 
   return (
@@ -79,7 +79,7 @@ export default function ATSAnalyzerModal({
             </div>
             <div>
               <h3 className="text-base font-bold text-white">ATS Parsing & Formatting Analyzer</h3>
-              <p className="text-xs text-slate-400">Automated readability check for Greenhouse, Workday & Lever</p>
+              <p className="text-xs text-slate-400">Automated readability and structure check</p>
             </div>
           </div>
           <button

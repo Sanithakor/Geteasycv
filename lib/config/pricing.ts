@@ -174,7 +174,7 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
 };
 
 export const DISPLAY_PLANS: PricingPlan[] = [
-  PRICING_PLANS.free,
+  PRICING_PLANS.starter,
   PRICING_PLANS.pro,
   PRICING_PLANS.premium,
 ];

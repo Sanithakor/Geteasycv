@@ -116,13 +116,19 @@ function CheckoutContent() {
       // 3. Create Order Server-Side
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token}`, 'x-auth-token': token } : {}),
       };
 
       const orderRes = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ plan: planId }),
+        credentials: 'include',
+        body: JSON.stringify({
+          plan: planId,
+          token: token || undefined,
+          userId: user?.id,
+          userEmail: user?.email,
+        }),
       });
 
       const orderData = await orderRes.json();
@@ -148,12 +154,16 @@ function CheckoutContent() {
             const verifyRes = await fetch('/api/razorpay/verify-payment', {
               method: 'POST',
               headers,
+              credentials: 'include',
               body: JSON.stringify({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 plan: planId,
                 isSimulation: orderData.isSimulation,
+                token: token || undefined,
+                userId: user?.id,
+                userEmail: user?.email,
               }),
             });
 
@@ -215,7 +225,7 @@ function CheckoutContent() {
           title="Complete Your Order for"
           highlightText={planDetails?.name || 'Pro Plan'}
           description="Instant activation. Full access to premium templates, PDF exports, and AI writing tools."
-          features={['Instant Activation', 'Encrypted 256-bit SSL Payment', '100% Refund Guarantee']}
+          features={['Instant Activation', '256-Bit SSL Encrypted', 'Refund Policy Available']}
         />
 
         <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -244,7 +254,7 @@ function CheckoutContent() {
                   <span className="px-3 py-1 bg-[#FEE1CF] text-[#0F0F0F] text-xs font-extrabold uppercase rounded-full tracking-wider">
                     Selected Plan
                   </span>
-                  <span className="text-xs font-bold text-slate-400">100% Safe &amp; Secure</span>
+                  <span className="text-xs font-bold text-slate-400">256-Bit Encrypted &amp; Secure</span>
                 </div>
                 <h2 className="text-2xl font-black text-slate-900 mt-2">
                   {planDetails?.name || 'Pro'} Plan Access

@@ -58,8 +58,8 @@ const RESUME_STEPS = [
 
 const COMPARISON_ROWS = [
   {
-    feature: 'ATS Parse Guarantee',
-    getEasyCv: '100% Tested on Workday & Greenhouse',
+    feature: 'ATS Compatibility',
+    getEasyCv: 'Engineered for standard ATS parsers',
     competitors: 'Often fails due to complex tables & canvas blocks',
     status: true,
   },
@@ -121,9 +121,9 @@ const POPULAR_TEMPLATES = [
 
 const RESUME_FAQS = [
   {
-    question: 'How does GetEasyCV guarantee ATS compatibility?',
+    question: 'How does GetEasyCV ensure ATS compatibility?',
     answer:
-      'Our resume engine produces clean, standard semantic documents with no nested tables, unreadable graphics, or overlapping text boxes. Each export is verified against the parsing algorithms of major Applicant Tracking Systems including Workday, Greenhouse, Lever, and Taleo.',
+      'Our resume engine produces clean, standard semantic documents with no nested tables, unreadable graphics, or overlapping text boxes. Each layout is engineered around common applicant tracking system parsing standards and clean document hierarchy.',
   },
   {
     question: 'Is it completely free to build and test my resume?',
@@ -162,7 +162,7 @@ export default function ResumeBuilderClientContent() {
           title="Build an ATS-Friendly Resume That"
           highlightText="Recruiters Notice"
           titleSuffix="in Minutes"
-          description="Engineered to pass modern Applicant Tracking Systems (Workday, Greenhouse, Lever). Pick an executive template, generate impactful bullets with AI, and download true vector PDFs without paywall traps."
+          description="Engineered around common Applicant Tracking System parsing standards. Pick a professional template, craft impactful bullets with AI assistance, and download clean vector PDFs."
           primaryAction={{
             label: 'Start Building Free',
             href: '/editor',
@@ -172,8 +172,8 @@ export default function ResumeBuilderClientContent() {
             href: '/templates',
           }}
           features={[
-            '100% Vector PDF Fidelity',
-            'Workday & Greenhouse Tested',
+            'Vector PDF Precision',
+            'Designed for Standard ATS Parsers',
             'No Surprise Subscription Traps',
           ]}
         />
@@ -183,9 +183,9 @@ export default function ResumeBuilderClientContent() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center sm:text-left">
               {[
-                { metric: '200+', label: 'Template Variations', desc: 'Customizable layouts & themes' },
-                { metric: '100%', label: 'ATS Parse Pass Rate', desc: 'Tested on Top 5 HR parsers' },
-                { metric: 'Top Rated', label: 'Recruiter Preferred', desc: 'Designed for HR readability' },
+                { metric: '100+', label: 'Resume Templates', desc: 'Customizable layouts & themes' },
+                { metric: 'Standard', label: 'ATS-Friendly Structure', desc: 'Designed for HR readability' },
+                { metric: '16', label: 'Layout Styles', desc: 'Single & multi-column designs' },
                 { metric: '10 Mins', label: 'Average Build Time', desc: 'From blank page to PDF' },
               ].map((stat) => (
                 <div key={stat.label} className="p-4 rounded-xl bg-slate-50 border border-slate-100">
@@ -393,7 +393,7 @@ export default function ResumeBuilderClientContent() {
         {/* Ready to Build Section */}
         <ReadyToBuild
           title="Ready to Build Your Recruiter-Ready Resume?"
-          subtitle="Join ambitious candidates who passed ATS filters and secured interviews at leading global employers."
+          subtitle="Join ambitious candidates building clean, ATS-friendly resumes for modern job applications."
           buttonText="Start Building Free"
           buttonHref="/editor"
         />

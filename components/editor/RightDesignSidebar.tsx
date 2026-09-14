@@ -773,11 +773,10 @@ export default function RightDesignSidebar({
             {/* ATS Auto-fit note */}
             <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200/80 space-y-1">
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
-                <span>✓ 100% ATS-Friendly Structure</span>
+                <span>✓ ATS-Friendly Structure</span>
               </div>
               <p className="text-[11px] text-emerald-700 leading-relaxed">
-                All templates output clean semantic headings, standard bullet points, and high-contrast text that pass
-                Applicant Tracking Systems like Workday, Greenhouse, and Lever.
+                All templates output clean semantic headings, standard bullet points, and high-contrast text engineered for high readability on standard Applicant Tracking Systems.
               </p>
             </div>
           </div>

@@ -24,7 +24,7 @@ export const INITIAL_BLOG_POSTS: BlogPostItem[] = [
     content: `
 # How to Write an ATS-Friendly Resume
 
-Over 98% of Fortune 500 companies use an **Applicant Tracking System (ATS)** to filter candidates before human eyes ever see a resume. If your formatting or structure confuses the parser, your application may be automatically filtered out—no matter how qualified you are.
+Most major employers and large enterprises use an **Applicant Tracking System (ATS)** to screen candidate applications before a recruiter reviews them. If your formatting or structure confuses the parser, your application may not parse cleanly—no matter how qualified you are.
 
 ---
 
@@ -53,7 +53,7 @@ An ATS is software that parses resume documents, extracts structured data (work 
 
 ## Conclusion
 
-Creating an ATS-friendly resume doesn't mean sacrificing design. With GetEasyCV's ATS-optimized templates, your resume stays beautifully formatted for humans while remaining 100% readable by automated parsers.
+Creating an ATS-friendly resume doesn't mean sacrificing design. With GetEasyCV's ATS-optimized templates, your resume stays beautifully formatted for humans while remaining highly readable by automated parsers.
     `,
     category: 'Resume Tips',
     tags: ['ATS', 'Resume Writing', 'Career'],

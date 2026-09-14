@@ -227,6 +227,9 @@ const AIFieldButton: React.FC<AIFieldButtonProps> = ({
             className="w-full resize-y rounded-md border border-violet-200 bg-violet-50/30 px-2 py-1.5 text-[11px] text-slate-800 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-300 transition-all"
             aria-label="Edit AI suggestion"
           />
+          <p className="text-[9px] text-slate-400 mt-1 leading-tight">
+            Verify all metrics, facts, and qualifications before adding to your resume.
+          </p>
         </div>
 
         {/* Action buttons */}

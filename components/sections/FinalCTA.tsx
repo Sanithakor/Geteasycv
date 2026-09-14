@@ -81,7 +81,7 @@ export default function FinalCTA() {
           </div>
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-[#58C09D]" />
-            <span>100% Privacy protected</span>
+            <span>Privacy protected</span>
           </div>
         </div>
       </div>

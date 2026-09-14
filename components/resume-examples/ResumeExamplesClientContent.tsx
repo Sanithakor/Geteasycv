@@ -336,7 +336,7 @@ export default function ResumeExamplesClientContent() {
                 </div>
                 <h4 className="text-sm font-bold text-[#111111]">Use Clean ATS Typography & Hierarchy</h4>
                 <p className="text-xs text-[#555555] leading-relaxed">
-                  Avoid complex multi-layered graphics or text boxes that confuse parsers. Clean linear sections guarantee 100% readability.
+                  Avoid complex multi-layered graphics or text boxes that confuse parsers. Clean linear sections improve readability on modern applicant tracking systems.
                 </p>
               </div>
             </div>

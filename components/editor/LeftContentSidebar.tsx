@@ -355,17 +355,6 @@ export default function LeftContentSidebar({
       return matchesCategory && matchesSearch;
     });
   }, [templates, selectedCategory, searchQuery]);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    personal: true,
-    summary: true,
-    experience: false,
-    education: false,
-    skills: false,
-    projects: false,
-    certifications: false,
-    languages: false,
-  });
-
   const [showAddMenu, setShowAddMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -411,32 +400,38 @@ export default function LeftContentSidebar({
     }
   };
 
-  const activeSectionsList = ['personal', ...sectionOrder];
+  const activeSectionsList = useMemo(
+    () => ['personal', ...sectionOrder.filter((secId) => secId !== 'header' && SECTION_CONFIG[secId])],
+    [sectionOrder]
+  );
+  const currentActiveSection = activeSectionsList.includes(expandedSection) ? expandedSection : 'personal';
   const completedCount = activeSectionsList.filter(checkCompletion).length;
   const completionPercent = Math.round((completedCount / activeSectionsList.length) * 100);
 
-  const toggleSection = (id: string) => {
-    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
-    setExpandedSection(id);
+  const currentTabIndex = activeSectionsList.indexOf(currentActiveSection);
+  const prevTabId = currentTabIndex > 0 ? activeSectionsList[currentTabIndex - 1] : null;
+  const nextTabId = currentTabIndex < activeSectionsList.length - 1 ? activeSectionsList[currentTabIndex + 1] : null;
+
+  const getSectionTitle = (secId: string) => {
+    if (secId === 'personal') return 'Personal Information';
+    return SECTION_CONFIG[secId]?.title || secId;
+  };
+
+  const getSectionHelper = (secId: string) => {
+    if (secId === 'personal') return 'Your name, title, contact details & photo';
+    return SECTION_CONFIG[secId]?.helper || '';
+  };
+
+  const getSectionIcon = (secId: string) => {
+    if (secId === 'personal') return User;
+    return SECTION_CONFIG[secId]?.icon || Layers;
+  };
+
+  const handleSelectTab = (secId: string) => {
+    setExpandedSection(secId);
     if (onScrollToPreview) {
-      onScrollToPreview(id);
+      onScrollToPreview(secId);
     }
-  };
-
-  const expandAll = () => {
-    const next: Record<string, boolean> = { personal: true };
-    sectionOrder.forEach((sec) => {
-      next[sec] = true;
-    });
-    setOpenSections(next);
-  };
-
-  const collapseAll = () => {
-    const next: Record<string, boolean> = { personal: false };
-    sectionOrder.forEach((sec) => {
-      next[sec] = false;
-    });
-    setOpenSections(next);
   };
 
   const moveSectionUp = (secId: string) => {
@@ -462,6 +457,9 @@ export default function LeftContentSidebar({
   const removeSection = (secId: string) => {
     setSectionOrder((prev: string[]) => prev.filter((s) => s !== secId));
     setVisibility((prev: any) => ({ ...prev, [secId]: false }));
+    if (expandedSection === secId) {
+      setExpandedSection('personal');
+    }
     toast.success(`Removed ${SECTION_CONFIG[secId]?.title || secId} section`);
   };
 
@@ -470,7 +468,6 @@ export default function LeftContentSidebar({
       setSectionOrder((prev: string[]) => [...prev, secId]);
     }
     setVisibility((prev: any) => ({ ...prev, [secId]: true }));
-    setOpenSections((prev) => ({ ...prev, [secId]: true }));
     setExpandedSection(secId);
     setShowAddMenu(false);
     toast.success(`Added ${SECTION_CONFIG[secId]?.title || secId} section!`);
@@ -876,8 +873,8 @@ export default function LeftContentSidebar({
         </div>
       )}
       {/* Top Header with Completion Counter */}
-      <div className="px-4 py-3 border-b border-slate-200/90 bg-slate-50/70 shrink-0">
-        <div className="flex items-center justify-between mb-2">
+      <div className="px-4 py-3 border-b border-slate-200/90 bg-slate-50/70 shrink-0 space-y-2.5">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-violet-600/10 text-violet-600 flex items-center justify-center">
               <FileText className="w-4 h-4" />
@@ -898,14 +895,14 @@ export default function LeftContentSidebar({
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-2.5">
+        <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-violet-600 to-indigo-500 transition-all duration-300"
             style={{ width: `${completionPercent}%` }}
           />
         </div>
 
-        {/* Action Controls: Add Section & Expand/Collapse */}
+        {/* Action Controls: Add Section & Horizontal Section Tabs */}
         <div className="flex items-center justify-between gap-2 relative">
           <div className="relative">
             <button
@@ -963,243 +960,264 @@ export default function LeftContentSidebar({
             )}
           </div>
         </div>
+
+        {/* Horizontal Section Tabs Row (As shown in screenshot) */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth pt-1">
+          {activeSectionsList.map((secId) => {
+            const Icon = getSectionIcon(secId);
+            const title = getSectionTitle(secId);
+            const isSelected = currentActiveSection === secId;
+            const isDone = checkCompletion(secId);
+            const isVisible = secId === 'personal' || visibility[secId] !== false;
+
+            return (
+              <button
+                key={secId}
+                type="button"
+                onClick={() => handleSelectTab(secId)}
+                className={`group shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all cursor-pointer select-none ${
+                  isSelected
+                    ? 'bg-violet-50 text-violet-900 border-2 border-violet-600 shadow-xs font-bold'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-2xs hover:border-slate-300 font-medium'
+                }`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                    isSelected
+                      ? 'bg-violet-600 text-white'
+                      : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </div>
+                <span className="whitespace-nowrap">{title}</span>
+                {isDone && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
+                {!isVisible && <EyeOff className="w-3 h-3 text-amber-500 shrink-0" />}
+              </button>
+            );
+          })}
+
+          {/* Add Section Quick Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowAddMenu(!showAddMenu)}
+            className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 transition-colors cursor-pointer"
+            title="Add another section to your CV"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add</span>
+          </button>
+        </div>
       </div>
 
-      {/* Scrollable Form Sections List (Always Open & Directly Editable) */}
-      <div className="flex-1 overflow-y-auto p-3.5 space-y-4 [scrollbar-gutter:stable]">
-        {/* 1. PERSONAL INFORMATION (Permanent Root Section) */}
+      {/* Active Form Section Container (Only renders the active tab) */}
+      <div className="flex-1 overflow-y-auto p-3.5 [scrollbar-gutter:stable]">
         <div
-          id="editor-section-personal"
-          className="rounded-xl border border-violet-200 bg-white shadow-xs overflow-hidden"
+          id={`editor-section-${currentActiveSection}`}
+          className="rounded-xl border border-violet-200/90 bg-white shadow-xs overflow-hidden"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between p-3 bg-slate-50/70 border-b border-slate-100 select-none">
+          {/* Active Section Header */}
+          <div className="flex items-center justify-between p-3.5 bg-slate-50/70 border-b border-slate-100 select-none">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center shrink-0">
-                <User className="w-4 h-4" />
+                {React.createElement(getSectionIcon(currentActiveSection), { className: 'w-4 h-4' })}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-xs font-bold text-slate-900">Personal Information</h3>
-                  {checkCompletion('personal') && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
-                </div>
-                <p className="text-[11px] text-slate-500 truncate">Contact details, photo, and title</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Form Content — Always Visible */}
-          <div className="p-4 bg-white space-y-4">
-              {/* Profile Photo Uploader */}
-              <div className="flex items-center gap-4 p-3 bg-white rounded-xl border border-slate-200/80">
-                <div className="relative w-14 h-14 rounded-full overflow-hidden bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center shrink-0">
-                  {cvData.personal?.avatar ? (
-                    <img
-                      src={cvData.personal.avatar}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <User className="w-7 h-7 text-slate-400" />
+                  <h3 className="text-xs font-bold text-slate-900">{getSectionTitle(currentActiveSection)}</h3>
+                  {checkCompletion(currentActiveSection) && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
+                  {currentActiveSection !== 'personal' && visibility[currentActiveSection] === false && (
+                    <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.2 rounded font-semibold">
+                      Hidden on CV
+                    </span>
                   )}
                 </div>
-
-                <div className="flex-1 space-y-1">
-                  <span className="text-xs font-bold text-slate-800 block">Profile Photo</span>
-                  <div className="flex items-center gap-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="px-2.5 py-1 text-xs font-semibold bg-violet-50 text-violet-700 hover:bg-violet-100 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-                    >
-                      <Camera className="w-3 h-3" />
-                      <span>Upload</span>
-                    </button>
-                    {cvData.personal?.avatar && (
-                      <button
-                        type="button"
-                        onClick={removePhoto}
-                        className="px-2 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Name & Job Title */}
-              <div className="grid grid-cols-2 gap-3">
-                <Field
-                  label="First Name"
-                  required
-                  value={cvData.personal?.firstName}
-                  placeholder="Sarah"
-                  onChange={(val) => updatePersonal('firstName', val)}
-                />
-                <Field
-                  label="Last Name"
-                  required
-                  value={cvData.personal?.lastName}
-                  placeholder="Johnson"
-                  onChange={(val) => updatePersonal('lastName', val)}
-                />
-              </div>
-
-              <div>
-                <Field
-                  label="Professional Title"
-                  value={cvData.personal?.title}
-                  placeholder="Senior Full Stack Engineer"
-                  onChange={(val) => updatePersonal('title', val)}
-                />
-                <VoiceAIFieldAssist
-                  fieldName="Job Title"
-                  fieldValue={cvData.personal?.title || ''}
-                  onAccept={(text) => {
-                    pushHistory(cvData);
-                    updatePersonal('title', text);
-                  }}
-                  sectionName="Personal Information"
-                  jobTitle={cvData.personal?.title || 'Professional'}
-                />
-              </div>
-
-              {/* Contact Information */}
-              <div className="grid grid-cols-2 gap-3">
-                <Field
-                  label="Email"
-                  type="email"
-                  required
-                  value={cvData.personal?.email}
-                  placeholder="sarah@example.com"
-                  onChange={(val) => updatePersonal('email', val)}
-                />
-                <Field
-                  label="Phone"
-                  type="tel"
-                  value={cvData.personal?.phone}
-                  placeholder="+1 (555) 123-4567"
-                  onChange={(val) => updatePersonal('phone', val)}
-                />
-              </div>
-
-              <Field
-                label="Location"
-                value={cvData.personal?.location}
-                placeholder="San Francisco, CA"
-                onChange={(val) => updatePersonal('location', val)}
-              />
-
-              <div className="grid grid-cols-2 gap-3">
-                <Field
-                  label="Website / Portfolio"
-                  value={cvData.personal?.website}
-                  placeholder="https://sarah.dev"
-                  onChange={(val) => updatePersonal('website', val)}
-                />
-                <Field
-                  label="LinkedIn"
-                  value={cvData.personal?.linkedin}
-                  placeholder="linkedin.com/in/sarah"
-                  onChange={(val) => updatePersonal('linkedin', val)}
-                />
+                <p className="text-[11px] text-slate-500 truncate">{getSectionHelper(currentActiveSection)}</p>
               </div>
             </div>
-        </div>
 
-        {/* REORDERABLE SECTIONS (Permanently Open & Directly Editable) */}
-        {sectionOrder
-          .filter((secId) => secId !== 'header' && SECTION_CONFIG[secId])
-          .map((secId) => {
-            const conf = SECTION_CONFIG[secId];
-            const Icon = conf.icon;
-            const isVisible = visibility[secId] !== false;
-            const isDone = checkCompletion(secId);
+            {/* Tools (Only for non-personal sections) */}
+            {currentActiveSection !== 'personal' && (
+              <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center bg-white rounded-lg p-0.5 border border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => moveSectionUp(currentActiveSection)}
+                    className="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors"
+                    title="Move tab left"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveSectionDown(currentActiveSection)}
+                    className="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors"
+                    title="Move tab right"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
 
-            return (
-              <div
-                key={secId}
-                id={`editor-section-${secId}`}
-                className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden"
-              >
-                {/* Section Header Card */}
-                <div className="flex items-center justify-between p-3 bg-slate-50/70 border-b border-slate-100 select-none">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-slate-200/60 text-slate-700 flex items-center justify-center shrink-0">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-xs font-bold text-slate-900">{conf.title}</h3>
-                        {isDone && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
-                        {!isVisible && (
-                          <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.2 rounded font-semibold">
-                            Hidden
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-slate-500 truncate">{conf.helper}</p>
-                    </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const isVis = visibility[currentActiveSection] !== false;
+                    setVisibility((prev: any) => ({ ...prev, [currentActiveSection]: !isVis }));
+                    toast.success(isVis ? `Hidden on CV` : `Visible on CV`);
+                  }}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    visibility[currentActiveSection] !== false
+                      ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                      : 'text-amber-600 bg-amber-50'
+                  }`}
+                  title={visibility[currentActiveSection] !== false ? 'Hide from CV' : 'Show on CV'}
+                >
+                  {visibility[currentActiveSection] !== false ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => removeSection(currentActiveSection)}
+                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                  title="Remove section"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Form Content */}
+          <div className="p-4 bg-white space-y-4">
+            {/* 1. PERSONAL INFORMATION */}
+            {currentActiveSection === 'personal' && (
+              <div className="space-y-4">
+                {/* Profile Photo Uploader */}
+                <div className="flex items-center gap-4 p-3 bg-white rounded-xl border border-slate-200/80">
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center shrink-0">
+                    {cvData.personal?.avatar ? (
+                      <img
+                        src={cvData.personal.avatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-7 h-7 text-slate-400" />
+                    )}
                   </div>
 
-                  {/* Section Tools: Reorder Up/Down, Toggle Visibility, Delete */}
-                  <div className="flex items-center gap-1 shrink-0">
-                    <div className="flex items-center bg-white rounded-lg p-0.5 border border-slate-200">
+                  <div className="flex-1 space-y-1">
+                    <span className="text-xs font-bold text-slate-800 block">Profile Photo</span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                      />
                       <button
                         type="button"
-                        onClick={() => moveSectionUp(secId)}
-                        className="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors"
-                        title="Move section up"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-2.5 py-1 text-xs font-semibold bg-violet-50 text-violet-700 hover:bg-violet-100 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                       >
-                        <ChevronUp className="w-3.5 h-3.5" />
+                        <Camera className="w-3 h-3" />
+                        <span>Upload</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => moveSectionDown(secId)}
-                        className="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors"
-                        title="Move section down"
-                      >
-                        <ChevronDown className="w-3.5 h-3.5" />
-                      </button>
+                      {cvData.personal?.avatar && (
+                        <button
+                          type="button"
+                          onClick={removePhoto}
+                          className="px-2 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      )}
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setVisibility((prev: any) => ({ ...prev, [secId]: !isVisible }));
-                        toast.success(isVisible ? `Hidden on CV` : `Visible on CV`);
-                      }}
-                      className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                        isVisible ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-amber-600 bg-amber-50'
-                      }`}
-                      title={isVisible ? 'Hide from CV' : 'Show on CV'}
-                    >
-                      {isVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => removeSection(secId)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                      title="Remove section"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
                   </div>
                 </div>
 
-                {/* Section Form Content — Always Open */}
-                <div className="p-4 bg-white space-y-4">
+                {/* Name & Job Title */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="First Name"
+                    required
+                    value={cvData.personal?.firstName}
+                    placeholder="Sarah"
+                    onChange={(val) => updatePersonal('firstName', val)}
+                  />
+                  <Field
+                    label="Last Name"
+                    required
+                    value={cvData.personal?.lastName}
+                    placeholder="Johnson"
+                    onChange={(val) => updatePersonal('lastName', val)}
+                  />
+                </div>
+
+                <div>
+                  <Field
+                    label="Professional Title"
+                    value={cvData.personal?.title}
+                    placeholder="Senior Full Stack Engineer"
+                    onChange={(val) => updatePersonal('title', val)}
+                  />
+                  <VoiceAIFieldAssist
+                    fieldName="Job Title"
+                    fieldValue={cvData.personal?.title || ''}
+                    onAccept={(text) => {
+                      pushHistory(cvData);
+                      updatePersonal('title', text);
+                    }}
+                    sectionName="Personal Information"
+                    jobTitle={cvData.personal?.title || 'Professional'}
+                  />
+                </div>
+
+                {/* Contact Information */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="Email"
+                    type="email"
+                    required
+                    value={cvData.personal?.email}
+                    placeholder="sarah@example.com"
+                    onChange={(val) => updatePersonal('email', val)}
+                  />
+                  <Field
+                    label="Phone"
+                    type="tel"
+                    value={cvData.personal?.phone}
+                    placeholder="+1 (555) 123-4567"
+                    onChange={(val) => updatePersonal('phone', val)}
+                  />
+                </div>
+
+                <Field
+                  label="Location"
+                  value={cvData.personal?.location}
+                  placeholder="San Francisco, CA"
+                  onChange={(val) => updatePersonal('location', val)}
+                />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="Website / Portfolio"
+                    value={cvData.personal?.website}
+                    placeholder="https://sarah.dev"
+                    onChange={(val) => updatePersonal('website', val)}
+                  />
+                  <Field
+                    label="LinkedIn"
+                    value={cvData.personal?.linkedin}
+                    placeholder="linkedin.com/in/sarah"
+                    onChange={(val) => updatePersonal('linkedin', val)}
+                  />
+                </div>
+              </div>
+            )}
                   {/* 2. SUMMARY */}
-                  {secId === 'summary' && (
+                  {currentActiveSection === 'summary' && (
                     <div className="space-y-3">
                       <TextField
                         label="Professional Summary"
@@ -1242,7 +1260,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 3. EXPERIENCE */}
-                  {secId === 'experience' && (
+                  {currentActiveSection === 'experience' && (
                     <div className="space-y-3">
                       {(cvData.experience || []).map((exp, idx) => (
                         <ItemCard
@@ -1424,7 +1442,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 4. EDUCATION */}
-                  {secId === 'education' && (
+                  {currentActiveSection === 'education' && (
                     <div className="space-y-3">
                       {(cvData.education || []).map((edu, idx) => (
                         <ItemCard
@@ -1512,7 +1530,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 5. SKILLS */}
-                  {secId === 'skills' && (
+                  {currentActiveSection === 'skills' && (
                     <div className="space-y-3">
                       {(cvData.skills || []).map((skill, idx) => (
                         <div
@@ -1594,7 +1612,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 6. PROJECTS */}
-                  {secId === 'projects' && (
+                  {currentActiveSection === 'projects' && (
                     <div className="space-y-3">
                       {(cvData.projects || []).map((proj, idx) => (
                         <ItemCard
@@ -1698,7 +1716,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 7. CERTIFICATIONS */}
-                  {secId === 'certifications' && (
+                  {currentActiveSection === 'certifications' && (
                     <div className="space-y-3">
                       {(cvData.certifications || []).map((cert, idx) => (
                         <ItemCard
@@ -1767,7 +1785,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 8. LANGUAGES */}
-                  {secId === 'languages' && (
+                  {currentActiveSection === 'languages' && (
                     <div className="space-y-3">
                       {(cvData.languages || []).map((lang, idx) => (
                         <div
@@ -1836,7 +1854,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 9. AWARDS & HONORS */}
-                  {secId === 'awards' && (
+                  {currentActiveSection === 'awards' && (
                     <div className="space-y-3">
                       {(cvData.awards || []).map((awd, idx) => (
                         <ItemCard
@@ -1906,7 +1924,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 10. INTERESTS & HOBBIES */}
-                  {secId === 'interests' && (
+                  {currentActiveSection === 'interests' && (
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-1.5">
                         {(cvData.interests || []).map((tag, idx) => (
@@ -1975,7 +1993,7 @@ export default function LeftContentSidebar({
                   )}
 
                   {/* 11. REFERENCES */}
-                  {secId === 'references' && (
+                  {currentActiveSection === 'references' && (
                     <div className="space-y-3">
                       <p className="text-xs text-slate-500 italic">
                         Available references will appear on your CV. Many job seekers use "Available upon request".
@@ -1990,10 +2008,40 @@ export default function LeftContentSidebar({
                       />
                     </div>
                   )}
-                </div>
+          </div>
+
+          {/* Card Bottom Navigation (Previous / Next Tab) */}
+          <div className="flex items-center justify-between px-4 py-3 bg-slate-50/80 border-t border-slate-100">
+            {prevTabId ? (
+              <button
+                type="button"
+                onClick={() => handleSelectTab(prevTabId)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span>Prev: {getSectionTitle(prevTabId)}</span>
+              </button>
+            ) : (
+              <div />
+            )}
+
+            {nextTabId ? (
+              <button
+                type="button"
+                onClick={() => handleSelectTab(nextTabId)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-violet-600 hover:bg-violet-700 shadow-2xs transition-colors cursor-pointer"
+              >
+                <span>Next: {getSectionTitle(nextTabId)}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>All Sections Complete</span>
               </div>
-            );
-          })}
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

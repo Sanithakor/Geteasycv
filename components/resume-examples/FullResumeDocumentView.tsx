@@ -140,7 +140,7 @@ export default function FullResumeDocumentView({ example }: FullResumeDocumentVi
                 className="text-[11px] font-bold px-2 py-0.5 rounded-full"
                 style={{ background: '#C9AFE8', color: '#111111' }}
               >
-                100% Recruiter Approved
+                Recruiter-Friendly Layout
               </span>
             </div>
             <p className="text-xs text-[#666666]">

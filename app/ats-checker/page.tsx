@@ -8,13 +8,13 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 export const metadata: Metadata = {
   title: 'Free ATS Resume Checker & Format Scanner | GetEasyCV',
   description:
-    'Scan your resume against ATS algorithms to ensure 100% readability, keyword optimization, and correct formatting before applying for jobs.',
+    'Scan your resume against ATS readability standards to improve formatting, keyword optimization, and layout parseability before applying for jobs.',
   alternates: {
     canonical: `${baseUrl}/ats-checker`,
   },
   openGraph: {
     title: 'Free ATS Resume Checker & Format Scanner | GetEasyCV',
-    description: 'Scan your resume against ATS algorithms for instant feedback.',
+    description: 'Scan your resume against ATS readability standards for instant feedback.',
     url: `${baseUrl}/ats-checker`,
   },
 };
@@ -24,7 +24,7 @@ export default function ATSCheckerPage() {
     <>
       <ToolAppSchema
         name="Free ATS Resume Checker & Format Scanner"
-        description="Scan your resume against ATS algorithms to ensure 100% readability and keyword optimization."
+        description="Scan your resume against ATS readability standards to improve formatting and keyword optimization."
         url="/ats-checker"
       />
       <BreadcrumbSchema

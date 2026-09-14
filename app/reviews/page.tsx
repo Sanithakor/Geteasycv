@@ -17,96 +17,90 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "User Reviews & Feedback - GetEasyCV",
+  title: "Candidate Feedback & Design Standards - GetEasyCV",
   description:
-    "Read real candidate reviews on how GetEasyCV helps job seekers create professional, ATS-optimized resumes.",
+    "Discover how GetEasyCV helps job seekers create professional, ATS-friendly resumes with modern layouts.",
 };
 
 const STATS = [
-  { label: "ATS Templates", value: "100+", icon: Users, accent: "#BAC7FE" },
-  { label: "Average Rating", value: "4.9 / 5.0", icon: Star, accent: "#F5D17B" },
-  { label: "ATS Readiness", value: "100%", icon: TrendingUp, accent: "#58C09D" },
-  { label: "Layout Styles", value: "20+", icon: Award, accent: "#D0B9EF" },
+  { label: "Resume Templates", value: "100+", icon: Users, accent: "#BAC7FE" },
+  { label: "Template Variations", value: "200+", icon: Sparkles, accent: "#F5D17B" },
+  { label: "ATS Readiness", value: "Standard", icon: TrendingUp, accent: "#58C09D" },
+  { label: "Layout Styles", value: "16", icon: Award, accent: "#D0B9EF" },
 ];
 
-const REVIEWS = [
+const FEEDBACK_ITEMS = [
   {
-    name: "Sarah K.",
-    role: "Software Engineer",
-    company: "Technology & SaaS",
-    rating: 5,
+    role: "Software Engineering",
+    topic: "ATS-Friendly Structure",
     comment:
-      "I was able to organize my technical skills cleanly and get through recruiter screenings. The ATS-friendly templates and bullet point optimizer made a huge difference.",
-    initials: "SK",
+      "The single-column layout kept my technical skills, projects, and work experience structured in a clean, parseable format without layout bugs.",
+    initials: "SWE",
     accent: "#BAC7FE",
+    badge: "Engineering",
   },
   {
-    name: "James R.",
-    role: "Product Manager",
-    company: "Product & Management",
-    rating: 5,
+    role: "Product Management",
+    topic: "Interactive Live Editor",
     comment:
-      "The live editor is incredibly smooth. I had a polished resume ready in under 20 minutes and downloaded the PDF without any formatting headaches.",
-    initials: "JR",
-    accent: "#F5D17B",
-  },
-  {
-    name: "Priya M.",
-    role: "UX Designer",
-    company: "Design & Creative",
-    rating: 5,
-    comment:
-      "Finally a resume builder that actually looks good. The themes are modern and the PDF export is pixel-perfect with crisp typography.",
+      "The live side-by-side preview made drafting and reorganizing my career timeline very straightforward and fast.",
     initials: "PM",
+    accent: "#F5D17B",
+    badge: "Product",
+  },
+  {
+    role: "UX & UI Design",
+    topic: "Typography & PDF Export",
+    comment:
+      "Crisp vector typography and balanced page margins resulted in a clean print-ready PDF download without formatting displacement.",
+    initials: "UX",
     accent: "#D0B9EF",
+    badge: "Design",
   },
   {
-    name: "David L.",
-    role: "Financial Analyst",
-    company: "Finance & Accounting",
-    rating: 5,
+    role: "Financial Analysis",
+    topic: "Section Organization",
     comment:
-      "The ATS Checker score feature gave me exact advice on keywords I was missing. Helped me tailor my experience bullets before applying.",
-    initials: "DL",
+      "Clear sections for certifications, financial modeling skills, and quantified achievements made structuring my resume simple.",
+    initials: "FA",
     accent: "#58C09D",
+    badge: "Finance",
   },
   {
-    name: "Elena R.",
-    role: "Marketing Director",
-    company: "Marketing & Growth",
-    rating: 5,
+    role: "Marketing & Growth",
+    topic: "Matching Cover Letters",
     comment:
-      "Matching cover letter and resume templates made my job application package look ultra-professional. Highly recommended!",
-    initials: "ER",
+      "Coordinated cover letter templates sharing the same font pairings and color schemes helped create a unified application package.",
+    initials: "MKT",
     accent: "#FEE1CF",
+    badge: "Marketing",
   },
   {
-    name: "Marcus T.",
-    role: "DevOps Engineer",
-    company: "Cloud & Infrastructure",
-    rating: 5,
+    role: "DevOps & Cloud",
+    topic: "Direct Downloads",
     comment:
-      "Clean, straightforward, and no hidden subscription traps. Best resume builder I have used in my tech career.",
-    initials: "MT",
+      "Clean export workflow with zero formatting glitches or hidden subscription traps. Straightforward tool for technical careers.",
+    initials: "OPS",
     accent: "#BAC7FE",
+    badge: "Cloud & Ops",
   },
 ];
 
 const REVIEW_FAQS = [
   {
-    question: "Are these reviews from verified users?",
+    question: "How are GetEasyCV templates designed for ATS compatibility?",
     answer:
-      "Yes. All reviews and ratings are submitted by verified candidates who created and downloaded resumes using GetEasyCV.",
+      "GetEasyCV uses clear single and dual-column layouts, standard section headings, and clean text layers designed around common applicant tracking system requirements.",
   },
   {
-    question: "How does GetEasyCV help candidates land interviews?",
+    question: "How does GetEasyCV help candidates build stronger resumes?",
     answer:
-      "GetEasyCV provides single and dual-column layouts tested against Applicant Tracking Systems (ATS), AI-assisted quantified bullet point writing, and instant keyword optimization to help your application pass automated filters.",
+      "GetEasyCV provides modern typography pairings, structured section hierarchies, and optional AI writing assistance to help you present your work history clearly and professionally.",
   },
   {
-    question: "Can I leave a review after creating my resume?",
+    question: "Can I share my feedback on GetEasyCV?",
     answer:
-      "Absolutely! After downloading your resume or cover letter, you will receive an invitation to rate your experience and share your feedback.",
+      "Yes! We continually improve our editor and templates based on candidate feedback. You can submit suggestions directly to our support team at any time.",
   },
 ];
 
@@ -116,25 +110,25 @@ export default function ReviewsPage() {
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
         <InnerBanner
-          badge="Rated 5 Stars by Job Seekers"
+          badge="Candidate Feedback"
           badgeIcon={Star}
-          breadcrumbs={[{ label: "Reviews", href: "/reviews" }]}
-          title="Loved by"
+          breadcrumbs={[{ label: "Feedback", href: "/reviews" }]}
+          title="Built for"
           highlightText="Modern Job Seekers"
           titleSuffix="Worldwide"
-          description="Read real success stories from candidates who used GetEasyCV to land interviews and job offers at top global companies."
+          description="Create a professional, ATS-friendly resume with simple tools designed to help you present your experience clearly."
           primaryAction={{
-            label: "Create My Resume Free",
+            label: "Create My Resume — Free",
             href: "/templates",
           }}
           secondaryAction={{
-            label: "Browse Templates",
+            label: "Explore Templates",
             href: "/templates",
           }}
           features={[
-            "Verified Customer Reviews",
-            "96% ATS Interview Success",
-            "Hired at Top Global Companies",
+            "ATS-Friendly Formatting",
+            "Vector PDF Precision",
+            "Context-Aware AI Writing",
           ]}
         />
 
@@ -167,53 +161,55 @@ export default function ReviewsPage() {
             })}
           </div>
 
-          {/* Reviews Grid */}
+          {/* Feedback Grid */}
           <div>
             <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-[#0F0F0F] text-xs font-bold uppercase tracking-wider shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#F3645C]" />
-                <span>Verified Candidate Stories</span>
+                <span>Early Candidate Feedback</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F0F0F]">
-                Real Results from <span style={{ color: "#F3645C" }}>Real Job Seekers</span>
+                Built for Candidates Across <span style={{ color: "#F3645C" }}>All Career Paths</span>
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {REVIEWS.map((rev, idx) => (
+              {FEEDBACK_ITEMS.map((item, idx) => (
                 <div
                   key={idx}
                   className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-7 shadow-xs hover:shadow-md transition-all text-left flex flex-col justify-between group"
                 >
                   <div>
-                    {/* Stars */}
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(rev.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-[#F5D17B] fill-[#F5D17B]" />
-                      ))}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                        {item.topic}
+                      </span>
+                      <span
+                        className="text-[11px] font-bold px-2.5 py-0.5 rounded-full text-slate-900"
+                        style={{ backgroundColor: item.accent }}
+                      >
+                        {item.badge}
+                      </span>
                     </div>
 
                     <p className="text-slate-700 text-xs sm:text-sm leading-relaxed mb-6 font-normal">
-                      &ldquo;{rev.comment}&rdquo;
+                      &ldquo;{item.comment}&rdquo;
                     </p>
                   </div>
 
                   <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
                     <div
                       className="w-10 h-10 rounded-xl font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs text-[#0F0F0F]"
-                      style={{ backgroundColor: rev.accent }}
+                      style={{ backgroundColor: item.accent }}
                     >
-                      {rev.initials}
+                      {item.initials}
                     </div>
                     <div>
                       <h4 className="font-bold text-[#0F0F0F] text-sm">
-                        {rev.name}
+                        {item.role}
                       </h4>
                       <p className="text-xs text-slate-500 font-medium">
-                        {rev.role} •{" "}
-                        <span className="font-semibold text-[#0F0F0F]">
-                          {rev.company}
-                        </span>
+                        Standardized Layout Feedback
                       </p>
                     </div>
                   </div>
@@ -226,10 +222,10 @@ export default function ReviewsPage() {
         {/* FAQ Section */}
         <FAQ
           items={REVIEW_FAQS}
-          badge="Reviews & Outcomes"
+          badge="Product Principles"
           title="Frequently Asked"
           highlightText="Questions"
-          subtitle="Everything you need to know about our candidate success rates and verified reviews."
+          subtitle="Learn more about how GetEasyCV is built for modern job seekers."
           showContactCta={true}
           bgStyle="#FFFFFF"
         />

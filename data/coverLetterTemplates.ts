@@ -327,7 +327,7 @@ export const coverLetterTemplates: CoverLetterTemplate[] = [
     category: 'ats',
     categoryLabel: 'ATS Friendly',
     layoutStyle: 'nordic-clean',
-    description: 'Engineered specifically for automated ATS algorithms with crisp linear hierarchy and 100% parseable text formatting.',
+    description: 'Engineered specifically for automated ATS algorithms with crisp linear hierarchy and clean parseable text formatting.',
     accentColor: '#059669',
     colorOptions: [
       { name: 'Emerald Green', hex: '#059669' },

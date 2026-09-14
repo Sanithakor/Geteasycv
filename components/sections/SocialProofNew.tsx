@@ -3,65 +3,46 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Star,
-  TrendingUp,
-  Users,
-  Clock,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
-  Zap,
-  FileCheck,
-  Award,
 } from "lucide-react";
 
-const TESTIMONIALS = [
+const FEEDBACK_CARDS = [
   {
-    name: "Sarah K.",
-    role: "Software Engineer",
-    company: "Technology",
-    quote: "The ATS-friendly templates parsed cleanly without formatting bugs. Highly recommend!",
-    avatar: "SK",
+    role: "Engineering & Technical",
+    title: "Clean ATS-Friendly Structure",
+    desc: "Single-column and dual-column layouts structured to parse cleanly without unreadable layers or table displacement.",
+    badge: "Tech & Dev",
     bg: "#BAC7FE",
   },
   {
-    name: "James R.",
-    role: "Product Manager",
-    company: "Management",
-    quote: "Built my resume in minutes. The live side-by-side editor and PDF export are seamless.",
-    avatar: "JR",
+    role: "Product & Management",
+    title: "Side-by-Side Live Editor",
+    desc: "Real-time editor makes organizing career achievements, executive summaries, and milestones fast and straightforward.",
+    badge: "Leadership",
     bg: "#D0B9EF",
   },
   {
-    name: "Priya M.",
-    role: "UX Designer",
-    company: "Design",
-    quote: "Beautiful templates and crisp vector PDF download. Exactly what I needed for my portfolio.",
-    avatar: "PM",
+    role: "Design & Creative Fields",
+    title: "Vector PDF Precision",
+    desc: "Modern typography pairings, balanced margins, and crisp print-ready vector PDF downloads suited for modern portfolios.",
+    badge: "Design",
     bg: "#FEE1CF",
   },
   {
-    name: "Michael T.",
-    role: "Data Scientist",
-    company: "Analytics",
-    quote: "AI bullet suggestions helped me articulate my achievements and technical impact much better.",
-    avatar: "MT",
+    role: "Career Changers & Freshers",
+    title: "AI Writing Assistance",
+    desc: "Context-aware bullet suggestions to help articulate day-to-day responsibilities and relevant academic projects clearly.",
+    badge: "Early Career",
     bg: "#F5D17B",
   },
   {
-    name: "Lisa W.",
-    role: "Marketing Manager",
-    company: "Marketing",
-    quote: "Professional results without subscription traps or broken formatting.",
-    avatar: "LW",
+    role: "Finance & Operations",
+    title: "Structured Document Flow",
+    desc: "Standardized sections that keep verified achievements, metrics, and certifications cleanly organized for hiring managers.",
+    badge: "Operations",
     bg: "#DDF4EA",
   },
-];
-
-const STATS = [
-  { icon: ShieldCheck, value: "100%", label: "ATS Readable", bg: "#BAC7FE", iconColor: "#0F0F0F" },
-  { icon: FileCheck, value: "100+", label: "ATS Templates", bg: "#F5D17B", iconColor: "#0F0F0F" },
-  { icon: Zap, value: "Instant", label: "Vector PDF Export", bg: "#58C09D", iconColor: "#FFFFFF" },
-  { icon: Award, value: "Recruiter", label: "Approved Formats", bg: "#D0B9EF", iconColor: "#0F0F0F" },
 ];
 
 export default function SocialProofNew() {
@@ -86,7 +67,7 @@ export default function SocialProofNew() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, TESTIMONIALS.length - visibleCount);
+  const maxIndex = Math.max(0, FEEDBACK_CARDS.length - visibleCount);
 
   useEffect(() => {
     if (isPaused) return;
@@ -124,29 +105,6 @@ export default function SocialProofNew() {
   return (
     <section className="py-16 sm:py-24 font-sans" style={{ background: "#F8F8F6" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-16">
-          {STATS.map(({ icon: Icon, value, label, bg, iconColor }) => (
-            <div
-              key={label}
-              className="bg-white rounded-2xl p-5 sm:p-6 border text-center hover:shadow-lg transition-all shadow-2xs"
-              style={{ borderColor: "rgba(15,15,15,0.08)" }}
-            >
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-xs"
-                style={{ background: bg }}
-              >
-                <Icon className="w-6 h-6" style={{ color: iconColor }} />
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold mb-1 tracking-tight text-[#0F0F0F]">
-                {value}
-              </div>
-              <div className="text-xs sm:text-sm font-medium text-slate-600">
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
-
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-4">
           <div className="space-y-3 max-w-2xl">
             <div
@@ -154,13 +112,13 @@ export default function SocialProofNew() {
               style={{ borderColor: "rgba(15,15,15,0.08)", color: "#0F0F0F" }}
             >
               <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-              <span>USER FEEDBACK</span>
+              <span>BUILT FOR CANDIDATES</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F]">
-              Loved by Job Seekers
+              Built for Modern Job Seekers
             </h2>
             <p className="text-sm sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
-              Designed for career growth and ATS compliance.
+              Create a professional, ATS-friendly resume with simple tools designed to help you present your experience clearly.
             </p>
           </div>
 
@@ -196,9 +154,9 @@ export default function SocialProofNew() {
               transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
             }}
           >
-            {TESTIMONIALS.map((t, idx) => (
+            {FEEDBACK_CARDS.map((t, idx) => (
               <div
-                key={`${t.name}-${idx}`}
+                key={`${t.role}-${idx}`}
                 className="shrink-0 px-3"
                 style={{ width: `${100 / visibleCount}%` }}
               >
@@ -209,14 +167,14 @@ export default function SocialProofNew() {
                   <div>
                     <div className="flex items-center gap-3.5 mb-4">
                       <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-[#0F0F0F] font-bold text-sm shrink-0 shadow-2xs group-hover:scale-105 transition-transform"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-[#0F0F0F] font-bold text-xs shrink-0 shadow-2xs group-hover:scale-105 transition-transform"
                         style={{ background: t.bg }}
                       >
-                        {t.avatar}
+                        ✓
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-base text-slate-900 truncate">
-                          {t.name}
+                          {t.title}
                         </p>
                         <p className="text-xs text-slate-500 font-medium truncate">
                           {t.role}
@@ -224,9 +182,9 @@ export default function SocialProofNew() {
                       </div>
                     </div>
 
-                    <blockquote className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal mb-6 line-clamp-3">
-                      &ldquo;{t.quote}&rdquo;
-                    </blockquote>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-6 line-clamp-3">
+                      {t.desc}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
@@ -234,16 +192,11 @@ export default function SocialProofNew() {
                       className="text-xs font-bold px-3 py-1 rounded-lg"
                       style={{ background: t.bg, color: "#0F0F0F" }}
                     >
-                      {t.company}
+                      {t.badge}
                     </span>
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 text-amber-400 fill-amber-400"
-                        />
-                      ))}
-                    </div>
+                    <span className="text-xs font-semibold text-slate-400">
+                      Standardized Format
+                    </span>
                   </div>
                 </div>
               </div>

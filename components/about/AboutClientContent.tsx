@@ -54,9 +54,9 @@ export default function AboutClientContent() {
             href: "/ats-checker",
           }}
           features={[
-            "100% Vector PDF Fidelity",
+            "Vector PDF Precision",
             "Privacy-First Data Architecture",
-            "Tested on Fortune 500 ATS Parsers",
+            "Engineered for Standard ATS Parsers",
           ]}
         />
 
@@ -72,13 +72,13 @@ export default function AboutClientContent() {
                   color: "text-slate-900",
                 },
                 {
-                  metric: "100%",
-                  label: "ATS Compatible Layouts",
-                  desc: "Verified on Workday, Greenhouse & Lever",
+                  metric: "ATS",
+                  label: "Friendly Layouts",
+                  desc: "Designed around common ATS parsing requirements",
                   color: "text-emerald-600",
                 },
                 {
-                  metric: "20",
+                  metric: "16",
                   label: "Professional Layouts",
                   desc: "Modular designs for all career trajectories",
                   color: "text-violet-600",
@@ -113,10 +113,9 @@ export default function AboutClientContent() {
         <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold uppercase tracking-wider mb-4">
-              <Target className="w-3.5 h-3.5" />
-              <span>The Problem in Job Search</span>
+              <span>Why We Started GetEasyCV</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               Why Traditional Resume Builders{' '}
               <span className="bg-gradient-to-r from-rose-500 to-violet-600 bg-clip-text text-transparent">
                 Fail Job Seekers
@@ -186,10 +185,10 @@ export default function AboutClientContent() {
                 <div className="space-y-4 text-xs sm:text-sm text-slate-700">
                   {[
                     "Honest Transparent Access: Truly build and download real vector PDF resumes with zero surprise traps.",
-                    "Pure Vector PDF Architecture: 300 DPI text layer with embedded fonts and guaranteed selectable text.",
+                    "Pure Vector PDF Architecture: 300 DPI text layer with embedded fonts and selectable text.",
                     "Smart Pagination Engine: Mathematically calculated spacing prevents awkward orphan headers automatically.",
-                    "Recruiter-Approved Formats: Verified single & two-column layouts tested against Workday, Greenhouse & Lever.",
-                    "Strict Privacy-First Security: You own 100% of your career data. We never sell or share user profiles.",
+                    "Recruiter-Approved Formats: Clean single & two-column layouts built around common ATS parsing requirements.",
+                    "Strict Privacy-First Security: You own your career data. We never sell or share user profiles.",
                   ].map((perk, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -200,7 +199,7 @@ export default function AboutClientContent() {
               </div>
 
               <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-bold">
-                Result: Professional, recruiter-ready resumes that pass ATS parsing algorithms with 98.6% accuracy.
+                Result: Professional, recruiter-ready resumes designed for high readability on applicant tracking systems.
               </div>
             </div>
           </div>

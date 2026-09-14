@@ -41,7 +41,7 @@ export default function AtsCheckerClientContent() {
           title="Pass Applicant Tracking Systems"
           highlightText="(ATS)"
           titleSuffix="with Confidence"
-          description="Scan your resume against ATS algorithms to ensure 100% readability, keyword optimization, and correct formatting before you apply."
+          description="Scan your resume against ATS readability standards to improve section formatting, keyword alignment, and parseability before you apply."
           primaryAction={{
             label: "Create ATS-Ready Resume",
             href: "/templates",
@@ -51,7 +51,7 @@ export default function AtsCheckerClientContent() {
             href: "/ai-features",
           }}
           features={[
-            "100% ATS Readable",
+            "ATS-Friendly Layouts",
             "Keyword Optimization",
             "Instant Parser Feedback",
           ]}
@@ -100,7 +100,7 @@ export default function AtsCheckerClientContent() {
                       Scan Summary Report
                     </h4>
                     <p className="text-xs text-slate-500 font-medium">
-                      Scanned against top recruiters ATS standards (Workday, Greenhouse, Lever)
+                      Scanned against standard recruiter ATS formatting guidelines
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

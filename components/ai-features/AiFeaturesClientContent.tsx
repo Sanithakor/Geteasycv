@@ -66,17 +66,17 @@ const DEMO_PROMPTS = [
   {
     role: "Senior Full Stack Engineer",
     original: "Worked on React and Node.js web applications for company clients.",
-    improved: "Architected and deployed high-concurrency microservices in Node.js and React, improving API throughput by 40% and serving 1.5M+ active users.",
+    improved: "Optimized API performance and improved application scalability across distributed Node.js services.",
   },
   {
     role: "Product Marketing Manager",
     original: "Responsible for managing social media accounts and marketing campaigns.",
-    improved: "Spearheaded multi-channel acquisition campaign across paid search and social, driving 25,000+ new user signups and reducing CAC by 18%.",
+    improved: "Managed sales initiatives and improved pipeline performance through targeted multi-channel campaign optimization.",
   },
   {
     role: "Financial Analyst",
     original: "Prepared monthly accounting reports and checked budget spreadsheets.",
-    improved: "Directed monthly financial auditing for 12 corporate entities, identifying $65K in operational cost redundancies while ensuring 100% GAAP compliance.",
+    improved: "Directed monthly financial auditing across corporate accounts, streamlining reporting workflows and ensuring full regulatory compliance.",
   },
 ];
 
@@ -107,7 +107,7 @@ export default function AiFeaturesClientContent() {
           title="Supercharge Your Resume with"
           highlightText="AI Intelligence"
           titleSuffix="in Seconds"
-          description="Write recruiter-ready bullet points, tailor your summary to job descriptions, and pass ATS scans automatically with GetEasyCV AI."
+          description="Write recruiter-ready bullet points, tailor your summary to job descriptions, and create ATS-friendly resumes with GetEasyCV AI."
           primaryAction={{
             label: "Try AI Resume Builder Free",
             href: "/templates",
@@ -119,7 +119,7 @@ export default function AiFeaturesClientContent() {
           features={[
             "Instant Bullet Generator",
             "Job Description Matcher",
-            "100% ATS Compatible",
+            "ATS-Friendly",
           ]}
         />
 
@@ -178,7 +178,7 @@ export default function AiFeaturesClientContent() {
               </div>
             </div>
 
-            <div className="pt-2 text-center">
+            <div className="pt-2 text-center space-y-3">
               <Link
                 href="/editor"
                 className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#0F0F0F] hover:bg-[#262626] text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
@@ -186,6 +186,10 @@ export default function AiFeaturesClientContent() {
                 <span>Use AI Builder Now</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
+              
+              <p className="text-[11px] text-slate-500 font-normal max-w-xl mx-auto leading-relaxed">
+                AI-generated content is provided as a starting point. Always review and verify facts, metrics, achievements, and qualifications before adding them to your resume.
+              </p>
             </div>
           </div>
 
