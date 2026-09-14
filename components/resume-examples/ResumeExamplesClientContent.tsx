@@ -345,7 +345,7 @@ export default function ResumeExamplesClientContent() {
 
         <ReadyToBuild
           title="Ready to Build Your Tailored Resume?"
-          subtitle="Apply these recruiter-tested bullets to 150+ ATS-optimized templates today."
+          subtitle="Apply these recruiter-tested bullets to ATS-optimized templates today."
           buttonText="Start Building Free"
           buttonHref="/editor"
         />

@@ -22,7 +22,7 @@ export const ALL_FAQS: FAQItem[] = [
     category: 'Getting Started',
     question: 'How does GetEasyCV work?',
     answer:
-      'GetEasyCV lets you build a professional resume in 4 simple steps: choose from 150+ recruiter-tested templates, input your work history and skills (or use AI suggestions to generate them), customize colors and layout with real-time preview, and export a clean, ATS-compliant PDF in seconds.',
+      'GetEasyCV lets you build a professional resume in 4 simple steps: choose from 200+ recruiter-tested template variations, input your work history and skills (or use AI suggestions to generate them), customize colors and layout with real-time preview, and export a clean, ATS-compliant PDF in seconds.',
   },
   {
     id: 'faq-2',
@@ -132,7 +132,7 @@ export const PRICING_FAQS: FAQItem[] = [
   {
     question: 'What is included in the ₹999 Lifetime plan?',
     answer:
-      'Lifetime gives you permanent unlimited access to create as many resumes as you want, access all 150+ current and future premium templates, cover letters, and AI features forever with a single payment.',
+      'Lifetime gives you permanent unlimited access to create as many resumes as you want, access all current and future premium templates, cover letters, and AI features forever with a single payment.',
   },
   {
     question: 'Are there any hidden fees or auto-renewals on one-time plans?',

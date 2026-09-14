@@ -24,7 +24,7 @@ export default function PricingPage() {
     <>
       <ProductSchema
         name="GetEasyCV Premium Resume Plan"
-        description="Access 100+ ATS resume templates, AI bullet optimization, unlimited PDF downloads, and cover letter builder."
+        description="Access 200+ ATS resume template variations, AI bullet optimization, unlimited PDF downloads, and cover letter builder."
         price="0"
         url="/pricing"
       />

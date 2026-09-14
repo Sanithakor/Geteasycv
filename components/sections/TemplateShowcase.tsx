@@ -170,7 +170,7 @@ export default function TemplateShowcase() {
           <Link href="/templates"
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold transition-colors group"
             style={{ color: '#F3645C' }}>
-            Explore all 150+ Templates
+            Explore All Templates
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

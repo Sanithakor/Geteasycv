@@ -17,33 +17,33 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Customer Reviews & Success Stories - GetEasyCV",
+  title: "User Reviews & Feedback - GetEasyCV",
   description:
-    "See how thousands of job seekers landed interviews at top tech and enterprise companies using GetEasyCV.",
+    "Read real candidate reviews on how GetEasyCV helps job seekers create professional, ATS-optimized resumes.",
 };
 
 const STATS = [
-  { label: "Resumes Created", value: "50,000+", icon: Users, accent: "#BAC7FE" },
-  { label: "TrustScore Rating", value: "4.9 / 5.0", icon: Star, accent: "#F5D17B" },
-  { label: "ATS Interview Rate", value: "96%", icon: TrendingUp, accent: "#58C09D" },
-  { label: "Recruiter Templates", value: "150+", icon: Award, accent: "#D0B9EF" },
+  { label: "ATS Templates", value: "100+", icon: Users, accent: "#BAC7FE" },
+  { label: "Average Rating", value: "4.9 / 5.0", icon: Star, accent: "#F5D17B" },
+  { label: "ATS Readiness", value: "100%", icon: TrendingUp, accent: "#58C09D" },
+  { label: "Layout Styles", value: "20+", icon: Award, accent: "#D0B9EF" },
 ];
 
 const REVIEWS = [
   {
     name: "Sarah K.",
     role: "Software Engineer",
-    company: "Hired at Stripe",
+    company: "Technology & SaaS",
     rating: 5,
     comment:
-      "I landed 3 interviews in my first week using GetEasyCV. The ATS-friendly templates and bullet point optimizer made all the difference in getting past initial screening.",
+      "I was able to organize my technical skills cleanly and get through recruiter screenings. The ATS-friendly templates and bullet point optimizer made a huge difference.",
     initials: "SK",
     accent: "#BAC7FE",
   },
   {
     name: "James R.",
     role: "Product Manager",
-    company: "Hired at Notion",
+    company: "Product & Management",
     rating: 5,
     comment:
       "The live editor is incredibly smooth. I had a polished resume ready in under 20 minutes and downloaded the PDF without any formatting headaches.",
@@ -53,7 +53,7 @@ const REVIEWS = [
   {
     name: "Priya M.",
     role: "UX Designer",
-    company: "Hired at Figma",
+    company: "Design & Creative",
     rating: 5,
     comment:
       "Finally a resume builder that actually looks good. The themes are modern and the PDF export is pixel-perfect with crisp typography.",
@@ -63,17 +63,17 @@ const REVIEWS = [
   {
     name: "David L.",
     role: "Financial Analyst",
-    company: "Hired at Morgan Stanley",
+    company: "Finance & Accounting",
     rating: 5,
     comment:
-      "The ATS Checker score feature gave me exact advice on keywords I was missing. Upgraded my score from 72 to 96 before applying.",
+      "The ATS Checker score feature gave me exact advice on keywords I was missing. Helped me tailor my experience bullets before applying.",
     initials: "DL",
     accent: "#58C09D",
   },
   {
     name: "Elena R.",
     role: "Marketing Director",
-    company: "Hired at HubSpot",
+    company: "Marketing & Growth",
     rating: 5,
     comment:
       "Matching cover letter and resume templates made my job application package look ultra-professional. Highly recommended!",
@@ -83,10 +83,10 @@ const REVIEWS = [
   {
     name: "Marcus T.",
     role: "DevOps Engineer",
-    company: "Hired at AWS",
+    company: "Cloud & Infrastructure",
     rating: 5,
     comment:
-      "Clean, straightforward, and no hidden subscription traps. Best resume builder I have used in 10 years of my tech career.",
+      "Clean, straightforward, and no hidden subscription traps. Best resume builder I have used in my tech career.",
     initials: "MT",
     accent: "#BAC7FE",
   },
@@ -116,11 +116,11 @@ export default function ReviewsPage() {
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F] font-sans">
         <InnerBanner
-          badge="TrustScore 4.9 / 5.0 (5,000+ Reviews)"
+          badge="Rated 5 Stars by Job Seekers"
           badgeIcon={Star}
           breadcrumbs={[{ label: "Reviews", href: "/reviews" }]}
-          title="Loved by Over"
-          highlightText="50,000+ Job Seekers"
+          title="Loved by"
+          highlightText="Modern Job Seekers"
           titleSuffix="Worldwide"
           description="Read real success stories from candidates who used GetEasyCV to land interviews and job offers at top global companies."
           primaryAction={{

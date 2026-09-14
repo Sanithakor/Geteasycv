@@ -1,4 +1,5 @@
 import { prisma, safeDbQuery } from '@/lib/db';
+import { PRICING_PLANS, PricingPlan } from '@/lib/config/pricing';
 
 export interface PlanItem {
   id: string;
@@ -19,77 +20,32 @@ export interface PlanItem {
   sortOrder: number;
 }
 
+function mapPricingPlanToPlanItem(p: PricingPlan): PlanItem {
+  return {
+    id: p.id,
+    name: p.name,
+    price: p.rawPrice,
+    currency: p.currency,
+    billingPeriod: p.billingPeriod,
+    description: p.description,
+    features: p.features,
+    popular: Boolean(p.popular),
+    badge: p.badge || null,
+    isActive: p.isActive,
+    maxResumes: p.maxResumes,
+    canUseAI: p.canUseAI,
+    canUsePremiumTemplates: p.canUsePremiumTemplates,
+    canExportPDF: p.canExportPDF,
+    canExportImages: p.canExportImages,
+    sortOrder: p.sortOrder,
+  };
+}
+
 export const DEFAULT_PLANS: PlanItem[] = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: 49,
-    currency: '₹',
-    billingPeriod: 'one-time payment',
-    description: 'Perfect for quick single resume creation.',
-    features: [
-      '1 CV Creation',
-      'High-resolution PDF download',
-      'Access to core templates',
-      'No recurring payment',
-    ],
-    popular: false,
-    badge: null,
-    isActive: true,
-    maxResumes: 1,
-    canUseAI: false,
-    canUsePremiumTemplates: false,
-    canExportPDF: true,
-    canExportImages: false,
-    sortOrder: 1,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 199,
-    currency: '₹',
-    billingPeriod: 'month',
-    description: 'For active job seekers looking to maximize interviews.',
-    features: [
-      'Unlimited CVs & Downloads',
-      'All premium templates',
-      'PDF, PNG, JPG Exports',
-      'AI Resume Bullet Rewriter',
-      'Cancel anytime',
-    ],
-    popular: true,
-    badge: 'MOST POPULAR',
-    isActive: true,
-    maxResumes: -1,
-    canUseAI: true,
-    canUsePremiumTemplates: true,
-    canExportPDF: true,
-    canExportImages: true,
-    sortOrder: 2,
-  },
-  {
-    id: 'lifetime',
-    name: 'Lifetime',
-    price: 999,
-    currency: '₹',
-    billingPeriod: 'one-time payment',
-    description: 'Permanent access for serious career growth.',
-    features: [
-      'Everything in Pro',
-      'Lifetime Unlimited Access',
-      'Future Premium Templates',
-      'Priority Customer Support',
-    ],
-    popular: false,
-    badge: 'BEST VALUE',
-    isActive: true,
-    maxResumes: -1,
-    canUseAI: true,
-    canUsePremiumTemplates: true,
-    canExportPDF: true,
-    canExportImages: true,
-    sortOrder: 3,
-  },
+  mapPricingPlanToPlanItem(PRICING_PLANS.free),
+  mapPricingPlanToPlanItem(PRICING_PLANS.starter),
+  mapPricingPlanToPlanItem(PRICING_PLANS.pro),
+  mapPricingPlanToPlanItem(PRICING_PLANS.premium),
 ];
 
 let inMemoryPlans: PlanItem[] = [...DEFAULT_PLANS];

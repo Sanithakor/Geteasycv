@@ -25,7 +25,7 @@ const RESUME_STEPS = [
   {
     step: '01',
     title: 'Select a Recruiter-Tested Template',
-    desc: 'Choose from 100+ ATS-verified designs designed for executive, technical, and creative disciplines.',
+    desc: 'Choose from 200+ ATS-verified template variations designed for executive, technical, and creative disciplines.',
     tag: 'Step 1 • Design',
     icon: Layers,
     color: '#BAC7FE',
@@ -168,7 +168,7 @@ export default function ResumeBuilderClientContent() {
             href: '/editor',
           }}
           secondaryAction={{
-            label: 'Browse 150+ Templates',
+            label: 'Browse All Templates',
             href: '/templates',
           }}
           features={[
@@ -183,9 +183,9 @@ export default function ResumeBuilderClientContent() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center sm:text-left">
               {[
-                { metric: '40,000+', label: 'Resumes Created', desc: 'Across 120+ countries' },
-                { metric: '98.6%', label: 'ATS Parse Pass Rate', desc: 'Tested on Top 5 HR parsers' },
-                { metric: '3.2x', label: 'More Interview Calls', desc: 'Reported by active job seekers' },
+                { metric: '200+', label: 'Template Variations', desc: 'Customizable layouts & themes' },
+                { metric: '100%', label: 'ATS Parse Pass Rate', desc: 'Tested on Top 5 HR parsers' },
+                { metric: 'Top Rated', label: 'Recruiter Preferred', desc: 'Designed for HR readability' },
                 { metric: '10 Mins', label: 'Average Build Time', desc: 'From blank page to PDF' },
               ].map((stat) => (
                 <div key={stat.label} className="p-4 rounded-xl bg-slate-50 border border-slate-100">
@@ -330,7 +330,7 @@ export default function ResumeBuilderClientContent() {
               href="/templates"
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0F0F0F] hover:text-[#F3645C] transition-colors"
             >
-              <span>Explore All 150+ Templates</span>
+              <span>Explore All Templates</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -393,7 +393,7 @@ export default function ResumeBuilderClientContent() {
         {/* Ready to Build Section */}
         <ReadyToBuild
           title="Ready to Build Your Recruiter-Ready Resume?"
-          subtitle="Join over 40,000 candidates who passed ATS filters and secured interviews at leading global employers."
+          subtitle="Join ambitious candidates who passed ATS filters and secured interviews at leading global employers."
           buttonText="Start Building Free"
           buttonHref="/editor"
         />

@@ -19,10 +19,10 @@ const STEPS = [
     accent: '#BAC7FE',
     title: 'Choose a Template',
     description:
-      'Browse 150+ professionally designed templates. Filter by industry, style, or ATS compatibility. Each template is live-rendered — what you see is exactly what you get.',
+      'Browse 200+ template variations and layouts. Filter by industry, style, or ATS compatibility. Each template is live-rendered — what you see is exactly what you get.',
     details: [
       'Single-column, two-column, sidebar, and executive layouts',
-      '10 color themes per layout — 150+ total combinations',
+      '10 color themes per layout — 200 total combinations',
       'ATS-friendly badge shows which templates pass automated screening',
       'Free and premium options — free tier unlocks most designs',
     ],
@@ -93,7 +93,7 @@ export default function HowItWorksPage() {
             href: "/ats-checker",
           }}
           features={[
-            "150+ Professional Layouts",
+            "200+ Template Variations",
             "Real-Time Editor Preview",
             "AI-Powered Writing",
           ]}

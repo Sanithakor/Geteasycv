@@ -18,12 +18,12 @@ interface ReadyToBuildProps {
 
 export default function ReadyToBuild({
   title = "Ready to Build Your Perfect Resume?",
-  subtitle = "Join over 40,000 ambitious professionals who landed interviews at Google, Amazon, Microsoft, and leading companies.",
+  subtitle = "Join ambitious professionals who landed interviews at Google, Amazon, Microsoft, and leading companies.",
   buttonText = "Create My Resume Now",
   buttonHref = "/templates",
-  secondaryButtonText = "Explore 150+ Templates",
+  secondaryButtonText = "Explore All Templates",
   secondaryButtonHref = "/templates",
-  badgeText = "4.9/5 Rating by 40,000+ Job Seekers",
+  badgeText = "Rated 5 Stars by Job Seekers",
   imageSrc = "/images/cta-rocket-perfect.png",
   containerBg = "#F8F9FA",
 }: ReadyToBuildProps) {
@@ -171,12 +171,12 @@ export default function ReadyToBuild({
               <div className="pt-2 flex items-center justify-center lg:justify-start gap-3">
                 <img
                   src="/images/cta-avatars.png"
-                  alt="40,000+ happy job seekers"
+                  alt="Happy job seekers"
                   className="h-8 w-auto object-contain"
                 />
                 <div className="h-6 w-[1px] bg-slate-200" />
                 <div className="text-left text-xs leading-tight">
-                  <span className="font-bold text-slate-800">Trusted by 40,000+ job seekers</span>
+                  <span className="font-bold text-slate-800">Trusted by ambitious job seekers</span>
                   <br />
                   <span className="text-[11px] text-slate-500">to build a brighter future</span>
                 </div>

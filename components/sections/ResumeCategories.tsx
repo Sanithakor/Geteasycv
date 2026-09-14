@@ -35,7 +35,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'business',
     name: 'Business & Management',
-    count: '120+ Templates',
+    count: 'ATS-Friendly',
     description: 'Executive leaders, operations, strategy consultants & business analysts',
     icon: Briefcase,
     query: 'business',
@@ -46,7 +46,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'technology',
     name: 'Tech & Software',
-    count: '150+ Templates',
+    count: 'ATS-Friendly',
     description: 'Full-stack engineers, cloud architects, DevOps & technical team leads',
     icon: Code2,
     query: 'technology',
@@ -57,7 +57,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'healthcare',
     name: 'Healthcare & Medicine',
-    count: '90+ Templates',
+    count: 'ATS-Friendly',
     description: 'Physicians, registered nurses, therapists & clinical care specialists',
     icon: HeartPulse,
     query: 'healthcare',
@@ -68,7 +68,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'finance',
     name: 'Finance & Banking',
-    count: '110+ Templates',
+    count: 'ATS-Friendly',
     description: 'Financial analysts, chartered accountants, bankers & risk auditors',
     icon: CircleDollarSign,
     query: 'finance',
@@ -79,7 +79,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'marketing',
     name: 'Marketing & Growth',
-    count: '100+ Templates',
+    count: 'ATS-Friendly',
     description: 'Growth marketers, content strategists, SEO experts & brand directors',
     icon: Megaphone,
     query: 'marketing',
@@ -90,7 +90,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'engineering',
     name: 'Engineering & Hardware',
-    count: '130+ Templates',
+    count: 'ATS-Friendly',
     description: 'Mechanical, electrical, civil, aerospace & robotics engineers',
     icon: Wrench,
     query: 'engineering',
@@ -101,7 +101,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'creative',
     name: 'Design & Creative',
-    count: '90+ Templates',
+    count: 'ATS-Friendly',
     description: 'UI/UX designers, art directors, 3D illustrators & brand copywriters',
     icon: Palette,
     query: 'creative',
@@ -112,7 +112,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'sales',
     name: 'Sales & Business Dev',
-    count: '70+ Templates',
+    count: 'ATS-Friendly',
     description: 'Enterprise account executives, SDR managers & client partnership leads',
     icon: ShoppingCart,
     query: 'sales',
@@ -123,7 +123,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'education',
     name: 'Education & Academia',
-    count: '80+ Templates',
+    count: 'ATS-Friendly',
     description: 'Professors, academic researchers, K-12 educators & curriculum leads',
     icon: GraduationCap,
     query: 'education',
@@ -134,7 +134,7 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'entry-level',
     name: 'Entry-Level & Students',
-    count: '60+ Templates',
+    count: 'ATS-Friendly',
     description: 'College graduates, interns, career switchers & early-career talent',
     icon: User,
     query: 'entry-level',
@@ -164,19 +164,18 @@ export default function ResumeCategories() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F0F0F] leading-tight mb-4">
-            Find the Perfect Resume for Your{' '}
-            <span style={{ color: '#F3645C' }}>Career Path</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F0F0F] tracking-tight mb-4">
+            Explore Resume Categories
           </h2>
 
           <p className="text-sm sm:text-base lg:text-lg text-[#333333] leading-relaxed max-w-2xl mx-auto">
-            Explore 150+ ATS-parsed, recruiter-approved resume layouts tailored for distinct industries, executive tracks, and career stages.
+            Explore 200+ ATS-parsed, recruiter-approved resume layout variations tailored for distinct industries, executive tracks, and career stages.
           </p>
 
           {/* Filter Pills */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-6">
             {[
-              { id: 'all', label: 'All Industries (150+)' },
+              { id: 'all', label: 'All Industries (200+)' },
               { id: 'business', label: 'Business & Finance' },
               { id: 'tech', label: 'Tech & Engineering' },
               { id: 'creative', label: 'Creative & Media' },
@@ -276,7 +275,7 @@ export default function ResumeCategories() {
               className="w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-[#0F0F0F] bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <Layers className="w-4 h-4 text-slate-600" />
-              <span>Browse All 150+ Templates</span>
+              <span>Browse All Templates</span>
             </Link>
           </div>
         </div>

@@ -321,3 +321,33 @@ export const FEATURE_FLAGS = {
   ANALYTICS_ENABLED: process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true',
   CMS_ENABLED: process.env.NEXT_PUBLIC_CMS_ENABLED === 'true',
 };
+
+// ============================================
+// SITE CREDIBILITY & STATISTICS (CENTRAL SOURCE OF TRUTH)
+// ============================================
+
+export const SITE_STATS = {
+  // Verified System Metrics
+  templateCountLabel: '200+ Template Variations',
+  templateCountShort: '200+',
+  layoutsCountLabel: '20 Professional Layouts',
+  layoutsCountShort: '20',
+  coverLetterTemplatesCount: '10',
+  resumeExamplesCount: '12',
+
+  // Trustworthy Marketing Messaging
+  userCountCopy: 'Built for Modern Job Seekers',
+  userCountShort: 'Top-Rated',
+  resumesCreatedCopy: 'Professional Resumes Created',
+  atsPassCopy: 'ATS-Friendly Layouts',
+  atsParseRateCopy: 'ATS-Optimized Formatting',
+  interviewBoostCopy: 'Designed for Recruiter Filters',
+  ratingLabel: '5-Star User Rating',
+  ratingBadge: 'Rated 5 Stars by Job Seekers',
+  ratingValue: '5.0',
+  
+  // CTA & Subtitle Defaults
+  exploreTemplatesCTA: 'Explore Resume Templates',
+  browseTemplatesCTA: 'Browse All Templates',
+  trustedCopy: 'Trusted by Ambitious Professionals',
+};

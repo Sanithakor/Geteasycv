@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -201,7 +201,7 @@ export default function ResumeBuilderFeatures() {
         <div className="mx-auto flex max-w-xl items-center justify-center">
           <div className="flex items-center gap-2 px-4 text-xs font-medium sm:text-sm" style={{ color: '#333333' }}>
             <User className="w-4 h-4" style={{ color: '#9ca3af' }} />
-            <span>Trusted by 50,000+ job seekers worldwide</span>
+            <span>Trusted by job seekers worldwide</span>
           </div>
         </div>
       </div>

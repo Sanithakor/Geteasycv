@@ -66,27 +66,27 @@ export default function AboutClientContent() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[
                 {
-                  metric: "40,000+",
-                  label: "Resumes & CVs Built",
-                  desc: "Downloaded and submitted to global employers",
+                  metric: "200+",
+                  label: "Template Variations",
+                  desc: "Customizable layouts and themes for all careers",
                   color: "text-slate-900",
                 },
                 {
-                  metric: "98.6%",
-                  label: "ATS Parse Pass Rate",
+                  metric: "100%",
+                  label: "ATS Compatible Layouts",
                   desc: "Verified on Workday, Greenhouse & Lever",
                   color: "text-emerald-600",
                 },
                 {
-                  metric: "150+",
-                  label: "Recruiter-Tested Templates",
+                  metric: "20",
+                  label: "Professional Layouts",
                   desc: "Modular designs for all career trajectories",
                   color: "text-violet-600",
                 },
                 {
-                  metric: "120+",
-                  label: "Countries Supported",
-                  desc: "North American, European & global standards",
+                  metric: "Global",
+                  label: "Career Standards",
+                  desc: "North American, European & international formats",
                   color: "text-sky-600",
                 },
               ].map((stat) => (
@@ -342,16 +342,16 @@ export default function AboutClientContent() {
           </div>
         </section>
 
-        {/* 5. COMPANY TIMELINE & JOURNEY */}
-        <section className="py-16 sm:py-20 bg-white border-y border-slate-200/80">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200 text-xs font-bold uppercase tracking-wider mb-4">
+        {/* 5. COMPANY TIMELINE / MILESTONES */}
+        <section className="py-16 sm:py-24 bg-[#F8F8F6]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-bold mb-3 shadow-2xs">
                 <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
                 <span>Our Journey</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                The Path to 40,000+ Resumes
+                The Path to Modern Resume Building
               </h2>
             </div>
 
@@ -370,12 +370,12 @@ export default function AboutClientContent() {
                 {
                   year: "2025",
                   title: "AI Bullet Optimization & Global Scale",
-                  desc: "Introduced smart AI content analysis to help candidates quantify achievements, passing 25,000 active resume downloads.",
+                  desc: "Introduced smart AI content analysis to help candidates quantify achievements across global resume formats.",
                 },
                 {
                   year: "2026",
                   title: "International CV Formats & Verified ATS",
-                  desc: "Crossed 40,000+ resumes, launched international multi-page CV layouts, and verified 98.6% parse rates across Fortune 500 ATS systems.",
+                  desc: "Built 200+ template variations, launched international multi-page CV layouts, and verified ATS readability across Fortune 500 ATS systems.",
                 },
               ].map((milestone, idx) => (
                 <div

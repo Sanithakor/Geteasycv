@@ -6,7 +6,7 @@ import { Sparkles, FileText, Pencil, Eye, Download, ArrowRight } from "lucide-re
 
 export default function HowItWorks() {
   const steps = [
-    { num: 1, icon: FileText,  title: "Choose Template",    description: "Pick from 150+ ATS-friendly templates designed by professionals.", accent: '#BAC7FE' },
+    { num: 1, icon: FileText,  title: "Choose Template",    description: "Pick from 200+ template variations & layouts designed by career experts.", accent: '#BAC7FE' },
     { num: 2, icon: Pencil,    title: "Build Your Resume",  description: "Add your information with our easy builder and AI-powered suggestions.", accent: '#F5D17B', featured: true },
     { num: 3, icon: Eye,       title: "Preview & Optimize", description: "Preview in real-time and get ATS score to optimize your resume.", accent: '#D0B9EF' },
     { num: 4, icon: Download,  title: "Download & Apply",   description: "Download your resume and start applying with confidence.", accent: '#58C09D' },

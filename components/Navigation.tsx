@@ -82,7 +82,7 @@ const navItems: NavItem[] = [
     dropdown: [
       {
         name: 'All Resume Templates',
-        description: 'Browse 150+ professionally designed templates',
+        description: 'Browse 200+ template variations & layouts',
         href: '/templates',
         icon: LayoutTemplate,
       },

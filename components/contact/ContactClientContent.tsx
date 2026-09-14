@@ -174,7 +174,7 @@ export default function ContactClientContent() {
                     <div>
                       <span className="font-bold text-slate-900 block">Support Email</span>
                       <a href="mailto:info@geteasycv.com" className="text-[#F3645C] hover:underline mt-0.5 block">
-                        Info@geteasycv.com
+                        info@geteasycv.com
                       </a>
                     </div>
                   </div>

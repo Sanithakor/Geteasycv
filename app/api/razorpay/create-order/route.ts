@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
-
-// Plan pricing map in INR paise (₹1 = 100 paise)
-const PLAN_AMOUNTS: Record<string, number> = {
-  starter: 4900,   // ₹49
-  pro: 19900,      // ₹199
-  lifetime: 99900, // ₹999
-};
+import { getPlanById } from '@/lib/config/pricing';
 
 export async function POST(req: Request) {
   try {
@@ -17,18 +11,19 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const requestedPlan = (body.plan || 'pro').toLowerCase();
+    const requestedPlanId = (body.plan || 'pro').toLowerCase();
+    const planConfig = getPlanById(requestedPlanId);
 
-    if (!PLAN_AMOUNTS[requestedPlan]) {
+    if (!planConfig || planConfig.id === 'free' || planConfig.amountPaise <= 0) {
       return NextResponse.json(
-        { error: `Invalid plan '${requestedPlan}'. Choose starter, pro, or lifetime.` },
+        { error: `Invalid paid plan '${requestedPlanId}'. Choose starter, pro, or premium.` },
         { status: 400 }
       );
     }
 
     const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
-    const amount = PLAN_AMOUNTS[requestedPlan];
+    const amount = planConfig.amountPaise;
 
     // Fallback simulation mode if environment keys are not configured yet
     if (!keyId || !keySecret) {
@@ -39,7 +34,7 @@ export async function POST(req: Request) {
         amount,
         currency: 'INR',
         keyId: keyId || 'rzp_test_mock_key_id',
-        plan: requestedPlan,
+        plan: planConfig.id,
         isSimulation: true,
       });
     }
@@ -55,7 +50,7 @@ export async function POST(req: Request) {
       receipt: `receipt_${auth.userId.slice(0, 10)}_${Date.now()}`,
       notes: {
         userId: auth.userId,
-        plan: requestedPlan,
+        plan: planConfig.id,
       },
     };
 
@@ -67,7 +62,7 @@ export async function POST(req: Request) {
       amount: order.amount,
       currency: order.currency,
       keyId,
-      plan: requestedPlan,
+      plan: planConfig.id,
     });
   } catch (error: any) {
     console.error('[RAZORPAY_CREATE_ORDER_ERROR]', error);

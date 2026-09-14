@@ -496,7 +496,7 @@ export default function AISection() {
                       Context-Aware Role Intelligence
                     </h4>
                     <p className="text-[11px] text-slate-300">
-                      Trained on 50,000+ accepted resumes across Fortune 500 job specs.
+                      Trained on recruiter-accepted resumes across Fortune 500 job specs.
                     </p>
                   </div>
                 </div>
@@ -504,12 +504,12 @@ export default function AISection() {
                 <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
                   <div className="text-right">
                     <div className="text-[10px] uppercase font-bold text-slate-400">Interview Boost</div>
-                    <div className="text-xs font-extrabold text-emerald-400">+3.2x Higher</div>
+                    <div className="text-xs font-extrabold text-emerald-400">Recruiter Verified</div>
                   </div>
                   <div className="w-px h-6 bg-slate-700" />
                   <div className="text-right">
                     <div className="text-[10px] uppercase font-bold text-slate-400">ATS Pass Rate</div>
-                    <div className="text-xs font-extrabold text-violet-300">99.4%</div>
+                    <div className="text-xs font-extrabold text-violet-300">100% Ready</div>
                   </div>
                 </div>
               </div>

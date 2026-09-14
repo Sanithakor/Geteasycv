@@ -53,7 +53,7 @@ const SOCIAL_LINKS = [
   },
   {
     name: 'Mail',
-    href: 'mailto:support@geteasycv.com',
+    href: 'mailto:info@geteasycv.com',
     icon: Mail,
     ariaLabel: 'Email our support team',
   },

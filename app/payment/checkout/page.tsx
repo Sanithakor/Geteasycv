@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useAuthModalStore } from '@/lib/store/authModalStore';
 import AuthModal from '@/components/auth/AuthModal';
+import { getPlanById } from '@/lib/config/pricing';
 import {
   CreditCard,
   Check,
@@ -31,7 +32,8 @@ function CheckoutContent() {
   const { isAuthenticated, user, token, _hydrated } = useAuthStore();
   const { openLogin } = useAuthModalStore();
 
-  const [planDetails, setPlanDetails] = useState<any>(null);
+  const staticPlanConfig = getPlanById(planId);
+  const [planDetails, setPlanDetails] = useState<any>(staticPlanConfig);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -51,27 +53,24 @@ function CheckoutContent() {
           (p: any) => p.id.toLowerCase() === planId || p.name.toLowerCase() === planId
         );
         if (found) {
-          setPlanDetails(found);
-        } else {
-          // Fallback static structure
           setPlanDetails({
-            id: planId,
-            name: planId.charAt(0).toUpperCase() + planId.slice(1),
-            price: planId === 'starter' ? '₹49' : planId === 'lifetime' ? '₹999' : '₹199',
-            rawPrice: planId === 'starter' ? 49 : planId === 'lifetime' ? 999 : 199,
-            period: planId === 'starter' || planId === 'lifetime' ? 'one-time payment' : 'month',
-            description: 'Access all premium templates, high-res PDF exports, and AI tools.',
-            features: [
-              'All ATS & Premium Templates Unlocked',
-              'High-Resolution PDF & Image Exports',
-              'AI Resume Bullet Point Rewriter',
-              'Unlimited Resume Creation & Downloads',
-            ],
+            id: found.id,
+            name: found.name || staticPlanConfig.name,
+            price: found.price === 0 ? '$0' : `${found.currency || '₹'}${found.price}`,
+            rawPrice: found.price,
+            period: found.billingPeriod || staticPlanConfig.billingPeriod,
+            description: found.description || staticPlanConfig.description,
+            features: found.features || staticPlanConfig.features,
           });
+        } else {
+          setPlanDetails(staticPlanConfig);
         }
+      } else {
+        setPlanDetails(staticPlanConfig);
       }
     } catch (err) {
       console.error('[CHECKOUT_FETCH_PLANS_ERROR]', err);
+      setPlanDetails(staticPlanConfig);
     } finally {
       setLoadingPlan(false);
     }
@@ -162,7 +161,6 @@ function CheckoutContent() {
 
             if (verifyRes.ok && verifyData.success) {
               toast.success('Payment verified successfully!', { id: 'razorpay-verify' });
-              // Redirect back to templates page with success query parameter
               const targetRedirect = `${fromUrl}${fromUrl.includes('?') ? '&' : '?'}purchase=success&plan=${planId}`;
               router.push(targetRedirect);
             } else {
@@ -221,7 +219,6 @@ function CheckoutContent() {
         />
 
         <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-          {/* Back button */}
           <button
             onClick={() => router.push('/pricing')}
             className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 mb-6 transition-colors cursor-pointer"
@@ -230,7 +227,6 @@ function CheckoutContent() {
             <span>Back to Pricing Plans</span>
           </button>
 
-          {/* Cancellation / Failure Error Banner */}
           {paymentError && (
             <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-rose-800 text-sm font-semibold animate-in fade-in duration-200">
               <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
@@ -242,7 +238,6 @@ function CheckoutContent() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-            {/* Left: Plan Summary & Features */}
             <div className="md:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
               <div>
                 <div className="flex items-center justify-between">
@@ -259,7 +254,6 @@ function CheckoutContent() {
                 </p>
               </div>
 
-              {/* Price Row */}
               <div className="flex items-baseline justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Due Now</span>
                 <div className="text-right">
@@ -268,7 +262,6 @@ function CheckoutContent() {
                 </div>
               </div>
 
-              {/* Included Features */}
               <div className="space-y-3 pt-2">
                 <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">INCLUDED IN THIS PLAN:</p>
                 <ul className="space-y-2.5">
@@ -287,14 +280,12 @@ function CheckoutContent() {
               </div>
             </div>
 
-            {/* Right: Payment Authorization & Checkout Trigger */}
             <div className="md:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
               <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-[#F3645C]" />
                 <span>Account &amp; Checkout</span>
               </h3>
 
-              {/* Account Status Badge */}
               {_hydrated && isAuthenticated && user ? (
                 <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
                   <div className="flex items-center gap-2 text-emerald-800 text-xs font-bold">
@@ -314,7 +305,6 @@ function CheckoutContent() {
                 </div>
               )}
 
-              {/* Payment Method Badge */}
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-600">
                   <span>Payment Gateway:</span>
@@ -325,7 +315,6 @@ function CheckoutContent() {
                 </p>
               </div>
 
-              {/* Pay Button */}
               <button
                 onClick={handleStartPayment}
                 disabled={isProcessing}

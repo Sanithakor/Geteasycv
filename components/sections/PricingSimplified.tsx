@@ -1,82 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check, Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
-
-export interface PricingPlan {
-  id: string;
-  name: string;
-  price: string | number;
-  currency?: string;
-  period: string;
-  description: string;
-  features: string[];
-  cta: string;
-  href?: string;
-  highlight?: boolean;
-  badge?: string | null;
-  onClick?: () => void;
-}
-
-export const DEFAULT_PRICING_PLANS: PricingPlan[] = [
-  {
-    id: "free",
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "Perfect for creating and downloading your first resume.",
-    features: [
-      "1 Free Resume Export",
-      "Access to basic ATS templates",
-      "Real-time live visual editor",
-      "Standard section customization",
-      "Community support",
-    ],
-    cta: "Get Started",
-    href: "/editor",
-    highlight: false,
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    price: "$9",
-    period: "month",
-    description: "Most popular for active job seekers looking to land interviews.",
-    features: [
-      "Unlimited resumes & cover letters",
-      "All 150+ ATS-friendly templates",
-      "PDF & DOCX high-res export",
-      "AI content suggestions",
-      "Custom colors & fonts",
-      "Priority support",
-      "ATS optimization",
-    ],
-    cta: "Start Free Trial",
-    href: "/signup?plan=pro",
-    highlight: true,
-    badge: "RECOMMENDED",
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    price: "$19",
-    period: "month",
-    description: "Advanced features and lifetime power for professionals.",
-    features: [
-      "Everything in Pro",
-      "Cover letter builder",
-      "Portfolio builder",
-      "Custom branding",
-      "API access",
-      "Team collaboration",
-      "Dedicated support",
-    ],
-    cta: "Start Free Trial",
-    href: "/signup?plan=premium",
-    highlight: false,
-  },
-];
+import { DISPLAY_PLANS, PricingPlan, getPlanById } from "@/lib/config/pricing";
 
 export interface PricingSectionProps {
   badge?: string;
@@ -96,13 +23,65 @@ export default function PricingSimplified({
   title = "Simple, Transparent",
   highlightText = "Pricing",
   subtitle = "Start free, upgrade when you need more. No hidden fees, cancel anytime.",
-  plans = DEFAULT_PRICING_PLANS,
+  plans: initialPlans,
   bgStyle = "#FFFFFF",
   className = "",
   onPlanClick,
   showTrustBadges = true,
-  footnote = "All plans include a 14-day free trial. No credit card required.",
+  footnote = "All premium plans include a 7-day money-back guarantee. Cancel anytime with 1 click.",
 }: PricingSectionProps) {
+  const [plans, setPlans] = useState<PricingPlan[]>(initialPlans || DISPLAY_PLANS);
+
+  useEffect(() => {
+    if (initialPlans) {
+      setPlans(initialPlans);
+      return;
+    }
+
+    // Attempt to load dynamic plans from API, fallback to DISPLAY_PLANS
+    fetch("/api/plans")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.success && Array.isArray(json.data) && json.data.length > 0) {
+          const active = json.data
+            .filter((p: any) => p.isActive !== false)
+            .map((p: any) => {
+              const staticConfig = getPlanById(p.id);
+              return {
+                id: p.id,
+                name: p.name || staticConfig.name,
+                price: p.price === 0 ? "$0" : `${p.currency || "₹"}${p.price}`,
+                rawPrice: p.price,
+                amountPaise: p.price * 100,
+                currency: p.currency || "₹",
+                billingPeriod: p.billingPeriod || staticConfig.billingPeriod,
+                period: p.billingPeriod || staticConfig.billingPeriod,
+                description: p.description || staticConfig.description,
+                features: p.features && p.features.length > 0 ? p.features : staticConfig.features,
+                cta: staticConfig.cta,
+                popular: Boolean(p.popular ?? staticConfig.popular),
+                highlight: Boolean(p.popular ?? staticConfig.popular),
+                badge: p.badge || (p.popular ? "MOST POPULAR" : staticConfig.badge),
+                isActive: true,
+                maxResumes: p.maxResumes ?? staticConfig.maxResumes,
+                canUseAI: p.canUseAI ?? staticConfig.canUseAI,
+                canUsePremiumTemplates: p.canUsePremiumTemplates ?? staticConfig.canUsePremiumTemplates,
+                canExportPDF: p.canExportPDF ?? staticConfig.canExportPDF,
+                canExportImages: p.canExportImages ?? staticConfig.canExportImages,
+                sortOrder: p.sortOrder ?? staticConfig.sortOrder,
+              } as PricingPlan;
+            });
+
+          if (active.length > 0) {
+            setPlans(active);
+          }
+        }
+      })
+      .catch(() => {
+        setPlans(DISPLAY_PLANS);
+      });
+  }, [initialPlans]);
+
   return (
     <section
       className={`py-16 sm:py-24 font-sans ${className}`}
@@ -143,7 +122,7 @@ export default function PricingSimplified({
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch text-left mb-12">
           {plans.map((plan) => {
-            const isHighlight = plan.highlight;
+            const isHighlight = Boolean(plan.popular || (plan as any).highlight);
 
             return (
               <div
@@ -161,7 +140,7 @@ export default function PricingSimplified({
                     style={{ background: "#F5D17B" }}
                   >
                     <Sparkles className="w-3.5 h-3.5 text-[#0F0F0F]" />
-                    <span>{plan.badge || "RECOMMENDED"}</span>
+                    <span>{plan.badge || "MOST POPULAR"}</span>
                   </div>
                 )}
 
@@ -182,7 +161,7 @@ export default function PricingSimplified({
                       {typeof plan.price === "number" ? `$${plan.price}` : plan.price}
                     </span>
                     <span className="text-xs sm:text-sm font-medium text-[#666666]">
-                      /{plan.period}
+                      /{plan.billingPeriod || (plan as any).period}
                     </span>
                   </div>
 
@@ -203,7 +182,7 @@ export default function PricingSimplified({
                       </button>
                     ) : (
                       <Link
-                        href={plan.href || "/signup"}
+                        href={plan.id === "free" ? "/editor" : `/pricing?plan=${plan.id}`}
                         className={`w-full py-3.5 sm:py-4 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-center ${
                           isHighlight
                             ? "bg-[#0F0F0F] hover:bg-[#262626] text-white shadow-lg hover:scale-[1.02]"
@@ -262,7 +241,7 @@ export default function PricingSimplified({
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[#333333] font-semibold pt-2">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-[#58C09D]" />
-              <span>14-day money-back guarantee</span>
+              <span>7-day money-back guarantee</span>
             </div>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-[#58C09D]" />
@@ -280,4 +259,3 @@ export default function PricingSimplified({
 }
 
 export { PricingSimplified as PricingSection };
-

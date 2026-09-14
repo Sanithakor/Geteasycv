@@ -331,7 +331,7 @@ export function HowItWorksVisual() {
       {/* 4 Steps Checklist */}
       <div className="space-y-2.5">
         {[
-          { num: "01", title: "Select Template", desc: "150+ ATS Certified Layouts", color: "#BAC7FE", done: true },
+          { num: "01", title: "Select Template", desc: "200+ Template Variations", color: "#BAC7FE", done: true },
           { num: "02", title: "Fill Details & Skills", desc: "Interactive Real-Time Preview", color: "#F5D17B", done: true },
           { num: "03", title: "Optimize with AI", desc: "Automated Bullet Rewrites & Scoring", color: "#D0B9EF", done: true, active: true },
           { num: "04", title: "Export PDF / DOCX", desc: "Instant Download & Share Link", color: "#58C09D", done: false },
@@ -395,16 +395,16 @@ export function AboutVisual() {
       {/* Grid of 4 Key Platform Stats */}
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3.5 rounded-xl bg-[#FFF9F6] border border-[#FEE1CF] space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">50K+</div>
-          <div className="text-[10px] font-bold text-[#F3645C] uppercase tracking-wider">Resumes Created</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">200+</div>
+          <div className="text-[10px] font-bold text-[#F3645C] uppercase tracking-wider">Template Variations</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#F6F8FF] border border-[#BAC7FE]/40 space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">94%</div>
-          <div className="text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">Interview Rate</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">100%</div>
+          <div className="text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">ATS Compatible</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#FFFDF5] border border-[#F5D17B]/40 space-y-1">
-          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">150+</div>
-          <div className="text-[10px] font-bold text-[#D97706] uppercase tracking-wider">ATS Templates</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">20</div>
+          <div className="text-[10px] font-bold text-[#D97706] uppercase tracking-wider">Professional Layouts</div>
         </div>
         <div className="p-3.5 rounded-xl bg-[#F7F4FD] border border-[#D0B9EF]/40 space-y-1">
           <div className="text-xl sm:text-2xl font-extrabold text-[#0F0F0F]">100%</div>

@@ -19,8 +19,8 @@ export default function HeroNew() {
   }, []);
 
   const badgeText = downloadCount > 0 
-    ? `${downloadCount.toLocaleString()}+ CVs Downloaded` 
-    : '10,000+ CVs Downloaded';
+    ? `${downloadCount.toLocaleString()}+ Resumes Downloaded` 
+    : '100+ Recruiter-Tested Formats';
 
   return (
     <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28" style={{ background: '#F8F8F6' }}>

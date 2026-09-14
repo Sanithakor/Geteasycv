@@ -5,15 +5,15 @@ import TemplatesClientContent from '@/components/templates/TemplatesClientConten
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://geteasycv.com';
 
 export const metadata: Metadata = {
-  title: '100+ Free ATS-Friendly Resume Templates | GetEasyCV',
+  title: '200+ Free ATS-Friendly Resume Templates & Variations | GetEasyCV',
   description:
-    'Browse 100+ ATS-tested professional resume templates designed by career experts. Customize layouts, colors, and download high-resolution PDFs.',
+    'Browse 200+ ATS-tested professional resume template variations designed by career experts. Customize layouts, colors, and download high-resolution PDFs.',
   alternates: {
     canonical: `${baseUrl}/templates`,
   },
   openGraph: {
-    title: '100+ Free ATS-Friendly Resume Templates | GetEasyCV',
-    description: 'Browse recruiter-tested resume templates for every career level.',
+    title: '200+ Free ATS-Friendly Resume Templates & Variations | GetEasyCV',
+    description: 'Browse recruiter-tested resume templates and layout variations for every career level.',
     url: `${baseUrl}/templates`,
   },
 };

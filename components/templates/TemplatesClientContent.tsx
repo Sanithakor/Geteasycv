@@ -407,16 +407,16 @@ function TemplatesContent() {
       <Navigation />
       <main className="min-h-screen bg-[#F8F8F6] text-[#0F0F0F]">
         <InnerBanner
-          badge="150+ Professional Templates"
+          badge="200+ Template Variations"
           badgeIcon={Sparkles}
           breadcrumbs={[{ label: "Templates", href: "/templates" }]}
           title="Professional ATS-Friendly"
           highlightText="Resume Templates"
           titleSuffix="for Every Career"
-          description="Choose from 150+ ATS-friendly resume templates designed by career experts and recruiters to help you land your dream job."
+          description="Choose from 200+ ATS-friendly template variations designed by career experts and recruiters to help you land your dream job."
           features={[
-            "150+ Modern Templates",
-            "100% ATS Optimized",
+            "200+ Template Variations",
+            "100% ATS Ready",
             "Instant PDF Download",
           ]}
         >
@@ -572,7 +572,7 @@ function TemplatesContent() {
                         All Categories
                       </span>
                     </div>
-                    <span className="text-[11px] text-slate-400 font-normal">150+</span>
+                    <span className="text-[11px] text-slate-400 font-normal">200+</span>
                   </label>
 
                   {categoriesToShow.map((cat) => {
