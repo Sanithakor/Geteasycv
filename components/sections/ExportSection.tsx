@@ -62,7 +62,7 @@ const EXPORT_OPTIONS = [
     format: 'PDF',
     title: 'Vector PDF Export',
     tag: 'Industry Standard • 300 DPI',
-    desc: 'Guarantees 100% pixel-perfect typography, embedded fonts, and exact page margins on any device or printer.',
+    desc: 'Delivers crisp high-resolution typography, embedded fonts, and exact page margins on any device or printer.',
     accentColor: '#E11D48',
     iconBg: 'bg-rose-50 text-rose-600 border-rose-100',
     badge: 'bg-rose-50 text-rose-700',

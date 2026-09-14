@@ -56,7 +56,7 @@ function CheckoutContent() {
           setPlanDetails({
             id: found.id,
             name: found.name || staticPlanConfig.name,
-            price: found.price === 0 ? '$0' : `${found.currency || '₹'}${found.price}`,
+            price: found.price === 0 ? '₹0' : `${found.currency || '₹'}${found.price}`,
             rawPrice: found.price,
             period: found.billingPeriod || staticPlanConfig.billingPeriod,
             description: found.description || staticPlanConfig.description,

@@ -57,7 +57,7 @@ const navItems: NavItem[] = [
       },
       {
         name: 'ATS Resume Builder',
-        description: 'Optimized formatting guaranteed to pass ATS filters',
+        description: 'Optimized formatting engineered for maximum ATS readability',
         href: '/ats-resume-builder',
         icon: FileCheck2,
       },

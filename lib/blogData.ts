@@ -18,11 +18,11 @@ export interface BlogPostItem {
 export const INITIAL_BLOG_POSTS: BlogPostItem[] = [
   {
     id: 'post-1',
-    slug: 'ats-friendly-resume-guide-2024',
-    title: 'How to Write an ATS-Friendly Resume in 2024 (Step-by-Step Guide)',
+    slug: 'ats-friendly-resume-guide',
+    title: 'How to Write an ATS-Friendly Resume (Step-by-Step Guide)',
     excerpt: 'Applicant Tracking Systems scan your resume before a recruiter reads it. Learn the exact formatting, keywords, and structural rules to pass ATS filters every time.',
     content: `
-# How to Write an ATS-Friendly Resume in 2024
+# How to Write an ATS-Friendly Resume
 
 Over 98% of Fortune 500 companies use an **Applicant Tracking System (ATS)** to filter candidates before human eyes ever see a resume. If your formatting or structure confuses the parser, your application may be automatically filtered out—no matter how qualified you are.
 

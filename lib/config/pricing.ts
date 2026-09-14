@@ -33,10 +33,10 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
   free: {
     id: 'free',
     name: 'Free',
-    price: '$0',
+    price: '₹0',
     rawPrice: 0,
     amountPaise: 0,
-    currency: '$',
+    currency: '₹',
     billingPeriod: 'Free forever',
     period: 'Free forever',
     description: 'Essential CV creation with standard templates.',

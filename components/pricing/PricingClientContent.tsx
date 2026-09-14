@@ -83,7 +83,7 @@ function PricingContent() {
               ...staticConfig,
               id: p.id,
               name: p.name || staticConfig.name,
-              price: p.price === 0 ? '$0' : `${p.currency || '₹'}${p.price}`,
+              price: p.price === 0 ? '₹0' : `${p.currency || '₹'}${p.price}`,
               rawPrice: p.price,
               period: p.billingPeriod || staticConfig.billingPeriod,
               billingPeriod: p.billingPeriod || staticConfig.billingPeriod,
