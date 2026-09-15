@@ -454,8 +454,31 @@ export const getAllIndustries = (): string[] => {
 
 // Function to check if a template belongs to specific categories
 export const isTemplateInCategory = (templateId: string, categoryId: string): boolean => {
+  if (!categoryId || categoryId === 'all') return true;
+
   const category = getTemplateCategory(categoryId);
-  return category ? category.templateIds.includes(templateId) : false;
+  if (category) return category.templateIds.includes(templateId);
+
+  // Alias & keyword matching fallback for query parameters like 'business', 'tech', 'healthcare', etc.
+  const query = categoryId.toLowerCase().trim();
+  const matchingCats = templateCategories.filter((cat) => {
+    const catId = cat.id.toLowerCase();
+    const catName = cat.name.toLowerCase();
+    return (
+      catId === query ||
+      catId.includes(query) ||
+      query.includes(catId) ||
+      catName.includes(query) ||
+      cat.industries.some((ind) => ind.toLowerCase().includes(query)) ||
+      cat.styles.some((st) => st.toLowerCase().includes(query))
+    );
+  });
+
+  if (matchingCats.length > 0) {
+    return matchingCats.some((cat) => cat.templateIds.includes(templateId));
+  }
+
+  return true;
 };
 
 // Function to get all categories a template belongs to

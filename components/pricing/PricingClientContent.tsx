@@ -9,7 +9,9 @@ import { PRICING_FAQS } from '@/data/faqs';
 import Footer from '@/components/Footer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
-import { PRICING_PLANS, DISPLAY_PLANS, getPlanById, isUserPlanActive, PricingPlan } from '@/lib/config/pricing';
+import { getSavedCountry, saveSelectedCountry, detectBrowserCountry } from '@/lib/utils/geo';
+import CountrySelector from '@/components/pricing/CountrySelector';
+import { PRICING_PLANS, DISPLAY_PLANS, getPlanById, getLocalizedPlans, isUserPlanActive, PricingPlan } from '@/lib/config/pricing';
 import {
   Check,
   Sparkles,
@@ -22,6 +24,7 @@ import {
   Award,
   AlertCircle,
   RefreshCw,
+  Globe,
 } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 
@@ -56,20 +59,38 @@ function PricingContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason');
   const autoPlan = searchParams.get('plan');
+  const queryCountry = searchParams.get('country');
 
   const { user, _hydrated } = useAuthStore();
   const userTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
+  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [plans, setPlans] = useState<PricingPlan[]>(DISPLAY_PLANS);
   const [autoCheckoutTriggered, setAutoCheckoutTriggered] = useState(false);
 
-  const fetchPlansData = async () => {
+  useEffect(() => {
+    if (queryCountry) {
+      setSelectedCountry(queryCountry.toUpperCase());
+      saveSelectedCountry(queryCountry.toUpperCase());
+    } else {
+      const saved = getSavedCountry();
+      if (saved) {
+        setSelectedCountry(saved);
+      } else {
+        const detected = detectBrowserCountry();
+        setSelectedCountry(detected);
+        saveSelectedCountry(detected);
+      }
+    }
+  }, [queryCountry]);
+
+  const fetchPlansData = async (countryCode: string) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/plans');
+      const res = await fetch(`/api/plans?country=${countryCode}`);
       if (!res.ok) {
         throw new Error(`Failed to load plans (Status ${res.status})`);
       }
@@ -78,12 +99,12 @@ function PricingContent() {
         const formatted: PricingPlan[] = json.data
           .filter((p: any) => p.isActive !== false && p.id.toLowerCase() !== 'free')
           .map((p: any) => {
-            const staticConfig = getPlanById(p.id);
+            const staticConfig = getPlanById(p.id, countryCode);
             return {
               ...staticConfig,
               id: p.id,
               name: p.name || staticConfig.name,
-              price: p.price === 0 ? '₹0' : `${p.currency || '₹'}${p.price}`,
+              price: p.priceFormatted || `${p.currency || staticConfig.symbol}${p.price}`,
               rawPrice: p.price,
               period: p.billingPeriod || staticConfig.billingPeriod,
               billingPeriod: p.billingPeriod || staticConfig.billingPeriod,
@@ -97,34 +118,38 @@ function PricingContent() {
           });
         setPlans(formatted);
       } else {
-        setPlans(DISPLAY_PLANS);
+        setPlans(getLocalizedPlans(countryCode));
       }
     } catch (err: any) {
       console.warn('[PRICING_PAGE_FETCH_WARN] Using central fallback plans:', err);
-      // Ensure safe fallback instead of error crash
-      setPlans(DISPLAY_PLANS);
+      setPlans(getLocalizedPlans(countryCode));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPlansData();
-  }, []);
+    fetchPlansData(selectedCountry);
+  }, [selectedCountry]);
+
+  const handleCountryChange = (newCountry: string) => {
+    setSelectedCountry(newCountry);
+    saveSelectedCountry(newCountry);
+  };
 
   useEffect(() => {
     if (autoPlan && !autoCheckoutTriggered) {
       setAutoCheckoutTriggered(true);
-      router.push(`/payment/checkout?plan=${autoPlan}&from=/templates`);
+      router.push(`/payment/checkout?plan=${autoPlan}&country=${selectedCountry}&from=/templates`);
     }
-  }, [autoPlan, autoCheckoutTriggered, router]);
+  }, [autoPlan, autoCheckoutTriggered, router, selectedCountry]);
 
   const handleSelectPlan = (planId: string) => {
     if (planId === 'free') {
       router.push('/editor');
       return;
     }
-    router.push(`/payment/checkout?plan=${planId}&from=/templates`);
+    router.push(`/payment/checkout?plan=${planId}&country=${selectedCountry}&from=/templates`);
   };
 
   return (
@@ -159,7 +184,23 @@ function PricingContent() {
           )}
         </InnerBanner>
 
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          {/* Country Selector Bar */}
+          <div className="mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-2xs">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+                <Globe className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">Select Your Location &amp; Currency</h3>
+                <p className="text-xs text-slate-500">Prices and payment checkout automatically adjust to your region.</p>
+              </div>
+            </div>
+            <CountrySelector
+              selectedCountry={selectedCountry}
+              onCountryChange={handleCountryChange}
+            />
+          </div>
           {error && (
             <div className="mx-auto mb-10 max-w-xl rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-900 shadow-sm space-y-3">
               <AlertCircle className="mx-auto h-8 w-8 text-rose-600" />
@@ -168,7 +209,7 @@ function PricingContent() {
                 {error}. Please check your network connection or click retry below.
               </p>
               <button
-                onClick={fetchPlansData}
+                onClick={() => fetchPlansData(selectedCountry)}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 text-white font-bold text-xs shadow-md hover:bg-rose-700 transition-colors cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />

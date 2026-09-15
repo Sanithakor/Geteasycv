@@ -5,16 +5,18 @@ import { getPlanById } from '@/lib/config/pricing';
 
 export async function POST(req: Request) {
   try {
-    const auth = await getAuthFromRequest(req);
+    const body = await req.json().catch(() => ({}));
+    const auth = await getAuthFromRequest(req, body);
+
     if (!auth?.userId) {
       return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
     }
 
-    const body = await req.json();
     const requestedPlanId = (body.plan || 'pro').toLowerCase();
-    const planConfig = getPlanById(requestedPlanId);
+    const country = (body.country || req.headers.get('cf-ipcountry') || 'IN').toUpperCase();
+    const planConfig = getPlanById(requestedPlanId, country);
 
-    if (!planConfig || planConfig.id === 'free' || planConfig.amountPaise <= 0) {
+    if (!planConfig || planConfig.id === 'free' || planConfig.amountSubunits <= 0) {
       return NextResponse.json(
         { error: `Invalid paid plan '${requestedPlanId}'. Choose starter, pro, or premium.` },
         { status: 400 }
@@ -23,7 +25,8 @@ export async function POST(req: Request) {
 
     const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
-    const amount = planConfig.amountPaise;
+    const amount = planConfig.amountSubunits;
+    const currency = planConfig.currency || 'INR';
 
     // Fallback simulation mode if environment keys are not configured yet
     if (!keyId || !keySecret) {
@@ -32,9 +35,10 @@ export async function POST(req: Request) {
         success: true,
         orderId: `order_mock_${Date.now()}`,
         amount,
-        currency: 'INR',
+        currency,
         keyId: keyId || 'rzp_test_mock_key_id',
         plan: planConfig.id,
+        country,
         isSimulation: true,
       });
     }
@@ -46,11 +50,13 @@ export async function POST(req: Request) {
 
     const options = {
       amount,
-      currency: 'INR',
+      currency,
       receipt: `receipt_${auth.userId.slice(0, 10)}_${Date.now()}`,
       notes: {
         userId: auth.userId,
         plan: planConfig.id,
+        country,
+        currency,
       },
     };
 
@@ -63,6 +69,7 @@ export async function POST(req: Request) {
       currency: order.currency,
       keyId,
       plan: planConfig.id,
+      country,
     });
   } catch (error: any) {
     console.error('[RAZORPAY_CREATE_ORDER_ERROR]', error);

@@ -1,11 +1,12 @@
 import { prisma, safeDbQuery } from '@/lib/db';
-import { PRICING_PLANS, PricingPlan } from '@/lib/config/pricing';
+import { PRICING_PLANS, PricingPlan, getLocalizedPlans } from '@/lib/config/pricing';
 
 export interface PlanItem {
   id: string;
   name: string;
   price: number;
   currency: string;
+  symbol?: string;
   billingPeriod: string;
   description: string;
   features: string[];
@@ -26,6 +27,7 @@ function mapPricingPlanToPlanItem(p: PricingPlan): PlanItem {
     name: p.name,
     price: p.rawPrice,
     currency: p.currency,
+    symbol: p.symbol,
     billingPeriod: p.billingPeriod,
     description: p.description,
     features: p.features,
@@ -54,17 +56,18 @@ export function getMemoryPlans(): PlanItem[] {
   return inMemoryPlans;
 }
 
-export async function fetchAllPlans(): Promise<PlanItem[]> {
+export async function fetchAllPlans(countryCode: string = 'IN'): Promise<PlanItem[]> {
+  const localized = getLocalizedPlans(countryCode).map(mapPricingPlanToPlanItem);
+
   return safeDbQuery(async () => {
     const config = await (prisma as any).systemConfig.findUnique({
-      where: { id: 'system_plans' },
+      where: { id: `system_plans_${countryCode.toUpperCase()}` },
     });
 
     if (config && config.value) {
       try {
         const parsed = JSON.parse(config.value);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          inMemoryPlans = parsed;
           return parsed;
         }
       } catch (err) {
@@ -72,21 +75,21 @@ export async function fetchAllPlans(): Promise<PlanItem[]> {
       }
     }
 
-    return inMemoryPlans;
-  }, inMemoryPlans);
+    return localized;
+  }, localized);
 }
 
-export async function saveAllPlans(plans: PlanItem[]): Promise<boolean> {
+export async function saveAllPlans(plans: PlanItem[], countryCode: string = 'IN'): Promise<boolean> {
   inMemoryPlans = [...plans];
   return safeDbQuery(async () => {
     await (prisma as any).systemConfig.upsert({
-      where: { id: 'system_plans' },
+      where: { id: `system_plans_${countryCode.toUpperCase()}` },
       update: {
         value: JSON.stringify(plans),
       },
       create: {
-        id: 'system_plans',
-        appName: 'GetEasyCV Plans',
+        id: `system_plans_${countryCode.toUpperCase()}`,
+        appName: `GetEasyCV Plans ${countryCode.toUpperCase()}`,
         value: JSON.stringify(plans),
       },
     });

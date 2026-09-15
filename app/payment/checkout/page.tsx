@@ -9,6 +9,8 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useAuthModalStore } from '@/lib/store/authModalStore';
 import AuthModal from '@/components/auth/AuthModal';
 import { getPlanById } from '@/lib/config/pricing';
+import { getSavedCountry, saveSelectedCountry } from '@/lib/utils/geo';
+import CountrySelector from '@/components/pricing/CountrySelector';
 import {
   CreditCard,
   Check,
@@ -20,6 +22,7 @@ import {
   Sparkles,
   ArrowLeft,
   CheckCircle2,
+  Globe,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -28,25 +31,41 @@ function CheckoutContent() {
   const searchParams = useSearchParams();
   const planId = (searchParams.get('plan') || 'pro').toLowerCase();
   const fromUrl = searchParams.get('from') || '/templates';
+  const queryCountry = searchParams.get('country');
 
   const { isAuthenticated, user, token, _hydrated } = useAuthStore();
   const { openLogin } = useAuthModalStore();
 
-  const staticPlanConfig = getPlanById(planId);
+  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
+
+  useEffect(() => {
+    if (queryCountry) {
+      setSelectedCountry(queryCountry.toUpperCase());
+      saveSelectedCountry(queryCountry.toUpperCase());
+    } else {
+      const saved = getSavedCountry();
+      if (saved) {
+        setSelectedCountry(saved);
+      }
+    }
+  }, [queryCountry]);
+
+  const staticPlanConfig = getPlanById(planId, selectedCountry);
   const [planDetails, setPlanDetails] = useState<any>(staticPlanConfig);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  // Fetch plan info dynamically from /api/plans
+  // Fetch plan info dynamically from /api/plans?country=...
   useEffect(() => {
-    fetchPlans();
-  }, [planId]);
+    fetchPlans(selectedCountry);
+  }, [planId, selectedCountry]);
 
-  const fetchPlans = async () => {
+  const fetchPlans = async (countryCode: string) => {
     setLoadingPlan(true);
+    const fallbackConfig = getPlanById(planId, countryCode);
     try {
-      const res = await fetch('/api/plans');
+      const res = await fetch(`/api/plans?country=${countryCode}`);
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data)) {
         const found = data.data.find(
@@ -55,25 +74,30 @@ function CheckoutContent() {
         if (found) {
           setPlanDetails({
             id: found.id,
-            name: found.name || staticPlanConfig.name,
-            price: found.price === 0 ? '₹0' : `${found.currency || '₹'}${found.price}`,
+            name: found.name || fallbackConfig.name,
+            price: found.priceFormatted || `${found.currency || fallbackConfig.symbol}${found.price}`,
             rawPrice: found.price,
-            period: found.billingPeriod || staticPlanConfig.billingPeriod,
-            description: found.description || staticPlanConfig.description,
-            features: found.features || staticPlanConfig.features,
+            period: found.billingPeriod || fallbackConfig.billingPeriod,
+            description: found.description || fallbackConfig.description,
+            features: found.features || fallbackConfig.features,
           });
         } else {
-          setPlanDetails(staticPlanConfig);
+          setPlanDetails(fallbackConfig);
         }
       } else {
-        setPlanDetails(staticPlanConfig);
+        setPlanDetails(fallbackConfig);
       }
     } catch (err) {
       console.error('[CHECKOUT_FETCH_PLANS_ERROR]', err);
-      setPlanDetails(staticPlanConfig);
+      setPlanDetails(fallbackConfig);
     } finally {
       setLoadingPlan(false);
     }
+  };
+
+  const handleCountryChange = (newCountry: string) => {
+    setSelectedCountry(newCountry);
+    saveSelectedCountry(newCountry);
   };
 
   const loadRazorpayScript = (): Promise<boolean> => {
@@ -100,7 +124,7 @@ function CheckoutContent() {
     const isAuthed = (authState.isAuthenticated && Boolean(currentUser || currentToken)) || Boolean(currentToken);
     if (!isAuthed || !currentUser) {
       toast.error('Please sign in to complete your checkout.');
-      const callbackPath = `/payment/checkout?plan=${planId}&from=${encodeURIComponent(fromUrl)}`;
+      const callbackPath = `/payment/checkout?plan=${planId}&country=${selectedCountry}&from=${encodeURIComponent(fromUrl)}`;
       openLogin(callbackPath);
       return;
     }
@@ -117,7 +141,7 @@ function CheckoutContent() {
         return;
       }
 
-      // 3. Create Order Server-Side
+      // 3. Create Order Server-Side with Country Code
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
         ...(currentToken ? { Authorization: `Bearer ${currentToken}`, 'x-auth-token': currentToken } : {}),
@@ -129,6 +153,7 @@ function CheckoutContent() {
         credentials: 'include',
         body: JSON.stringify({
           plan: planId,
+          country: selectedCountry,
           token: currentToken || undefined,
           userId: currentUser.id,
           userEmail: currentUser.email,
@@ -164,6 +189,7 @@ function CheckoutContent() {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 plan: planId,
+                country: selectedCountry,
                 isSimulation: orderData.isSimulation,
                 token: token || undefined,
                 userId: user?.id,
@@ -266,6 +292,17 @@ function CheckoutContent() {
                 <p className="text-xs text-slate-500 mt-1">
                   {planDetails?.description || 'Access all premium ATS templates and AI writing features.'}
                 </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/70">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-amber-700 shrink-0" />
+                  <span className="text-xs font-bold text-amber-900">Billing Country &amp; Currency:</span>
+                </div>
+                <CountrySelector
+                  selectedCountry={selectedCountry}
+                  onCountryChange={handleCountryChange}
+                />
               </div>
 
               <div className="flex items-baseline justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">

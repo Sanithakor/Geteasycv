@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserLayout from '@/components/layout/UserLayout';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
-import { DISPLAY_PLANS, isUserPlanActive } from '@/lib/config/pricing';
-import { CreditCard, Check, Sparkles } from 'lucide-react';
+import { getSavedCountry, saveSelectedCountry, detectBrowserCountry } from '@/lib/utils/geo';
+import CountrySelector from '@/components/pricing/CountrySelector';
+import { DISPLAY_PLANS, getPlanById, getLocalizedPlans, isUserPlanActive, PricingPlan } from '@/lib/config/pricing';
+import { CreditCard, Check, Sparkles, Globe } from 'lucide-react';
 
 export default function UserSubscriptionPage() {
   const router = useRouter();
@@ -13,12 +15,67 @@ export default function UserSubscriptionPage() {
   const [loadingPlan] = useState<string | null>(null);
   const currentTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
+  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
+  const [plans, setPlans] = useState<PricingPlan[]>(DISPLAY_PLANS);
+
+  useEffect(() => {
+    const saved = getSavedCountry();
+    if (saved) {
+      setSelectedCountry(saved);
+    } else {
+      const detected = detectBrowserCountry();
+      setSelectedCountry(detected);
+      saveSelectedCountry(detected);
+    }
+  }, []);
+
+  const fetchPlans = async (countryCode: string) => {
+    try {
+      const res = await fetch(`/api/plans?country=${countryCode}`);
+      const data = await res.json();
+      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
+        const formatted: PricingPlan[] = data.data
+          .filter((p: any) => p.isActive !== false && p.id.toLowerCase() !== 'free')
+          .map((p: any) => {
+            const staticConfig = getPlanById(p.id, countryCode);
+            return {
+              ...staticConfig,
+              id: p.id,
+              name: p.name || staticConfig.name,
+              price: p.priceFormatted || `${p.currency || staticConfig.symbol}${p.price}`,
+              rawPrice: p.price,
+              period: p.billingPeriod || staticConfig.billingPeriod,
+              billingPeriod: p.billingPeriod || staticConfig.billingPeriod,
+              description: p.description || staticConfig.description,
+              features: p.features && p.features.length > 0 ? p.features : staticConfig.features,
+              popular: Boolean(p.popular ?? staticConfig.popular),
+              badge: p.badge || (p.popular ? 'MOST POPULAR' : staticConfig.badge),
+            };
+          });
+        setPlans(formatted);
+      } else {
+        setPlans(getLocalizedPlans(countryCode));
+      }
+    } catch {
+      setPlans(getLocalizedPlans(countryCode));
+    }
+  };
+
+  useEffect(() => {
+    fetchPlans(selectedCountry);
+  }, [selectedCountry]);
+
+  const handleCountryChange = (newCountry: string) => {
+    setSelectedCountry(newCountry);
+    saveSelectedCountry(newCountry);
+  };
+
   const handleCheckout = (planId: string) => {
     if (planId === 'free') {
       router.push('/editor');
       return;
     }
-    router.push(`/payment/checkout?plan=${planId}&from=/subscription`);
+    router.push(`/payment/checkout?plan=${planId}&country=${selectedCountry}&from=/subscription`);
   };
 
   return (
@@ -61,9 +118,22 @@ export default function UserSubscriptionPage() {
 
         {/* Plans Grid */}
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">Available Plans</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {DISPLAY_PLANS.map((plan) => {
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Available Plans</h2>
+              <p className="text-xs text-slate-500">Choose a plan tailored for your region and billing frequency.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4 text-slate-500 shrink-0" />
+              <CountrySelector
+                selectedCountry={selectedCountry}
+                onCountryChange={handleCountryChange}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            {plans.map((plan) => {
               const isCurrent = isUserPlanActive(currentTier, plan.id);
               const isLoadingThis = loadingPlan === plan.id;
 
@@ -78,7 +148,7 @@ export default function UserSubscriptionPage() {
                 >
                   {plan.popular && (
                     <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-teal-600 text-white font-bold text-[10px] uppercase tracking-wider shadow-sm">
-                      Most Popular
+                      {plan.badge || 'Most Popular'}
                     </span>
                   )}
 
@@ -90,7 +160,7 @@ export default function UserSubscriptionPage() {
 
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-bold text-slate-900">{plan.price}</span>
-                      <span className="text-xs text-slate-500">/ {plan.billingPeriod}</span>
+                      <span className="text-xs text-slate-500">/ {plan.billingPeriod || plan.period}</span>
                     </div>
 
                     <ul className="space-y-2.5 pt-4 border-t border-slate-100">

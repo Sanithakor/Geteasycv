@@ -1,22 +1,35 @@
 /**
- * GetEasyCV — Central Pricing & Subscription Configuration
- * Single Source of Truth for plans, prices, feature limits, and display metadata.
+ * GetEasyCV — Central Country-Wise Pricing & Subscription Configuration
+ * Single Source of Truth for plans, prices, currencies, feature limits, and display metadata.
  */
+
+import { getCountryOption, CountryOption } from '@/lib/utils/geo';
+
+export interface PlanPrice {
+  price: string;          // Formatted price string (e.g. "₹199", "$5.99", "€5.99")
+  rawPrice: number;       // Numeric price (e.g. 199, 5.99)
+  amountSubunits: number; // Amount in smallest sub-unit (e.g. 19900 paise, 599 cents)
+  currency: string;       // Currency ISO code (INR, USD, EUR, etc.)
+  symbol: string;         // Currency symbol (₹, $, €, £, C$, A$, AED, S$)
+  period: string;         // Billing period text (e.g. "month", "one-time payment", "lifetime access")
+}
 
 export interface PricingPlan {
   id: string;
   name: string;
   price: string;
-  rawPrice: number; // Price in currency unit (e.g. 199 for ₹199 or 9 for $9)
-  amountPaise: number; // Amount in smallest currency sub-unit (for Razorpay: ₹1 = 100 paise)
+  rawPrice: number;
+  amountPaise: number; // Subunit amount (backward compatibility alias)
+  amountSubunits: number;
   currency: string;
+  symbol: string;
   billingPeriod: string;
-  period: string; // Alias for billingPeriod for compatibility
+  period: string;
   description: string;
   features: string[];
   cta: string;
   popular?: boolean;
-  highlight?: boolean; // Alias for popular
+  highlight?: boolean;
   badge?: string | null;
   isActive: boolean;
   
@@ -29,42 +42,97 @@ export interface PricingPlan {
   sortOrder: number;
 }
 
-export const PRICING_PLANS: Record<string, PricingPlan> = {
-  free: {
-    id: 'free',
-    name: 'Free',
-    price: '₹0',
-    rawPrice: 0,
-    amountPaise: 0,
-    currency: '₹',
-    billingPeriod: 'Free forever',
-    period: 'Free forever',
-    description: 'Essential CV creation with standard templates.',
-    features: [
-      '1 CV Creation',
-      'Standard ATS Template',
-      'Basic PDF Export',
-      'Free Account Forever',
-    ],
-    cta: 'Current Plan',
-    popular: false,
-    highlight: false,
-    badge: null,
-    isActive: true,
-    maxResumes: 1,
-    canUseAI: false,
-    canUsePremiumTemplates: false,
-    canExportPDF: true,
-    canExportImages: false,
-    sortOrder: 0,
+export interface CountryPlanMatrix {
+  currency: string;
+  symbol: string;
+  starter: { price: string; rawPrice: number; amountSubunits: number };
+  pro: { price: string; rawPrice: number; amountSubunits: number };
+  premium: { price: string; rawPrice: number; amountSubunits: number };
+}
+
+export const COUNTRY_PRICING_MATRIX: Record<string, CountryPlanMatrix> = {
+  IN: {
+    currency: 'INR',
+    symbol: '₹',
+    starter: { price: '₹49', rawPrice: 49, amountSubunits: 4900 },
+    pro: { price: '₹199', rawPrice: 199, amountSubunits: 19900 },
+    premium: { price: '₹999', rawPrice: 999, amountSubunits: 99900 },
   },
-  starter: {
+  US: {
+    currency: 'USD',
+    symbol: '$',
+    starter: { price: '$1.99', rawPrice: 1.99, amountSubunits: 199 },
+    pro: { price: '$5.99', rawPrice: 5.99, amountSubunits: 599 },
+    premium: { price: '$24.99', rawPrice: 24.99, amountSubunits: 2499 },
+  },
+  GB: {
+    currency: 'GBP',
+    symbol: '£',
+    starter: { price: '£1.49', rawPrice: 1.49, amountSubunits: 149 },
+    pro: { price: '£4.99', rawPrice: 4.99, amountSubunits: 499 },
+    premium: { price: '£19.99', rawPrice: 19.99, amountSubunits: 1999 },
+  },
+  EU: {
+    currency: 'EUR',
+    symbol: '€',
+    starter: { price: '€1.99', rawPrice: 1.99, amountSubunits: 199 },
+    pro: { price: '€5.99', rawPrice: 5.99, amountSubunits: 599 },
+    premium: { price: '€24.99', rawPrice: 24.99, amountSubunits: 2499 },
+  },
+  CA: {
+    currency: 'CAD',
+    symbol: 'C$',
+    starter: { price: 'C$2.99', rawPrice: 2.99, amountSubunits: 299 },
+    pro: { price: 'C$7.99', rawPrice: 7.99, amountSubunits: 799 },
+    premium: { price: 'C$29.99', rawPrice: 29.99, amountSubunits: 2999 },
+  },
+  AU: {
+    currency: 'AUD',
+    symbol: 'A$',
+    starter: { price: 'A$3.49', rawPrice: 3.49, amountSubunits: 349 },
+    pro: { price: 'A$8.99', rawPrice: 8.99, amountSubunits: 899 },
+    premium: { price: 'A$34.99', rawPrice: 34.99, amountSubunits: 3499 },
+  },
+  AE: {
+    currency: 'AED',
+    symbol: 'AED',
+    starter: { price: 'AED 7', rawPrice: 7, amountSubunits: 700 },
+    pro: { price: 'AED 22', rawPrice: 22, amountSubunits: 2200 },
+    premium: { price: 'AED 89', rawPrice: 89, amountSubunits: 8900 },
+  },
+  SG: {
+    currency: 'SGD',
+    symbol: 'S$',
+    starter: { price: 'S$2.99', rawPrice: 2.99, amountSubunits: 299 },
+    pro: { price: 'S$7.99', rawPrice: 7.99, amountSubunits: 799 },
+    premium: { price: 'S$29.99', rawPrice: 29.99, amountSubunits: 2999 },
+  },
+};
+
+export function getCountryPricingMatrix(countryCode: string): CountryPlanMatrix {
+  const code = (countryCode || 'US').toUpperCase().trim();
+  if (COUNTRY_PRICING_MATRIX[code]) {
+    return COUNTRY_PRICING_MATRIX[code];
+  }
+  const option = getCountryOption(code);
+  if (COUNTRY_PRICING_MATRIX[option.code]) {
+    return COUNTRY_PRICING_MATRIX[option.code];
+  }
+  return COUNTRY_PRICING_MATRIX.US;
+}
+
+export function getLocalizedPlans(countryCode: string = 'IN'): PricingPlan[] {
+  const matrix = getCountryPricingMatrix(countryCode);
+
+  const starterPlan: PricingPlan = {
     id: 'starter',
     name: 'Starter',
-    price: '₹49',
-    rawPrice: 49,
-    amountPaise: 4900,
-    currency: '₹',
+    price: matrix.starter.price,
+    rawPrice: matrix.starter.rawPrice,
+    amountPaise: matrix.starter.amountSubunits,
+    amountSubunits: matrix.starter.amountSubunits,
+    currency: matrix.currency,
+    symbol: matrix.symbol,
     billingPeriod: 'one-time payment',
     period: 'one-time payment',
     description: 'Perfect for quick single resume creation.',
@@ -85,14 +153,17 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     canExportPDF: true,
     canExportImages: false,
     sortOrder: 1,
-  },
-  pro: {
+  };
+
+  const proPlan: PricingPlan = {
     id: 'pro',
     name: 'Pro',
-    price: '₹199',
-    rawPrice: 199,
-    amountPaise: 19900,
-    currency: '₹',
+    price: matrix.pro.price,
+    rawPrice: matrix.pro.rawPrice,
+    amountPaise: matrix.pro.amountSubunits,
+    amountSubunits: matrix.pro.amountSubunits,
+    currency: matrix.currency,
+    symbol: matrix.symbol,
     billingPeriod: 'month',
     period: 'month',
     description: 'For active job seekers looking to maximize interviews.',
@@ -114,14 +185,17 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     canExportPDF: true,
     canExportImages: true,
     sortOrder: 2,
-  },
-  premium: {
+  };
+
+  const premiumPlan: PricingPlan = {
     id: 'premium',
     name: 'Premium',
-    price: '₹999',
-    rawPrice: 999,
-    amountPaise: 99900,
-    currency: '₹',
+    price: matrix.premium.price,
+    rawPrice: matrix.premium.rawPrice,
+    amountPaise: matrix.premium.amountSubunits,
+    amountSubunits: matrix.premium.amountSubunits,
+    currency: matrix.currency,
+    symbol: matrix.symbol,
     billingPeriod: 'lifetime access',
     period: 'lifetime access',
     description: 'Permanent access for serious career growth.',
@@ -142,52 +216,70 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     canExportPDF: true,
     canExportImages: true,
     sortOrder: 3,
-  },
-  lifetime: {
-    id: 'lifetime',
-    name: 'Lifetime',
-    price: '₹999',
-    rawPrice: 999,
-    amountPaise: 99900,
-    currency: '₹',
-    billingPeriod: 'one-time payment',
-    period: 'one-time payment',
-    description: 'Permanent access for serious career growth.',
+  };
+
+  return [starterPlan, proPlan, premiumPlan];
+}
+
+export const PRICING_PLANS: Record<string, PricingPlan> = {
+  free: {
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    rawPrice: 0,
+    amountPaise: 0,
+    amountSubunits: 0,
+    currency: 'USD',
+    symbol: '$',
+    billingPeriod: 'Free forever',
+    period: 'Free forever',
+    description: 'Essential CV creation with standard templates.',
     features: [
-      'Everything in Pro',
-      'Lifetime Unlimited Access',
-      'Future Premium Templates',
-      'Priority Customer Support',
+      '1 CV Creation',
+      'Standard ATS Template',
+      'Basic PDF Export',
+      'Free Account Forever',
     ],
-    cta: 'Get Lifetime',
+    cta: 'Current Plan',
     popular: false,
     highlight: false,
-    badge: 'BEST VALUE',
+    badge: null,
     isActive: true,
-    maxResumes: -1,
-    canUseAI: true,
-    canUsePremiumTemplates: true,
+    maxResumes: 1,
+    canUseAI: false,
+    canUsePremiumTemplates: false,
     canExportPDF: true,
-    canExportImages: true,
+    canExportImages: false,
+    sortOrder: 0,
+  },
+  ...getLocalizedPlans('IN').reduce((acc, p) => ({ ...acc, [p.id]: p }), {}),
+  lifetime: {
+    ...getLocalizedPlans('IN').find((p) => p.id === 'premium')!,
+    id: 'lifetime',
+    name: 'Lifetime',
+    cta: 'Get Lifetime',
     sortOrder: 4,
   },
 };
 
-export const DISPLAY_PLANS: PricingPlan[] = [
-  PRICING_PLANS.starter,
-  PRICING_PLANS.pro,
-  PRICING_PLANS.premium,
-];
+export const DISPLAY_PLANS: PricingPlan[] = getLocalizedPlans('IN');
 
-export function getPlanById(planId: string): PricingPlan {
+export function getPlanById(planId: string, countryCode: string = 'IN'): PricingPlan {
   const normalized = (planId || 'pro').toLowerCase().trim();
-  if (PRICING_PLANS[normalized]) {
-    return PRICING_PLANS[normalized];
+  const localizedList = getLocalizedPlans(countryCode);
+
+  let targetId = normalized;
+  if (normalized === 'lifetime') targetId = 'premium';
+
+  const found = localizedList.find((p) => p.id === targetId);
+  if (found) {
+    if (normalized === 'lifetime') {
+      return { ...found, id: 'lifetime', name: 'Lifetime', cta: 'Get Lifetime' };
+    }
+    return found;
   }
-  // Alias mapping
-  if (normalized === 'starter') return PRICING_PLANS.starter;
-  if (normalized === 'lifetime') return PRICING_PLANS.lifetime;
-  return PRICING_PLANS.pro;
+
+  return localizedList.find((p) => p.id === 'pro')!;
 }
 
 export function isUserPlanActive(userTier: string | null | undefined, targetPlanId: string): boolean {

@@ -1,17 +1,22 @@
 /**
  * GET, POST & PUT /api/plans
- * API Endpoint to fetch and update dynamic subscription plans
+ * API Endpoint to fetch and update dynamic subscription plans with country-wise pricing support
  */
 
 import { NextResponse } from 'next/server';
 import { fetchAllPlans, saveAllPlans, PlanItem } from '@/lib/plansStore';
 import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
+import { detectBrowserCountry } from '@/lib/utils/geo';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const plans = await fetchAllPlans();
+    const { searchParams } = new URL(req.url);
+    const country = searchParams.get('country') || req.headers.get('cf-ipcountry') || req.headers.get('x-country') || 'IN';
+    const plans = await fetchAllPlans(country);
+
     return NextResponse.json({
       success: true,
+      country,
       data: plans,
     });
   } catch (error) {
@@ -32,6 +37,8 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Forbidden: Admin authorization required' }, { status: 403 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const country = searchParams.get('country') || 'IN';
     const body = await req.json();
     const plans: PlanItem[] = body.plans || (Array.isArray(body) ? body : []);
 
@@ -39,10 +46,11 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Invalid plans payload array' }, { status: 400 });
     }
 
-    await saveAllPlans(plans);
+    await saveAllPlans(plans, country);
 
     return NextResponse.json({
       success: true,
+      country,
       message: 'Plans updated successfully',
       data: plans,
     });

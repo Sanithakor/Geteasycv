@@ -88,7 +88,7 @@ export async function middleware(request: NextRequest) {
       // Redirect to home with modal trigger + callbackUrl so they land on /admin after login
       const dest = new URL('/', request.url);
       dest.searchParams.set('openAuth', 'login');
-      dest.searchParams.set('callbackUrl', pathname);
+      dest.searchParams.set('callbackUrl', request.nextUrl.pathname + request.nextUrl.search);
       return NextResponse.redirect(dest);
     }
     if (!isAdmin) {
@@ -104,7 +104,7 @@ export async function middleware(request: NextRequest) {
       // Redirect to home with modal trigger + callbackUrl
       const dest = new URL('/', request.url);
       dest.searchParams.set('openAuth', 'login');
-      dest.searchParams.set('callbackUrl', pathname);
+      dest.searchParams.set('callbackUrl', request.nextUrl.pathname + request.nextUrl.search);
       return NextResponse.redirect(dest);
     }
     return NextResponse.next();

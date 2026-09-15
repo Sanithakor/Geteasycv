@@ -219,7 +219,8 @@ export default function EditorPage() {
   // Authentication check
   useEffect(() => {
     if (mounted && _hydrated && !isAuthenticated) {
-      router.replace('/?openAuth=login&callbackUrl=/editor');
+      const fullPath = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/editor';
+      router.replace(`/?openAuth=login&callbackUrl=${encodeURIComponent(fullPath)}`);
     }
   }, [mounted, _hydrated, isAuthenticated, router]);
 

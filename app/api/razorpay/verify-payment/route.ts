@@ -3,22 +3,24 @@ import crypto from 'crypto';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { sendPaymentSuccessEmail } from '@/lib/email';
-import { fetchAllPlans } from '@/lib/plansStore';
+import { getPlanById } from '@/lib/config/pricing';
 import { createSystemNotification } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
-    const auth = await getAuthFromRequest(req);
+    const body = await req.json().catch(() => ({}));
+    const auth = await getAuthFromRequest(req, body);
+
     if (!auth?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
       plan = 'pro',
+      country = 'IN',
     } = body;
 
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
@@ -51,27 +53,17 @@ export async function POST(req: Request) {
     }
 
     const normalizedPlan = (plan || 'pro').toLowerCase();
+    const planConfig = getPlanById(normalizedPlan, country);
 
-    // Dynamically fetch configured plan price from store
-    const allPlans = await fetchAllPlans();
-    const matchedPlan = allPlans.find(
-      p => p.id.toLowerCase() === normalizedPlan || p.name.toLowerCase() === normalizedPlan
-    );
-
-    let amount = 199;
-    if (matchedPlan && matchedPlan.price !== undefined) {
-      amount = matchedPlan.price;
-    } else if (normalizedPlan === 'starter') {
-      amount = 49;
-    } else if (normalizedPlan === 'lifetime') {
-      amount = 999;
-    }
+    const amount = planConfig.rawPrice;
+    const currency = planConfig.currency || 'INR';
+    const displayFormattedPrice = planConfig.price;
 
     // 1. Transactionally update User subscription tier in PostgreSQL
     const updatedUser = await (prisma.user as any).update({
       where: { id: auth.userId },
       data: {
-        subscriptionTier: normalizedPlan,
+        subscriptionTier: normalizedPlan === 'lifetime' ? 'premium' : normalizedPlan,
         updatedAt: new Date(),
       },
     });
@@ -81,22 +73,22 @@ export async function POST(req: Request) {
       where: { userId: auth.userId },
       create: {
         userId: auth.userId,
-        plan: normalizedPlan,
+        plan: normalizedPlan === 'lifetime' ? 'premium' : normalizedPlan,
         status: 'active',
         razorpayOrderId: razorpay_order_id || null,
         razorpayPaymentId: razorpay_payment_id || null,
         razorpaySignature: razorpay_signature || null,
         currentPeriodStart: new Date(),
-        currentPeriodEnd: normalizedPlan === 'lifetime' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        currentPeriodEnd: (normalizedPlan === 'premium' || normalizedPlan === 'lifetime') ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       },
       update: {
-        plan: normalizedPlan,
+        plan: normalizedPlan === 'lifetime' ? 'premium' : normalizedPlan,
         status: 'active',
         razorpayOrderId: razorpay_order_id || null,
         razorpayPaymentId: razorpay_payment_id || null,
         razorpaySignature: razorpay_signature || null,
         currentPeriodStart: new Date(),
-        currentPeriodEnd: normalizedPlan === 'lifetime' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        currentPeriodEnd: (normalizedPlan === 'premium' || normalizedPlan === 'lifetime') ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         updatedAt: new Date(),
       },
     });
@@ -106,13 +98,13 @@ export async function POST(req: Request) {
       data: {
         userId: auth.userId,
         amount,
-        currency: 'INR',
+        currency,
         status: 'completed',
         razorpayOrderId: razorpay_order_id || `sim_${Date.now()}`,
         razorpayPaymentId: razorpay_payment_id || `pay_sim_${Date.now()}`,
         razorpaySignature: razorpay_signature || null,
         userEmail: updatedUser.email,
-        description: `GetEasyCV ${normalizedPlan.toUpperCase()} Plan Purchase`,
+        description: `GetEasyCV ${normalizedPlan.toUpperCase()} Plan Purchase (${country.toUpperCase()})`,
       },
     });
 
@@ -120,7 +112,7 @@ export async function POST(req: Request) {
     try {
       await createSystemNotification({
         title: 'Payment Successful',
-        message: `Received ₹${amount} payment for ${normalizedPlan.toUpperCase()} plan`,
+        message: `Received ${displayFormattedPrice} payment for ${normalizedPlan.toUpperCase()} plan`,
         type: 'payment',
         target: 'all',
         userId: auth.userId,
@@ -143,7 +135,7 @@ export async function POST(req: Request) {
         await sendPaymentSuccessEmail(
           updatedUser.email,
           normalizedPlan.toUpperCase(),
-          `₹${amount}`
+          displayFormattedPrice
         );
       }
     } catch (emailErr) {
@@ -153,7 +145,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: 'Payment verified and plan activated successfully.',
-      subscriptionTier: normalizedPlan,
+      subscriptionTier: normalizedPlan === 'lifetime' ? 'premium' : normalizedPlan,
     });
   } catch (error: any) {
     console.error('[RAZORPAY_VERIFY_ERROR]', error);

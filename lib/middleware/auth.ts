@@ -11,9 +11,9 @@ export interface AuthPayload {
 }
 
 /**
- * Extract auth payload from request headers or body fallback
+ * Extract auth payload from request headers, cookies, or body fallback
  */
-export async function getAuthFromRequest(req: Request): Promise<AuthPayload | null> {
+export async function getAuthFromRequest(req: Request, bodyData?: any): Promise<AuthPayload | null> {
   try {
     let token = '';
 
@@ -37,6 +37,11 @@ export async function getAuthFromRequest(req: Request): Promise<AuthPayload | nu
       }
     }
 
+    // 4. Try token from passed bodyData
+    if (!token && bodyData && typeof bodyData.token === 'string') {
+      token = bodyData.token.trim();
+    }
+
     if (token) {
       const payload = await verifyToken(token);
       if (payload && payload.userId) {
@@ -44,22 +49,26 @@ export async function getAuthFromRequest(req: Request): Promise<AuthPayload | nu
       }
     }
 
-    // 4. Try request body fallback if JSON request contains token or userId
-    try {
-      const clonedReq = req.clone();
-      const body = await clonedReq.json().catch(() => null);
-      if (body) {
-        if (body.token) {
-          const payload = await verifyToken(body.token);
-          if (payload && payload.userId) {
-            return payload as AuthPayload;
-          }
-        }
-        if (body.userId && typeof body.userId === 'string') {
-          return { userId: body.userId, email: body.userEmail || body.email };
+    // 5. Fallback: Parse body if bodyData not passed and body contains token/userId
+    let body = bodyData;
+    if (!body) {
+      try {
+        const clonedReq = req.clone();
+        body = await clonedReq.json().catch(() => null);
+      } catch {}
+    }
+
+    if (body) {
+      if (body.token && typeof body.token === 'string') {
+        const payload = await verifyToken(body.token);
+        if (payload && payload.userId) {
+          return payload as AuthPayload;
         }
       }
-    } catch {}
+      if (body.userId && typeof body.userId === 'string' && body.userId.trim() !== '') {
+        return { userId: body.userId.trim(), email: body.userEmail || body.email };
+      }
+    }
 
     return null;
   } catch (err) {
@@ -116,16 +125,14 @@ export async function getCurrentUser(auth: AuthPayload | null) {
     }
   } catch {}
 
-  if (auth.userId) {
-    const userEmail = auth.email || (auth.userId.includes('@') ? auth.userId : `${auth.userId}@geteasycv.com`);
-    const userName = auth.email ? auth.email.split('@')[0] : (auth.role === 'admin' ? 'Admin User' : 'User');
+  if (auth.userId && auth.email) {
     return {
       id: auth.userId,
-      email: userEmail,
-      name: userName,
+      email: auth.email,
+      name: auth.email.split('@')[0],
       avatar: null,
       role: auth.role || 'user',
-      subscriptionTier: auth.subscriptionTier || auth.tier || (auth.role === 'admin' ? 'premium' : 'free'),
+      subscriptionTier: 'free',
     };
   }
 

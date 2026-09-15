@@ -44,6 +44,7 @@ export default function LoginForm({ redirectTo = '/dashboard' }: LoginFormProps)
 
     try {
       await login(formData.email.trim(), formData.password);
+      useAuthModalStore.getState().close();
       const authState = useAuthStore.getState();
       const targetPath = authState.user?.role === 'admin' ? '/admin' : targetRedirect;
       router.push(targetPath);
