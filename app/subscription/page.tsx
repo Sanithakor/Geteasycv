@@ -15,18 +15,19 @@ export default function UserSubscriptionPage() {
   const [loadingPlan] = useState<string | null>(null);
   const currentTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
-  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
-  const [plans, setPlans] = useState<PricingPlan[]>(DISPLAY_PLANS);
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    if (typeof window !== 'undefined') return getSavedCountry();
+    return 'IN';
+  });
+  const [plans, setPlans] = useState<PricingPlan[]>(() => {
+    const initCountry = typeof window !== 'undefined' ? getSavedCountry() : 'IN';
+    return getLocalizedPlans(initCountry);
+  });
 
   useEffect(() => {
     const saved = getSavedCountry();
-    if (saved) {
-      setSelectedCountry(saved);
-    } else {
-      const detected = detectBrowserCountry();
-      setSelectedCountry(detected);
-      saveSelectedCountry(detected);
-    }
+    setSelectedCountry(saved);
+    saveSelectedCountry(saved);
   }, []);
 
   const fetchPlans = async (countryCode: string) => {

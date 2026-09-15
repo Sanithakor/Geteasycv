@@ -36,7 +36,11 @@ function CheckoutContent() {
   const { isAuthenticated, user, token, _hydrated } = useAuthStore();
   const { openLogin } = useAuthModalStore();
 
-  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    if (queryCountry) return queryCountry.toUpperCase();
+    if (typeof window !== 'undefined') return getSavedCountry();
+    return 'IN';
+  });
 
   useEffect(() => {
     if (queryCountry) {
@@ -44,9 +48,8 @@ function CheckoutContent() {
       saveSelectedCountry(queryCountry.toUpperCase());
     } else {
       const saved = getSavedCountry();
-      if (saved) {
-        setSelectedCountry(saved);
-      }
+      setSelectedCountry(saved);
+      saveSelectedCountry(saved);
     }
   }, [queryCountry]);
 

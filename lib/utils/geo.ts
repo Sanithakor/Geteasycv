@@ -1,10 +1,10 @@
 /**
  * Country & Geolocation Utilities for GetEasyCV
- * Handles country detection, browser locale mapping, and storage persistence.
+ * Handles automatic country detection, browser locale/timezone mapping, HTTP header inspection, and storage persistence.
  */
 
 export interface CountryOption {
-  code: string; // ISO 2-letter country code (e.g. IN, US, GB)
+  code: string; // ISO 2-letter country code (e.g. IN, US, GB, EU, CA, AU, AE, SG)
   name: string;
   flag: string;
   currency: string;
@@ -22,52 +22,91 @@ export const SUPPORTED_COUNTRIES: CountryOption[] = [
   { code: 'SG', name: 'Singapore', flag: '🇸🇬', currency: 'SGD', symbol: 'S$' },
 ];
 
-export const DEFAULT_COUNTRY_CODE = 'US';
+export const DEFAULT_COUNTRY_CODE = 'IN'; // Safe default when no signal available
 
 export function getCountryOption(code: string): CountryOption {
   const normalized = (code || '').toUpperCase().trim();
   const found = SUPPORTED_COUNTRIES.find((c) => c.code === normalized);
   if (found) return found;
   
-  // European country codes fallback to EU
-  const eurozoneCodes = ['DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'IE', 'FI', 'PT', 'GR'];
+  // European country codes mapping to EU zone
+  const eurozoneCodes = ['DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'IE', 'FI', 'PT', 'GR', 'SE', 'DK', 'PL'];
   if (eurozoneCodes.includes(normalized)) {
     return SUPPORTED_COUNTRIES.find((c) => c.code === 'EU')!;
   }
 
-  // Final fallback to US
-  return SUPPORTED_COUNTRIES.find((c) => c.code === 'US')!;
+  // Default fallback option
+  return SUPPORTED_COUNTRIES.find((c) => c.code === DEFAULT_COUNTRY_CODE) || SUPPORTED_COUNTRIES[0];
 }
 
 /**
- * Detect user country code from browser locale
+ * Detect user country code dynamically from browser locale and timezone
  */
 export function detectBrowserCountry(): string {
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+  if (typeof window === 'undefined') {
     return DEFAULT_COUNTRY_CODE;
   }
 
   try {
-    const lang = navigator.language || (navigator as any).userLanguage || '';
-    if (lang) {
-      const parts = lang.split('-');
+    // 1. Check time zone first (most reliable indicator on client)
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (timeZone.includes('Asia/Kolkata') || timeZone.includes('Asia/Calcutta') || timeZone.includes('India')) return 'IN';
+    if (timeZone.includes('Europe/London')) return 'GB';
+    if (timeZone.includes('Europe/')) return 'EU';
+    if (timeZone.includes('Australia/')) return 'AU';
+    if (timeZone.includes('America/Toronto') || timeZone.includes('Canada/')) return 'CA';
+    if (timeZone.includes('Asia/Dubai')) return 'AE';
+    if (timeZone.includes('Asia/Singapore')) return 'SG';
+    if (timeZone.includes('America/')) return 'US';
+
+    // 2. Check navigator language tags (e.g., en-IN, en-US, en-GB)
+    const nav = typeof navigator !== 'undefined' ? navigator : null;
+    if (nav) {
+      const lang = nav.language || (nav as any).userLanguage || '';
+      if (lang) {
+        const parts = lang.split('-');
+        if (parts.length > 1) {
+          const countryPart = parts[1].toUpperCase();
+          const match = SUPPORTED_COUNTRIES.find((c) => c.code === countryPart);
+          if (match) return match.code;
+        }
+        
+        const l = parts[0].toLowerCase();
+        if (['hi', 'ta', 'te', 'mr', 'bn', 'gu', 'kn', 'ml', 'pa'].includes(l)) return 'IN';
+        if (['de', 'fr', 'it', 'es', 'nl', 'pt', 'el', 'fi', 'sv'].includes(l)) return 'EU';
+      }
+    }
+  } catch {}
+
+  return DEFAULT_COUNTRY_CODE;
+}
+
+/**
+ * Detect user country code from HTTP request headers on server side (Cloudflare / Vercel / Accept-Language)
+ */
+export function detectRequestCountry(req: Request): string {
+  try {
+    const cfCountry =
+      req.headers.get('cf-ipcountry') ||
+      req.headers.get('x-country') ||
+      req.headers.get('x-vercel-ip-country') ||
+      req.headers.get('x-real-ip-country');
+
+    if (cfCountry && cfCountry !== 'XX' && cfCountry !== 'T1') {
+      return getCountryOption(cfCountry).code;
+    }
+
+    const acceptLang = req.headers.get('accept-language') || '';
+    if (acceptLang) {
+      const primary = acceptLang.split(',')[0]?.split(';')[0]?.trim() || '';
+      const parts = primary.split('-');
       if (parts.length > 1) {
         const countryPart = parts[1].toUpperCase();
         return getCountryOption(countryPart).code;
       }
-      
-      // Handle language-only codes
       const l = parts[0].toLowerCase();
-      if (l === 'hi' || l === 'ta' || l === 'te' || l === 'mr' || l === 'bn') return 'IN';
-      if (l === 'de' || l === 'fr' || l === 'it' || l === 'es' || l === 'nl') return 'EU';
-      if (l === 'en') {
-        // Test time zone if available
-        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-        if (timeZone.includes('Asia/Kolkata') || timeZone.includes('India')) return 'IN';
-        if (timeZone.includes('Europe/London')) return 'GB';
-        if (timeZone.includes('Australia/')) return 'AU';
-        if (timeZone.includes('America/Toronto') || timeZone.includes('Canada/')) return 'CA';
-      }
+      if (['hi', 'ta', 'te', 'mr', 'bn', 'gu', 'kn', 'ml', 'pa'].includes(l)) return 'IN';
+      if (['de', 'fr', 'it', 'es', 'nl', 'pt', 'el', 'fi', 'sv'].includes(l)) return 'EU';
     }
   } catch {}
 

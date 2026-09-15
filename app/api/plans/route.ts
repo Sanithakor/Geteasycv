@@ -6,12 +6,12 @@
 import { NextResponse } from 'next/server';
 import { fetchAllPlans, saveAllPlans, PlanItem } from '@/lib/plansStore';
 import { getAuthFromRequest, requireAdmin } from '@/lib/middleware/auth';
-import { detectBrowserCountry } from '@/lib/utils/geo';
+import { detectRequestCountry } from '@/lib/utils/geo';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const country = searchParams.get('country') || req.headers.get('cf-ipcountry') || req.headers.get('x-country') || 'IN';
+    const country = searchParams.get('country') || detectRequestCountry(req);
     const plans = await fetchAllPlans(country);
 
     return NextResponse.json({

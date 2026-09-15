@@ -64,10 +64,17 @@ function PricingContent() {
   const { user, _hydrated } = useAuthStore();
   const userTier = (user?.tier || (user as any)?.subscriptionTier || 'free').toLowerCase();
 
-  const [selectedCountry, setSelectedCountry] = useState<string>('IN');
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    if (queryCountry) return queryCountry.toUpperCase();
+    if (typeof window !== 'undefined') return getSavedCountry();
+    return 'IN';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [plans, setPlans] = useState<PricingPlan[]>(DISPLAY_PLANS);
+  const [plans, setPlans] = useState<PricingPlan[]>(() => {
+    const initCountry = queryCountry ? queryCountry.toUpperCase() : (typeof window !== 'undefined' ? getSavedCountry() : 'IN');
+    return getLocalizedPlans(initCountry);
+  });
   const [autoCheckoutTriggered, setAutoCheckoutTriggered] = useState(false);
 
   useEffect(() => {
@@ -76,13 +83,8 @@ function PricingContent() {
       saveSelectedCountry(queryCountry.toUpperCase());
     } else {
       const saved = getSavedCountry();
-      if (saved) {
-        setSelectedCountry(saved);
-      } else {
-        const detected = detectBrowserCountry();
-        setSelectedCountry(detected);
-        saveSelectedCountry(detected);
-      }
+      setSelectedCountry(saved);
+      saveSelectedCountry(saved);
     }
   }, [queryCountry]);
 
