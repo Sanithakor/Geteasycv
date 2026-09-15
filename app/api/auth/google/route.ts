@@ -6,7 +6,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { SignJWT } from 'jose';
 import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
-import { createSystemNotification } from '@/lib/notifications';
+import { sendWelcomeEmail, sendGoogleAuthEmail } from '@/lib/email';
+import { createSystemNotification, notifyUserSignup, notifyLoginAlert } from '@/lib/notifications';
 
 const getJWTSecret = () => {
   const secret = process.env.JWT_SECRET || 'fallback-jwt-secret-key-geteasycv-32-chars';
@@ -176,6 +177,7 @@ export async function POST(req: Request) {
     const realAvatar = picture || '';
 
     let user: any = null;
+    let isNewUser = false;
 
     try {
       // Find existing user by googleId or email
@@ -201,6 +203,7 @@ export async function POST(req: Request) {
       }
 
       if (!user) {
+        isNewUser = true;
         // Create new user account with real Google details
         user = await prisma.user.create({
           data: {
@@ -281,12 +284,13 @@ export async function POST(req: Request) {
       createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : new Date().toISOString(),
     });
 
-    createSystemNotification({
-      title: 'New User Registered',
-      message: `${user.email || realEmail} joined GetEasyCV via Google`,
-      type: 'user_signup',
-      target: 'all',
-    }).catch(() => {});
+    if (isNewUser) {
+      sendWelcomeEmail(realEmail, user.name || realName, 'google').catch(() => {});
+      notifyUserSignup(user.id, user.name || realName, true).catch(() => {});
+    } else {
+      sendGoogleAuthEmail(realEmail, user.name || realName, false).catch(() => {});
+      notifyLoginAlert(user.id, true).catch(() => {});
+    }
 
     // Generate JWT auth token using jose (edge-compatible)
     const secret = getJWTSecret();

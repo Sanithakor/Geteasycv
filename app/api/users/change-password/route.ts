@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { comparePassword, hashPassword, validatePassword } from '@/lib/utils/auth';
+import { sendPasswordChangedEmail } from '@/lib/email';
+import { notifyPasswordChanged } from '@/lib/notifications';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },
-      select: { id: true, password: true },
+      select: { id: true, email: true, name: true, password: true },
     });
 
     if (!user || !user.password) {
@@ -76,6 +78,9 @@ export async function POST(req: Request) {
       where: { id: auth.userId },
       data: { password: newHashedPassword },
     });
+
+    sendPasswordChangedEmail(user.email, user.name || 'User').catch(() => {});
+    notifyPasswordChanged(user.id).catch(() => {});
 
     return NextResponse.json({
       success: true,

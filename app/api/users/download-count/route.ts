@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { canDownloadCV } from '@/lib/entitlements';
+import { sendResumeDownloadedEmail } from '@/lib/email';
+import { notifyResumeDownloaded } from '@/lib/notifications';
 
 export async function GET(req: Request) {
   try {
@@ -87,8 +89,14 @@ export async function POST(req: Request) {
     const updatedUser = await (prisma.user as any).update({
       where: { id: auth.userId },
       data: { downloadCount: { increment: 1 } },
-      select: { downloadCount: true },
+      select: { downloadCount: true, email: true, name: true },
     });
+
+    notifyResumeDownloaded(auth.userId, 'CV Document').catch(() => {});
+    if (updatedUser?.email || user?.email || auth.email) {
+      const destEmail = updatedUser?.email || user?.email || auth.email;
+      sendResumeDownloadedEmail(destEmail, updatedUser?.name || user?.name || 'User', 'CV Document', auth.userId).catch(() => {});
+    }
 
     return NextResponse.json({
       success: true,

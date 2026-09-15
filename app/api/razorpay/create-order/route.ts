@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
 import { getPlanById } from '@/lib/config/pricing';
+import { notifyPaymentInitiated } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
@@ -27,6 +28,9 @@ export async function POST(req: Request) {
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     const amount = planConfig.amountSubunits;
     const currency = planConfig.currency || 'INR';
+
+    // Trigger payment initiated in-app notification
+    notifyPaymentInitiated(auth.userId, planConfig.name, planConfig.price).catch(() => {});
 
     // Fallback simulation mode if environment keys are not configured yet
     if (!keyId || !keySecret) {

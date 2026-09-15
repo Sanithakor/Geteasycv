@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
-import { createSystemNotification } from '@/lib/notifications';
+import { createSystemNotification, notifyResumeCreated } from '@/lib/notifications';
+import { sendResumeCreatedEmail } from '@/lib/email';
 import { getStoreResumes, saveStoreResume, ResumeStoreItem } from '@/lib/resumeStore';
 import { canCreateCV } from '@/lib/entitlements';
 
@@ -204,13 +205,10 @@ export async function POST(req: Request) {
             templateId: targetTemplateId, // Preserve exact dynamic templateId
           };
 
-          createSystemNotification({
-            title: 'New Resume Created',
-            message: `"${resume.title}" was created`,
-            type: 'resume_created',
-            target: 'all',
-            userId: auth.userId,
-          }).catch(() => {});
+          notifyResumeCreated(auth.userId, requestedTitle).catch(() => {});
+          if (auth.email) {
+            sendResumeCreatedEmail(auth.email, 'User', requestedTitle, auth.userId).catch(() => {});
+          }
         }
       }
     } catch (dbError) {

@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db';
 import { getAuthFromRequest } from '@/lib/middleware/auth';
-import { sendPaymentSuccessEmail } from '@/lib/email';
+import { sendPaymentSuccessEmail, sendSubscriptionStartedEmail } from '@/lib/email';
 import { getPlanById } from '@/lib/config/pricing';
-import { createSystemNotification } from '@/lib/notifications';
+import { createSystemNotification, notifyPaymentSuccess, notifySubscriptionStarted } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
@@ -108,23 +108,10 @@ export async function POST(req: Request) {
       },
     });
 
-    // 4. Dispatch real system notifications
+    // 4. Dispatch system notifications
     try {
-      await createSystemNotification({
-        title: 'Payment Successful',
-        message: `Received ${displayFormattedPrice} payment for ${normalizedPlan.toUpperCase()} plan`,
-        type: 'payment',
-        target: 'all',
-        userId: auth.userId,
-      });
-
-      await createSystemNotification({
-        title: 'Subscription Upgraded',
-        message: `Upgraded to ${normalizedPlan.toUpperCase()} plan`,
-        type: 'subscription',
-        target: 'all',
-        userId: auth.userId,
-      });
+      notifyPaymentSuccess(auth.userId, normalizedPlan.toUpperCase(), displayFormattedPrice).catch(() => {});
+      notifySubscriptionStarted(auth.userId, normalizedPlan.toUpperCase()).catch(() => {});
     } catch (notifErr) {
       console.warn('[NOTIF_PAYMENT_WARN]', notifErr);
     }
@@ -132,11 +119,18 @@ export async function POST(req: Request) {
     // 5. Send transactional confirmation email
     try {
       if (updatedUser.email) {
-        await sendPaymentSuccessEmail(
+        sendPaymentSuccessEmail(
           updatedUser.email,
           normalizedPlan.toUpperCase(),
-          displayFormattedPrice
-        );
+          displayFormattedPrice,
+          currency,
+          razorpay_payment_id || undefined
+        ).catch(() => {});
+        sendSubscriptionStartedEmail(
+          updatedUser.email,
+          normalizedPlan.toUpperCase(),
+          planConfig.billingPeriod || 'Monthly'
+        ).catch(() => {});
       }
     } catch (emailErr) {
       console.warn('[PAYMENT_EMAIL_WARN]', emailErr);

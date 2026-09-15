@@ -9,7 +9,7 @@ import { prisma } from '@/lib/db';
 import { hashPassword, generateToken, validatePassword, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
 import { sendWelcomeEmail } from '@/lib/email';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
-import { createSystemNotification } from '@/lib/notifications';
+import { createSystemNotification, notifyUserSignup } from '@/lib/notifications';
 import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
 
 export async function POST(req: Request) {
@@ -120,21 +120,13 @@ export async function POST(req: Request) {
         lastSeenAt: new Date().toISOString(),
       });
 
-      // Send transactional welcome email
-      if (email) {
-        sendWelcomeEmail(user.email, user.name).catch((err) => {
+      // Send transactional welcome email & notify
+      if (user.email) {
+        sendWelcomeEmail(user.email, user.name, 'email').catch((err) => {
           console.warn('[WELCOME_EMAIL_WARN]', err);
         });
+        notifyUserSignup(user.id, user.name, false).catch((err) => console.warn('[NOTIF_WARN]', err));
       }
-
-      // Dispatch notification
-      createSystemNotification({
-        title: 'New User Registered',
-        message: `${user.email} joined GetEasyCV`,
-        type: 'user_signup',
-        target: 'all',
-        userId: user.id,
-      }).catch((err) => console.warn('[NOTIF_WARN]', err));
 
     } catch (dbError: any) {
       console.warn('[SIGNUP_DB_OFFLINE_FALLBACK] Database offline or unreachable, proceeding with mock account session:', dbError?.message);

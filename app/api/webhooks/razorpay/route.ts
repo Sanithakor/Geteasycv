@@ -1,7 +1,22 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db';
-import { sendPaymentSuccessEmail, sendSubscriptionCancelEmail } from '@/lib/email';
+import {
+  sendPaymentSuccessEmail,
+  sendPaymentFailedEmail,
+  sendSubscriptionStartedEmail,
+  sendSubscriptionRenewedEmail,
+  sendSubscriptionCancelledEmail,
+  sendRefundCompletedEmail,
+} from '@/lib/email';
+import {
+  notifyPaymentSuccess,
+  notifyPaymentFailed,
+  notifySubscriptionStarted,
+  notifySubscriptionRenewed,
+  notifySubscriptionCancelled,
+  notifyRefundCompleted,
+} from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
@@ -33,9 +48,9 @@ export async function POST(req: Request) {
 
     const payload = JSON.parse(rawBody);
     const event = payload.event;
-    const entity = payload.payload?.payment?.entity || payload.payload?.order?.entity || {};
+    const entity = payload.payload?.payment?.entity || payload.payload?.order?.entity || payload.payload?.subscription?.entity || payload.payload?.refund?.entity || {};
 
-    console.log(`[RAZORPAY_WEBHOOK] Received event: ${event}`);
+    console.log(`[RAZORPAY_WEBHOOK] Processing event: ${event}`);
 
     const notes = entity.notes || {};
     const userId = notes.userId;
@@ -45,7 +60,6 @@ export async function POST(req: Request) {
 
     if (event === 'payment.captured' || event === 'order.paid') {
       if (userId) {
-        // Update user subscription tier
         const user = await (prisma.user as any).update({
           where: { id: userId },
           data: {
@@ -54,7 +68,6 @@ export async function POST(req: Request) {
           },
         });
 
-        // Upsert subscription
         await (prisma.subscription as any).upsert({
           where: { userId },
           create: {
@@ -77,29 +90,46 @@ export async function POST(req: Request) {
           },
         });
 
-        // Record payment if not existing
-        const existingPayment = await (prisma.payment as any).findUnique({
-          where: { razorpayOrderId: razorpayOrderId },
+        const amountInRupees = entity.amount ? Math.round(entity.amount / 100) : 199;
+        const currency = entity.currency || 'INR';
+
+        await (prisma.payment as any).create({
+          data: {
+            userId,
+            amount: amountInRupees,
+            currency,
+            status: 'completed',
+            razorpayOrderId,
+            razorpayPaymentId,
+            userEmail: user.email,
+            description: `Razorpay Payment for ${plan.toUpperCase()} Plan`,
+          },
         });
 
-        if (!existingPayment) {
-          const amountInRupees = entity.amount ? Math.round(entity.amount / 100) : 199;
-          await (prisma.payment as any).create({
-            data: {
-              userId,
-              amount: amountInRupees,
-              currency: 'INR',
-              status: 'completed',
-              razorpayOrderId,
-              razorpayPaymentId,
-              userEmail: user.email,
-              description: `Razorpay Payment for ${plan.toUpperCase()} Plan`,
-            },
-          });
+        notifyPaymentSuccess(userId, plan.toUpperCase(), `${currency} ${amountInRupees}`).catch(() => {});
+        notifySubscriptionStarted(userId, plan.toUpperCase()).catch(() => {});
 
-          if (user.email) {
-            sendPaymentSuccessEmail(user.email, plan.toUpperCase(), `₹${amountInRupees}`).catch(() => {});
-          }
+        if (user.email) {
+          sendPaymentSuccessEmail(user.email, plan.toUpperCase(), `${currency} ${amountInRupees}`, currency, razorpayPaymentId).catch(() => {});
+          sendSubscriptionStartedEmail(user.email, plan.toUpperCase(), 'Monthly').catch(() => {});
+        }
+      }
+    } else if (event === 'payment.failed') {
+      if (userId) {
+        const user = await (prisma.user as any).findUnique({ where: { id: userId } });
+        const reason = entity.error_description || 'Card processor declined transaction';
+        notifyPaymentFailed(userId, plan.toUpperCase(), reason).catch(() => {});
+        if (user?.email) {
+          sendPaymentFailedEmail(user.email, plan.toUpperCase(), reason).catch(() => {});
+        }
+      }
+    } else if (event === 'subscription.charged' || event === 'subscription.renewed') {
+      if (userId) {
+        const nextBilling = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString();
+        notifySubscriptionRenewed(userId, plan.toUpperCase()).catch(() => {});
+        const user = await (prisma.user as any).findUnique({ where: { id: userId } });
+        if (user?.email) {
+          sendSubscriptionRenewedEmail(user.email, plan.toUpperCase(), nextBilling).catch(() => {});
         }
       }
     } else if (event === 'subscription.cancelled' || event === 'subscription.halted') {
@@ -109,9 +139,20 @@ export async function POST(req: Request) {
           data: { status: 'canceled', canceledAt: new Date() },
         });
 
+        notifySubscriptionCancelled(userId, plan.toUpperCase()).catch(() => {});
+
         const user = await (prisma.user as any).findUnique({ where: { id: userId } });
         if (user?.email) {
-          sendSubscriptionCancelEmail(user.email).catch(() => {});
+          sendSubscriptionCancelledEmail(user.email, plan.toUpperCase()).catch(() => {});
+        }
+      }
+    } else if (event === 'refund.processed' || event === 'refund.created') {
+      const refundAmount = entity.amount ? `${entity.currency || 'INR'} ${Math.round(entity.amount / 100)}` : 'Refund';
+      if (userId) {
+        notifyRefundCompleted(userId, refundAmount).catch(() => {});
+        const user = await (prisma.user as any).findUnique({ where: { id: userId } });
+        if (user?.email) {
+          sendRefundCompletedEmail(user.email, refundAmount, entity.id).catch(() => {});
         }
       }
     }

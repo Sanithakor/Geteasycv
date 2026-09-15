@@ -8,6 +8,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword, validatePassword } from '@/lib/utils/auth';
+import { sendPasswordChangedEmail } from '@/lib/email';
+import { notifyPasswordChanged } from '@/lib/notifications';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 
 export async function POST(req: Request) {
@@ -64,10 +66,16 @@ export async function POST(req: Request) {
     // Hash and update
     const hashedPassword = await hashPassword(newPassword);
 
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { email: verificationRecord.email },
       data: { password: hashedPassword },
+      select: { id: true, email: true, name: true },
     });
+
+    if (updatedUser) {
+      sendPasswordChangedEmail(updatedUser.email, updatedUser.name || 'User').catch(() => {});
+      notifyPasswordChanged(updatedUser.id).catch(() => {});
+    }
 
     // Delete the used token
     await prisma.verificationToken.delete({

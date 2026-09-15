@@ -7,8 +7,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyPassword, generateToken, sanitizeEmail, validateEmail } from '@/lib/utils/auth';
+import { sendLoginAlertEmail } from '@/lib/email';
+import { notifyLoginAlert } from '@/lib/notifications';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/middleware/rateLimit';
 import { registerOrUpdateUserInStore } from '@/lib/userRegistry';
+
 export async function POST(req: Request) {
   // Apply rate limiting (Max 5 attempts per 15 minutes per IP)
   const rateLimit = checkRateLimit(req, {
@@ -129,6 +132,12 @@ export async function POST(req: Request) {
       } catch (updateError) {
         console.warn('Could not update lastLoginAt in DB:', updateError);
       }
+    }
+
+    // Trigger security notification & email
+    if (user.email) {
+      sendLoginAlertEmail(user.email, user.name || 'User').catch(() => {});
+      notifyLoginAlert(user.id, false).catch(() => {});
     }
 
     const response = NextResponse.json({
