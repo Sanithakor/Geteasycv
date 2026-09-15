@@ -158,14 +158,18 @@ const navItems: NavItem[] = [
 
 function OpenAuthWatcher() {
   const searchParams = useSearchParams();
-  const { openLogin, openSignup } = useAuthModalStore();
-  const { isAuthenticated } = useAuthStore();
+  const { openLogin, openSignup, close } = useAuthModalStore();
+  const { isAuthenticated, _hydrated } = useAuthStore();
 
   useEffect(() => {
+    // Wait until hydration completes so we know whether user is actually logged in
+    if (!_hydrated) return;
+
     const param = searchParams.get('openAuth');
     if (!param) return;
 
     if (isAuthenticated) {
+      close();
       const url = new URL(window.location.href);
       url.searchParams.delete('openAuth');
       url.searchParams.delete('callbackUrl');
@@ -180,7 +184,7 @@ function OpenAuthWatcher() {
     url.searchParams.delete('openAuth');
     url.searchParams.delete('callbackUrl');
     window.history.replaceState({}, '', url.toString());
-  }, [searchParams, openLogin, openSignup, isAuthenticated]);
+  }, [searchParams, openLogin, openSignup, close, isAuthenticated, _hydrated]);
 
   return null;
 }

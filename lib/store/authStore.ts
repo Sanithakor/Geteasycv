@@ -51,6 +51,26 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
+/**
+ * Synchronizes client-side cookie with current auth token so Next.js server & middleware
+ * immediately recognize the user session on any navigation or hard refresh.
+ */
+const syncAuthCookies = (token: string | null) => {
+  if (typeof document === 'undefined') return;
+  try {
+    if (token) {
+      const maxAge = 30 * 24 * 60 * 60; // 30 days
+      document.cookie = `auth-token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      document.cookie = `token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+    } else {
+      document.cookie = 'auth-token=; path=/; max-age=0; SameSite=Lax';
+      document.cookie = 'token=; path=/; max-age=0; SameSite=Lax';
+    }
+  } catch (e) {
+    console.warn('[AUTH_COOKIE_SYNC_WARN]', e);
+  }
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -65,14 +85,23 @@ export const useAuthStore = create<AuthState>()(
       // Initialize / Validate existing session with backend
       initializeAuth: async () => {
         const currentToken = get().token;
+        const currentUser = get().user;
+
+        // If no token exists, user is a guest; mark hydrated without logging out or calling me API
+        if (!currentToken) {
+          set({ _hydrated: true, isAuthenticated: false });
+          return;
+        }
+
+        // Ensure browser cookie is in sync with stored token
+        syncAuthCookies(currentToken);
 
         try {
           const headers: Record<string, string> = {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${currentToken}`,
+            'x-auth-token': currentToken,
           };
-          if (currentToken) {
-            headers.Authorization = `Bearer ${currentToken}`;
-          }
 
           const response = await fetch(`${API_BASE_URL}/auth/me`, {
             method: 'GET',
@@ -100,15 +129,27 @@ export const useAuthStore = create<AuthState>()(
             }
           }
 
+          // If server explicitly returns 401 or 403 (e.g. token expired/invalidated)
           if (response.status === 401 || response.status === 403) {
+            console.warn('[AUTH] Token validation returned 401/403, clearing session.');
             await get().logout();
             return;
           }
 
-          set({ _hydrated: true });
+          // If server returned a 500 or non-auth error, preserve current stored session
+          set({
+            _hydrated: true,
+            isAuthenticated: Boolean(currentUser && currentToken),
+            isLoading: false,
+          });
         } catch (error) {
           console.warn('[AUTH_STORE_INITIALIZE_WARN]', error);
-          set({ _hydrated: true });
+          // On network failure or offline mode, preserve stored user credentials
+          set({
+            _hydrated: true,
+            isAuthenticated: Boolean(currentUser && currentToken),
+            isLoading: false,
+          });
         }
       },
 
@@ -124,7 +165,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || errorData.message || 'Login failed');
           }
 
@@ -136,12 +177,15 @@ export const useAuthStore = create<AuthState>()(
           } as User;
           delete (user as any).subscriptionTier;
 
+          syncAuthCookies(data.token);
+
           set({
             user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
             _hydrated: true,
+            error: null,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Login failed';
@@ -165,7 +209,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || errorData.message || 'Signup failed');
           }
 
@@ -177,12 +221,15 @@ export const useAuthStore = create<AuthState>()(
           } as User;
           delete (user as any).subscriptionTier;
 
+          syncAuthCookies(data.token);
+
           set({
             user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
             _hydrated: true,
+            error: null,
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Signup failed';
@@ -218,12 +265,17 @@ export const useAuthStore = create<AuthState>()(
           } as User;
           delete (user as any).subscriptionTier;
 
+          if (data.token) {
+            syncAuthCookies(data.token);
+          }
+
           set({
             user,
             token: data.token,
             isAuthenticated: true,
             isLoading: false,
             _hydrated: true,
+            error: null,
           });
           return { success: true, user, token: data.token };
         } catch (error) {
@@ -239,6 +291,8 @@ export const useAuthStore = create<AuthState>()(
       // Logout user — completely purges auth state and local storage keys to prevent stale user data
       logout: async () => {
         set({ isLoading: true });
+        syncAuthCookies(null);
+
         try {
           await fetch(`${API_BASE_URL}/auth/logout`, {
             method: 'POST',
@@ -293,6 +347,9 @@ export const useAuthStore = create<AuthState>()(
 
           if (response.ok) {
             const data: AuthResponse = await response.json();
+            if (data.token) {
+              syncAuthCookies(data.token);
+            }
             set({
               token: data.token,
               user: data.user,
@@ -313,6 +370,7 @@ export const useAuthStore = create<AuthState>()(
 
       // Set token manually
       setToken: (token: string | null) => {
+        syncAuthCookies(token);
         set({ token });
       },
 
@@ -351,8 +409,13 @@ export const useAuthStore = create<AuthState>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
+          const hasValidSession = Boolean(state.user && state.token);
+          state.isAuthenticated = hasValidSession;
           state.setHydrated(true);
-          state.initializeAuth();
+          if (state.token) {
+            syncAuthCookies(state.token);
+            state.initializeAuth();
+          }
         }
       },
     }

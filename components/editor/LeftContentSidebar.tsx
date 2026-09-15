@@ -1137,8 +1137,8 @@ export default function LeftContentSidebar({
                   </div>
                 </div>
 
-                {/* Name & Job Title */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Name */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field
                     label="First Name"
                     required
@@ -1155,27 +1155,36 @@ export default function LeftContentSidebar({
                   />
                 </div>
 
-                <div>
+                {/* Professional Title & Location */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Field
+                      label="Professional Title"
+                      value={cvData.personal?.title}
+                      placeholder="Senior Full Stack Engineer"
+                      onChange={(val) => updatePersonal('title', val)}
+                    />
+                    <VoiceAIFieldAssist
+                      fieldName="Job Title"
+                      fieldValue={cvData.personal?.title || ''}
+                      onAccept={(text) => {
+                        pushHistory(cvData);
+                        updatePersonal('title', text);
+                      }}
+                      sectionName="Personal Information"
+                      jobTitle={cvData.personal?.title || 'Professional'}
+                    />
+                  </div>
                   <Field
-                    label="Professional Title"
-                    value={cvData.personal?.title}
-                    placeholder="Senior Full Stack Engineer"
-                    onChange={(val) => updatePersonal('title', val)}
-                  />
-                  <VoiceAIFieldAssist
-                    fieldName="Job Title"
-                    fieldValue={cvData.personal?.title || ''}
-                    onAccept={(text) => {
-                      pushHistory(cvData);
-                      updatePersonal('title', text);
-                    }}
-                    sectionName="Personal Information"
-                    jobTitle={cvData.personal?.title || 'Professional'}
+                    label="Location"
+                    value={cvData.personal?.location}
+                    placeholder="San Francisco, CA"
+                    onChange={(val) => updatePersonal('location', val)}
                   />
                 </div>
 
                 {/* Contact Information */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field
                     label="Email"
                     type="email"
@@ -1193,14 +1202,8 @@ export default function LeftContentSidebar({
                   />
                 </div>
 
-                <Field
-                  label="Location"
-                  value={cvData.personal?.location}
-                  placeholder="San Francisco, CA"
-                  onChange={(val) => updatePersonal('location', val)}
-                />
-
-                <div className="grid grid-cols-2 gap-3">
+                {/* Social & Portfolio Links */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field
                     label="Website / Portfolio"
                     value={cvData.personal?.website}
@@ -1277,7 +1280,7 @@ export default function LeftContentSidebar({
                             }));
                           }}
                         >
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Job Title"
                               value={exp.position}
@@ -1292,7 +1295,7 @@ export default function LeftContentSidebar({
                             />
                           </div>
 
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Start Date"
                               value={exp.startDate}
@@ -1307,25 +1310,26 @@ export default function LeftContentSidebar({
                             />
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              id={`curr-${exp.id}`}
-                              checked={exp.current}
-                              onChange={(e) => updateExperience(exp.id, 'current', e.target.checked)}
-                              className="rounded border-slate-300 text-violet-600 focus:ring-violet-500"
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                            <Field
+                              label="Location"
+                              value={exp.location}
+                              placeholder="San Francisco, CA (or Remote)"
+                              onChange={(val) => updateExperience(exp.id, 'location', val)}
                             />
-                            <label htmlFor={`curr-${exp.id}`} className="text-xs font-medium text-slate-700">
-                              I currently work here
-                            </label>
+                            <div className="flex items-center gap-2 pt-1 sm:pt-4">
+                              <input
+                                type="checkbox"
+                                id={`curr-${exp.id}`}
+                                checked={exp.current}
+                                onChange={(e) => updateExperience(exp.id, 'current', e.target.checked)}
+                                className="rounded border-slate-300 text-violet-600 focus:ring-violet-500 cursor-pointer"
+                              />
+                              <label htmlFor={`curr-${exp.id}`} className="text-xs font-medium text-slate-700 cursor-pointer">
+                                I currently work here
+                              </label>
+                            </div>
                           </div>
-
-                          <Field
-                            label="Location"
-                            value={exp.location}
-                            placeholder="San Francisco, CA (or Remote)"
-                            onChange={(val) => updateExperience(exp.id, 'location', val)}
-                          />
 
                           {/* Role Summary */}
                           <div>
@@ -1457,29 +1461,37 @@ export default function LeftContentSidebar({
                             }));
                           }}
                         >
-                          <Field
-                            label="University / Institution"
-                            value={edu.institution}
-                            placeholder="Stanford University"
-                            onChange={(val) => updateEducation(edu.id, 'institution', val)}
-                          />
-
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field
+                              label="University / Institution"
+                              value={edu.institution}
+                              placeholder="Stanford University"
+                              onChange={(val) => updateEducation(edu.id, 'institution', val)}
+                            />
                             <Field
                               label="Degree"
                               value={edu.degree}
                               placeholder="Bachelor of Science"
                               onChange={(val) => updateEducation(edu.id, 'degree', val)}
                             />
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Field of Study"
                               value={edu.field}
                               placeholder="Computer Science"
                               onChange={(val) => updateEducation(edu.id, 'field', val)}
                             />
+                            <Field
+                              label="GPA (Optional)"
+                              value={edu.gpa}
+                              placeholder="3.9 / 4.0"
+                              onChange={(val) => updateEducation(edu.id, 'gpa', val)}
+                            />
                           </div>
 
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Start Date"
                               value={edu.startDate}
@@ -1493,13 +1505,6 @@ export default function LeftContentSidebar({
                               onChange={(val) => updateEducation(edu.id, 'endDate', val)}
                             />
                           </div>
-
-                          <Field
-                            label="GPA (Optional)"
-                            value={edu.gpa}
-                            placeholder="3.9 / 4.0"
-                            onChange={(val) => updateEducation(edu.id, 'gpa', val)}
-                          />
                         </ItemCard>
                       ))}
 
@@ -1531,23 +1536,23 @@ export default function LeftContentSidebar({
 
                   {/* 5. SKILLS */}
                   {currentActiveSection === 'skills' && (
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(cvData.skills || []).map((skill, idx) => (
                         <div
                           key={skill.id || idx}
                           className="flex items-center gap-2 p-2 bg-white rounded-lg border border-slate-200"
                         >
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <input
                               type="text"
                               value={skill.name}
                               placeholder="Skill name (e.g. React)"
                               onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
-                              className="w-full text-xs font-semibold text-slate-800 bg-transparent outline-none"
+                              className="w-full text-xs font-semibold text-slate-800 bg-transparent outline-none truncate"
                             />
                           </div>
 
-                          <div className="w-28">
+                          <div className="w-24 shrink-0">
                             <select
                               value={skill.category}
                               onChange={(e) => updateSkill(skill.id, 'category', e.target.value)}
@@ -1560,14 +1565,14 @@ export default function LeftContentSidebar({
                             </select>
                           </div>
 
-                          <div className="flex items-center gap-1 w-20">
+                          <div className="flex items-center gap-1 w-16 shrink-0">
                             <input
                               type="number"
                               min="1"
                               max="100"
                               value={skill.level || 85}
                               onChange={(e) => updateSkill(skill.id, 'level', Number(e.target.value))}
-                              className="w-12 text-[11px] text-center border border-slate-200 rounded py-0.5"
+                              className="w-10 text-[11px] text-center border border-slate-200 rounded py-0.5"
                             />
                             <span className="text-[10px] text-slate-400">%</span>
                           </div>
@@ -1581,7 +1586,7 @@ export default function LeftContentSidebar({
                                 skills: prev.skills.filter((s) => s.id !== skill.id),
                               }));
                             }}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded"
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded shrink-0"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1603,7 +1608,7 @@ export default function LeftContentSidebar({
                             skills: [...(prev.skills || []), newSkill],
                           }));
                         }}
-                        className="w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="col-span-1 md:col-span-2 w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Another Skill</span>
@@ -1669,25 +1674,27 @@ export default function LeftContentSidebar({
                             />
                           </div>
 
-                          <Field
-                            label="Technologies (comma separated)"
-                            value={(proj.technologies || []).join(', ')}
-                            placeholder="Next.js, TypeScript, PostgreSQL, Docker"
-                            onChange={(val) =>
-                              updateProject(
-                                proj.id,
-                                'technologies',
-                                val.split(',').map((s) => s.trim()).filter(Boolean)
-                              )
-                            }
-                          />
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field
+                              label="Technologies (comma separated)"
+                              value={(proj.technologies || []).join(', ')}
+                              placeholder="Next.js, TypeScript, PostgreSQL, Docker"
+                              onChange={(val) =>
+                                updateProject(
+                                  proj.id,
+                                  'technologies',
+                                  val.split(',').map((s) => s.trim()).filter(Boolean)
+                                )
+                              }
+                            />
 
-                          <Field
-                            label="Project Link / GitHub"
-                            value={proj.link}
-                            placeholder="https://github.com/username/project"
-                            onChange={(val) => updateProject(proj.id, 'link', val)}
-                          />
+                            <Field
+                              label="Project Link / GitHub"
+                              value={proj.link}
+                              placeholder="https://github.com/username/project"
+                              onChange={(val) => updateProject(proj.id, 'link', val)}
+                            />
+                          </div>
                         </ItemCard>
                       ))}
 
@@ -1717,7 +1724,7 @@ export default function LeftContentSidebar({
 
                   {/* 7. CERTIFICATIONS */}
                   {currentActiveSection === 'certifications' && (
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(cvData.certifications || []).map((cert, idx) => (
                         <ItemCard
                           key={cert.id || idx}
@@ -1731,19 +1738,21 @@ export default function LeftContentSidebar({
                             }));
                           }}
                         >
-                          <Field
-                            label="Certification Name"
-                            value={cert.name}
-                            placeholder="AWS Certified Solutions Architect"
-                            onChange={(val) => updateCertification(cert.id, 'name', val)}
-                          />
-                          <Field
-                            label="Issuing Organization"
-                            value={cert.issuer}
-                            placeholder="Amazon Web Services"
-                            onChange={(val) => updateCertification(cert.id, 'issuer', val)}
-                          />
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field
+                              label="Certification Name"
+                              value={cert.name}
+                              placeholder="AWS Certified Solutions Architect"
+                              onChange={(val) => updateCertification(cert.id, 'name', val)}
+                            />
+                            <Field
+                              label="Issuing Organization"
+                              value={cert.issuer}
+                              placeholder="Amazon Web Services"
+                              onChange={(val) => updateCertification(cert.id, 'issuer', val)}
+                            />
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Date Obtained"
                               value={cert.date}
@@ -1776,7 +1785,7 @@ export default function LeftContentSidebar({
                             certifications: [...(prev.certifications || []), newCert],
                           }));
                         }}
-                        className="w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="col-span-1 md:col-span-2 w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Another Certification</span>
@@ -1786,23 +1795,23 @@ export default function LeftContentSidebar({
 
                   {/* 8. LANGUAGES */}
                   {currentActiveSection === 'languages' && (
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(cvData.languages || []).map((lang, idx) => (
                         <div
                           key={lang.id || idx}
                           className="flex items-center gap-2 p-2.5 bg-white rounded-lg border border-slate-200"
                         >
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <input
                               type="text"
                               value={lang.name}
                               placeholder="Language (e.g. English)"
                               onChange={(e) => updateLanguage(lang.id, 'name', e.target.value)}
-                              className="w-full text-xs font-semibold text-slate-800 bg-transparent outline-none"
+                              className="w-full text-xs font-semibold text-slate-800 bg-transparent outline-none truncate"
                             />
                           </div>
 
-                          <div className="w-32">
+                          <div className="w-28 shrink-0">
                             <select
                               value={lang.proficiency}
                               onChange={(e) => updateLanguage(lang.id, 'proficiency', e.target.value)}
@@ -1824,7 +1833,7 @@ export default function LeftContentSidebar({
                                 languages: (prev.languages || []).filter((l) => l.id !== lang.id),
                               }));
                             }}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded"
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded shrink-0"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1845,7 +1854,7 @@ export default function LeftContentSidebar({
                             languages: [...(prev.languages || []), newLang],
                           }));
                         }}
-                        className="w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="col-span-1 md:col-span-2 w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Another Language</span>
@@ -1855,7 +1864,7 @@ export default function LeftContentSidebar({
 
                   {/* 9. AWARDS & HONORS */}
                   {currentActiveSection === 'awards' && (
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(cvData.awards || []).map((awd, idx) => (
                         <ItemCard
                           key={awd.id || idx}
@@ -1869,19 +1878,21 @@ export default function LeftContentSidebar({
                             }));
                           }}
                         >
-                          <Field
-                            label="Award / Honor Title"
-                            value={awd.title}
-                            placeholder="Employee of the Year"
-                            onChange={(val) => updateAward(awd.id, 'title', val)}
-                          />
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field
+                              label="Award / Honor Title"
+                              value={awd.title}
+                              placeholder="Employee of the Year"
+                              onChange={(val) => updateAward(awd.id, 'title', val)}
+                            />
                             <Field
                               label="Issuer / Organization"
                               value={awd.issuer}
                               placeholder="TechCorp"
                               onChange={(val) => updateAward(awd.id, 'issuer', val)}
                             />
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <Field
                               label="Year / Date"
                               value={awd.date}
@@ -1915,7 +1926,7 @@ export default function LeftContentSidebar({
                             awards: [...(prev.awards || []), newAwd],
                           }));
                         }}
-                        className="w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="col-span-1 md:col-span-2 w-full py-2.5 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 hover:bg-violet-100/70 text-violet-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Another Award</span>

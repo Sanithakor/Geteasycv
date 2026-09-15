@@ -10,6 +10,7 @@ import { TemplateRenderer } from '@/components/cv';
 import { sampleCV } from '@/data/sampleCV';
 import { GeneratedTemplate, generateTemplates } from '@/lib/generateTemplates';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useAuthModalStore } from '@/lib/store/authModalStore';
 import PurchaseSuccessModal from '@/components/PurchaseSuccessModal';
 import { 
   experienceLevels, 
@@ -339,8 +340,11 @@ function TemplatesContent() {
   }, [sortedTemplates.length, visibleCount]);
 
   const handleUseTemplate = async (template: GeneratedTemplate) => {
-    if (!isAuthenticated) {
-      router.push(`/login?redirect=/editor?template=${template.id}`);
+    const authState = useAuthStore.getState();
+    const isAuthed = (authState.isAuthenticated && Boolean(authState.user || authState.token)) || Boolean(authState.token);
+
+    if (!isAuthed) {
+      useAuthModalStore.getState().openLogin(`/editor?template=${template.id}`);
       return;
     }
 

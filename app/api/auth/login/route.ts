@@ -107,7 +107,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const token = await generateToken(user.id, user.role);
+    const token = await generateToken(user.id, user.role, user.email);
 
     registerOrUpdateUserInStore({
       id: user.id,

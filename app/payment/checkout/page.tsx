@@ -94,7 +94,11 @@ function CheckoutContent() {
     setPaymentError(null);
 
     // 1. Enforce Authentication
-    if (!_hydrated || !isAuthenticated || !user) {
+    const authState = useAuthStore.getState();
+    const currentUser = authState.user || user;
+    const currentToken = authState.token || token;
+    const isAuthed = (authState.isAuthenticated && Boolean(currentUser || currentToken)) || Boolean(currentToken);
+    if (!isAuthed || !currentUser) {
       toast.error('Please sign in to complete your checkout.');
       const callbackPath = `/payment/checkout?plan=${planId}&from=${encodeURIComponent(fromUrl)}`;
       openLogin(callbackPath);
@@ -116,7 +120,7 @@ function CheckoutContent() {
       // 3. Create Order Server-Side
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}`, 'x-auth-token': token } : {}),
+        ...(currentToken ? { Authorization: `Bearer ${currentToken}`, 'x-auth-token': currentToken } : {}),
       };
 
       const orderRes = await fetch('/api/razorpay/create-order', {
@@ -125,9 +129,9 @@ function CheckoutContent() {
         credentials: 'include',
         body: JSON.stringify({
           plan: planId,
-          token: token || undefined,
-          userId: user?.id,
-          userEmail: user?.email,
+          token: currentToken || undefined,
+          userId: currentUser.id,
+          userEmail: currentUser.email,
         }),
       });
 
@@ -185,8 +189,8 @@ function CheckoutContent() {
           }
         },
         prefill: {
-          name: user.name || '',
-          email: user.email || '',
+          name: currentUser.name || '',
+          email: currentUser.email || '',
         },
         theme: {
           color: '#0F0F0F',
@@ -296,7 +300,12 @@ function CheckoutContent() {
                 <span>Account &amp; Checkout</span>
               </h3>
 
-              {_hydrated && isAuthenticated && user ? (
+              {!_hydrated ? (
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl animate-pulse space-y-2">
+                  <div className="h-4 w-1/3 bg-slate-200 rounded" />
+                  <div className="h-3 w-2/3 bg-slate-100 rounded" />
+                </div>
+              ) : isAuthenticated && user ? (
                 <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
                   <div className="flex items-center gap-2 text-emerald-800 text-xs font-bold">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />

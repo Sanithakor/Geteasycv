@@ -116,14 +116,16 @@ export async function getCurrentUser(auth: AuthPayload | null) {
     }
   } catch {}
 
-  if (auth.userId && auth.email) {
+  if (auth.userId) {
+    const userEmail = auth.email || (auth.userId.includes('@') ? auth.userId : `${auth.userId}@geteasycv.com`);
+    const userName = auth.email ? auth.email.split('@')[0] : (auth.role === 'admin' ? 'Admin User' : 'User');
     return {
       id: auth.userId,
-      email: auth.email,
-      name: auth.email.split('@')[0],
+      email: userEmail,
+      name: userName,
       avatar: null,
       role: auth.role || 'user',
-      subscriptionTier: 'free',
+      subscriptionTier: auth.subscriptionTier || auth.tier || (auth.role === 'admin' ? 'premium' : 'free'),
     };
   }
 

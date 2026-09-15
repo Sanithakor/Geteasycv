@@ -106,7 +106,7 @@ export async function POST(req: Request) {
         });
       } catch {}
 
-      token = await generateToken(user.id, user.role);
+      token = await generateToken(user.id, user.role, user.email);
 
       registerOrUpdateUserInStore({
         id: user.id,
@@ -148,7 +148,7 @@ export async function POST(req: Request) {
         role: 'user',
         subscriptionTier: 'free',
       };
-      token = await generateToken(userId, 'user');
+      token = await generateToken(userId, 'user', sanitizedEmail);
 
       registerOrUpdateUserInStore({
         id: user.id,

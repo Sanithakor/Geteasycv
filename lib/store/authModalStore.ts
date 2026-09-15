@@ -27,16 +27,16 @@ export const useAuthModalStore = create<AuthModalState>((set) => ({
 
   openLogin: (redirectTo = '/dashboard') => {
     if (typeof window !== 'undefined') {
-      const { isAuthenticated } = useAuthStore.getState();
-      if (isAuthenticated) return;
+      const { isAuthenticated, user, token } = useAuthStore.getState();
+      if (isAuthenticated && (user || token)) return;
     }
     set({ isOpen: true, tab: 'login', redirectTo });
   },
 
   openSignup: (redirectTo = '/dashboard') => {
     if (typeof window !== 'undefined') {
-      const { isAuthenticated } = useAuthStore.getState();
-      if (isAuthenticated) return;
+      const { isAuthenticated, user, token } = useAuthStore.getState();
+      if (isAuthenticated && (user || token)) return;
     }
     set({ isOpen: true, tab: 'signup', redirectTo });
   },

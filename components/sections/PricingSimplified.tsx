@@ -30,11 +30,13 @@ export default function PricingSimplified({
   showTrustBadges = true,
   footnote = "All premium plans include a 7-day money-back guarantee. Cancel anytime with 1 click.",
 }: PricingSectionProps) {
-  const [plans, setPlans] = useState<PricingPlan[]>(initialPlans || DISPLAY_PLANS);
+  const [plans, setPlans] = useState<PricingPlan[]>(
+    (initialPlans || DISPLAY_PLANS).filter((p) => p.id.toLowerCase() !== 'free')
+  );
 
   useEffect(() => {
     if (initialPlans) {
-      setPlans(initialPlans);
+      setPlans(initialPlans.filter((p) => p.id.toLowerCase() !== 'free'));
       return;
     }
 
@@ -44,7 +46,7 @@ export default function PricingSimplified({
       .then((json) => {
         if (json?.success && Array.isArray(json.data) && json.data.length > 0) {
           const active = json.data
-            .filter((p: any) => p.isActive !== false)
+            .filter((p: any) => p.isActive !== false && p.id.toLowerCase() !== 'free')
             .map((p: any) => {
               const staticConfig = getPlanById(p.id);
               return {
